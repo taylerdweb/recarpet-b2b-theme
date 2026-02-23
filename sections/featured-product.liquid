@@ -115,7 +115,7 @@
                   </h2>
                 {%- when 'price' -%}
                   <spark-pdp parent-id="{{ product.id }}"></spark-pdp>
-                  {%- if customer.metafields.sparklayer.authentication -%}
+                  {%- if customer.tags contains 'b2b' -%}
                     <spark-product-price parent-id="{{ product.id }}"></spark-product-price>
                   {%- else -%}
                     <!-- Logged out — hide price completely -->

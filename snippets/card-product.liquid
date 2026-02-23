@@ -204,7 +204,7 @@
               </p>
             {%- endif -%}
 
-            {%- if customer.metafields.sparklayer.authentication -%}
+            {%- if customer.tags contains 'b2b' -%}
               <!-- SparkLayer handles B2B pricing display -->
               <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
             {%- else -%}

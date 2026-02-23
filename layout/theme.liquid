@@ -302,7 +302,7 @@
       }
     </script>
 
-    {%- if customer.metafields.sparklayer.authentication -%}
+    {%- if customer.tags contains 'b2b' -%}
       <!-- Start of SparkLayer core script-->
       
 <script>
@@ -317,7 +317,7 @@ window.sparkOptions = {
 	},
 	auth: {
 		user: {{ customer.email | json }},
-		token: {{ customer.metafields.sparklayer.authentication | json }},
+		token: null,
 	},
 };
 </script>
@@ -430,7 +430,7 @@ window.sparkOptions = {
 
 <!-- SparkLayer main script-->
 
-{%- if customer.metafields.sparklayer.authentication -%}
+{%- if customer.tags contains 'b2b' -%}
   <!-- Anything inside here only shows for logged in customers-->
   <!-- Start of SparkLayer core script-->
   <script>
@@ -445,7 +445,7 @@ window.sparkOptions = {
     },
     auth: {
       user: {{ customer.email | json }},
-      token: {{ customer.metafields.sparklayer.authentication | json }},
+      token: null,
     },
   };
   </script>
@@ -461,7 +461,7 @@ window.sparkOptions = {
 
 <!-- Add this to layout/theme.liquid before closing head tag or in a CSS file-->
 
-{%- if customer.metafields.sparklayer.authentication -%}
+{%- if customer.tags contains 'b2b' -%}
   <!-- SparkLayer Sample CSS Code -->
   
   <style type="text/css">
@@ -544,7 +544,7 @@ window.sparkOptions = {
   {%- endif -%}
 
   {%- comment -%} Force visitors to login unless B2B, or on allowed pages {%- endcomment -%}
-  {%- if customer.metafields.sparklayer.authentication -%}
+  {%- if customer.tags contains 'b2b' -%}
     <!-- Don't redirect for B2B customers -->
   {%- else -%}
     {%- if request.design_mode -%}
