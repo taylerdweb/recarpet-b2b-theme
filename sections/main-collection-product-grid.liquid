@@ -159,7 +159,7 @@
                   {%- assign lazy_load = true -%}
                 {%- endif -%}
                 {% assign productTags = product.tags | join: ', ' %}
-                {% assign customerTags = customer.tags | join: ', ' %}
+                {% assign customerTags = customer.tags | join: ',' | downcase %}
 
                 {% if productTags contains 'b2b-only' %}
                   {% if customerTags contains 'b2b' %}

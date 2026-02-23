@@ -204,7 +204,8 @@
               </p>
             {%- endif -%}
 
-            {%- if customer.tags contains 'b2b' -%}
+            {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
+            {%- if customer_tags_lower contains 'b2b' -%}
               {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
             {%- else -%}
               <div style="font-size: 13px; color: #888;">
