@@ -2,7 +2,7 @@
 
 
 {% if productTags contains 'b2b-only' %}
-  {%- if customer.metafields.sparklayer.authentication -%}
+  {%- if customer.tags contains 'b2b' -%}
 
   {%- else-%}
     <script>
@@ -126,9 +126,10 @@
                 <spark-pdp parent-id="{{ product.id }}"></spark-pdp> 
               {%- when 'price' -%}
                 {%- if customer.tags contains 'b2b' -%}
-                  <spark-product-price parent-id="{{ product.id }}"></spark-product-price>
+                  <div {{ block.shopify_attributes }}>
+                    {% render 'price', product: product, use_variant: true, show_badges: true, price_class: 'price--large' %}
+                  </div>
                 {%- else -%}
-                  <!-- Logged out — hide price completely -->
                   <p style="font-size: 13px; color: #888;" {{ block.shopify_attributes }}>
                     <a href="/pages/b2b-login">Ansök om B2B-konto</a> för att se priser
                   </p>
