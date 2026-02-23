@@ -206,7 +206,7 @@
 
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
             {%- if customer_tags_lower contains 'b2b' -%}
-              {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
+              <spark-product-price product-id="{{ card_product.id }}"></spark-product-price>
             {%- elsif customer -%}
               <div style="font-size: 13px; color: #888;">
                 Your account is awaiting B2B approval. We'll be in touch shortly.
