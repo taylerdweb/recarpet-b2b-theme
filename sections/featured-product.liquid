@@ -115,42 +115,14 @@
                   </h2>
                 {%- when 'price' -%}
                   <spark-pdp parent-id="{{ product.id }}"></spark-pdp>
-                  <div data-spark="b2c-only" id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
-                    {%- render 'price',
-                      product: product,
-                      placeholder: placeholder,
-                      use_variant: true,
-                      show_badges: true,
-                      price_class: 'price--large'
-                    -%}
-                  </div>
-                  {%- if product.quantity_price_breaks_configured? -%}
-                    <div class="volume-pricing-note" id="Volume-Note-{{ section.id }}">
-                      <span>{{ 'products.product.volume_pricing.note' | t }}</span>
-                    </div>
+                  {%- if customer.metafields.sparklayer.authentication -%}
+                    <spark-product-price parent-id="{{ product.id }}"></spark-product-price>
+                  {%- else -%}
+                    <!-- Logged out — hide price completely -->
+                    <p style="font-size: 13px; color: #888;" {{ block.shopify_attributes }}>
+                      <a href="/pages/b2b-login">Ansök om B2B-konto</a> för att se priser
+                    </p>
                   {%- endif -%}
-                  {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
-                    <div data-spark="b2c-only" class="product__tax caption rte">
-                      {%- if cart.duties_included and cart.taxes_included -%}
-                        {{ 'products.product.duties_and_taxes_included' | t }}
-                      {%- elsif cart.taxes_included -%}
-                        {{ 'products.product.taxes_included' | t }}
-                      {%- elsif cart.duties_included -%}
-                        {{ 'products.product.duties_included' | t }}
-                      {%- endif -%}
-                      {%- if shop.shipping_policy.body != blank -%}
-                        {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                      {%- endif -%}
-                    </div>
-                  {%- endif -%}
-                  {%- unless placeholder -%}
-                    <div {{ block.shopify_attributes }}>
-                      {%- form 'product', product -%}
-                        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-                        {{ form | payment_terms }}
-                      {%- endform -%}
-                    </div>
-                  {%- endunless -%}
                 {%- when 'sku' -%}
                   <p
                     data-spark="b2c-only"
