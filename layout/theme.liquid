@@ -542,10 +542,31 @@ window.sparkOptions = {
   
   <!-- End SparkLayer Sample CSS Code -->
   {%- endif -%}
-  
-  
 
-
+  {%- comment -%} Force visitors to login unless B2B, or on allowed pages {%- endcomment -%}
+  {%- if customer.metafields.sparklayer.authentication -%}
+    <!-- Don't redirect for B2B customers -->
+  {%- else -%}
+    {%- if request.design_mode -%}
+      <!-- Don't redirect if using Shopify Customiser tool -->
+    {%- else -%}
+      {%- if template contains 'customers/'
+        or request.path == '/challenge'
+        or request.path == '/pages/b2b-login'
+        or request.path == '/pages/contact'
+        or request.path == '/pages/contact-us'
+        or request.path == '/pages/about-us'
+        or request.path == '/pages/terms-and-conditions'
+        or request.path == '/'
+      -%}
+        <!-- Allowed page, do nothing -->
+      {%- else -%}
+        <script>
+          window.location.href = '/account/login';
+        </script>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
 
 
 
