@@ -1,0 +1,10 @@
+# Shopify
+config/settings_data.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.cursor/
+.vscode/
