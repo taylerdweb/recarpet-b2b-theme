@@ -118,16 +118,11 @@
                     </h2>
                   </a>
                 </div>
-                {%- if customer.tags contains 'b2b' -%}
-
-                {%- else -%}
-                  {% assign hidePricesLoggedOut = false %}
-                  {%- if hidePricesLoggedOut == true -%}
-                    <div style="border: 1px solid #ccc; padding: 12px 15px; font-size: 15px" class="b2c-sign-in">
-                      Please <a href="{{ routes.root_url }}/account/login" style="color: #000; text-decoration: underline">sign in</a> to see pricing
-                    </div>
-                  {%- endif -%}
-                {%- endif -%}
+                {%- unless customer.tags contains 'b2b' -%}
+                  <div style="border: 1px solid #ccc; padding: 12px 15px; font-size: 15px" class="b2c-sign-in">
+                    Please <a href="/pages/b2b-login" style="color: #000; text-decoration: underline">sign in</a> to see pricing
+                  </div>
+                {%- endunless -%}
                 <spark-pdp parent-id="{{ product.id }}"></spark-pdp> 
               {%- when 'price' -%}
                 {%- if customer.tags contains 'b2b' -%}
