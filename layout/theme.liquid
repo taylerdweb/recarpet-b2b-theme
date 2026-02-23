@@ -422,6 +422,37 @@ window.sparkOptions = {
 
       <!-- End SparkLayer Sample CSS Code -->
     {%- endif -%}
+
+<!-- SparkLayer main script-->
+
+{%- if customer.metafields.sparklayer.authentication -%}
+  <!-- Anything inside here only shows for logged in customers-->
+  <!-- Start of SparkLayer core script-->
+  <script>
+  window.sparkOptions = {
+    siteId: "taylerd",
+    platform: "shopify",
+    rootUrl: {{ routes.root_url | json }},
+    language: {{ request.locale.iso_code | json }},
+    accountRedirect: {
+      urlRegex: /\/account/g,
+      goTo: "/index", // page to redirect logged in users to
+    },
+    auth: {
+      user: {{ customer.email | json }},
+      token: {{ customer.metafields.sparklayer.authentication | json }},
+    },
+  };
+  </script>
+  <script async src="https://sparkcdn.io/sparkjs/taylerd/live"></script>
+  <!-- End of SparkLayer core script-->
+  {%- endif -%}
+  
+  <!-- required for linking to order or quotes: https://docs.sparklayer.io/my-account-interface#yT5mS -->
+  <script async src="https://cdn.sparklayer.io/spark-redirect.js"></script>
+
+
+
   </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
