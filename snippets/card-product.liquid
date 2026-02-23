@@ -205,10 +205,8 @@
             {%- endif -%}
 
             {%- if customer.tags contains 'b2b' -%}
-              <!-- SparkLayer handles B2B pricing display -->
-              <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
+              {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
             {%- else -%}
-              <!-- Logged out — hide price completely -->
               <div style="font-size: 13px; color: #888;">
                 <a href="/pages/b2b-login">Logga in</a> för att se priser
               </div>
