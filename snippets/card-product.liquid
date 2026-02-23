@@ -207,6 +207,10 @@
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
             {%- if customer_tags_lower contains 'b2b' -%}
               {% render 'price', product: card_product, price_class: '', show_compare_at_price: true %}
+            {%- elsif customer -%}
+              <div style="font-size: 13px; color: #888;">
+                Your account is awaiting B2B approval. We'll be in touch shortly.
+              </div>
             {%- else -%}
               <div style="font-size: 13px; color: #888;">
                 <a href="/pages/b2b-login">Logga in</a> för att se priser

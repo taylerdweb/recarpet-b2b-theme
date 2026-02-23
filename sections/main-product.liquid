@@ -125,9 +125,14 @@
                 {%- endunless -%}
                 <spark-pdp parent-id="{{ product.id }}"></spark-pdp> 
               {%- when 'price' -%}
-                {%- if customer.tags contains 'b2b' -%}
+                {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
+                {%- if customer_tags_lower contains 'b2b' -%}
                   <div {{ block.shopify_attributes }}>
                     {% render 'price', product: product, use_variant: true, show_badges: true, price_class: 'price--large' %}
+                  </div>
+                {%- elsif customer -%}
+                  <div style="border: 1px solid #ccc; padding: 12px 15px; font-size: 15px;" {{ block.shopify_attributes }}>
+                    Your account is awaiting B2B approval. We'll be in touch shortly.
                   </div>
                 {%- else -%}
                   <p style="font-size: 13px; color: #888;" {{ block.shopify_attributes }}>
