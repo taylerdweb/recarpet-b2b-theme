@@ -317,7 +317,7 @@ window.sparkOptions = {
 	},
 	auth: {
 		user: {{ customer.email | json }},
-		token: null,
+		token: {{ customer.metafields.sparklayer.authentication | default: '' | json }},
 	},
 };
 </script>
@@ -445,7 +445,7 @@ window.sparkOptions = {
     },
     auth: {
       user: {{ customer.email | json }},
-      token: null,
+      token: {{ customer.metafields.sparklayer.authentication | default: '' | json }},
     },
   };
   </script>
