@@ -128,6 +128,9 @@
               {%- when 'price' -%}
                 {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
                 {%- if customer_tags_lower contains 'b2b' -%}
+                  <div data-spark="b2c-only" {{ block.shopify_attributes }}>
+                    {% render 'price', product: product, use_variant: true, show_badges: true %}
+                  </div>
                   <spark-product-price product-id="{{ product.id }}"></spark-product-price>
                 {%- elsif customer -%}
                   <div {{ block.shopify_attributes }}>
