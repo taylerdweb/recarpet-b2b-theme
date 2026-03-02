@@ -193,12 +193,23 @@ This is the Shopify Liquid code that generates the page layout
 
                       {% if section.settings.form_email_field4 != blank %}
                       <div class="b2b-form-item">
-                        <input class="b2b-input" 
-                        type="text" 
-                        {% if section.settings.form_email_field4_required %} required {% endif %}  
-                        id="ContactForm-{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}" 
-                        name="contact[{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}]" 
-                        placeholder="{{ section.settings.form_email_field4 }}">                        
+                        <input class="b2b-input"
+                        type="text"
+                        {% if section.settings.form_email_field4_required %} required {% endif %}
+                        id="ContactForm-{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}"
+                        name="contact[{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}]"
+                        placeholder="{{ section.settings.form_email_field4 }}">
+                      </div>
+                      {% endif %}
+
+                      {% if section.settings.form_email_field_vat != blank %}
+                      <div class="b2b-form-item">
+                        <input class="b2b-input"
+                        type="text"
+                        {% if section.settings.form_email_field_vat_required %} required {% endif %}
+                        id="ContactForm-{{ section.settings.form_email_field_vat | replace: ' ', '_' | downcase }}"
+                        name="contact[{{ section.settings.form_email_field_vat | replace: ' ', '_' | downcase }}]"
+                        placeholder="{{ section.settings.form_email_field_vat }}">
                       </div>
                       {% endif %}
 
@@ -752,13 +763,13 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "text",
 "id": "title",
 "label": "Title",
-"default": "Welcome to our B2B login"
+"default": "Välkommen till vår B2B-inloggning"
 },
 {
 "type": "textarea",
 "id": "intro_text",
 "label": "Introduction Text",
-"default": "Sign in below to get instant access to your B2B account and start placing orders."
+"default": "Logga in nedan för att komma åt ditt B2B-konto och börja lägga beställningar."
 },
 
 {
@@ -778,50 +789,50 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "text",
 "id": "sign_in",
 "label": "Sign in button",
-"default": "Sign In"
+"default": "Logga in"
 },
 {
 "type": "text",
 "id": "forgot_password",
 "label": "Forgot password",
-"default": "Forgot password?"
+"default": "Glömt lösenord?"
 },
 
 {
 "type": "text",
 "id": "open_account_title",
 "label": "Open Account Title",
-"default": "Interested in opening an account?"
+"default": "Ansök om ett B2B-konto"
 },
 {
 "type": "richtext",
 "id": "open_account_text",
 "label": "Open Account Text",
-"default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>"
+"default": "<p>Fyll i formuläret nedan så granskar vi din ansökan och återkommer inom 1–2 arbetsdagar.</p>"
 },
 {
 "type": "text",
 "id": "open_account_button",
 "label": "Open Account Button Title",
-"default": "Apply for an account"
+"default": "Ansök om konto"
 },
 {
 "type": "text",
 "id": "apply_submit",
 "label": "Submit button",
-"default": "Apply Now"
+"default": "Skicka ansökan"
 },
 {
 "type": "text",
 "id": "form_message_success",
 "label": "Form Submit - Success Message",
-"default": "Thank you for your messsage, we will be in touch shortly."
+"default": "Tack för din ansökan! Vi återkommer inom 1–2 arbetsdagar."
 },
 {
 "type": "text",
 "id": "form_message_error",
 "label": "Form Submit - Error Message",
-"default": "Sorry, there appears to be an error in your form submission."
+"default": "Det uppstod ett fel vid skickandet. Vänligen försök igen."
 },
 {
 "type": "header",
@@ -864,28 +875,28 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "text",
 "id": "form_email_subject",
 "label": "Email subject",
-"default": " New B2B customer application to review",
+"default": "Ny B2B-ansökan att granska",
 "info": "This will show in the email sent via Shopify"
 },
 
 {
 "type": "text",
 "id": "form_email_field1",
-"label": "Field 1",
-"default": "Company Name",
+"label": "Field 1 — Company Name",
+"default": "Företagsnamn",
 "info": "Leave blank to remove this field"
 },
 {
 "type": "checkbox",
 "id": "form_email_field1_required",
 "label": "Make this field required?",
-"default": false
+"default": true
 },
 {
 "type": "text",
 "id": "form_email_field2",
-"label": "Field 2",
-"default": "Email",
+"label": "Field 2 — Email",
+"default": "E-postadress",
 "info": "Leave blank to remove this field"
 },
 {
@@ -897,8 +908,8 @@ This is the scheme that controls the content in the Shopify Customizer tool
 {
 "type": "text",
 "id": "form_email_field3",
-"label": "Field 3",
-"default": "Phone",
+"label": "Field 3 — Phone",
+"default": "Telefonnummer",
 "info": "Leave blank to remove this field"
 },
 {
@@ -906,26 +917,39 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "id": "form_email_field3_required",
 "label": "Make this field required?",
 "default": false
-},      
+},
 {
 "type": "text",
 "id": "form_email_field4",
-"label": "Field 4",
-"default": "Your Tax ID",
-"info": "Leave blank to remove this field"
+"label": "Field 4 — Company Registration Number",
+"default": "Organisationsnummer",
+"info": "Swedish company registration number, e.g. 556123-4567. Leave blank to remove this field"
 },
 {
 "type": "checkbox",
 "id": "form_email_field4_required",
+"label": "Make this field required?",
+"default": true
+},
+{
+"type": "text",
+"id": "form_email_field_vat",
+"label": "Field 5 — VAT Number",
+"default": "Momsregistreringsnummer (VAT)",
+"info": "Swedish VAT number, e.g. SE556123456701. Leave blank to remove this field"
+},
+{
+"type": "checkbox",
+"id": "form_email_field_vat_required",
 "label": "Make this field required?",
 "default": false
 },
 {
 "type": "text",
 "id": "form_email_field5",
-"label": "Comments",
-"default": "Comments",
-"info": "This field always shows at the end to allow comments to be added.  Leave blank to remove this field"
+"label": "Field 6 — Message / Comments",
+"default": "Berätta om din verksamhet",
+"info": "Text area at the end for additional info. Leave blank to remove this field"
 },
 {
 "type": "checkbox",
@@ -949,7 +973,7 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "text",
 "id": "faq_title",
 "label": "FAQs Title",
-"default": "Frequently Asked Questions"
+"default": "Vanliga frågor"
 },
 
 {

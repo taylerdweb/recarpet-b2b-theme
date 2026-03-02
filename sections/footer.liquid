@@ -156,6 +156,25 @@
                 {%- endcase -%}
               </div>
             {%- endfor -%}
+            {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
+            {%- unless customer_tags_lower contains 'b2b' -%}
+              <div
+                class="footer-block grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                {% if settings.animations_reveal_on_scroll %}
+                  data-cascade
+                  style="--animation-order: {{ section.blocks.size | plus: 1 }};"
+                {% endif %}
+              >
+                <h2 class="footer-block__heading inline-richtext">För företag</h2>
+                <ul class="footer-block__details-content list-unstyled">
+                  <li>
+                    <a href="/pages/b2b-login" class="link link--text list-menu__item list-menu__item--link">
+                      Ansök om B2B-konto
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            {%- endunless -%}
           </div>
         {%- endif -%}
 

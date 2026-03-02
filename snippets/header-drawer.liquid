@@ -149,6 +149,18 @@
                   {%- endif -%}
                 </li>
               {%- endfor -%}
+              {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
+              {%- unless customer_tags_lower contains 'b2b' -%}
+                <li>
+                  <a
+                    id="HeaderDrawer-b2b-login"
+                    href="/pages/b2b-login"
+                    class="menu-drawer__menu-item list-menu__item link link--text focus-inset"
+                  >
+                    B2B-inloggning
+                  </a>
+                </li>
+              {%- endunless -%}
             </ul>
           </nav>
           <div class="menu-drawer__utility-links">
