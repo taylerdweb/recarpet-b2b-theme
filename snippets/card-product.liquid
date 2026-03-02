@@ -205,13 +205,9 @@
             {%- endif -%}
 
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
-            {%- if customer_tags_lower contains 'b2b' -%}
-              <spark-product-price product-id="{{ card_product.id }}"></spark-product-price>
-            {%- elsif customer -%}
-              {% render 'price', product: card_product, price_class: 'price--listing' %}
+            {% render 'price', product: card_product, price_class: 'price--listing' %}
+            {%- if customer and customer_tags_lower contains 'b2b' == false -%}
               <p class="b2b-card-awaiting-note">Inväntar B2B-godkännande</p>
-            {%- else -%}
-              {% render 'price', product: card_product, price_class: 'price--listing' %}
             {%- endif -%}
           </div>
         </div>
