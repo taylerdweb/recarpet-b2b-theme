@@ -1526,3 +1526,8 @@ a.product__text {
   border-radius: 4px;
   margin-top: 0.8rem;
 }
+
+/* Hide brutto fallback when SparkLayer has rendered its price */
+spark-product-price:not(:empty) + .spark-price-fallback {
+  display: none;
+}

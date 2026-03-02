@@ -206,10 +206,10 @@
 
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
             {%- if customer_tags_lower contains 'b2b' -%}
-              <div data-spark="b2c-only">
+              <spark-product-price product-id="{{ card_product.id }}"></spark-product-price>
+              <div class="spark-price-fallback">
                 {% render 'price', product: card_product, price_class: 'price--listing' %}
               </div>
-              <spark-product-price product-id="{{ card_product.id }}"></spark-product-price>
             {%- elsif customer -%}
               {% render 'price', product: card_product, price_class: 'price--listing' %}
               <p class="b2b-card-awaiting-note">Inväntar B2B-godkännande</p>

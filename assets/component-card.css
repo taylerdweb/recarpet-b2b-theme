@@ -620,3 +620,8 @@
   color: #d97706;
   margin: 0.4rem 0 0;
 }
+
+/* Hide brutto fallback on cards when SparkLayer has rendered its price */
+spark-product-price:not(:empty) + .spark-price-fallback {
+  display: none;
+}
