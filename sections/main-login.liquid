@@ -1,3 +1,10 @@
+{% comment %} Redirect /account/login to B2B login page {% endcomment %}
+<script>
+  if (window.location.pathname === '/account/login') {
+    window.location.replace('/pages/b2b-login');
+  }
+</script>
+
 {{ 'customer.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
