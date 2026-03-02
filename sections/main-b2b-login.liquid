@@ -169,14 +169,15 @@ This is the Shopify Liquid code that generates the page layout
                       </div>
                       {% endif %}
                         
-                      {% if section.settings.form_email_field2 != blank %}  
+                      {% if section.settings.form_email_field2 != blank %}
                       <div class="b2b-form-item">
-                        <input class="b2b-input" 
-                        type="text"
+                        <input class="b2b-input"
+                        type="email"
                         {% if section.settings.form_email_field2_required %} required {% endif %}
-                        id="ContactForm-{{ section.settings.form_email_field2 | replace: ' ', '_' | downcase }}" 
-                        name="contact[{{ section.settings.form_email_field2 | replace: ' ', '_' | downcase }}]" 
-                        placeholder="{{ section.settings.form_email_field2 }}">                        
+                        id="ContactForm-email"
+                        name="contact[email]"
+                        autocomplete="email"
+                        placeholder="{{ section.settings.form_email_field2 }}">
                       </div>
                       {% endif %}
                         
