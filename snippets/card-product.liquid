@@ -212,15 +212,20 @@
                 Your account is awaiting B2B approval. We'll be in touch shortly.
               </div>
             {%- else -%}
-              <div style="font-size: 13px; color: #888;">
-                <a href="/pages/b2b-login">Logga in</a> för att se priser
-              </div>
+              {% render 'price', product: card_product, price_class: 'price--listing' %}
             {%- endif -%}
           </div>
         </div>
         {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
+        {%- unless customer -%}
+          <div class="card__cta-logged-out">
+            <a href="/pages/b2b-login" class="button button--full-width button--primary">
+              Ansök om konto &rarr;
+            </a>
+          </div>
+        {%- endunless -%}
         {% if quick_add == 'standard' %}
-          <div data-spark="b2c-only" class="quick-add no-js-hidden">
+          <div data-spark="b2c-only" class="quick-add no-js-hidden {% unless customer_tags_lower contains 'b2b' %}hidden{% endunless %}">
             {%- liquid
               assign qty_rules = false
               if card_product.selected_or_first_available_variant.quantity_rule.min > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1

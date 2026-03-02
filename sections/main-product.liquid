@@ -133,9 +133,10 @@
                     Your account is awaiting B2B approval. We'll be in touch shortly.
                   </div>
                 {%- else -%}
-                  <p style="font-size: 13px; color: #888;" {{ block.shopify_attributes }}>
-                    <a href="/pages/b2b-login">Ansök om B2B-konto</a> för att se priser
-                  </p>
+                  <div {{ block.shopify_attributes }}>
+                    {% render 'price', product: product, use_variant: true, show_badges: true %}
+                    <p class="b2b-price-note">Priser visas exkl. moms för godkända B2B-kunder.</p>
+                  </div>
                 {%- endif -%}
               {%- when 'inventory' -%}
                 <p
@@ -482,9 +483,20 @@
                       {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
                     </div>
                   {%- when 'buy_buttons' -%}
-                    {%- if hidePricesLoggedOut == false or customer.tags contains 'b2b' -%}
+                    {%- if customer_tags_lower contains 'b2b' -%}
                       <div data-spark="b2c-only">
                         {%- render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true -%}
+                      </div>
+                    {%- elsif customer -%}
+                      {{- nothing -}}
+                    {%- else -%}
+                      <div class="b2b-logged-out-cta">
+                        <a href="/pages/b2b-login" class="button button--full-width button--primary">
+                          Ansök om konto för att handla &rarr;
+                        </a>
+                        <a href="/pages/contact" class="button button--full-width button--secondary">
+                          Be om offert
+                        </a>
                       </div>
                     {%- endif -%}
                   {%- when 'rating' -%}

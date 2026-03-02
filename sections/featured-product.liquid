@@ -122,9 +122,10 @@
                       Your account is awaiting B2B approval. We'll be in touch shortly.
                     </div>
                   {%- else -%}
-                    <p style="font-size: 13px; color: #888;" {{ block.shopify_attributes }}>
-                      <a href="/pages/b2b-login">Ansök om B2B-konto</a> för att se priser
-                    </p>
+                    <div {{ block.shopify_attributes }}>
+                      {% render 'price', product: product, use_variant: true, show_badges: true %}
+                      <p class="b2b-price-note">Priser visas exkl. moms för godkända B2B-kunder.</p>
+                    </div>
                   {%- endif -%}
                 {%- when 'sku' -%}
                   <p
