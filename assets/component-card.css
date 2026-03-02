@@ -614,3 +614,9 @@
   font-size: 1.2rem;
   padding: 1rem;
 }
+
+.b2b-card-awaiting-note {
+  font-size: 1.1rem;
+  color: #d97706;
+  margin: 0.4rem 0 0;
+}

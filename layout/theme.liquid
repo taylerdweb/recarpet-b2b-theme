@@ -543,9 +543,11 @@ window.sparkOptions = {
   <!-- End SparkLayer Sample CSS Code -->
   {%- endif -%}
 
-  {%- comment -%} Force visitors to login unless B2B, or on allowed pages {%- endcomment -%}
+  {%- comment -%} Force LOGGED-OUT visitors to login unless on allowed pages. Logged-in customers (awaiting B2B approval) may browse freely. {%- endcomment -%}
   {%- if customer.tags contains 'b2b' -%}
-    <!-- Don't redirect for B2B customers -->
+    <!-- Don't redirect for approved B2B customers -->
+  {%- elsif customer -%}
+    <!-- Don't redirect for logged-in customers awaiting B2B approval -->
   {%- else -%}
     {%- if request.design_mode -%}
       <!-- Don't redirect if using Shopify Customiser tool -->
@@ -562,7 +564,7 @@ window.sparkOptions = {
         <!-- Allowed page, do nothing -->
       {%- else -%}
         <script>
-          window.location.href = '/account/login';
+          window.location.href = '/pages/b2b-login';
         </script>
       {%- endif -%}
     {%- endif -%}

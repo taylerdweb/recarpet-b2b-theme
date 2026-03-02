@@ -1516,3 +1516,13 @@ a.product__text {
   color: rgb(var(--color-foreground));
   border: 0.1rem solid rgba(var(--color-foreground), 0.1);
 }
+
+.b2b-awaiting-note {
+  font-size: 1.2rem;
+  color: #d97706;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  padding: 0.8rem 1.2rem;
+  border-radius: 4px;
+  margin-top: 0.8rem;
+}
