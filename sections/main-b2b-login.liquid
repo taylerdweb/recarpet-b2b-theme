@@ -30,7 +30,8 @@
   
 {% endcomment %}
 
-{%- if customer.tags contains 'b2b' -%}
+{%- assign _login_tags_str = customer.tags | join: ',' | downcase -%}
+{%- if _login_tags_str contains 'b2b' -%}
   <script>
       window.location.href = '/index#spark-account';
   </script>

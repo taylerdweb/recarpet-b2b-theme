@@ -2,7 +2,8 @@
 
 
 {% if productTags contains 'b2b-only' %}
-  {%- if customer.tags contains 'b2b' -%}
+  {%- assign _tags_str = customer.tags | join: ',' | downcase -%}
+  {%- if _tags_str contains 'b2b' -%}
 
   {%- else-%}
     <script>
@@ -229,7 +230,8 @@
                   </details>
                 </div>
               {%- when 'quantity_selector' -%}
-              {%- if hidePricesLoggedOut == false or customer.tags contains 'b2b' -%}
+              {%- assign _qty_tags_str = customer.tags | join: ',' | downcase -%}
+              {%- if hidePricesLoggedOut == false or _qty_tags_str contains 'b2b' -%}
                 <div
                   data-spark="b2c-only"
                   id="Quantity-Form-{{ section.id }}"

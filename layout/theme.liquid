@@ -1,4 +1,5 @@
 <!doctype html>
+{%- assign customer_tags_str = customer.tags | join: ',' | downcase -%}
 <html class="js" lang="{{ request.locale.iso_code }}">
   <head>
     <meta charset="utf-8">
@@ -302,9 +303,9 @@
       }
     </script>
 
-    {%- if customer.tags contains 'b2b' -%}
+    {%- if customer_tags_str contains 'b2b' -%}
       <!-- Start of SparkLayer core script-->
-      
+
 <script>
 window.sparkOptions = {
 	siteId: "taylerd",
@@ -430,7 +431,7 @@ window.sparkOptions = {
 
 <!-- SparkLayer main script-->
 
-{%- if customer.tags contains 'b2b' -%}
+{%- if customer_tags_str contains 'b2b' -%}
   <!-- Anything inside here only shows for logged in customers-->
   <!-- Start of SparkLayer core script-->
   <script>
@@ -461,7 +462,7 @@ window.sparkOptions = {
 
 <!-- Add this to layout/theme.liquid before closing head tag or in a CSS file-->
 
-{%- if customer.tags contains 'b2b' -%}
+{%- if customer_tags_str contains 'b2b' -%}
   <!-- SparkLayer Sample CSS Code -->
   
   <style type="text/css">
@@ -544,7 +545,7 @@ window.sparkOptions = {
   {%- endif -%}
 
   {%- comment -%} Force LOGGED-OUT visitors to login unless on allowed pages. Logged-in customers (awaiting B2B approval) may browse freely. {%- endcomment -%}
-  {%- if customer.tags contains 'b2b' -%}
+  {%- if customer_tags_str contains 'b2b' -%}
     <!-- Don't redirect for approved B2B customers -->
   {%- elsif customer -%}
     <!-- Don't redirect for logged-in customers awaiting B2B approval -->
@@ -577,7 +578,7 @@ window.sparkOptions = {
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
       {% comment %} Define accessible pages {% endcomment %}
-      {%- if customer.tags contains 'b2b' or template contains 'customers/' or request.path == '/challenge'  or request.path == '/pages/b2b-login' -%}
+      {%- if customer_tags_str contains 'b2b' or template contains 'customers/' or request.path == '/challenge'  or request.path == '/pages/b2b-login' -%}
       {% assign showSiteForB2B = false %}
       {% endif %}
       {%- if showSiteForB2B == blank -%}
@@ -591,7 +592,7 @@ window.sparkOptions = {
       {% comment %} Show content for logged in users {% endcomment %}
       {%- unless showB2BLogin -%}
 
-      {%- if customer.tags contains 'b2b' -%}
+      {%- if customer_tags_str contains 'b2b' -%}
         {%- if template contains 'customers/' or request.path == '/cart' -%}
           <script>
             window.location.href = '/index#spark-account';
