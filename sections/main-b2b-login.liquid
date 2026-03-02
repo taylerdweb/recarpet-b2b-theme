@@ -143,8 +143,14 @@ This is the Shopify Liquid code that generates the page layout
                     
                    {%- form 'contact', id: 'ContactForm' -%}
                     {%- if form.posted_successfully? -%}
-                      <div class="b2b-form-success b2b-form-message" tabindex="-1" autofocus>                               
-                      {{ section.settings.form_message_success }}
+                      <div class="b2b-form-success b2b-form-message" tabindex="-1" autofocus>
+                        {{ section.settings.form_message_success }}
+                      </div>
+                      <div class="b2b-create-account-prompt">
+                        <p class="b2b-body-text">{{ section.settings.form_message_create_account_text }}</p>
+                        <a href="{{ routes.account_login_url }}" class="b2b-btn b2b-btn-primary b2b-create-account-btn">
+                          {{ section.settings.form_message_create_account_button }}
+                        </a>
                       </div>
                     {%- elsif form.errors -%}
                       <div class="b2b-form-error b2b-form-message">
@@ -442,6 +448,27 @@ color: #00a372;
 border: 1px solid red;
 background: red;
 color: white;
+}
+
+/* Post-submit create account prompt */
+
+.b2b-create-account-prompt {
+  margin-top: 1.5em;
+  padding: 1.25em;
+  background: #f8f8f8;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.b2b-create-account-prompt .b2b-body-text {
+  margin-bottom: 1em;
+}
+
+.b2b-create-account-btn {
+  width: 100%;
+  display: block;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 /* Login fields */
@@ -834,6 +861,18 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "id": "form_message_error",
 "label": "Form Submit - Error Message",
 "default": "Det uppstod ett fel vid skickandet. Vänligen försök igen."
+},
+{
+"type": "text",
+"id": "form_message_create_account_text",
+"label": "Post-submit: Create account text",
+"default": "Sista steget — skapa ditt inloggningskonto med samma e-postadress som du angav ovan. Vi aktiverar ditt B2B-konto när vi granskat din ansökan."
+},
+{
+"type": "text",
+"id": "form_message_create_account_button",
+"label": "Post-submit: Create account button",
+"default": "Skapa inloggningskonto →"
 },
 {
 "type": "header",
