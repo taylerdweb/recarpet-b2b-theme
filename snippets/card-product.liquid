@@ -206,8 +206,10 @@
 
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
             {% render 'price', product: card_product, price_class: 'price--listing' %}
-            {%- if customer and customer_tags_lower contains 'b2b' == false -%}
-              <p class="b2b-card-awaiting-note">Inväntar B2B-godkännande</p>
+            {%- if customer -%}
+              {%- unless customer_tags_lower contains 'b2b' -%}
+                <p class="b2b-card-awaiting-note">Inväntar B2B-godkännande</p>
+              {%- endunless -%}
             {%- endif -%}
           </div>
         </div>
