@@ -322,6 +322,24 @@
       };
       </script>
       <script async src="https://sparkcdn.io/sparkjs/taylerd/live"></script>
+
+      <!-- Rename SparkLayer "Qty" column header to "m²" -->
+      <script>
+        (function () {
+          function renameQtyToM2() {
+            document.querySelectorAll('th, td.spark-price-break__qty, [class*="price-break"] th').forEach(function (el) {
+              if (el.textContent.trim() === 'Qty') {
+                el.textContent = 'm\u00B2';
+              }
+            });
+          }
+          // Watch for SparkLayer to dynamically render its tables
+          var observer = new MutationObserver(renameQtyToM2);
+          observer.observe(document.documentElement, { childList: true, subtree: true });
+          // Also run after page load in case content is already present
+          document.addEventListener('DOMContentLoaded', renameQtyToM2);
+        })();
+      </script>
     {%- endif -%}
   
   <!-- required for linking to order or quotes: https://docs.sparklayer.io/my-account-interface#yT5mS -->
@@ -425,6 +443,22 @@
   .card-wrapper {
     justify-content: space-between;
     height: 100%;
+  }
+
+  /* m² unit label next to price */
+  .price-unit {
+    font-size: 0.85em;
+    opacity: 0.75;
+    margin-left: 1px;
+  }
+
+  /* m² label next to quantity input */
+  .quantity__unit {
+    font-size: 0.85em;
+    font-weight: 500;
+    margin-left: 6px;
+    align-self: center;
+    color: currentColor;
   }
 
   .product__info-wrapper {

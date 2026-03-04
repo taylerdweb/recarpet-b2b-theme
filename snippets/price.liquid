@@ -81,12 +81,12 @@
             {{-
               'products.product.volume_pricing.price_range'
               | t: minimum: money_price_min, maximum: money_price_max
-            -}}
+            -}}<span class="price-unit">/m²</span>
           </span>
         {%- else -%}
           <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
           <span class="price-item price-item--regular">
-            {{ money_price }}
+            {{ money_price }}<span class="price-unit">/m²</span>
           </span>
         {%- endif -%}
       </div>
@@ -105,7 +105,7 @@
         {%- endunless -%}
         <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
         <span class="price-item price-item--sale price-item--last">
-          {{ money_price }}
+          {{ money_price }}<span class="price-unit">/m²</span>
         </span>
       </div>
       {%- if product.selected_or_first_available_variant.unit_price_measurement -%}
