@@ -319,77 +319,58 @@
           user: {{ customer.email | json }},
           token: {{ customer.metafields.sparklayer.authentication | json }},
         },
-      };
-      </script>
-      <script async src="https://sparkcdn.io/sparkjs/taylerd/live"></script>
 
-      <!-- Patch SparkLayer: rename "Qty"→"m²" and add "/m²" to "From:" price -->
-      <script>
-        (function () {
-          // CSS injected into shadow roots (handles shadow DOM case)
-          var SHADOW_CSS =
-            '.price-summary p::after{content:"/m\\00B2";font-size:.85em;opacity:.75;margin-left:1px}';
+        // -----------------------------------------------------------------
+        // TEMPORARY: set to true to see translation keys overlaid in the UI
+        // Once you have the correct key, set back to false and add it below
+        // -----------------------------------------------------------------
+        showTranslations: true,
 
-          var injectedRoots = new WeakSet();
+        // Override SparkLayer text labels.
+        // The exact key for "Qty" will appear in the UI with showTranslations: true
+        translations: {
+          "en": {
+            "quantity":                "m\u00B2",
+            "qty":                     "m\u00B2",
+          },
+          "sv": {
+            "quantity":                "m\u00B2",
+            "qty":                     "m\u00B2",
+          },
+        },
 
-          function patchRoot(root) {
-            // Rename every <th> whose text is exactly "Qty"
+        // onReady fires after SparkLayer has fully rendered — the right time to patch the DOM
+        onReady: async function (spark) {
+          function patchDOM(root) {
+            // Rename any <th> with text "Qty"
             root.querySelectorAll('th').forEach(function (th) {
               if (th.textContent.trim() === 'Qty') {
                 th.textContent = 'm\u00B2';
               }
             });
-            // If this is a shadow root, inject the /m² CSS once
-            if (root !== document && !injectedRoots.has(root)) {
-              injectedRoots.add(root);
-              var s = document.createElement('style');
-              s.textContent = SHADOW_CSS;
-              root.appendChild(s);
-            }
-          }
-
-          function watchRoot(root) {
-            var obs = new MutationObserver(function () { patchRoot(root); });
-            obs.observe(root, { childList: true, subtree: true });
-            patchRoot(root);
-          }
-
-          function checkShadowRoots(node) {
-            if (!node || node.nodeType !== 1) return;
-            if (node.shadowRoot && !injectedRoots.has(node.shadowRoot)) {
-              watchRoot(node.shadowRoot);
-            }
-            if (node.querySelectorAll) {
-              node.querySelectorAll('*').forEach(function (child) {
-                if (child.shadowRoot && !injectedRoots.has(child.shadowRoot)) {
-                  watchRoot(child.shadowRoot);
-                }
-              });
-            }
-          }
-
-          function init() {
-            // Watch the full document for SparkLayer rendering into light DOM
-            var docObs = new MutationObserver(function (mutations) {
-              patchRoot(document);
-              mutations.forEach(function (m) {
-                m.addedNodes.forEach(checkShadowRoots);
-              });
+            // Append /m² to the "From: X kr" summary price
+            root.querySelectorAll('.price-summary p').forEach(function (p) {
+              if (!p.dataset.m2 && p.textContent.trim().length > 0) {
+                p.dataset.m2 = '1';
+                var suffix = document.createElement('span');
+                suffix.style.cssText = 'font-size:.85em;opacity:.75;margin-left:2px';
+                suffix.textContent = '/m\u00B2';
+                p.appendChild(suffix);
+              }
             });
-            // document.documentElement is always present (unlike document.body in <head>)
-            docObs.observe(document.documentElement, { childList: true, subtree: true });
-
-            patchRoot(document);
-            checkShadowRoots(document.documentElement);
           }
 
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-          } else {
-            init();
-          }
-        })();
+          // Patch light DOM
+          patchDOM(document);
+
+          // Patch shadow DOM inside SparkLayer custom elements
+          document.querySelectorAll('spark-pdp, spark-product-price').forEach(function (el) {
+            if (el.shadowRoot) patchDOM(el.shadowRoot);
+          });
+        },
+      };
       </script>
+      <script async src="https://sparkcdn.io/sparkjs/taylerd/live"></script>
     {%- endif -%}
   
   <!-- required for linking to order or quotes: https://docs.sparklayer.io/my-account-interface#yT5mS -->
