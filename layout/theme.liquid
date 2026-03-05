@@ -323,20 +323,71 @@
       </script>
       <script async src="https://sparkcdn.io/sparkjs/taylerd/live"></script>
 
-      <!-- Rename SparkLayer "Qty" column header to "m²" -->
+      <!-- Patch SparkLayer: rename "Qty"→"m²" and add "/m²" to "From:" price -->
       <script>
         (function () {
-          function renameQtyToM2() {
-            document.querySelectorAll('th').forEach(function (th) {
+          // CSS injected into shadow roots (handles shadow DOM case)
+          var SHADOW_CSS =
+            '.price-summary p::after{content:"/m\\00B2";font-size:.85em;opacity:.75;margin-left:1px}';
+
+          var injectedRoots = new WeakSet();
+
+          function patchRoot(root) {
+            // Rename every <th> whose text is exactly "Qty"
+            root.querySelectorAll('th').forEach(function (th) {
               if (th.textContent.trim() === 'Qty') {
                 th.textContent = 'm\u00B2';
               }
             });
+            // If this is a shadow root, inject the /m² CSS once
+            if (root !== document && !injectedRoots.has(root)) {
+              injectedRoots.add(root);
+              var s = document.createElement('style');
+              s.textContent = SHADOW_CSS;
+              root.appendChild(s);
+            }
           }
-          // Watch for SparkLayer to dynamically inject its table
-          var observer = new MutationObserver(renameQtyToM2);
-          observer.observe(document.body, { childList: true, subtree: true });
-          document.addEventListener('DOMContentLoaded', renameQtyToM2);
+
+          function watchRoot(root) {
+            var obs = new MutationObserver(function () { patchRoot(root); });
+            obs.observe(root, { childList: true, subtree: true });
+            patchRoot(root);
+          }
+
+          function checkShadowRoots(node) {
+            if (!node || node.nodeType !== 1) return;
+            if (node.shadowRoot && !injectedRoots.has(node.shadowRoot)) {
+              watchRoot(node.shadowRoot);
+            }
+            if (node.querySelectorAll) {
+              node.querySelectorAll('*').forEach(function (child) {
+                if (child.shadowRoot && !injectedRoots.has(child.shadowRoot)) {
+                  watchRoot(child.shadowRoot);
+                }
+              });
+            }
+          }
+
+          function init() {
+            // Watch the full document for SparkLayer rendering into light DOM
+            var docObs = new MutationObserver(function (mutations) {
+              patchRoot(document);
+              mutations.forEach(function (m) {
+                m.addedNodes.forEach(checkShadowRoots);
+              });
+            });
+            // document.documentElement is always present (unlike document.body in <head>)
+            docObs.observe(document.documentElement, { childList: true, subtree: true });
+
+            patchRoot(document);
+            checkShadowRoots(document.documentElement);
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+          } else {
+            init();
+          }
         })();
       </script>
     {%- endif -%}
