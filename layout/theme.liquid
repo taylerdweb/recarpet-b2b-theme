@@ -332,10 +332,10 @@
 
         // onReady fires after SparkLayer has fully rendered — the right time to patch the DOM
         onReady: async function (spark) {
-          var M2_SUFFIX_CSS = '.price-summary p::after{content:"/m\u00B2";margin-left:2px}';
+          var M2_SUFFIX_CSS = 'p::after{content:"/m\u00B2";margin-left:2px}';
+          var SPARK_ELS = 'spark-pdp, spark-product-price, spark-product-card';
 
           function injectStyle(root) {
-            // Inject a <style> directly into shadow root so ::after works inside it
             if (!root.querySelector('style[data-m2]')) {
               var s = document.createElement('style');
               s.setAttribute('data-m2', '1');
@@ -344,51 +344,70 @@
             }
           }
 
-          function patchRoot(root) {
-            // Rename any <th> with text "Qty"
-            root.querySelectorAll('th').forEach(function (th) {
-              if (th.textContent.trim() === 'Qty') {
-                th.textContent = 'm\u00B2';
-              }
-            });
-            // Append /m² suffix span to "From: X kr" price paragraph
-            root.querySelectorAll('.price-summary p').forEach(function (p) {
-              if (!p.dataset.m2 && p.textContent.trim().length > 0) {
-                p.dataset.m2 = '1';
-                var span = document.createElement('span');
-                span.style.cssText = 'margin-left:2px';
-                span.textContent = '/m\u00B2';
-                p.appendChild(span);
-              }
-            });
+          function appendM2(p) {
+            if (p.dataset.m2) return;
+            var text = p.textContent.trim();
+            if (!text) return;
+            p.dataset.m2 = '1';
+            var span = document.createElement('span');
+            span.style.cssText = 'margin-left:2px';
+            span.textContent = '/m\u00B2';
+            p.appendChild(span);
           }
 
-          var SPARK_ELS = 'spark-pdp, spark-product-price, spark-product-card';
-
-          function patchElement(el) {
-            patchRoot(el);
-            if (el.shadowRoot) {
-              injectStyle(el.shadowRoot);
-              patchRoot(el.shadowRoot);
+          function patchRoot(root, insideSpark) {
+            // Rename any <th> with text "Qty" (product page price-break table)
+            root.querySelectorAll('th').forEach(function (th) {
+              if (th.textContent.trim() === 'Qty') th.textContent = 'm\u00B2';
+            });
+            // Product page: patch by known class
+            root.querySelectorAll('.price-summary p').forEach(appendM2);
+            // Inside a spark element: also scan ALL <p> tags for "From: X kr" pattern
+            // (product cards may use a different class than .price-summary)
+            if (insideSpark) {
+              root.querySelectorAll('p').forEach(function (p) {
+                var t = p.textContent.trim();
+                if (/^from\b/i.test(t) && t.length < 80) appendM2(p);
+              });
             }
           }
 
-          // Watch one element: patch now and re-patch whenever its DOM changes
+          function patchElement(el) {
+            patchRoot(el, true);
+            if (el.shadowRoot) {
+              injectStyle(el.shadowRoot);
+              patchRoot(el.shadowRoot, true);
+            }
+          }
+
           function watchElement(el) {
             if (el.dataset.m2watched) return;
             el.dataset.m2watched = '1';
             patchElement(el);
             var obs = new MutationObserver(function () { patchElement(el); });
             obs.observe(el, { childList: true, subtree: true });
-            setTimeout(function () { obs.disconnect(); }, 8000);
+            setTimeout(function () { obs.disconnect(); }, 10000);
           }
 
-          // Patch light DOM and all existing SparkLayer elements
-          patchRoot(document);
+          // Patch light DOM (by class only — safe for whole document)
+          patchRoot(document, false);
+
+          // Watch all existing SparkLayer elements
           document.querySelectorAll(SPARK_ELS).forEach(watchElement);
 
-          // Watch the whole body for spark elements added later
-          // (collection infinite scroll, quick-view panels, etc.)
+          // Poll for shadow roots — they may appear after onReady fires
+          var pollCount = 0;
+          var poll = setInterval(function () {
+            document.querySelectorAll(SPARK_ELS).forEach(function (el) {
+              if (el.shadowRoot) {
+                injectStyle(el.shadowRoot);
+                patchRoot(el.shadowRoot, true);
+              }
+            });
+            if (++pollCount >= 20) clearInterval(poll); // stop after 10s
+          }, 500);
+
+          // Watch body for SparkLayer elements added after initial load
           var bodyObs = new MutationObserver(function (mutations) {
             mutations.forEach(function (mut) {
               mut.addedNodes.forEach(function (node) {
