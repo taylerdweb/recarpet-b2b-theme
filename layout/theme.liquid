@@ -332,7 +332,7 @@
 
         // onReady fires after SparkLayer has fully rendered — the right time to patch the DOM
         onReady: async function (spark) {
-          var M2_SUFFIX_CSS = '.price-summary p::after{content:"/m\u00B2";font-size:.85em;opacity:.75;margin-left:1px}';
+          var M2_SUFFIX_CSS = '.price-summary p::after{content:"/m\u00B2";margin-left:2px}';
 
           function injectStyle(root) {
             // Inject a <style> directly into shadow root so ::after works inside it
@@ -356,7 +356,7 @@
               if (!p.dataset.m2 && p.textContent.trim().length > 0) {
                 p.dataset.m2 = '1';
                 var span = document.createElement('span');
-                span.style.cssText = 'font-size:.85em;opacity:.75;margin-left:2px';
+                span.style.cssText = 'margin-left:2px';
                 span.textContent = '/m\u00B2';
                 p.appendChild(span);
               }
@@ -497,9 +497,7 @@
   /* SparkLayer "From: X kr" → append /m² via CSS (no JS timing needed) */
   .price-summary p::after {
     content: '/m\00B2';
-    font-size: 0.85em;
-    opacity: 0.75;
-    margin-left: 1px;
+    margin-left: 2px;
   }
 
   /* m² unit label next to price */
