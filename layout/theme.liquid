@@ -332,17 +332,7 @@
 
         // onReady fires after SparkLayer has fully rendered — the right time to patch the DOM
         onReady: async function (spark) {
-          var M2_SUFFIX_CSS = 'p::after{content:"/m\u00B2";margin-left:2px}';
           var SPARK_ELS = 'spark-pdp, spark-product-price, spark-product-card';
-
-          function injectStyle(root) {
-            if (!root.querySelector('style[data-m2]')) {
-              var s = document.createElement('style');
-              s.setAttribute('data-m2', '1');
-              s.textContent = M2_SUFFIX_CSS;
-              root.prepend(s);
-            }
-          }
 
           function appendM2(p) {
             if (p.dataset.m2) return;
@@ -374,10 +364,7 @@
 
           function patchElement(el) {
             patchRoot(el, true);
-            if (el.shadowRoot) {
-              injectStyle(el.shadowRoot);
-              patchRoot(el.shadowRoot, true);
-            }
+            if (el.shadowRoot) patchRoot(el.shadowRoot, true);
           }
 
           function watchElement(el) {
@@ -399,10 +386,7 @@
           var pollCount = 0;
           var poll = setInterval(function () {
             document.querySelectorAll(SPARK_ELS).forEach(function (el) {
-              if (el.shadowRoot) {
-                injectStyle(el.shadowRoot);
-                patchRoot(el.shadowRoot, true);
-              }
+              if (el.shadowRoot) patchRoot(el.shadowRoot, true);
             });
             if (++pollCount >= 20) clearInterval(poll); // stop after 10s
           }, 500);
@@ -527,11 +511,7 @@
     height: 100%;
   }
 
-  /* SparkLayer "From: X kr" → append /m² via CSS (no JS timing needed) */
-  .price-summary p::after {
-    content: '/m\00B2';
-    margin-left: 2px;
-  }
+  /* /m² suffix is handled by JS (onReady patcher) — no CSS needed here */
 
   /* m² unit label next to price */
   .price-unit {
