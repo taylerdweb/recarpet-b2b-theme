@@ -363,6 +363,8 @@
             });
           }
 
+          var SPARK_ELS = 'spark-pdp, spark-product-price, spark-product-card';
+
           function patchElement(el) {
             patchRoot(el);
             if (el.shadowRoot) {
@@ -371,20 +373,32 @@
             }
           }
 
-          // Patch light DOM first
-          patchRoot(document);
-
-          // Patch existing SparkLayer custom elements (including their shadow roots)
-          document.querySelectorAll('spark-pdp, spark-product-price').forEach(patchElement);
-
-          // spark-product-price renders asynchronously — watch it with a MutationObserver
-          // in case it finishes after onReady fires
-          var priceEl = document.querySelector('spark-product-price');
-          if (priceEl) {
-            var obs = new MutationObserver(function () { patchElement(priceEl); });
-            obs.observe(priceEl, { childList: true, subtree: true });
+          // Watch one element: patch now and re-patch whenever its DOM changes
+          function watchElement(el) {
+            if (el.dataset.m2watched) return;
+            el.dataset.m2watched = '1';
+            patchElement(el);
+            var obs = new MutationObserver(function () { patchElement(el); });
+            obs.observe(el, { childList: true, subtree: true });
             setTimeout(function () { obs.disconnect(); }, 8000);
           }
+
+          // Patch light DOM and all existing SparkLayer elements
+          patchRoot(document);
+          document.querySelectorAll(SPARK_ELS).forEach(watchElement);
+
+          // Watch the whole body for spark elements added later
+          // (collection infinite scroll, quick-view panels, etc.)
+          var bodyObs = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mut) {
+              mut.addedNodes.forEach(function (node) {
+                if (node.nodeType !== 1) return;
+                if (node.matches && node.matches(SPARK_ELS)) watchElement(node);
+                if (node.querySelectorAll) node.querySelectorAll(SPARK_ELS).forEach(watchElement);
+              });
+            });
+          });
+          bodyObs.observe(document.body, { childList: true, subtree: true });
         },
       };
       </script>
