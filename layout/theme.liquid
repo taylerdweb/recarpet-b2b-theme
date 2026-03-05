@@ -332,32 +332,59 @@
 
         // onReady fires after SparkLayer has fully rendered — the right time to patch the DOM
         onReady: async function (spark) {
-          function patchDOM(root) {
+          var M2_SUFFIX_CSS = '.price-summary p::after{content:"/m\u00B2";font-size:.85em;opacity:.75;margin-left:1px}';
+
+          function injectStyle(root) {
+            // Inject a <style> directly into shadow root so ::after works inside it
+            if (!root.querySelector('style[data-m2]')) {
+              var s = document.createElement('style');
+              s.setAttribute('data-m2', '1');
+              s.textContent = M2_SUFFIX_CSS;
+              root.prepend(s);
+            }
+          }
+
+          function patchRoot(root) {
             // Rename any <th> with text "Qty"
             root.querySelectorAll('th').forEach(function (th) {
               if (th.textContent.trim() === 'Qty') {
                 th.textContent = 'm\u00B2';
               }
             });
-            // Append /m² to the "From: X kr" summary price
+            // Append /m² suffix span to "From: X kr" price paragraph
             root.querySelectorAll('.price-summary p').forEach(function (p) {
               if (!p.dataset.m2 && p.textContent.trim().length > 0) {
                 p.dataset.m2 = '1';
-                var suffix = document.createElement('span');
-                suffix.style.cssText = 'font-size:.85em;opacity:.75;margin-left:2px';
-                suffix.textContent = '/m\u00B2';
-                p.appendChild(suffix);
+                var span = document.createElement('span');
+                span.style.cssText = 'font-size:.85em;opacity:.75;margin-left:2px';
+                span.textContent = '/m\u00B2';
+                p.appendChild(span);
               }
             });
           }
 
-          // Patch light DOM
-          patchDOM(document);
+          function patchElement(el) {
+            patchRoot(el);
+            if (el.shadowRoot) {
+              injectStyle(el.shadowRoot);
+              patchRoot(el.shadowRoot);
+            }
+          }
 
-          // Patch shadow DOM inside SparkLayer custom elements
-          document.querySelectorAll('spark-pdp, spark-product-price').forEach(function (el) {
-            if (el.shadowRoot) patchDOM(el.shadowRoot);
-          });
+          // Patch light DOM first
+          patchRoot(document);
+
+          // Patch existing SparkLayer custom elements (including their shadow roots)
+          document.querySelectorAll('spark-pdp, spark-product-price').forEach(patchElement);
+
+          // spark-product-price renders asynchronously — watch it with a MutationObserver
+          // in case it finishes after onReady fires
+          var priceEl = document.querySelector('spark-product-price');
+          if (priceEl) {
+            var obs = new MutationObserver(function () { patchElement(priceEl); });
+            obs.observe(priceEl, { childList: true, subtree: true });
+            setTimeout(function () { obs.disconnect(); }, 8000);
+          }
         },
       };
       </script>
