@@ -327,16 +327,15 @@
       <script>
         (function () {
           function renameQtyToM2() {
-            document.querySelectorAll('th, td.spark-price-break__qty, [class*="price-break"] th').forEach(function (el) {
-              if (el.textContent.trim() === 'Qty') {
-                el.textContent = 'm\u00B2';
+            document.querySelectorAll('th').forEach(function (th) {
+              if (th.textContent.trim() === 'Qty') {
+                th.textContent = 'm\u00B2';
               }
             });
           }
-          // Watch for SparkLayer to dynamically render its tables
+          // Watch for SparkLayer to dynamically inject its table
           var observer = new MutationObserver(renameQtyToM2);
-          observer.observe(document.documentElement, { childList: true, subtree: true });
-          // Also run after page load in case content is already present
+          observer.observe(document.body, { childList: true, subtree: true });
           document.addEventListener('DOMContentLoaded', renameQtyToM2);
         })();
       </script>
@@ -443,6 +442,14 @@
   .card-wrapper {
     justify-content: space-between;
     height: 100%;
+  }
+
+  /* SparkLayer "From: X kr" → append /m² via CSS (no JS timing needed) */
+  .price-summary p::after {
+    content: '/m\00B2';
+    font-size: 0.85em;
+    opacity: 0.75;
+    margin-left: 1px;
   }
 
   /* m² unit label next to price */
