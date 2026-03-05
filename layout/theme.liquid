@@ -320,22 +320,13 @@
           token: {{ customer.metafields.sparklayer.authentication | json }},
         },
 
-        // -----------------------------------------------------------------
-        // TEMPORARY: set to true to see translation keys overlaid in the UI
-        // Once you have the correct key, set back to false and add it below
-        // -----------------------------------------------------------------
-        showTranslations: true,
-
-        // Override SparkLayer text labels.
-        // The exact key for "Qty" will appear in the UI with showTranslations: true
+        // Override SparkLayer text labels — keys confirmed via showTranslations: true
         translations: {
           "en": {
-            "quantity":                "m\u00B2",
-            "qty":                     "m\u00B2",
+            "pdp.price-breaks.qty": "m\u00B2",
           },
           "sv": {
-            "quantity":                "m\u00B2",
-            "qty":                     "m\u00B2",
+            "pdp.price-breaks.qty": "m\u00B2",
           },
         },
 
