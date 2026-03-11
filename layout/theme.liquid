@@ -320,38 +320,11 @@
           token: {{ customer.metafields.sparklayer.authentication | json }},
         },
 
-        // Extra fakturauppgifter i checkout — sparas som order attributes i Shopify
+        // Fakturauppgifter i checkout — strukturerat i ett fält, sparas som order note i Shopify
         additionalInformation: {
-          fields: [
-            {
-              id: "invoice_email",
-              label: "Faktura-e-post",
-              placeholder: "faktura@foretag.se",
-              required: true,
-              type: "email",
-            },
-            {
-              id: "org_number",
-              label: "Organisationsnummer",
-              placeholder: "556000-0000",
-              required: true,
-              type: "text",
-            },
-            {
-              id: "reference_number",
-              label: "Referensnummer / Märkning",
-              placeholder: "t.ex. projektnummer eller kostnadsställe",
-              required: false,
-              type: "text",
-            },
-            {
-              id: "invoice_address",
-              label: "Fakturaadress (om annan än leveransadress)",
-              placeholder: "Gatuadress, postnummer, ort",
-              required: false,
-              type: "text",
-            },
-          ],
+          placeholder: "Org.nr: ___ | Faktura-e-post: ___ | Referensnummer: ___",
+          label: "Fakturauppgifter",
+          required: true,
         },
 
         // Override SparkLayer text labels — keys confirmed via showTranslations: true
