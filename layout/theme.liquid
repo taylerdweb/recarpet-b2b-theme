@@ -320,22 +320,19 @@
           token: {{ customer.metafields.sparklayer.authentication | json }},
         },
 
-        // Fakturauppgifter i checkout — strukturerat i ett fält, sparas som order note i Shopify
-        additionalInformation: {
-          placeholder: "Org.nr: ___ | Faktura-e-post: ___ | Referensnummer: ___",
-          label: "Fakturauppgifter",
-          required: true,
-        },
-
-        showTranslations: true, // TEMP — ta bort efter att vi hittat rätt nycklar
-
         // Override SparkLayer text labels — keys confirmed via showTranslations: true
         translations: {
           "en": {
             "pdp.price-breaks.qty": "m\u00B2",
+            "cart.checkout.notes.label": "Fakturauppgifter",
+            "cart.checkout.notes.placeholder": "Org.nr: ___ | Faktura-e-post: ___ | Referensnummer: ___",
+            "cart.checkout.notes.default-helper-text": "Fyll i alla tre f\u00E4lten s\u00E5 att vi kan skicka er faktura r\u00E4tt.",
           },
           "sv": {
             "pdp.price-breaks.qty": "m\u00B2",
+            "cart.checkout.notes.label": "Fakturauppgifter",
+            "cart.checkout.notes.placeholder": "Org.nr: ___ | Faktura-e-post: ___ | Referensnummer: ___",
+            "cart.checkout.notes.default-helper-text": "Fyll i alla tre f\u00E4lten s\u00E5 att vi kan skicka er faktura r\u00E4tt.",
           },
         },
 
