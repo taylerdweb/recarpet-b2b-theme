@@ -210,16 +210,18 @@ This is the Shopify Liquid code that generates the page layout
                       </div>
                       {% endif %}
 
-                      {% if section.settings.form_email_field_vat != blank %}
+                      <!-- Roll-dropdown (hardcoded) -->
                       <div class="b2b-form-item">
-                        <input class="b2b-input"
-                        type="text"
-                        {% if section.settings.form_email_field_vat_required %} required {% endif %}
-                        id="ContactForm-{{ section.settings.form_email_field_vat | replace: ' ', '_' | downcase }}"
-                        name="contact[{{ section.settings.form_email_field_vat | replace: ' ', '_' | downcase }}]"
-                        placeholder="{{ section.settings.form_email_field_vat }}">
+                        <select class="b2b-input" name="contact[roll]" id="ContactForm-roll" required>
+                          <option value="" disabled selected>Roll / Verksamhet</option>
+                          <option value="Arkitekt">Arkitekt</option>
+                          <option value="Byggare">Byggare</option>
+                          <option value="Golvläggare">Golvläggare</option>
+                          <option value="Fastighetsbolag">Fastighetsbolag</option>
+                          <option value="Entreprenör">Entreprenör</option>
+                          <option value="Hyresgäst">Hyresgäst</option>
+                        </select>
                       </div>
-                      {% endif %}
 
                      {% for block in form_fields %}
                         <div class="b2b-form-item">
