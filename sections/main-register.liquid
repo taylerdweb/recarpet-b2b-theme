@@ -50,11 +50,10 @@
           value="{{ form.first_name }}"
         {% endif %}
         autocomplete="given-name"
-        placeholder="{{ 'customer.register.first_name' | t }}"
+        placeholder="Förnamn"
+        aria-required="true"
       >
-      <label for="RegisterForm-FirstName">
-        {{ 'customer.register.first_name' | t }}
-      </label>
+      <label for="RegisterForm-FirstName">Förnamn</label>
     </div>
     <div class="field">
       <input
@@ -65,11 +64,10 @@
           value="{{ form.last_name }}"
         {% endif %}
         autocomplete="family-name"
-        placeholder="{{ 'customer.register.last_name' | t }}"
+        placeholder="Efternamn"
+        aria-required="true"
       >
-      <label for="RegisterForm-LastName">
-        {{ 'customer.register.last_name' | t }}
-      </label>
+      <label for="RegisterForm-LastName">Efternamn</label>
     </div>
     <div class="field">
       <input
@@ -87,11 +85,9 @@
           aria-invalid="true"
           aria-describedby="RegisterForm-email-error"
         {% endif %}
-        placeholder="{{ 'customer.register.email' | t }}"
+        placeholder="E-postadress"
       >
-      <label for="RegisterForm-email">
-        {{ 'customer.register.email' | t }}
-      </label>
+      <label for="RegisterForm-email">E-postadress</label>
     </div>
     {%- if form.errors contains 'email' -%}
       <span id="RegisterForm-email-error" class="form__message">
@@ -104,6 +100,41 @@
     {%- endif -%}
     <div class="field">
       <input
+        type="tel"
+        name="customer[phone]"
+        id="RegisterForm-phone"
+        autocomplete="tel"
+        placeholder="Telefonnummer"
+        aria-required="true"
+      >
+      <label for="RegisterForm-phone">Telefonnummer</label>
+    </div>
+    <div class="field">
+      <input
+        type="text"
+        id="RegisterForm-company"
+        autocomplete="organization"
+        placeholder="Företagsnamn"
+        aria-required="true"
+      >
+      <label for="RegisterForm-company">Företagsnamn</label>
+    </div>
+    <div class="field">
+      <select id="RegisterForm-role" aria-required="true">
+        <option value="" disabled selected>Välj roll</option>
+        <option value="Arkitekt">Arkitekt</option>
+        <option value="Byggare">Byggare</option>
+        <option value="Golvläggare">Golvläggare</option>
+        <option value="Fastighetsbolag">Fastighetsbolag</option>
+        <option value="Entreprenör">Entreprenör</option>
+        <option value="Hyresgäst">Hyresgäst</option>
+      </select>
+      <label for="RegisterForm-role">Roll / Verksamhet</label>
+    </div>
+    <!-- Packed into customer note — read by admin in Shopify -->
+    <input type="hidden" name="customer[note]" id="RegisterForm-note" value="">
+    <div class="field">
+      <input
         type="password"
         name="customer[password]"
         id="RegisterForm-password"
@@ -112,11 +143,9 @@
           aria-invalid="true"
           aria-describedby="RegisterForm-password-error"
         {% endif %}
-        placeholder="{{ 'customer.register.password' | t }}"
+        placeholder="Lösenord"
       >
-      <label for="RegisterForm-password">
-        {{ 'customer.register.password' | t }}
-      </label>
+      <label for="RegisterForm-password">Lösenord</label>
     </div>
     {%- if form.errors contains 'password' -%}
       <span id="RegisterForm-password-error" class="form__message">
@@ -128,7 +157,7 @@
       </span>
     {%- endif -%}
     <button>
-      {{ 'customer.register.submit' | t }}
+      Ansök om konto
     </button>
   {%- endform -%}
 </div>
@@ -141,11 +170,39 @@
         $form = document.querySelectorAll(selector)[0];
 
     if ($form) {
-      $redirect = document.createElement('input');
+      // Redirect after registration
+      var $redirect = document.createElement('input');
       $redirect.setAttribute('name', 'return_to');
       $redirect.setAttribute('type', 'hidden');
       $redirect.value = REDIRECT_PATH;
       $form.appendChild($redirect);
+
+      // On submit: pack company + role into hidden note field
+      $form.addEventListener('submit', function() {
+        var company = document.getElementById('RegisterForm-company');
+        var role    = document.getElementById('RegisterForm-role');
+        var note    = document.getElementById('RegisterForm-note');
+
+        var parts = [];
+        if (company && company.value.trim()) parts.push('Företag: ' + company.value.trim());
+        if (role && role.value)              parts.push('Roll: ' + role.value);
+
+        if (note && parts.length) {
+          note.value = parts.join(' | ');
+        }
+
+        // Validate required custom fields
+        var valid = true;
+        if (company && !company.value.trim()) {
+          company.focus();
+          valid = false;
+        }
+        if (role && !role.value) {
+          role.focus();
+          valid = false;
+        }
+        if (!valid) return false;
+      });
     }
   })();
 </script>
