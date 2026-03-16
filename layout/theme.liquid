@@ -409,29 +409,14 @@
           });
           bodyObs.observe(document.body, { childList: true, subtree: true });
 
-          // ── Fakturauppgifter: replace single notes textarea with 3 labelled inputs ──
+          // ── Fakturauppgifter: replace customer-reference input with 3 labelled inputs ──
+          // SparkLayer renders <input id="customer-reference"> inside spark-drawer's shadow root
 
-          // Recursively collect all textareas across nested shadow roots
-          function findAllTextareas(root, found) {
-            found = found || [];
-            try {
-              (root || document).querySelectorAll('textarea').forEach(function(ta) { found.push(ta); });
-              (root || document).querySelectorAll('*').forEach(function(el) {
-                if (el.shadowRoot) findAllTextareas(el.shadowRoot, found);
-              });
-            } catch(e) {}
-            return found;
-          }
-
-          function injectFakturaFields(textarea) {
-            if (!textarea || textarea.dataset.fakSplitted) return;
-            var ph = textarea.placeholder || '';
-            var nm = textarea.name || '';
-            // Only target the checkout notes field
-            if (nm !== 'notes' && !ph.includes('Org') && !ph.includes('Faktura')) return;
-
-            textarea.dataset.fakSplitted = '1';
-            textarea.style.display = 'none';
+          function injectFakturaFields(root) {
+            var input = root.querySelector('input#customer-reference, input[placeholder*="Org.nr"]');
+            if (!input || input.dataset.fakSplitted) return;
+            input.dataset.fakSplitted = '1';
+            input.style.display = 'none';
 
             var FIELDS = [
               { key: 'orgnr',  label: 'Org.nr',          type: 'text',  ph: 'ex. 556123-4567' },
@@ -448,9 +433,9 @@
                 var el = wrap.querySelector('[data-fk="' + f.key + '"]');
                 return f.label + ': ' + (el ? el.value.trim() : '');
               });
-              textarea.value = vals.join(' | ');
+              input.value = vals.join(' | ');
               ['input', 'change'].forEach(function(ev) {
-                textarea.dispatchEvent(new Event(ev, { bubbles: true }));
+                input.dispatchEvent(new Event(ev, { bubbles: true, composed: true }));
               });
             }
 
@@ -466,8 +451,7 @@
               inp.type        = f.type;
               inp.placeholder = f.ph;
               inp.dataset.fk  = f.key;
-              inp.className   = textarea.className;
-              inp.style.cssText = 'width:100%;padding:8px 12px;border:1px solid #ccc;border-radius:4px;font-size:14px;box-sizing:border-box;';
+              inp.className   = input.className;
               inp.addEventListener('input', sync);
 
               row.appendChild(lbl);
@@ -475,13 +459,19 @@
               wrap.appendChild(row);
             });
 
-            textarea.parentNode.insertBefore(wrap, textarea);
+            input.parentNode.insertBefore(wrap, input);
           }
 
-          // Poll — recursively traverse ALL shadow roots to find the notes textarea
-          var fakPoll = setInterval(function() {
-            findAllTextareas(document).forEach(injectFakturaFields);
-          }, 400);
+          // Target spark-drawer shadow root specifically + fallback
+          function runFakturaInjection() {
+            var drawer = document.querySelector('spark-drawer');
+            if (drawer && drawer.shadowRoot) injectFakturaFields(drawer.shadowRoot);
+            document.querySelectorAll('*').forEach(function(el) {
+              if (el.shadowRoot) injectFakturaFields(el.shadowRoot);
+            });
+          }
+
+          var fakPoll = setInterval(runFakturaInjection, 400);
           setTimeout(function() { clearInterval(fakPoll); }, 60000);
           // ──────────────────────────────────────────────────────────────────────────
         },
