@@ -410,18 +410,33 @@
           bodyObs.observe(document.body, { childList: true, subtree: true });
 
           // ── Fakturauppgifter: replace single notes textarea with 3 labelled inputs ──
-          function injectFakturaFields(root) {
-            var textarea = root.querySelector(
-              'textarea[name="notes"], textarea[placeholder*="Org"], textarea[placeholder*="Faktura"]'
-            );
+
+          // Recursively collect all textareas across nested shadow roots
+          function findAllTextareas(root, found) {
+            found = found || [];
+            try {
+              (root || document).querySelectorAll('textarea').forEach(function(ta) { found.push(ta); });
+              (root || document).querySelectorAll('*').forEach(function(el) {
+                if (el.shadowRoot) findAllTextareas(el.shadowRoot, found);
+              });
+            } catch(e) {}
+            return found;
+          }
+
+          function injectFakturaFields(textarea) {
             if (!textarea || textarea.dataset.fakSplitted) return;
+            var ph = textarea.placeholder || '';
+            var nm = textarea.name || '';
+            // Only target the checkout notes field
+            if (nm !== 'notes' && !ph.includes('Org') && !ph.includes('Faktura')) return;
+
             textarea.dataset.fakSplitted = '1';
             textarea.style.display = 'none';
 
             var FIELDS = [
-              { key: 'orgnr',  label: 'Org.nr',           type: 'text',  ph: 'ex. 556123-4567' },
-              { key: 'fepost', label: 'Faktura-e-post',   type: 'email', ph: 'ex. faktura@foretag.se' },
-              { key: 'ref',    label: 'Referensnummer',   type: 'text',  ph: 'ex. PO-2026-001' }
+              { key: 'orgnr',  label: 'Org.nr',          type: 'text',  ph: 'ex. 556123-4567' },
+              { key: 'fepost', label: 'Faktura-e-post',  type: 'email', ph: 'ex. faktura@foretag.se' },
+              { key: 'ref',    label: 'Referensnummer',  type: 'text',  ph: 'ex. PO-2026-001' }
             ];
 
             var wrap = document.createElement('div');
@@ -445,7 +460,7 @@
 
               var lbl = document.createElement('label');
               lbl.textContent = f.label;
-              lbl.style.cssText = 'font-size:13px;font-weight:600;color:inherit;display:block;';
+              lbl.style.cssText = 'font-size:13px;font-weight:600;color:inherit;display:block;margin-bottom:2px;';
 
               var inp = document.createElement('input');
               inp.type        = f.type;
@@ -463,13 +478,10 @@
             textarea.parentNode.insertBefore(wrap, textarea);
           }
 
-          // Poll both light DOM and all shadow roots for the notes field
+          // Poll — recursively traverse ALL shadow roots to find the notes textarea
           var fakPoll = setInterval(function() {
-            injectFakturaFields(document);
-            document.querySelectorAll('*').forEach(function(el) {
-              if (el.shadowRoot) injectFakturaFields(el.shadowRoot);
-            });
-          }, 600);
+            findAllTextareas(document).forEach(injectFakturaFields);
+          }, 400);
           setTimeout(function() { clearInterval(fakPoll); }, 60000);
           // ──────────────────────────────────────────────────────────────────────────
         },
