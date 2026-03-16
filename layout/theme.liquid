@@ -408,6 +408,70 @@
             });
           });
           bodyObs.observe(document.body, { childList: true, subtree: true });
+
+          // ── Fakturauppgifter: replace single notes textarea with 3 labelled inputs ──
+          function injectFakturaFields(root) {
+            var textarea = root.querySelector(
+              'textarea[name="notes"], textarea[placeholder*="Org"], textarea[placeholder*="Faktura"]'
+            );
+            if (!textarea || textarea.dataset.fakSplitted) return;
+            textarea.dataset.fakSplitted = '1';
+            textarea.style.display = 'none';
+
+            var FIELDS = [
+              { key: 'orgnr',  label: 'Org.nr',           type: 'text',  ph: 'ex. 556123-4567' },
+              { key: 'fepost', label: 'Faktura-e-post',   type: 'email', ph: 'ex. faktura@foretag.se' },
+              { key: 'ref',    label: 'Referensnummer',   type: 'text',  ph: 'ex. PO-2026-001' }
+            ];
+
+            var wrap = document.createElement('div');
+            wrap.setAttribute('data-fak-wrap', '1');
+            wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;margin-bottom:8px;';
+
+            function sync() {
+              var vals = FIELDS.map(function(f) {
+                var el = wrap.querySelector('[data-fk="' + f.key + '"]');
+                return f.label + ': ' + (el ? el.value.trim() : '');
+              });
+              textarea.value = vals.join(' | ');
+              ['input', 'change'].forEach(function(ev) {
+                textarea.dispatchEvent(new Event(ev, { bubbles: true }));
+              });
+            }
+
+            FIELDS.forEach(function(f) {
+              var row = document.createElement('div');
+              row.style.cssText = 'display:flex;flex-direction:column;gap:4px;';
+
+              var lbl = document.createElement('label');
+              lbl.textContent = f.label;
+              lbl.style.cssText = 'font-size:13px;font-weight:600;color:inherit;display:block;';
+
+              var inp = document.createElement('input');
+              inp.type        = f.type;
+              inp.placeholder = f.ph;
+              inp.dataset.fk  = f.key;
+              inp.className   = textarea.className;
+              inp.style.cssText = 'width:100%;padding:8px 12px;border:1px solid #ccc;border-radius:4px;font-size:14px;box-sizing:border-box;';
+              inp.addEventListener('input', sync);
+
+              row.appendChild(lbl);
+              row.appendChild(inp);
+              wrap.appendChild(row);
+            });
+
+            textarea.parentNode.insertBefore(wrap, textarea);
+          }
+
+          // Poll both light DOM and all shadow roots for the notes field
+          var fakPoll = setInterval(function() {
+            injectFakturaFields(document);
+            document.querySelectorAll('*').forEach(function(el) {
+              if (el.shadowRoot) injectFakturaFields(el.shadowRoot);
+            });
+          }, 600);
+          setTimeout(function() { clearInterval(fakPoll); }, 60000);
+          // ──────────────────────────────────────────────────────────────────────────
         },
       };
       </script>
