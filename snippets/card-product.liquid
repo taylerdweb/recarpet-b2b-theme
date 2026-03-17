@@ -206,7 +206,7 @@
 
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
             {%- if customer_tags_lower contains 'b2b' -%}
-              <spark-product-card parent-id="{{ card_product.id }}" mode-quick-buy show-stock></spark-product-card>
+              <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
               <div data-spark="b2c-only">
                 {% render 'price', product: card_product, price_class: 'price--listing' %}
               </div>
