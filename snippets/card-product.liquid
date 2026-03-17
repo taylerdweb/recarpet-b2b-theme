@@ -205,7 +205,7 @@
             {%- endif -%}
 
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
-            {%- if customer_tags_lower contains 'b2b' -%}
+            {%- if customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' -%}
               <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
               <div data-spark="b2c-only">
                 {% render 'price', product: card_product, price_class: 'price--listing' %}
@@ -227,7 +227,7 @@
           </div>
         {%- endunless -%}
         {% if quick_add == 'standard' %}
-          <div data-spark="b2c-only" class="quick-add no-js-hidden {% unless customer_tags_lower contains 'b2b' %}hidden{% endunless %}">
+          <div data-spark="b2c-only" class="quick-add no-js-hidden {% unless customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' %}hidden{% endunless %}">
             {%- liquid
               assign qty_rules = false
               if card_product.selected_or_first_available_variant.quantity_rule.min > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1

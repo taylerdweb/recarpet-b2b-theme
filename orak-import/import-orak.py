@@ -51,8 +51,10 @@ SPARKLAYER_DIR = BASE_DIR.parent / "sparklayer-pricelists"
 # Brons (public): no pricelist — sees standard Shopify price
 # Silver (member): netto x 1.00 (0% discount)
 # Guld (entrepreneur): netto x 0.90 (10% discount)
+# Krets: netto x 0.80 (20% discount off entrepreneur price)
 SILVER_MULTIPLIER = 1.00
 GULD_MULTIPLIER   = 0.90
+KRETS_MULTIPLIER  = 0.80
 
 # Fallback-valutakurser (används om live-hämtning misslyckas)
 FALLBACK_RATES = {
@@ -428,6 +430,7 @@ def generate_pricelists(products: list, rates: dict):
         "sparklayer-entrepreneur-nok.csv": (GULD_MULTIPLIER,   eur_nok),
         "sparklayer-entrepreneur-dkk.csv": (GULD_MULTIPLIER,   eur_dkk),
         "sparklayer-entrepreneur-eur.csv": (GULD_MULTIPLIER,   1.0),
+        "sparklayer-krets-sek.csv":        (KRETS_MULTIPLIER,  eur_sek),
     }
 
     # Bygg rader per lista
@@ -457,7 +460,7 @@ def generate_pricelists(products: list, rates: dict):
             writer.writerows(rows)
         print(f"  OK  {filename}  ({len(rows)} SKUs)")
 
-    print("\n  Genererar SparkLayer-prislistor (8 st)...")
+    print("\n  Genererar SparkLayer-prislistor (9 st)...")
     for name, rows in list_rows.items():
         write_csv(name, rows)
 
@@ -469,6 +472,7 @@ def generate_pricelists(products: list, rates: dict):
 
   Member:       netto × {SILVER_MULTIPLIER:.0%}  (0 % rabatt)
   Entrepreneur: netto × {GULD_MULTIPLIER:.0%}   (-{int((1-GULD_MULTIPLIER)*100)} % rabatt)
+  Krets:        netto × {KRETS_MULTIPLIER:.0%}   (-{int((1-KRETS_MULTIPLIER)*100)} % rabatt, SEK)
 
   Ladda upp CSVs i SparkLayer → Price Lists
 """)
@@ -535,6 +539,7 @@ def update_pricelist_excel(products: list, rates: dict):
             "sku":        sku,
             "sek_member": px(eur_sek, SILVER_MULTIPLIER),
             "sek_entre":  px(eur_sek, GULD_MULTIPLIER),
+            "sek_krets":  px(eur_sek, KRETS_MULTIPLIER),
             "nok_member": px(eur_nok, SILVER_MULTIPLIER),
             "nok_entre":  px(eur_nok, GULD_MULTIPLIER),
             "dkk_member": px(eur_dkk, SILVER_MULTIPLIER),
@@ -574,6 +579,7 @@ def update_pricelist_excel(products: list, rates: dict):
         ("nok_member", "member-nok"),
         ("dkk_member", "member-dkk"),
         ("eur_member", "member-eur"),
+        ("sek_krets",  "krets"),
     ]
 
     if "Bulk Upload" not in wb.sheetnames:
@@ -594,7 +600,7 @@ def update_pricelist_excel(products: list, rates: dict):
         for p in product_rows:
             for price_key, slug in SLUG_MAP:
                 writer.writerow([p["sku"], p[price_key], slug])
-    print(f"  OK  sparklayer-bulk-upload.csv  ({len(product_rows) * len(SLUG_MAP)} rader, {len(product_rows)} SKUs × 8 listor)")
+    print(f"  OK  sparklayer-bulk-upload.csv  ({len(product_rows) * len(SLUG_MAP)} rader, {len(product_rows)} SKUs × {len(SLUG_MAP)} listor)")
 
     wb.save(PRICELIST_EXCEL)
 
