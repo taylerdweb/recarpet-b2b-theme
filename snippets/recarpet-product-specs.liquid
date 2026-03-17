@@ -42,7 +42,24 @@
       <span class="recarpet-badge recarpet-badge--outofstock">OUT OF STOCK</span>
     {%- endif -%}
     {%- if product_label != blank -%}
-      <span class="recarpet-badge recarpet-badge--label">{{ product_label | upcase }}</span>
+      {%- liquid
+        assign label_display = product_label | downcase
+        case label_display
+          when 'réemploi'
+            assign label_display = 'Återbruk'
+          when 'reemploi'
+            assign label_display = 'Återbruk'
+          when 'fin de série'
+            assign label_display = 'Slutsåld kollektion'
+          when 'fin de serie'
+            assign label_display = 'Slutsåld kollektion'
+          when 'produit à venir'
+            assign label_display = 'Kommer snart'
+          else
+            assign label_display = product_label
+        endcase
+      -%}
+      <span class="recarpet-badge recarpet-badge--label">{{ label_display | upcase }}</span>
     {%- endif -%}
   </div>
 
