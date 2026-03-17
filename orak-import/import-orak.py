@@ -5,6 +5,8 @@ Läser ORAKs standard CSV-export och:
   1. Skapar/uppdaterar produkter i Shopify via Admin API
   2. Sätter meta fields (dimensioner, teknisk spec, etc.)
   3. Genererar SparkLayer-prislistor för Silver (0%) och Guld (-10%)
+  4. Publicerar produkter till SparkLayer B2B-kanal automatiskt
+  5. Lägger till produkter i rätt produktserie (collection)
 
 Usage:
     python import-orak.py --csv path/to/orak.csv
@@ -51,6 +53,17 @@ SPARKLAYER_DIR = BASE_DIR.parent / "sparklayer-pricelists"
 # Guld (entrepreneur): netto x 0.90 (10% discount)
 SILVER_MULTIPLIER = 1.00
 GULD_MULTIPLIER   = 0.90
+
+# SparkLayer sales channel name (exact title as it appears in Shopify Admin → Settings → Sales channels)
+SPARKLAYER_CHANNEL_NAME = "SparkLayer B2B & Wholesale"
+
+# Produktserie — alla ORAK-produkter hamnar i "Återbrukade mattor"
+# OBS: handlen ändras INTE när du byter namn i Shopify Admin.
+# Kolla rätt handle: Admin → Collections → klicka samlingen → rulla ner till "Sökmotor"-sektionen
+ATERVUNNA_HANDLE = "atervunna-mattor"  # ändra om handlen är annorlunda, t.ex. "mattor"
+
+# "Produit à venir" = återbrukade mattor under rengöring → publiceras direkt men märks med tagg "kommande"
+KOMMANDE_LABELS = {"produit a venir", "a venir"}
 
 # ORAK CSV column → internal key mapping
 COLUMN_MAP = {
@@ -112,6 +125,56 @@ def _rate_limit(response):
                 time.sleep(0.5)
         else:
             time.sleep(0.25)
+
+
+def get_sparklayer_publication_id() -> int | None:
+    """Hämtar publication_id för SparkLayer-kanalen."""
+    try:
+        data = shopify_get("publications.json")
+        for pub in data.get("publications", []):
+            if SPARKLAYER_CHANNEL_NAME.lower() in pub.get("name", "").lower():
+                print(f"  SparkLayer publication_id: {pub['id']}  ({pub['name']})")
+                return pub["id"]
+        names = [p.get("name") for p in data.get("publications", [])]
+        print(f"  Warning: SparkLayer channel ej hittad. Tillgängliga: {names}")
+    except Exception as e:
+        print(f"  Warning: kunde inte hämta publications: {e}")
+    return None
+
+
+def publish_to_sparklayer(product_id: int, publication_id: int):
+    """Publicerar en produkt till SparkLayer-kanalen."""
+    try:
+        shopify_post(
+            f"products/{product_id}/publications.json",
+            {"publish": {"publication_id": publication_id}},
+        )
+    except Exception as e:
+        print(f"      Warning: SparkLayer-publicering misslyckades för {product_id}: {e}")
+
+
+def get_collection_id_map() -> dict:
+    """Returnerar {handle: collection_id} för alla custom collections."""
+    id_map = {}
+    try:
+        data = shopify_get("custom_collections.json", {"limit": 250, "fields": "id,handle,title"})
+        for col in data.get("custom_collections", []):
+            id_map[col["handle"]] = col["id"]
+    except Exception as e:
+        print(f"  Warning: kunde inte hämta collections: {e}")
+    return id_map
+
+
+def add_product_to_collection(product_id: int, collection_id: int):
+    """Lägger till en produkt i en collection (skapar collect om den inte finns)."""
+    try:
+        shopify_post("collects.json", {
+            "collect": {"product_id": product_id, "collection_id": collection_id}
+        })
+    except Exception as e:
+        # 422 = redan i collection, ignorera
+        if "422" not in str(e):
+            print(f"      Warning: collection-tilldelning misslyckades: {e}")
 
 
 def get_existing_skus() -> dict:
@@ -321,10 +384,18 @@ def main():
     sync_log = load_sync_log()
     existing = {}
     location_id = None
+    sparklayer_pub_id = None
+    collection_id_map = {}
 
     if not args.dry_run:
-        existing    = get_existing_skus()
-        location_id = get_first_location_id()
+        existing          = get_existing_skus()
+        location_id       = get_first_location_id()
+        sparklayer_pub_id = get_sparklayer_publication_id()
+        collection_id_map = get_collection_id_map()
+        if not collection_id_map:
+            print("  OBS: Inga collections hittade. Skapa dem i Shopify Admin först.")
+        else:
+            print(f"  Collections hittade: {list(collection_id_map.keys())}")
 
     created = updated = skipped = errors = 0
 
@@ -349,8 +420,15 @@ def main():
             continue
 
         product_type = PRODUCT_TYPE_MAP.get(normalise_label(label), "Carpet Tile")
-        tags = ",".join(filter(None, ["b2b", "b2b-only", "orak", brand.lower(),
-                                      normalise_label(label).replace(" ", "-") if label else ""]))
+
+        # Taggar: alla ORAK-produkter får "atervunna-mattor"; "Produit à venir" får dessutom "kommande"
+        label_key = normalise_label(label) if label else ""
+        extra_tags = ["kommande"] if label_key in KOMMANDE_LABELS else []
+        tags = ",".join(filter(None, [
+            "b2b", "b2b-only", "orak", "atervunna-mattor",
+            brand.lower(),
+            label_key.replace(" ", "-") if label_key else "",
+        ] + extra_tags))
 
         metafields = []
         if dims:
@@ -362,9 +440,13 @@ def main():
 
         is_new = sku not in existing
 
+        # Alla ORAK-produkter → "Återbrukade mattor"
+        collection_id = collection_id_map.get(ATERVUNNA_HANDLE)
+        kommande_note = " [kommande]" if label_key in KOMMANDE_LABELS else ""
+
         if args.dry_run:
             action = "CREATE" if is_new else "UPDATE"
-            print(f"  [{action}] {sku}  {title}  price:{price:.2f}  qty:{quantity}")
+            print(f"  [{action}] {sku}  {title}  price:{price:.2f}  qty:{quantity}  → {ATERVUNNA_HANDLE}{kommande_note}")
             skipped += 1
             continue
 
@@ -378,10 +460,20 @@ def main():
                 set_inventory(inv_item_id, location_id, quantity)
                 set_metafields(product_id, metafields)
 
+                # Publicera till SparkLayer
+                if sparklayer_pub_id:
+                    publish_to_sparklayer(product_id, sparklayer_pub_id)
+
+                # Lägg till i rätt produktserie
+                if collection_id:
+                    add_product_to_collection(product_id, collection_id)
+
                 sync_log[sku] = {"product_id": product_id, "variant_id": variant_id, "inventory_item_id": inv_item_id}
                 existing[sku] = sync_log[sku]
 
-                print(f"  CREATED  {sku} - {title}")
+                pub_ok = "✓ SparkLayer" if sparklayer_pub_id else "– SparkLayer (ej konfigurerad)"
+                col_ok = f"✓ {ATERVUNNA_HANDLE}" if collection_id else f"– {ATERVUNNA_HANDLE} (collection saknas — kolla handle)"
+                print(f"  CREATED  {sku} - {title}{kommande_note}  [{pub_ok}] [{col_ok}]")
                 created += 1
             else:
                 info = existing[sku]
@@ -389,7 +481,16 @@ def main():
                 if info.get("inventory_item_id"):
                     set_inventory(info["inventory_item_id"], location_id, quantity)
                 set_metafields(info["product_id"], metafields)
-                print(f"  UPDATED  {sku} - qty:{quantity}  price:{price:.2f}")
+
+                # Publicera till SparkLayer (idempotent — skadas inte av att köras igen)
+                if sparklayer_pub_id:
+                    publish_to_sparklayer(info["product_id"], sparklayer_pub_id)
+
+                # Säkerställ att produkten finns i "Återbrukade mattor"
+                if collection_id:
+                    add_product_to_collection(info["product_id"], collection_id)
+
+                print(f"  UPDATED  {sku} - qty:{quantity}  price:{price:.2f}{kommande_note}")
                 updated += 1
 
         except Exception as e:

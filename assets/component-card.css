@@ -620,3 +620,11 @@
   color: #d97706;
   margin: 0.4rem 0 0;
 }
+
+/* reCarpet: Force 1:1 square crop on all product grid images regardless of theme setting */
+.product-card-wrapper .card__inner.ratio {
+  --ratio-percent: 100%;
+}
+.product-card-wrapper .card__inner.ratio::before {
+  padding-bottom: 100%;
+}

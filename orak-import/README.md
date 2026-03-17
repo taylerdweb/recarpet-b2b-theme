@@ -1,116 +1,108 @@
-# reCarpet — Orak Import
+# reCarpet — ORAK Import
 
-Skript som omvandlar Oraks produktexport till en Shopify-klar importfil.
-
----
-
-## Mapstruktur
-
-```
-orak-import/
-├── import-orak.py          ← Huvudskript
-├── product-specs.xlsx      ← Tekniska specs per modell (reCarpet underhåller)
-├── .env                    ← Shopify-credentials (skapa från .env.example)
-├── sample-delivery/        ← Exempelleverans från Orak
-│   ├── stock.xlsx          ← Oraks standardexport (oförändrad)
-│   ├── prices.csv          ← Prislista från Orak
-│   └── photos/             ← Bilder namngivna efter GIZ-nummer
-└── output/
-    ├── shopify-import.csv  ← Genererad fil — ladda upp i Shopify
-    └── image-upload-log.json
-```
+Synkar ORAKs CSV-export direkt mot Shopify via API.
+Skapar/uppdaterar produkter, publicerar till SparkLayer B2B-kanal och lägger in produkterna i rätt serie.
 
 ---
 
-## Vad Orak skickar varje gång
+## Förberedelse (en gång)
 
-| Fil | Format | Beskrivning |
-|-----|--------|-------------|
-| `stock.xlsx` | Excel | Deras befintliga export (oförändrad) |
-| `prices.csv` | CSV | Två kolumner: `giz_id` och `price_per_sqm` |
-| `photos/` | Mapp | JPG/PNG namngivna efter GIZ-nummer |
-
-### prices.csv format
-```
-giz_id,price_per_sqm
-GIZ2202010,299.00
-GIZ2203001,249.00
-```
-
-### Bildnamngivning
-```
-GIZ2202010.jpg      ← huvudbild (obligatorisk)
-GIZ2202010_2.jpg    ← extrabild (valfri)
-GIZ2202010_3.jpg    ← extrabild (valfri)
-```
-
----
-
-## Installation (en gång)
-
+### 1. Installera beroenden
 ```bash
-pip install openpyxl pandas requests python-dotenv
+pip install pandas requests python-dotenv
+```
+
+### 2. Skapa .env-fil
+Skapa en fil som heter `.env` i mappen `orak-import/` med följande innehåll:
+```
+SHOPIFY_SHOP=recarpet.myshopify.com
+SHOPIFY_TOKEN=shpat_xxxxxxxxxxxxxxxxxxxx
+```
+
+**Hämta token:**
+Shopify Admin → Settings → Apps → Develop apps → Create an app
+→ Configuration → scopes: `write_products`, `write_inventory`, `read_publications`
+→ Install app → kopiera "Admin API access token"
+
+### 3. Kontrollera collection-handle
+Scriptet lägger alla produkter i "Återbrukade mattor". Verifiera att handlen stämmer:
+Shopify Admin → Collections → klicka "Återbrukade mattor" → scrolla ner till "Sökmotor-lista"
+→ notera URL-handlen (t.ex. `atervunna-mattor` eller `mattor`)
+
+Om handlen är annorlunda, öppna `import-orak.py` och ändra rad:
+```python
+ATERVUNNA_HANDLE = "atervunna-mattor"   # ← ändra till rätt handle om nödvändigt
 ```
 
 ---
 
-## Användning
+## Köra scriptet
 
-### Utan bilduppladdning (snabbt)
+### Torrkörning (se vad som händer utan att skriva något)
 ```bash
-python import-orak.py --delivery namn-pa-leveransmapp
+cd orak-import
+python import-orak.py --csv "Produits Mars 2026 - orak.csv" --dry-run
 ```
-Bilder hanteras manuellt i Shopify admin efteråt.
+Perfekt att köra först för att verifiera att allt ser rätt ut.
 
-### Med automatisk bilduppladdning (rekommenderat)
+### Skarp körning (skriver till Shopify)
 ```bash
-python import-orak.py --delivery namn-pa-leveransmapp --upload-images
+cd orak-import
+python import-orak.py --csv "Produits Mars 2026 - orak.csv"
 ```
-Bilder laddas upp till Shopify CDN automatiskt. Kräver `.env`-fil med API-credentials.
+
+### Generera SparkLayer-prislistor utan att ladda upp produkter
+```bash
+python import-orak.py --csv "Produits Mars 2026 - orak.csv" --pricelists-only
+```
 
 ---
 
-## Konfigurera Shopify API (för bilduppladdning)
+## Vad scriptet gör vid körning
 
-1. Kopiera `.env.example` → `.env`
-2. Gå till Shopify Admin → **Settings → Apps → Develop apps**
-3. Klicka **Create an app** → ge den ett namn (t.ex. "reCarpet Import")
-4. Gå till **Configuration** → lägg till scope: `write_products`, `write_files`
-5. Klicka **Install app** → kopiera **Admin API access token**
-6. Klistra in token i `.env`
+För varje produkt i CSV:n:
 
----
+1. **Skapar** produkten om SKU:n inte finns sedan tidigare
+   — eller **uppdaterar** pris och lagersaldo om den redan finns
 
-## Månatlig arbetsflöde
+2. **Publicerar** produkten till SparkLayer B2B & Wholesale-kanalen automatiskt
 
-1. Orak skickar: `stock.xlsx` + `prices.csv` + mapp med bilder
-2. Lägg filerna i en ny mapp, t.ex. `leverans-2026-04/`
-3. Kör skriptet:
-   ```bash
-   python import-orak.py --delivery leverans-2026-04 --upload-images
-   ```
-4. Öppna Shopify Admin → **Produkter → Importera**
-5. Välj `output/shopify-import.csv` → Importera
-6. Produkter som inte längre finns i exporten får lager = 0 automatiskt
+3. **Lägger in** produkten i "Återbrukade mattor"-collection
+
+4. **Taggar:**
+   - Alla produkter: `b2b`, `b2b-only`, `orak`, `atervunna-mattor`, varumärket
+   - Produkter av typen "Produit à venir" (väntar på rengöring): + `kommande`
+
+5. **Genererar** uppdaterade SparkLayer-prislistor i `../sparklayer-pricelists/`
 
 ---
 
-## product-specs.xlsx — underhåll
+## Produkttyper från ORAK → Shopify
 
-Filen innehåller tekniska specs per modell (Interface Composure, Balsan Stoneage etc).
-Specs är samma för alla lot av samma modell och behöver **bara uppdateras när en ny modell dyker upp**.
-
-- Kolumnerna C–L är de du fyller i
-- MARQUE + MODELE måste matcha exakt vad Orak skriver i sin export
-- Lämna tomt om du inte har informationen — det är OK
+| ORAK-etikett | Shopify-collection | Extra tagg |
+|---|---|---|
+| Réemploi | Återbrukade mattor | – |
+| Fin de série | Återbrukade mattor | – |
+| Produit à venir | Återbrukade mattor | `kommande` |
 
 ---
 
 ## Felsökning
 
-| Problem | Lösning |
-|---------|---------|
-| `ModuleNotFoundError` | Kör `pip install openpyxl pandas requests python-dotenv` |
-| Pris saknas för produkt | Lägg till GIZ-numret i `prices.csv` |
-| Spec saknas för modell | Lägg till raden i `product-specs.xlsx` |
-| Bild laddas inte upp | Kontrollera `.env` och att bildnamnet börjar med GIZ-numret |
+| Symptom | Lösning |
+|---|---|
+| `ModuleNotFoundError` | Kör `pip install pandas requests python-dotenv` |
+| `Error: set SHOPIFY_SHOP and SHOPIFY_TOKEN` | Skapa `.env`-filen enligt steg 2 ovan |
+| `– SparkLayer (ej konfigurerad)` i loggen | Kontrollera att kanalens namn i Shopify är exakt "SparkLayer B2B & Wholesale" |
+| `– atervunna-mattor (collection saknas)` | Kontrollera handle enligt steg 3 ovan — ändra `ATERVUNNA_HANDLE` i scriptet |
+| Produkt skapas men hamnar inte i collection | Kör scriptet igen — collection-tilldelning är idempotent (skadas inte av att köras igen) |
+
+---
+
+## Efter körning
+
+- Ladda upp de genererade prislistorna i SparkLayer Admin:
+  `../sparklayer-pricelists/sparklayer-member-sek.csv`
+  `../sparklayer-pricelists/sparklayer-entrepreneur-sek.csv`
+
+- Loggfil sparas i `output/sync-log.json` — innehåller Shopify product/variant-ID per SKU
