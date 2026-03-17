@@ -9,7 +9,7 @@ Skapar/uppdaterar produkter, publicerar till SparkLayer B2B-kanal och lägger in
 
 ### 1. Installera beroenden
 ```bash
-pip install pandas requests python-dotenv
+pip3 install pandas requests python-dotenv
 ```
 
 ### 2. Skapa .env-fil
@@ -41,19 +41,19 @@ ATERVUNNA_HANDLE = "atervunna-mattor"   # ← ändra till rätt handle om nödv�
 ### Torrkörning (se vad som händer utan att skriva något)
 ```bash
 cd orak-import
-python import-orak.py --csv "Produits Mars 2026 - orak.csv" --dry-run
+python3 import-orak.py --csv "Produits Mars 2026 - orak.csv" --dry-run
 ```
 Perfekt att köra först för att verifiera att allt ser rätt ut.
 
 ### Skarp körning (skriver till Shopify)
 ```bash
 cd orak-import
-python import-orak.py --csv "Produits Mars 2026 - orak.csv"
+python3 import-orak.py --csv "Produits Mars 2026 - orak.csv"
 ```
 
 ### Generera SparkLayer-prislistor utan att ladda upp produkter
 ```bash
-python import-orak.py --csv "Produits Mars 2026 - orak.csv" --pricelists-only
+python3 import-orak.py --csv "Produits Mars 2026 - orak.csv" --pricelists-only
 ```
 
 ---
