@@ -9,6 +9,10 @@ Thumbs.db
 .cursor/
 .vscode/
 
+# Secrets / local env
+.env
+orak-import/.env
+
 # Interna projektfiler
 Recarpet mötes notes och transcript.rtf
 recarpet-kundmote-agenda.md
