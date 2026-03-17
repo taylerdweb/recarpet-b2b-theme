@@ -358,12 +358,12 @@
             });
             // Product page: patch by known class
             root.querySelectorAll('.price-summary p').forEach(appendM2);
-            // Inside a spark element: also scan ALL <p> tags for "From: X kr" pattern
-            // (product cards may use a different class than .price-summary)
+            // Inside a spark element: scan ALL short <p> tags that contain a digit
+            // Single-variant products show plain "271,38 kr" — not "From: X kr"
             if (insideSpark) {
               root.querySelectorAll('p').forEach(function (p) {
                 var t = p.textContent.trim();
-                if (/^from\b/i.test(t) && t.length < 80) appendM2(p);
+                if (t.length > 0 && t.length < 80 && /\d/.test(t)) appendM2(p);
               });
             }
           }
@@ -581,6 +581,13 @@
   .card-wrapper {
     justify-content: space-between;
     height: 100%;
+  }
+
+  /* Lift spark-product-card above the Dawn full-card link overlay (full-unstyled-link::after)
+     so that quantity +/- and Add buttons receive click events */
+  spark-product-card {
+    position: relative;
+    z-index: 2;
   }
 
   /* /m² suffix is handled by JS (onReady patcher) — no CSS needed here */

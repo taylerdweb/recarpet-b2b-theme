@@ -1248,5 +1248,1210 @@
     "product_id": 15028424868180,
     "variant_id": 53959215448404,
     "inventory_item_id": 56135326400852
+  },
+  "RC-ORAK-GIZ2202010": {
+    "product_id": 15028584939860,
+    "variant_id": 53959972225364,
+    "inventory_item_id": 56136166342996
+  },
+  "RC-ORAK-GIZ2111008": {
+    "product_id": 15028585103700,
+    "variant_id": 53959972487508,
+    "inventory_item_id": 56136166605140
+  },
+  "RC-ORAK-GIZ2111013": {
+    "product_id": 15028585300308,
+    "variant_id": 53959972946260,
+    "inventory_item_id": 56136167129428
+  },
+  "RC-ORAK-GIZ2112001": {
+    "product_id": 15028693369172,
+    "variant_id": 53960252293460,
+    "inventory_item_id": 56136486748500
+  },
+  "RC-ORAK-GIZ2112002": {
+    "product_id": 15028693533012,
+    "variant_id": 53960252490068,
+    "inventory_item_id": 56136486945108
+  },
+  "RC-ORAK-GIZ2203004": {
+    "product_id": 15028693795156,
+    "variant_id": 53960252850516,
+    "inventory_item_id": 56136487305556
+  },
+  "RC-ORAK-GIZ2111002": {
+    "product_id": 15028693991764,
+    "variant_id": 53960253112660,
+    "inventory_item_id": 56136487567700
+  },
+  "RC-ORAK-GIZ2204002": {
+    "product_id": 15028694188372,
+    "variant_id": 53960253374804,
+    "inventory_item_id": 56136487829844
+  },
+  "RC-ORAK-GIZ2202003": {
+    "product_id": 15028586447188,
+    "variant_id": 53959975043412,
+    "inventory_item_id": 56136169488724
+  },
+  "RC-ORAK-GIZ2206005": {
+    "product_id": 15028694548820,
+    "variant_id": 53960255045972,
+    "inventory_item_id": 56136489501012
+  },
+  "RC-ORAK-GIZ2206004": {
+    "product_id": 15028694581588,
+    "variant_id": 53960255209812,
+    "inventory_item_id": 56136489664852
+  },
+  "RC-ORAK-GIZ2201001": {
+    "product_id": 15028587069780,
+    "variant_id": 53959976419668,
+    "inventory_item_id": 56136171094356
+  },
+  "RC-ORAK-GIZ2209002": {
+    "product_id": 15028694647124,
+    "variant_id": 53960255439188,
+    "inventory_item_id": 56136489894228
+  },
+  "RC-ORAK-GIZ2209004": {
+    "product_id": 15028694778196,
+    "variant_id": 53960255603028,
+    "inventory_item_id": 56136490058068
+  },
+  "RC-ORAK-GIZ2201002": {
+    "product_id": 15028587626836,
+    "variant_id": 53959980843348,
+    "inventory_item_id": 56136175649108
+  },
+  "RC-ORAK-GIZ2209010": {
+    "product_id": 15028587823444,
+    "variant_id": 53959981236564,
+    "inventory_item_id": 56136176075092
+  },
+  "RC-ORAK-GIZ2210001": {
+    "product_id": 15028694876500,
+    "variant_id": 53960255930708,
+    "inventory_item_id": 56136490385748
+  },
+  "RC-ORAK-GIZ2210006": {
+    "product_id": 15028695040340,
+    "variant_id": 53960256291156,
+    "inventory_item_id": 56136490746196
+  },
+  "RC-ORAK-GIZ2208007": {
+    "product_id": 15028695204180,
+    "variant_id": 53960256618836,
+    "inventory_item_id": 56136491073876
+  },
+  "RC-ORAK-GIZ2208001": {
+    "product_id": 15028695302484,
+    "variant_id": 53960256782676,
+    "inventory_item_id": 56136491237716
+  },
+  "RC-ORAK-GIZ2203005": {
+    "product_id": 15028695368020,
+    "variant_id": 53960257012052,
+    "inventory_item_id": 56136491467092
+  },
+  "RC-ORAK-GIZ2210004": {
+    "product_id": 15028589134164,
+    "variant_id": 53959982842196,
+    "inventory_item_id": 56136177877332
+  },
+  "RC-ORAK-GIZ2210010": {
+    "product_id": 15028589232468,
+    "variant_id": 53959982973268,
+    "inventory_item_id": 56136178008404
+  },
+  "RC-ORAK-GIZ2211009": {
+    "product_id": 15028589429076,
+    "variant_id": 53959983300948,
+    "inventory_item_id": 56136178598228
+  },
+  "RC-ORAK-GIZ2111016": {
+    "product_id": 15028695630164,
+    "variant_id": 53960257831252,
+    "inventory_item_id": 56136492286292
+  },
+  "RC-ORAK-GIZ2212009": {
+    "product_id": 15028589789524,
+    "variant_id": 53959983661396,
+    "inventory_item_id": 56136178958676
+  },
+  "RC-ORAK-GIZ2210003": {
+    "product_id": 15028589953364,
+    "variant_id": 53959983825236,
+    "inventory_item_id": 56136179122516
+  },
+  "RC-ORAK-GIZ2202005": {
+    "product_id": 15028590084436,
+    "variant_id": 53959983956308,
+    "inventory_item_id": 56136179253588
+  },
+  "RC-ORAK-GIZ2212014": {
+    "product_id": 15028590215508,
+    "variant_id": 53959984087380,
+    "inventory_item_id": 56136179384660
+  },
+  "RC-ORAK-GIZ2210012": {
+    "product_id": 15028590379348,
+    "variant_id": 53959984251220,
+    "inventory_item_id": 56136179548500
+  },
+  "RC-ORAK-GIZ2210013": {
+    "product_id": 15028590575956,
+    "variant_id": 53959985430868,
+    "inventory_item_id": 56136180990292
+  },
+  "RC-ORAK-GIZ2211005": {
+    "product_id": 15028695826772,
+    "variant_id": 53960258486612,
+    "inventory_item_id": 56136492941652
+  },
+  "RC-ORAK-GIZ2301004": {
+    "product_id": 15028590969172,
+    "variant_id": 53959985955156,
+    "inventory_item_id": 56136181776724
+  },
+  "RC-ORAK-GIZ2301006": {
+    "product_id": 15028591133012,
+    "variant_id": 53959986184532,
+    "inventory_item_id": 56136182006100
+  },
+  "RC-ORAK-GIZ2211004": {
+    "product_id": 15028696285524,
+    "variant_id": 53960261075284,
+    "inventory_item_id": 56136495530324
+  },
+  "RC-ORAK-GIZ2302005": {
+    "product_id": 15028591591764,
+    "variant_id": 53959986643284,
+    "inventory_item_id": 56136182464852
+  },
+  "RC-ORAK-GIZ2301008": {
+    "product_id": 15028696711508,
+    "variant_id": 53960265597268,
+    "inventory_item_id": 56136500052308
+  },
+  "RC-ORAK-GIZ2208011": {
+    "product_id": 15028696842580,
+    "variant_id": 53960266482004,
+    "inventory_item_id": 56136500937044
+  },
+  "RC-ORAK-GIZ2302006": {
+    "product_id": 15028592574804,
+    "variant_id": 53959991198036,
+    "inventory_item_id": 56136186659156
+  },
+  "RC-ORAK-GIZ2212008": {
+    "product_id": 15028697104724,
+    "variant_id": 53960268448084,
+    "inventory_item_id": 56136502903124
+  },
+  "RC-ORAK-GIZ2206001": {
+    "product_id": 15028593426772,
+    "variant_id": 53959996080468,
+    "inventory_item_id": 56136192819540
+  },
+  "RC-ORAK-GIZ2302003": {
+    "product_id": 15028697497940,
+    "variant_id": 53960272052564,
+    "inventory_item_id": 56136506540372
+  },
+  "RC-ORAK-GIZ2303002": {
+    "product_id": 15028593983828,
+    "variant_id": 53959996637524,
+    "inventory_item_id": 56136193638740
+  },
+  "RC-ORAK-GIZ2302009": {
+    "product_id": 15028697858388,
+    "variant_id": 53960275099988,
+    "inventory_item_id": 56136509522260
+  },
+  "RC-ORAK-GIZ2303005": {
+    "product_id": 15028698087764,
+    "variant_id": 53960277393748,
+    "inventory_item_id": 56136511881556
+  },
+  "RC-ORAK-GIZ2304006": {
+    "product_id": 15028594540884,
+    "variant_id": 53959997260116,
+    "inventory_item_id": 56136194490708
+  },
+  "RC-ORAK-GIZ2303007": {
+    "product_id": 15028594639188,
+    "variant_id": 53959997358420,
+    "inventory_item_id": 56136194589012
+  },
+  "RC-ORAK-GIZ2304005": {
+    "product_id": 15028594803028,
+    "variant_id": 53959997620564,
+    "inventory_item_id": 56136194916692
+  },
+  "RC-ORAK-GIZ2304002": {
+    "product_id": 15028698808660,
+    "variant_id": 53960282767700,
+    "inventory_item_id": 56136517255508
+  },
+  "RC-ORAK-GIZ2304001": {
+    "product_id": 15028595130708,
+    "variant_id": 53960000209236,
+    "inventory_item_id": 56136197767508
+  },
+  "RC-ORAK-GIZ2303001": {
+    "product_id": 15028595294548,
+    "variant_id": 53960000373076,
+    "inventory_item_id": 56136197931348
+  },
+  "RC-ORAK-GIZ2305010": {
+    "product_id": 15028699267412,
+    "variant_id": 53960287322452,
+    "inventory_item_id": 56136521810260
+  },
+  "RC-ORAK-GIZ2304003": {
+    "product_id": 15028699431252,
+    "variant_id": 53960289026388,
+    "inventory_item_id": 56136523645268
+  },
+  "RC-ORAK-GIZ2306003": {
+    "product_id": 15028699627860,
+    "variant_id": 53960289943892,
+    "inventory_item_id": 56136524562772
+  },
+  "RC-ORAK-GIZ2301011": {
+    "product_id": 15028596080980,
+    "variant_id": 53960001651028,
+    "inventory_item_id": 56136199209300
+  },
+  "RC-ORAK-GIZ2208004": {
+    "product_id": 15028700021076,
+    "variant_id": 53960292368724,
+    "inventory_item_id": 56136526987604
+  },
+  "RC-ORAK-GIZ2306005": {
+    "product_id": 15028700217684,
+    "variant_id": 53960293122388,
+    "inventory_item_id": 56136527741268
+  },
+  "RC-ORAK-GIZ2301007": {
+    "product_id": 15028700348756,
+    "variant_id": 53960294465876,
+    "inventory_item_id": 56136529084756
+  },
+  "RC-ORAK-GIZ2307004": {
+    "product_id": 15028596638036,
+    "variant_id": 53960002797908,
+    "inventory_item_id": 56136200618324
+  },
+  "RC-ORAK-GIZ2307005": {
+    "product_id": 15028596932948,
+    "variant_id": 53960003092820,
+    "inventory_item_id": 56136200913236
+  },
+  "RC-ORAK-GIZ2305006": {
+    "product_id": 15028700709204,
+    "variant_id": 53960302231892,
+    "inventory_item_id": 56136533967188
+  },
+  "RC-ORAK-GIZ2305007": {
+    "product_id": 15028597260628,
+    "variant_id": 53960004108628,
+    "inventory_item_id": 56136202060116
+  },
+  "RC-ORAK-GIZ2305008": {
+    "product_id": 15028597457236,
+    "variant_id": 53960004665684,
+    "inventory_item_id": 56136202748244
+  },
+  "RC-ORAK-GIZ2306001": {
+    "product_id": 15028597686612,
+    "variant_id": 53960005026132,
+    "inventory_item_id": 56136203239764
+  },
+  "RC-ORAK-GIZ2305011": {
+    "product_id": 15028701167956,
+    "variant_id": 53960311701844,
+    "inventory_item_id": 56136546320724
+  },
+  "RC-ORAK-GIZ2307016": {
+    "product_id": 15028598440276,
+    "variant_id": 53960006467924,
+    "inventory_item_id": 56136204747092
+  },
+  "RC-ORAK-GIZ2307018": {
+    "product_id": 15028701462868,
+    "variant_id": 53960316649812,
+    "inventory_item_id": 56136551268692
+  },
+  "RC-ORAK-GIZ2307019": {
+    "product_id": 15028701659476,
+    "variant_id": 53960318517588,
+    "inventory_item_id": 56136553136468
+  },
+  "RC-ORAK-GIZ2307009": {
+    "product_id": 15028599357780,
+    "variant_id": 53960008139092,
+    "inventory_item_id": 56136206614868
+  },
+  "RC-ORAK-GIZ2307010": {
+    "product_id": 15028599521620,
+    "variant_id": 53960008302932,
+    "inventory_item_id": 56136206778708
+  },
+  "RC-ORAK-GIZ2307011": {
+    "product_id": 15028599652692,
+    "variant_id": 53960008434004,
+    "inventory_item_id": 56136206909780
+  },
+  "RC-ORAK-GIZ2306009": {
+    "product_id": 15028599849300,
+    "variant_id": 53960008794452,
+    "inventory_item_id": 56136207270228
+  },
+  "RC-ORAK-GIZ2307002": {
+    "product_id": 15028702118228,
+    "variant_id": 53960325235028,
+    "inventory_item_id": 56136560050516
+  },
+  "RC-ORAK-GIZ2309007": {
+    "product_id": 15028600275284,
+    "variant_id": 53960009613652,
+    "inventory_item_id": 56136208253268
+  },
+  "RC-ORAK-GIZ2308004": {
+    "product_id": 15028702445908,
+    "variant_id": 53960330740052,
+    "inventory_item_id": 56136565555540
+  },
+  "RC-ORAK-GIZ2310003": {
+    "product_id": 15028702576980,
+    "variant_id": 53960332935508,
+    "inventory_item_id": 56136567750996
+  },
+  "RC-ORAK-GIZ2306004": {
+    "product_id": 15028600734036,
+    "variant_id": 53960010236244,
+    "inventory_item_id": 56136208941396
+  },
+  "RC-ORAK-GIZ2307020": {
+    "product_id": 15028702937428,
+    "variant_id": 53960337195348,
+    "inventory_item_id": 56136570765652
+  },
+  "RC-ORAK-GIZ2309010": {
+    "product_id": 15028601094484,
+    "variant_id": 53960010826068,
+    "inventory_item_id": 56136209629524
+  },
+  "RC-ORAK-GIZ2303004": {
+    "product_id": 15028703232340,
+    "variant_id": 53960340701524,
+    "inventory_item_id": 56136575517012
+  },
+  "RC-ORAK-GIZ2310001": {
+    "product_id": 15028601454932,
+    "variant_id": 53960011383124,
+    "inventory_item_id": 56136210252116
+  },
+  "RC-ORAK-GIZ2310005": {
+    "product_id": 15028703691092,
+    "variant_id": 53960344142164,
+    "inventory_item_id": 56136578957652
+  },
+  "RC-ORAK-GIZ2310007": {
+    "product_id": 15028601815380,
+    "variant_id": 53960012235092,
+    "inventory_item_id": 56136211104084
+  },
+  "RC-ORAK-GIZ2309001": {
+    "product_id": 15028703920468,
+    "variant_id": 53960346501460,
+    "inventory_item_id": 56136581316948
+  },
+  "RC-ORAK-GIZ2305009": {
+    "product_id": 15028704084308,
+    "variant_id": 53960347877716,
+    "inventory_item_id": 56136582693204
+  },
+  "RC-ORAK-GIZ2311005": {
+    "product_id": 15028602306900,
+    "variant_id": 53960014102868,
+    "inventory_item_id": 56136213397844
+  },
+  "RC-ORAK-GIZ2311011": {
+    "product_id": 15028602470740,
+    "variant_id": 53960014266708,
+    "inventory_item_id": 56136213561684
+  },
+  "RC-ORAK-GIZ2311012": {
+    "product_id": 15028602601812,
+    "variant_id": 53960014397780,
+    "inventory_item_id": 56136213692756
+  },
+  "RC-ORAK-GIZ2311014": {
+    "product_id": 15028602765652,
+    "variant_id": 53960014627156,
+    "inventory_item_id": 56136213922132
+  },
+  "RC-ORAK-GIZ2205007": {
+    "product_id": 15028704772436,
+    "variant_id": 53960350040404,
+    "inventory_item_id": 56136584855892
+  },
+  "RC-ORAK-GIZ2309008": {
+    "product_id": 15028603027796,
+    "variant_id": 53960016560468,
+    "inventory_item_id": 56136216019284
+  },
+  "RC-ORAK-GIZ2310004": {
+    "product_id": 15028603158868,
+    "variant_id": 53960016691540,
+    "inventory_item_id": 56136216150356
+  },
+  "RC-ORAK-GIZ2310006": {
+    "product_id": 15028705329492,
+    "variant_id": 53960351580500,
+    "inventory_item_id": 56136586395988
+  },
+  "RC-ORAK-GIZ2311001": {
+    "product_id": 15028705821012,
+    "variant_id": 53960354922836,
+    "inventory_item_id": 56136588558676
+  },
+  "RC-ORAK-GIZ2311002": {
+    "product_id": 15028706083156,
+    "variant_id": 53960356823380,
+    "inventory_item_id": 56136591638868
+  },
+  "RC-ORAK-GIZ2311004": {
+    "product_id": 15028706214228,
+    "variant_id": 53960357642580,
+    "inventory_item_id": 56136592458068
+  },
+  "RC-ORAK-GIZ2111004": {
+    "product_id": 15028706410836,
+    "variant_id": 53960358822228,
+    "inventory_item_id": 56136593637716
+  },
+  "RC-ORAK-GIZ2312002": {
+    "product_id": 15028604305748,
+    "variant_id": 53960018461012,
+    "inventory_item_id": 56136218444116
+  },
+  "RC-ORAK-GIZ2312008": {
+    "product_id": 15028604535124,
+    "variant_id": 53960018788692,
+    "inventory_item_id": 56136218771796
+  },
+  "RC-ORAK-GIZ2401005": {
+    "product_id": 15028604698964,
+    "variant_id": 53960018952532,
+    "inventory_item_id": 56136218935636
+  },
+  "RC-ORAK-GIZ2205004": {
+    "product_id": 15028707000660,
+    "variant_id": 53960361050452,
+    "inventory_item_id": 56136595865940
+  },
+  "RC-ORAK-GIZ2401001": {
+    "product_id": 15028605059412,
+    "variant_id": 53960019968340,
+    "inventory_item_id": 56136220377428
+  },
+  "RC-ORAK-GIZ2401002": {
+    "product_id": 15028605223252,
+    "variant_id": 53960020722004,
+    "inventory_item_id": 56136221262164
+  },
+  "RC-ORAK-GIZ2401003": {
+    "product_id": 15028605419860,
+    "variant_id": 53960020951380,
+    "inventory_item_id": 56136221491540
+  },
+  "RC-ORAK-GIZ2311007": {
+    "product_id": 15028707623252,
+    "variant_id": 53960364097876,
+    "inventory_item_id": 56136598913364
+  },
+  "RC-ORAK-GIZ2311008": {
+    "product_id": 15028707787092,
+    "variant_id": 53960365146452,
+    "inventory_item_id": 56136599961940
+  },
+  "RC-ORAK-GIZ2311013": {
+    "product_id": 15028707950932,
+    "variant_id": 53960366096724,
+    "inventory_item_id": 56136600912212
+  },
+  "RC-ORAK-GIZ2312001": {
+    "product_id": 15028708114772,
+    "variant_id": 53960367931732,
+    "inventory_item_id": 56136602747220
+  },
+  "RC-ORAK-GIZ2312009": {
+    "product_id": 15028708213076,
+    "variant_id": 53960368456020,
+    "inventory_item_id": 56136603271508
+  },
+  "RC-ORAK-2312005-01": {
+    "product_id": 15028606271828,
+    "variant_id": 53960022229332,
+    "inventory_item_id": 56136223064404
+  },
+  "RC-ORAK-GIZ2312006": {
+    "product_id": 15028606501204,
+    "variant_id": 53960022458708,
+    "inventory_item_id": 56136223293780
+  },
+  "RC-ORAK-GIZ2301009": {
+    "product_id": 15028708835668,
+    "variant_id": 53960374387028,
+    "inventory_item_id": 56136609202516
+  },
+  "RC-ORAK-GIZ2111005": {
+    "product_id": 15028709065044,
+    "variant_id": 53960375468372,
+    "inventory_item_id": 56136610316628
+  },
+  "RC-ORAK-GIZ2204005": {
+    "product_id": 15028606927188,
+    "variant_id": 53960022982996,
+    "inventory_item_id": 56136224014676
+  },
+  "RC-ORAK-GIZ2206006": {
+    "product_id": 15028709491028,
+    "variant_id": 53960377762132,
+    "inventory_item_id": 56136612577620
+  },
+  "RC-ORAK-GIZ2301002": {
+    "product_id": 15028607287636,
+    "variant_id": 53960023507284,
+    "inventory_item_id": 56136224604500
+  },
+  "RC-ORAK-GIZ2210002": {
+    "product_id": 15028607517012,
+    "variant_id": 53960023769428,
+    "inventory_item_id": 56136224866644
+  },
+  "RC-ORAK-240109-01": {
+    "product_id": 15028607680852,
+    "variant_id": 53960023998804,
+    "inventory_item_id": 56136225096020
+  },
+  "RC-ORAK-240201-01": {
+    "product_id": 15028710015316,
+    "variant_id": 53960380449108,
+    "inventory_item_id": 56136615264596
+  },
+  "RC-ORAK-240201-02": {
+    "product_id": 15028710277460,
+    "variant_id": 53960381661524,
+    "inventory_item_id": 56136616477012
+  },
+  "RC-ORAK-240213-01": {
+    "product_id": 15028710506836,
+    "variant_id": 53960382873940,
+    "inventory_item_id": 56136617853268
+  },
+  "RC-ORAK-240202-01": {
+    "product_id": 15028608303444,
+    "variant_id": 53960024916308,
+    "inventory_item_id": 56136226046292
+  },
+  "RC-ORAK-240204-01": {
+    "product_id": 15028710900052,
+    "variant_id": 53960386052436,
+    "inventory_item_id": 56136621031764
+  },
+  "RC-ORAK-240208-01": {
+    "product_id": 15028608631124,
+    "variant_id": 53960025899348,
+    "inventory_item_id": 56136227225940
+  },
+  "RC-ORAK-240304-02": {
+    "product_id": 15028608762196,
+    "variant_id": 53960025997652,
+    "inventory_item_id": 56136227324244
+  },
+  "RC-ORAK-240304-03": {
+    "product_id": 15028608893268,
+    "variant_id": 53960026128724,
+    "inventory_item_id": 56136227455316
+  },
+  "RC-ORAK-240305-01": {
+    "product_id": 15028609220948,
+    "variant_id": 53960026521940,
+    "inventory_item_id": 56136228143444
+  },
+  "RC-ORAK-240211-06": {
+    "product_id": 15028609417556,
+    "variant_id": 53960026849620,
+    "inventory_item_id": 56136228471124
+  },
+  "RC-ORAK-240211-01": {
+    "product_id": 15028712309076,
+    "variant_id": 53960397521236,
+    "inventory_item_id": 56136632500564
+  },
+  "RC-ORAK-GIZ2306006": {
+    "product_id": 15028712505684,
+    "variant_id": 53960401813844,
+    "inventory_item_id": 56136636793172
+  },
+  "RC-ORAK-GIZ2401007": {
+    "product_id": 15028609843540,
+    "variant_id": 53960027701588,
+    "inventory_item_id": 56136229323092
+  },
+  "RC-ORAK-240211-02": {
+    "product_id": 15028712833364,
+    "variant_id": 53960403222868,
+    "inventory_item_id": 56136638202196
+  },
+  "RC-ORAK-240310-01": {
+    "product_id": 15028610171220,
+    "variant_id": 53960028914004,
+    "inventory_item_id": 56136230961492
+  },
+  "RC-ORAK-240401-01": {
+    "product_id": 15028713095508,
+    "variant_id": 53960406696276,
+    "inventory_item_id": 56136641675604
+  },
+  "RC-ORAK-240505-01": {
+    "product_id": 15028610531668,
+    "variant_id": 53960029765972,
+    "inventory_item_id": 56136232141140
+  },
+  "RC-ORAK-240314-01": {
+    "product_id": 15028713488724,
+    "variant_id": 53960413938004,
+    "inventory_item_id": 56136648917332
+  },
+  "RC-ORAK-240801-01": {
+    "product_id": 15028610826580,
+    "variant_id": 53960030060884,
+    "inventory_item_id": 56136232436052
+  },
+  "RC-ORAK-240708-01": {
+    "product_id": 15028713816404,
+    "variant_id": 53960420065620,
+    "inventory_item_id": 56136655044948
+  },
+  "RC-ORAK-250307-02": {
+    "product_id": 15028611088724,
+    "variant_id": 53960030454100,
+    "inventory_item_id": 56136233517396
+  },
+  "RC-ORAK-241109-03": {
+    "product_id": 15028611252564,
+    "variant_id": 53960030945620,
+    "inventory_item_id": 56136233943380
+  },
+  "RC-ORAK-241105-02": {
+    "product_id": 15028611449172,
+    "variant_id": 53960031404372,
+    "inventory_item_id": 56136234828116
+  },
+  "RC-ORAK-250201-04": {
+    "product_id": 15028611645780,
+    "variant_id": 53960031895892,
+    "inventory_item_id": 56136235417940
+  },
+  "RC-ORAK-250307-01": {
+    "product_id": 15028611809620,
+    "variant_id": 53960032125268,
+    "inventory_item_id": 56136235647316
+  },
+  "RC-ORAK-250201-02": {
+    "product_id": 15028611973460,
+    "variant_id": 53960032289108,
+    "inventory_item_id": 56136235811156
+  },
+  "RC-ORAK-250302-01": {
+    "product_id": 15028612104532,
+    "variant_id": 53960032452948,
+    "inventory_item_id": 56136236204372
+  },
+  "RC-ORAK-250302-02": {
+    "product_id": 15028715061588,
+    "variant_id": 53960437498196,
+    "inventory_item_id": 56136672510292
+  },
+  "RC-ORAK-241109-07": {
+    "product_id": 15028715225428,
+    "variant_id": 53960439333204,
+    "inventory_item_id": 56136674378068
+  },
+  "RC-ORAK-241107-01": {
+    "product_id": 15028613349716,
+    "variant_id": 53960034419028,
+    "inventory_item_id": 56136238170452
+  },
+  "RC-ORAK-241202-02": {
+    "product_id": 15028724891988,
+    "variant_id": 53960526070100,
+    "inventory_item_id": 56136761409876
+  },
+  "RC-ORAK-241202-05": {
+    "product_id": 15028725154132,
+    "variant_id": 53960527577428,
+    "inventory_item_id": 56136763081044
+  },
+  "RC-ORAK-250902-01": {
+    "product_id": 15028614627668,
+    "variant_id": 53960036876628,
+    "inventory_item_id": 56136240628052
+  },
+  "RC-ORAK-250304-02": {
+    "product_id": 15028614791508,
+    "variant_id": 53960037368148,
+    "inventory_item_id": 56136241152340
+  },
+  "RC-ORAK-250201-03": {
+    "product_id": 15028645626196,
+    "variant_id": 53960138981716,
+    "inventory_item_id": 56136362197332
+  },
+  "RC-ORAK-240604-01": {
+    "product_id": 15028715913556,
+    "variant_id": 53960443658580,
+    "inventory_item_id": 56136678703444
+  },
+  "RC-ORAK-240309-02": {
+    "product_id": 15028716339540,
+    "variant_id": 53960445165908,
+    "inventory_item_id": 56136680210772
+  },
+  "RC-ORAK-240501-01": {
+    "product_id": 15028645855572,
+    "variant_id": 53960140489044,
+    "inventory_item_id": 56136364589396
+  },
+  "RC-ORAK-240502-01": {
+    "product_id": 15028716601684,
+    "variant_id": 53960447721812,
+    "inventory_item_id": 56136682766676
+  },
+  "RC-ORAK-240502-02": {
+    "product_id": 15028716831060,
+    "variant_id": 53960448672084,
+    "inventory_item_id": 56136683716948
+  },
+  "RC-ORAK-240503-01": {
+    "product_id": 15028646281556,
+    "variant_id": 53960142881108,
+    "inventory_item_id": 56136367440212
+  },
+  "RC-ORAK-240803-02": {
+    "product_id": 15028646674772,
+    "variant_id": 53960148910420,
+    "inventory_item_id": 56136373567828
+  },
+  "RC-ORAK-240803-01": {
+    "product_id": 15028652998996,
+    "variant_id": 53960157462868,
+    "inventory_item_id": 56136382284116
+  },
+  "RC-ORAK-240803-03": {
+    "product_id": 15028665680212,
+    "variant_id": 53960171979092,
+    "inventory_item_id": 56136396898644
+  },
+  "RC-ORAK-240506-01": {
+    "product_id": 15028717814100,
+    "variant_id": 53960455881044,
+    "inventory_item_id": 56136690925908
+  },
+  "RC-ORAK-240701-08": {
+    "product_id": 15028677345620,
+    "variant_id": 53960184594772,
+    "inventory_item_id": 56136410104148
+  },
+  "RC-ORAK-240701-01": {
+    "product_id": 15028677476692,
+    "variant_id": 53960185315668,
+    "inventory_item_id": 56136411087188
+  },
+  "RC-ORAK-240404-01": {
+    "product_id": 15028718240084,
+    "variant_id": 53960464007508,
+    "inventory_item_id": 56136699052372
+  },
+  "RC-ORAK-240707-01": {
+    "product_id": 15028718436692,
+    "variant_id": 53960465875284,
+    "inventory_item_id": 56136700920148
+  },
+  "RC-ORAK-240603-01": {
+    "product_id": 15028718567764,
+    "variant_id": 53960467972436,
+    "inventory_item_id": 56136703017300
+  },
+  "RC-ORAK-241101-01": {
+    "product_id": 15028718731604,
+    "variant_id": 53960470102356,
+    "inventory_item_id": 56136705147220
+  },
+  "RC-ORAK-241101-02": {
+    "product_id": 15028718895444,
+    "variant_id": 53960470561108,
+    "inventory_item_id": 56136705605972
+  },
+  "RC-ORAK-240606-01": {
+    "product_id": 15028677902676,
+    "variant_id": 53960186888532,
+    "inventory_item_id": 56136413020500
+  },
+  "RC-ORAK-240901-01": {
+    "product_id": 15028719124820,
+    "variant_id": 53960473477460,
+    "inventory_item_id": 56136708555092
+  },
+  "RC-ORAK-240902-02": {
+    "product_id": 15028719255892,
+    "variant_id": 53960477311316,
+    "inventory_item_id": 56136712356180
+  },
+  "RC-ORAK-240702-01": {
+    "product_id": 15028719452500,
+    "variant_id": 53960480555348,
+    "inventory_item_id": 56136715600212
+  },
+  "RC-ORAK-240804-02": {
+    "product_id": 15028678394196,
+    "variant_id": 53960190296404,
+    "inventory_item_id": 56136417476948
+  },
+  "RC-ORAK-240802-02": {
+    "product_id": 15028719812948,
+    "variant_id": 53960484094292,
+    "inventory_item_id": 56136718451028
+  },
+  "RC-ORAK-240203-01": {
+    "product_id": 15028719944020,
+    "variant_id": 53960485667156,
+    "inventory_item_id": 56136720712020
+  },
+  "RC-ORAK-240701-03": {
+    "product_id": 15028678623572,
+    "variant_id": 53960190984532,
+    "inventory_item_id": 56136418427220
+  },
+  "RC-ORAK-240603-02": {
+    "product_id": 15028720337236,
+    "variant_id": 53960489304404,
+    "inventory_item_id": 56136724349268
+  },
+  "RC-ORAK-GIZ2311010": {
+    "product_id": 15028720468308,
+    "variant_id": 53960491565396,
+    "inventory_item_id": 56136726610260
+  },
+  "RC-ORAK-240908-01": {
+    "product_id": 15028720664916,
+    "variant_id": 53960493695316,
+    "inventory_item_id": 56136728740180
+  },
+  "RC-ORAK-240908-02": {
+    "product_id": 15028720763220,
+    "variant_id": 53960494907732,
+    "inventory_item_id": 56136729952596
+  },
+  "RC-ORAK-240911-01": {
+    "product_id": 15028679180628,
+    "variant_id": 53960196948308,
+    "inventory_item_id": 56136425210196
+  },
+  "RC-ORAK-241001-02": {
+    "product_id": 15028721090900,
+    "variant_id": 53960497398100,
+    "inventory_item_id": 56136732475732
+  },
+  "RC-ORAK-241103-01": {
+    "product_id": 15028721254740,
+    "variant_id": 53960498676052,
+    "inventory_item_id": 56136733753684
+  },
+  "RC-ORAK-241104-01": {
+    "product_id": 15028679672148,
+    "variant_id": 53960199405908,
+    "inventory_item_id": 56136428388692
+  },
+  "RC-ORAK-241104-02": {
+    "product_id": 15028679704916,
+    "variant_id": 53960199733588,
+    "inventory_item_id": 56136428978516
+  },
+  "RC-ORAK-241105-01": {
+    "product_id": 15028721779028,
+    "variant_id": 53960501330260,
+    "inventory_item_id": 56136736407892
+  },
+  "RC-ORAK-SAPE-2": {
+    "product_id": 15028721877332,
+    "variant_id": 53960504705364,
+    "inventory_item_id": 56136739782996
+  },
+  "RC-ORAK-SAPE-3": {
+    "product_id": 15028722041172,
+    "variant_id": 53960506540372,
+    "inventory_item_id": 56136741618004
+  },
+  "RC-ORAK-240307-01": {
+    "product_id": 15028722270548,
+    "variant_id": 53960507195732,
+    "inventory_item_id": 56136742535508
+  },
+  "RC-ORAK-240902-03": {
+    "product_id": 15028722434388,
+    "variant_id": 53960507556180,
+    "inventory_item_id": 56136742895956
+  },
+  "RC-ORAK-241001-01": {
+    "product_id": 15028680425812,
+    "variant_id": 53960204550484,
+    "inventory_item_id": 56136434188628
+  },
+  "RC-ORAK-241109-01": {
+    "product_id": 15028722729300,
+    "variant_id": 53960509456724,
+    "inventory_item_id": 56136744796500
+  },
+  "RC-ORAK-241109-02": {
+    "product_id": 15028722860372,
+    "variant_id": 53960511652180,
+    "inventory_item_id": 56136746991956
+  },
+  "RC-ORAK-241204-01": {
+    "product_id": 15028680655188,
+    "variant_id": 53960205664596,
+    "inventory_item_id": 56136435564884
+  },
+  "RC-ORAK-241204-02": {
+    "product_id": 15028680884564,
+    "variant_id": 53960206975316,
+    "inventory_item_id": 56136437006676
+  },
+  "RC-ORAK-4700-elegance": {
+    "product_id": 15028681048404,
+    "variant_id": 53960207401300,
+    "inventory_item_id": 56136437432660
+  },
+  "RC-ORAK-3580-City-Square-029": {
+    "product_id": 15028681146708,
+    "variant_id": 53960208515412,
+    "inventory_item_id": 56136438874452
+  },
+  "RC-ORAK-250204-01": {
+    "product_id": 15028723745108,
+    "variant_id": 53960518992212,
+    "inventory_item_id": 56136754331988
+  },
+  "RC-ORAK-250304-01": {
+    "product_id": 15028723941716,
+    "variant_id": 53960520499540,
+    "inventory_item_id": 56136755872084
+  },
+  "RC-ORAK-240705-01": {
+    "product_id": 15028681572692,
+    "variant_id": 53960212513108,
+    "inventory_item_id": 56136443265364
+  },
+  "RC-ORAK-250201-01": {
+    "product_id": 15028724433236,
+    "variant_id": 53960524333396,
+    "inventory_item_id": 56136759673172
+  },
+  "RC-ORAK-241202-07": {
+    "product_id": 15028725252436,
+    "variant_id": 53960528265556,
+    "inventory_item_id": 56136763769172
+  },
+  "RC-ORAK-250101-01": {
+    "product_id": 15028725317972,
+    "variant_id": 53960528494932,
+    "inventory_item_id": 56136763998548
+  },
+  "RC-ORAK-250111-02": {
+    "product_id": 15028725514580,
+    "variant_id": 53960529707348,
+    "inventory_item_id": 56136765210964
+  },
+  "RC-ORAK-250111-03": {
+    "product_id": 15028725973332,
+    "variant_id": 53960531345748,
+    "inventory_item_id": 56136766849364
+  },
+  "RC-ORAK-250202-02": {
+    "product_id": 15028682424660,
+    "variant_id": 53960216871252,
+    "inventory_item_id": 56136448704852
+  },
+  "RC-ORAK-250306-01": {
+    "product_id": 15028726530388,
+    "variant_id": 53960533606740,
+    "inventory_item_id": 56136769503572
+  },
+  "RC-ORAK-2312005-2": {
+    "product_id": 15028682490196,
+    "variant_id": 53960217297236,
+    "inventory_item_id": 56136449458516
+  },
+  "RC-ORAK-250501-01": {
+    "product_id": 15028727152980,
+    "variant_id": 53960536424788,
+    "inventory_item_id": 56136772321620
+  },
+  "RC-ORAK-250404-02": {
+    "product_id": 15028682719572,
+    "variant_id": 53960218509652,
+    "inventory_item_id": 56136451064148
+  },
+  "RC-ORAK-250401-01": {
+    "product_id": 15028727710036,
+    "variant_id": 53960538423636,
+    "inventory_item_id": 56136774320468
+  },
+  "RC-ORAK-250401-02": {
+    "product_id": 15028728070484,
+    "variant_id": 53960540258644,
+    "inventory_item_id": 56136776155476
+  },
+  "RC-ORAK-250305-01": {
+    "product_id": 15028728398164,
+    "variant_id": 53960541241684,
+    "inventory_item_id": 56136777138516
+  },
+  "RC-ORAK-250604-01": {
+    "product_id": 15028683014484,
+    "variant_id": 53960220049748,
+    "inventory_item_id": 56136452899156
+  },
+  "RC-ORAK-250402-02": {
+    "product_id": 15028683112788,
+    "variant_id": 53960220803412,
+    "inventory_item_id": 56136453783892
+  },
+  "RC-ORAK-250402-03": {
+    "product_id": 15028683211092,
+    "variant_id": 53960221163860,
+    "inventory_item_id": 56136454406484
+  },
+  "RC-ORAK-250605-01": {
+    "product_id": 15028683243860,
+    "variant_id": 53960221426004,
+    "inventory_item_id": 56136454832468
+  },
+  "RC-ORAK-250402-01": {
+    "product_id": 15028683309396,
+    "variant_id": 53960221557076,
+    "inventory_item_id": 56136454963540
+  },
+  "RC-ORAK-250402-04": {
+    "product_id": 15028728922452,
+    "variant_id": 53960544158036,
+    "inventory_item_id": 56136780218708
+  },
+  "RC-ORAK-250702-01": {
+    "product_id": 15028728955220,
+    "variant_id": 53960544256340,
+    "inventory_item_id": 56136780317012
+  },
+  "RC-ORAK-250702-02": {
+    "product_id": 15028729020756,
+    "variant_id": 53960544354644,
+    "inventory_item_id": 56136780415316
+  },
+  "RC-ORAK-250702-03": {
+    "product_id": 15028729151828,
+    "variant_id": 53960544649556,
+    "inventory_item_id": 56136780710228
+  },
+  "RC-ORAK-250707-01": {
+    "product_id": 15028683702612,
+    "variant_id": 53960222966100,
+    "inventory_item_id": 56136456864084
+  },
+  "RC-ORAK-250603-01": {
+    "product_id": 15028729315668,
+    "variant_id": 53960544977236,
+    "inventory_item_id": 56136781037908
+  },
+  "RC-ORAK-250706-01": {
+    "product_id": 15028683833684,
+    "variant_id": 53960223261012,
+    "inventory_item_id": 56136457158996
+  },
+  "RC-ORAK-250802-01": {
+    "product_id": 15028729381204,
+    "variant_id": 53960545468756,
+    "inventory_item_id": 56136781529428
+  },
+  "RC-ORAK-250806-01": {
+    "product_id": 15028683931988,
+    "variant_id": 53960223621460,
+    "inventory_item_id": 56136457519444
+  },
+  "RC-ORAK-250904-01": {
+    "product_id": 15028684063060,
+    "variant_id": 53960224047444,
+    "inventory_item_id": 56136457945428
+  },
+  "RC-ORAK-251003-01": {
+    "product_id": 15028684095828,
+    "variant_id": 53960224145748,
+    "inventory_item_id": 56136458043732
+  },
+  "RC-ORAK-241203-01": {
+    "product_id": 15028684194132,
+    "variant_id": 53960224309588,
+    "inventory_item_id": 56136458207572
+  },
+  "RC-ORAK-251101-01": {
+    "product_id": 15028684226900,
+    "variant_id": 53960224407892,
+    "inventory_item_id": 56136458305876
+  },
+  "RC-ORAK-250502-01": {
+    "product_id": 15028729774420,
+    "variant_id": 53960547762516,
+    "inventory_item_id": 56136783888724
+  },
+  "RC-ORAK-250502-02": {
+    "product_id": 15028729872724,
+    "variant_id": 53960547926356,
+    "inventory_item_id": 56136784052564
+  },
+  "RC-ORAK-251005-01": {
+    "product_id": 15028684489044,
+    "variant_id": 53960224964948,
+    "inventory_item_id": 56136458862932
+  },
+  "RC-ORAK-251202-01": {
+    "product_id": 15028684554580,
+    "variant_id": 53960225161556,
+    "inventory_item_id": 56136459059540
+  },
+  "RC-ORAK-251204-01": {
+    "product_id": 15028729905492,
+    "variant_id": 53960548122964,
+    "inventory_item_id": 56136784249172
+  },
+  "RC-ORAK-250301-01": {
+    "product_id": 15028684718420,
+    "variant_id": 53960225456468,
+    "inventory_item_id": 56136459354452
+  },
+  "RC-ORAK-260104-01": {
+    "product_id": 15028684751188,
+    "variant_id": 53960225620308,
+    "inventory_item_id": 56136459518292
+  },
+  "RC-ORAK-250203-01": {
+    "product_id": 15028715454804,
+    "variant_id": 53960440807764,
+    "inventory_item_id": 56136675852628
   }
 }
