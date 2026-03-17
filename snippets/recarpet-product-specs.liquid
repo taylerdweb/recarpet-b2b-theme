@@ -1,0 +1,300 @@
+{%- comment -%}
+  reCarpet — Product Specs Panel
+  Renders the technical specifications table and order info
+  for ORAK / Composil / Milliken products.
+
+  All data comes from product.metafields.recarpet.*
+  Fields that are empty are simply not rendered.
+
+  Usage: {% render 'recarpet-product-specs', product: product %}
+{%- endcomment -%}
+
+{%- liquid
+  assign mf           = product.metafields.recarpet
+  assign dimensions   = mf.dimensions.value
+  assign tech_url     = mf.technical_sheet_url.value
+  assign product_label = mf.product_label.value
+  assign backing      = mf.backing.value
+  assign thickness    = mf.thickness.value
+  assign fire_rating  = mf.fire_rating.value
+  assign acoustic     = mf.acoustic_rating.value
+  assign impact       = mf.impact_absorption.value
+  assign lrv          = mf.lrv.value
+  assign min_order    = mf.min_order.value
+  assign delivery_days = mf.delivery_days.value
+  assign pose_service = mf.pose_service.value
+  assign maintenance  = mf.maintenance_service.value
+
+  assign qty          = product.selected_or_first_available_variant.inventory_quantity
+  assign in_stock     = false
+  if qty > 0
+    assign in_stock = true
+  endif
+-%}
+
+<div class="recarpet-specs">
+
+  {%- comment -%} ── Stock badge + Product label ─────────────────────────── {%- endcomment -%}
+  <div class="recarpet-specs__badges">
+    {%- if in_stock -%}
+      <span class="recarpet-badge recarpet-badge--stock">IN STOCK</span>
+    {%- else -%}
+      <span class="recarpet-badge recarpet-badge--outofstock">OUT OF STOCK</span>
+    {%- endif -%}
+    {%- if product_label != blank -%}
+      <span class="recarpet-badge recarpet-badge--label">{{ product_label | upcase }}</span>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ── Services (Pose / Maintenance) ──────────────────────── {%- endcomment -%}
+  {%- if pose_service != blank or maintenance != blank -%}
+    <div class="recarpet-specs__services">
+      {%- if pose_service != blank -%}
+        <div class="recarpet-service">
+          <span class="recarpet-service__icon">
+            {%- render 'icon-install' -%}
+          </span>
+          <div>
+            <span class="recarpet-service__label">INSTALLATION</span>
+            <span class="recarpet-service__value">{{ pose_service }}</span>
+          </div>
+        </div>
+      {%- endif -%}
+      {%- if maintenance != blank -%}
+        <div class="recarpet-service">
+          <span class="recarpet-service__icon">
+            {%- render 'icon-maintenance' -%}
+          </span>
+          <div>
+            <span class="recarpet-service__label">MAINTENANCE</span>
+            <span class="recarpet-service__value">{{ maintenance }}</span>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── Technical specs table ─────────────────────────────── {%- endcomment -%}
+  {%- assign has_specs = false -%}
+  {%- if backing != blank or dimensions != blank or thickness != blank or fire_rating != blank or acoustic != blank or impact != blank or lrv != blank or tech_url != blank -%}
+    {%- assign has_specs = true -%}
+  {%- endif -%}
+
+  {%- if has_specs -%}
+    <table class="recarpet-specs__table">
+      {%- if backing != blank -%}
+        <tr>
+          <td class="recarpet-specs__label">Backing</td>
+          <td class="recarpet-specs__value">{{ backing }}</td>
+        </tr>
+      {%- endif -%}
+      {%- if dimensions != blank -%}
+        <tr>
+          <td class="recarpet-specs__label">Format</td>
+          <td class="recarpet-specs__value">{{ dimensions }} cm</td>
+        </tr>
+      {%- endif -%}
+      {%- if thickness != blank -%}
+        <tr>
+          <td class="recarpet-specs__label">Thickness</td>
+          <td class="recarpet-specs__value">{{ thickness }}</td>
+        </tr>
+      {%- endif -%}
+      {%- if fire_rating != blank -%}
+        <tr>
+          <td class="recarpet-specs__label">Fire rating</td>
+          <td class="recarpet-specs__value">{{ fire_rating }}</td>
+        </tr>
+      {%- endif -%}
+      {%- if acoustic != blank -%}
+        <tr>
+          <td class="recarpet-specs__label">Sound insulation</td>
+          <td class="recarpet-specs__value">{{ acoustic }}</td>
+        </tr>
+      {%- endif -%}
+      {%- if impact != blank -%}
+        <tr>
+          <td class="recarpet-specs__label">Impact absorption</td>
+          <td class="recarpet-specs__value">{{ impact }}</td>
+        </tr>
+      {%- endif -%}
+      {%- if lrv != blank -%}
+        <tr>
+          <td class="recarpet-specs__label">LRV</td>
+          <td class="recarpet-specs__value">{{ lrv }}</td>
+        </tr>
+      {%- endif -%}
+      {%- if tech_url != blank -%}
+        <tr>
+          <td class="recarpet-specs__label">Technical sheet</td>
+          <td class="recarpet-specs__value">
+            <a href="{{ tech_url }}" target="_blank" rel="noopener" class="recarpet-specs__pdf-link">
+              Download PDF
+            </a>
+          </td>
+        </tr>
+      {%- endif -%}
+    </table>
+  {%- endif -%}
+
+  {%- comment -%} ── Order info bar ────────────────────────────────────── {%- endcomment -%}
+  {%- if qty > 0 or min_order != blank or delivery_days != blank -%}
+    <div class="recarpet-specs__order-bar">
+      {%- if qty > 0 -%}
+        <div class="recarpet-specs__order-cell">
+          <span class="recarpet-specs__order-label">In stock</span>
+          <span class="recarpet-specs__order-value">{{ qty }} m²</span>
+        </div>
+      {%- endif -%}
+      {%- if min_order != blank -%}
+        <div class="recarpet-specs__order-cell">
+          <span class="recarpet-specs__order-label">Min. order</span>
+          <span class="recarpet-specs__order-value">{{ min_order }}</span>
+        </div>
+      {%- endif -%}
+      {%- if delivery_days != blank -%}
+        <div class="recarpet-specs__order-cell">
+          <span class="recarpet-specs__order-label">Lead time</span>
+          <span class="recarpet-specs__order-value">{{ delivery_days }} days</span>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+</div>
+
+<style>
+  .recarpet-specs {
+    margin: 20px 0;
+    font-family: inherit;
+  }
+
+  /* Badges */
+  .recarpet-specs__badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .recarpet-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+  .recarpet-badge--stock {
+    background: #e6f4ea;
+    color: #1a6b2f;
+    border: 1px solid #a8d5b5;
+  }
+  .recarpet-badge--outofstock {
+    background: #f5f5f5;
+    color: #888;
+    border: 1px solid #ddd;
+  }
+  .recarpet-badge--label {
+    background: #f5f0e8;
+    color: #7a5c2e;
+    border: 1px solid #e0d0b8;
+  }
+
+  /* Services */
+  .recarpet-specs__services {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .recarpet-service {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .recarpet-service__icon {
+    width: 36px;
+    height: 36px;
+    background: #f5f0c8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .recarpet-service__label {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #999;
+    text-transform: uppercase;
+    text-decoration: underline;
+  }
+  .recarpet-service__value {
+    display: block;
+    font-size: 14px;
+    color: #222;
+  }
+
+  /* Specs table */
+  .recarpet-specs__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  .recarpet-specs__table tr {
+    border-bottom: 1px solid #eee;
+  }
+  .recarpet-specs__table tr:last-child {
+    border-bottom: none;
+  }
+  .recarpet-specs__label {
+    padding: 10px 0;
+    color: #666;
+    width: 50%;
+    vertical-align: top;
+  }
+  .recarpet-specs__value {
+    padding: 10px 0;
+    color: #111;
+    font-weight: 400;
+  }
+  .recarpet-specs__pdf-link {
+    color: #111;
+    text-decoration: underline;
+  }
+
+  /* Order bar */
+  .recarpet-specs__order-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .recarpet-specs__order-cell {
+    padding: 14px 16px;
+    text-align: center;
+    border-right: 1px solid #ddd;
+  }
+  .recarpet-specs__order-cell:last-child {
+    border-right: none;
+  }
+  .recarpet-specs__order-label {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+  }
+  .recarpet-specs__order-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    color: #111;
+  }
+</style>

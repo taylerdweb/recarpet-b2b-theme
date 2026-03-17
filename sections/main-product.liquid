@@ -192,6 +192,10 @@
                     {%- endif -%}
                   {%- endif -%}
                 </p>
+              {%- when 'recarpet_specs' -%}
+                <div class="product__recarpet-specs quick-add-hidden" {{ block.shopify_attributes }}>
+                  {%- render 'recarpet-product-specs', product: product -%}
+                </div>
               {%- when 'description' -%}
                 {%- if product.description != blank -%}
                   <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
@@ -938,6 +942,11 @@
           "info": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.info"
         }
       ]
+    },
+    {
+      "type": "recarpet_specs",
+      "name": "reCarpet — Product Specs",
+      "limit": 1
     },
     {
       "type": "description",
