@@ -124,23 +124,38 @@
                     Please <a href="/pages/b2b-login" style="color: #000; text-decoration: underline">sign in</a> to see pricing
                   </div>
                 {%- endunless -%}
-                <spark-pdp parent-id="{{ product.id }}"></spark-pdp>
+                {%- assign _pdp_tags = product.tags | join: ',' | downcase -%}
+                {%- assign _pdp_ctags = customer.tags | join: ',' | downcase -%}
+                {%- assign _pdp_is_storbatch = false -%}
+                {%- if _pdp_tags contains 'storbatch' -%}{%- assign _pdp_is_storbatch = true -%}{%- endif -%}
+                {%- assign _pdp_is_guld_or_krets = false -%}
+                {%- if _pdp_ctags contains 'entrepreneur' or _pdp_ctags contains 'krets' -%}{%- assign _pdp_is_guld_or_krets = true -%}{%- endif -%}
 
-                {%- comment -%} Montering-tillval — visas bara på mattproduker, ej tjänster {%- endcomment -%}
-                {%- unless product.product_type contains 'Tjänst' -%}
-                  <div class="montering-addon" id="montering-addon" style="display:none;">
-                    <label class="montering-addon__label">
-                      <input type="checkbox" id="montering-checkbox" class="montering-addon__checkbox">
-                      <span class="montering-addon__text">
-                        Lägg till montering
-                        <span class="montering-addon__price">+45 kr/m²</span>
-                      </span>
-                    </label>
-                    <p class="montering-addon__note" id="montering-subtotal" style="display:none;">
-                      <!-- Fylls i av JS med beräknad totalkostnad -->
-                    </p>
+                {%- if _pdp_is_storbatch and _pdp_is_guld_or_krets == false -%}
+                  {%- comment -%} Silver-kund + storbatch → låst produkt, ingen SparkLayer PDP {%- endcomment -%}
+                  <div class="storbatch-lock-pdp">
+                    <p class="storbatch-lock-pdp__title">Storbatch — endast för Guld-medlemmar</p>
+                    <p class="storbatch-lock-pdp__text">Denna produkt finns i stora kvantiteter och är reserverad för Guld-medlemmar. Kontakta oss för att uppgradera ditt konto.</p>
                   </div>
-                {%- endunless -%}
+                {%- else -%}
+                  <spark-pdp parent-id="{{ product.id }}"></spark-pdp>
+
+                  {%- comment -%} Montering-tillval — visas bara på mattproduker, ej tjänster {%- endcomment -%}
+                  {%- unless product.product_type contains 'Tjänst' -%}
+                    <div class="montering-addon" id="montering-addon" style="display:none;">
+                      <label class="montering-addon__label">
+                        <input type="checkbox" id="montering-checkbox" class="montering-addon__checkbox">
+                        <span class="montering-addon__text">
+                          Lägg till montering
+                          <span class="montering-addon__price">+45 kr/m²</span>
+                        </span>
+                      </label>
+                      <p class="montering-addon__note" id="montering-subtotal" style="display:none;">
+                        <!-- Fylls i av JS med beräknad totalkostnad -->
+                      </p>
+                    </div>
+                  {%- endunless -%}
+                {%- endif -%}
 
               {%- when 'price' -%}
                 {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
