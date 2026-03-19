@@ -205,11 +205,27 @@
             {%- endif -%}
 
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
+            {%- assign product_tags_lower = card_product.tags | join: ',' | downcase -%}
+            {%- assign is_storbatch = false -%}
+            {%- if product_tags_lower contains 'storbatch' -%}
+              {%- assign is_storbatch = true -%}
+            {%- endif -%}
+            {%- assign is_guld_or_krets = false -%}
+            {%- if customer_tags_lower contains 'krets' or customer_tags_lower contains 'entrepreneur' -%}
+              {%- assign is_guld_or_krets = true -%}
+            {%- endif -%}
+
             {%- if customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' -%}
-              <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
-              <div data-spark="b2c-only">
+              {%- if is_storbatch and is_guld_or_krets == false -%}
+                {%- comment -%} Silver-kund + storbatch → låst produkt {%- endcomment -%}
                 {% render 'price', product: card_product, price_class: 'price--listing' %}
-              </div>
+                <p class="storbatch-lock-note">Endast för Guld-medlemmar</p>
+              {%- else -%}
+                <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
+                <div data-spark="b2c-only">
+                  {% render 'price', product: card_product, price_class: 'price--listing' %}
+                </div>
+              {%- endif -%}
             {%- elsif customer -%}
               {% render 'price', product: card_product, price_class: 'price--listing' %}
               <p class="b2b-card-awaiting-note">Inväntar B2B-godkännande</p>

@@ -478,6 +478,95 @@
 
           var fakPoll = setInterval(runFakturaInjection, 400);
           setTimeout(function() { clearInterval(fakPoll); }, 60000);
+
+          // ── Montering-tillval: auto-add vid köp ────────────────────────────────
+          // VIKTIGT: Uppdatera MONTERING_VARIANT_ID efter att du kört setup-services.py
+          var MONTERING_VARIANT_ID = null; // ← Fyll i variant-ID från setup-services.py
+          var MONTERING_PRICE_PER_M2 = 45;
+
+          var addonEl = document.getElementById('montering-addon');
+          var checkboxEl = document.getElementById('montering-checkbox');
+          var subtotalEl = document.getElementById('montering-subtotal');
+
+          if (addonEl && checkboxEl) {
+            // Visa checkbox (döljs i HTML tills JS laddats)
+            addonEl.style.display = '';
+
+            // Uppdatera delsumma när kvantitet ändras i spark-pdp
+            function updateMonteringSubtotal() {
+              if (!checkboxEl.checked) { subtotalEl.style.display = 'none'; return; }
+              var qty = getSparkQuantity();
+              if (qty > 0) {
+                subtotalEl.textContent = 'Montering: ' + qty + ' m² × ' + MONTERING_PRICE_PER_M2 + ' kr = ' + (qty * MONTERING_PRICE_PER_M2) + ' kr';
+                subtotalEl.style.display = '';
+              }
+            }
+
+            checkboxEl.addEventListener('change', updateMonteringSubtotal);
+
+            // Hämta kvantitet från spark-pdp:s input (shadow DOM)
+            function getSparkQuantity() {
+              var pdp = document.querySelector('spark-pdp');
+              if (!pdp) return 1;
+              // Kolla shadow root först
+              var root = pdp.shadowRoot || pdp;
+              var input = root.querySelector('input[type="number"]');
+              if (input) return parseInt(input.value, 10) || 1;
+              // Fallback: kolla alla inputs i pdp
+              var inputs = root.querySelectorAll('input');
+              for (var i = 0; i < inputs.length; i++) {
+                var v = parseInt(inputs[i].value, 10);
+                if (v > 0) return v;
+              }
+              return 1;
+            }
+
+            // Polla kvantitet för subtotal-uppdatering
+            setInterval(updateMonteringSubtotal, 1000);
+
+            // Lyssna på SparkLayer cart events — lägg till montering automatiskt
+            // SparkLayer dispatchar 'spark:cart:updated' när kundvagnen ändras
+            if (MONTERING_VARIANT_ID) {
+              var lastCartCount = 0;
+
+              document.addEventListener('spark:cart:updated', function(e) {
+                if (!checkboxEl.checked) return;
+                var qty = getSparkQuantity();
+                if (qty <= 0) return;
+
+                // Använd SparkLayer SDK för att lägga till montering
+                try {
+                  if (window.Spark && window.Spark.cart && window.Spark.cart.addItem) {
+                    window.Spark.cart.addItem(MONTERING_VARIANT_ID, qty);
+                    console.log('[reCarpet] Montering tillagd: ' + qty + ' m²');
+                  } else if (window.Spark && window.Spark.addToBasket) {
+                    window.Spark.addToBasket(MONTERING_VARIANT_ID, qty);
+                    console.log('[reCarpet] Montering tillagd via addToBasket: ' + qty + ' m²');
+                  } else {
+                    console.warn('[reCarpet] SparkLayer cart API ej tillgänglig — montering kunde inte läggas till automatiskt.');
+                  }
+                } catch (err) {
+                  console.warn('[reCarpet] Montering auto-add misslyckades:', err);
+                }
+              });
+
+              // Fallback: observera cart drawer öppning som alternativ trigger
+              var drawerObs = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mut) {
+                  mut.addedNodes.forEach(function(node) {
+                    if (node.nodeType !== 1) return;
+                    if (node.tagName && node.tagName.toLowerCase().indexOf('spark') === 0) {
+                      // SparkLayer element tillagd — kolla om det är cart-relaterat
+                      if (checkboxEl && checkboxEl.checked && MONTERING_VARIANT_ID) {
+                        // Triggas av att cart drawer öppnas efter add-to-cart
+                      }
+                    }
+                  });
+                });
+              });
+              drawerObs.observe(document.body, { childList: true, subtree: false });
+            }
+          }
           // ──────────────────────────────────────────────────────────────────────────
         },
       };
@@ -615,6 +704,52 @@
 
   .product__info-wrapper {
     z-index: 2;
+  }
+
+  /* Montering-tillval checkbox på PDP */
+  .montering-addon {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fafafa;
+  }
+  .montering-addon__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .montering-addon__checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--b2b-brand-color, #5b36f5);
+    cursor: pointer;
+  }
+  .montering-addon__price {
+    color: #666;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+  .montering-addon__note {
+    font-size: 13px;
+    color: #555;
+    margin: 6px 0 0 26px;
+  }
+
+  /* Storbatch lock — visas för silver-kunder på produkter med qty > 300 */
+  .storbatch-lock-note {
+    font-size: 13px;
+    font-weight: 600;
+    color: #b8860b;
+    background: #fdf6e3;
+    border: 1px solid #e8d5a3;
+    border-radius: 4px;
+    padding: 6px 10px;
+    margin-top: 6px;
+    text-align: center;
   }
 
   </style>

@@ -86,6 +86,13 @@ SKIP_RAW_SKUS = {
 }
 SKIP_PATTERNS = ["bloqué", "bloque", "sur chantier"]
 
+# Tjänsteprodukter — fasta priser i SEK (samma pris alla kundnivåer)
+# Inkluderas i alla SparkLayer-prislistor vid generering
+SERVICE_PRODUCTS = [
+    {"sku": "RC-SERVICE-MONTERING",  "sek_price": 45.00},
+    {"sku": "RC-SERVICE-RENGORING",  "sek_price": 30.00},
+]
+
 # ORAK CSV column → internal key mapping
 COLUMN_MAP = {
     "title":             "title",
@@ -252,20 +259,94 @@ def add_product_to_collection(product_id: int, collection_id: int):
 
 
 def get_existing_skus() -> dict:
+    """Hämtar alla produkter från Shopify (paginerat)."""
     print("  Fetching existing products from Shopify...")
     sku_map = {}
     params = {"limit": 250, "fields": "id,title,variants"}
-    data = shopify_get("products.json", params)
-    for product in data.get("products", []):
-        for variant in product.get("variants", []):
-            if variant.get("sku"):
-                sku_map[variant["sku"]] = {
-                    "product_id": product["id"],
-                    "variant_id": variant["id"],
-                    "inventory_item_id": variant.get("inventory_item_id"),
-                }
+    while True:
+        data = shopify_get("products.json", params)
+        products = data.get("products", [])
+        if not products:
+            break
+        for product in products:
+            for variant in product.get("variants", []):
+                if variant.get("sku"):
+                    sku_map[variant["sku"]] = {
+                        "product_id": product["id"],
+                        "variant_id": variant["id"],
+                        "inventory_item_id": variant.get("inventory_item_id"),
+                    }
+        # Paginering: hämta nästa sida
+        if len(products) < 250:
+            break
+        params["since_id"] = products[-1]["id"]
     print(f"    {len(sku_map)} existing products found")
     return sku_map
+
+
+# SKUs som ALDRIG ska tas bort vid --reset
+PROTECTED_SKUS = {sp["sku"] for sp in SERVICE_PRODUCTS}
+
+
+def delete_all_products(dry_run: bool = False):
+    """
+    Tar bort ALLA produkter från Shopify, utom tjänsteprodukter (PROTECTED_SKUS).
+    Rensar även sync-loggen.
+    """
+    print("\n  Hämtar alla produkter för borttagning...")
+    all_products = []
+    params = {"limit": 250, "fields": "id,title,variants"}
+    while True:
+        data = shopify_get("products.json", params)
+        products = data.get("products", [])
+        if not products:
+            break
+        all_products.extend(products)
+        if len(products) < 250:
+            break
+        params["since_id"] = products[-1]["id"]
+
+    to_delete = []
+    protected = []
+    for p in all_products:
+        skus = [v.get("sku", "") for v in p.get("variants", [])]
+        if any(s in PROTECTED_SKUS for s in skus):
+            protected.append(p)
+        else:
+            to_delete.append(p)
+
+    print(f"  Totalt: {len(all_products)} produkter")
+    print(f"  Ska tas bort: {len(to_delete)}")
+    print(f"  Skyddade (tjänster): {len(protected)} — {[v.get('sku','?') for p in protected for v in p.get('variants',[])]}")
+
+    if dry_run:
+        print("  [DRY-RUN] Inga produkter togs bort.")
+        return len(to_delete)
+
+    deleted = errors = 0
+    for i, p in enumerate(to_delete, 1):
+        try:
+            url = f"https://{SHOPIFY_SHOP}/admin/api/{API_VERSION}/products/{p['id']}.json"
+            r = requests.delete(url, headers=api_headers())
+            _rate_limit(r)
+            if r.status_code in (200, 204):
+                deleted += 1
+            else:
+                print(f"    Warning: {p['id']} → HTTP {r.status_code}")
+                errors += 1
+            if i % 50 == 0:
+                print(f"    ...{i}/{len(to_delete)} borttagna")
+        except Exception as e:
+            print(f"    ERROR {p['id']}: {e}")
+            errors += 1
+
+    # Rensa sync-log
+    if SYNC_LOG.exists():
+        SYNC_LOG.unlink()
+        print("  Sync-log rensad.")
+
+    print(f"\n  Reset klart: {deleted} borttagna, {errors} fel, {len(protected)} skyddade.")
+    return deleted
 
 
 def get_first_location_id() -> int:
@@ -452,6 +533,25 @@ def generate_pricelists(products: list, rates: dict):
             price = round(eur_price * rate * mult, 2)
             list_rows[name].append([sku, 1, f"{price:.2f}"])
 
+    # Lägg till tjänsteprodukter — samma pris i alla listor (konverteras till respektive valuta)
+    for sp in SERVICE_PRODUCTS:
+        sek_price = sp["sek_price"]
+        for name, (mult, rate) in LISTS.items():
+            # Tjänster har fast SEK-pris — konvertera till andra valutor via SEK-kurs
+            if rate == 1.0:
+                # EUR-lista: konvertera SEK → EUR
+                svc_price = round(sek_price / eur_sek, 2)
+            elif rate == eur_nok:
+                # NOK-lista: konvertera SEK → NOK
+                svc_price = round(sek_price * (eur_nok / eur_sek), 2)
+            elif rate == eur_dkk:
+                # DKK-lista: konvertera SEK → DKK
+                svc_price = round(sek_price * (eur_dkk / eur_sek), 2)
+            else:
+                # SEK-lista: pris rakt av
+                svc_price = sek_price
+            list_rows[name].append([sp["sku"], 1, f"{svc_price:.2f}"])
+
     def write_csv(filename, rows):
         path = SPARKLAYER_DIR / filename
         with open(path, "w", newline="") as f:
@@ -546,6 +646,20 @@ def update_pricelist_excel(products: list, rates: dict):
             "dkk_entre":  px(eur_dkk, GULD_MULTIPLIER),
             "eur_member": px(1.0,     SILVER_MULTIPLIER),
             "eur_entre":  px(1.0,     GULD_MULTIPLIER),
+        })
+
+    # Lägg till tjänsteprodukter i product_rows (samma pris alla nivåer)
+    for sp in SERVICE_PRODUCTS:
+        sek = sp["sek_price"]
+        nok = round(sek * (eur_nok / eur_sek), 2)
+        dkk = round(sek * (eur_dkk / eur_sek), 2)
+        eur = round(sek / eur_sek, 2)
+        product_rows.append({
+            "sku":        sp["sku"],
+            "sek_member": sek,  "sek_entre": sek,  "sek_krets": sek,
+            "nok_member": nok,  "nok_entre": nok,
+            "dkk_member": dkk,  "dkk_entre": dkk,
+            "eur_member": eur,  "eur_entre": eur,
         })
 
     # ── 3. Entrepreneur-sheet ─────────────────────────────────────────────────
@@ -719,6 +833,7 @@ def main():
     parser.add_argument("--dry-run",         action="store_true", help="Simulate without writing to Shopify")
     parser.add_argument("--pricelists-only", action="store_true", help="Only generate SparkLayer CSVs")
     parser.add_argument("--fix-sparklayer",  action="store_true", help="Publicera alla befintliga Shopify-produkter till SparkLayer")
+    parser.add_argument("--reset",           action="store_true", help="Ta bort ALLA produkter (utom tjänster) och importera om från CSV")
     args = parser.parse_args()
 
     csv_path = Path(args.csv)
@@ -731,7 +846,7 @@ def main():
             print("Error: set SHOPIFY_SHOP and SHOPIFY_TOKEN in .env")
             sys.exit(1)
 
-    mode = "DRY-RUN" if args.dry_run else ("PRICELISTS ONLY" if args.pricelists_only else ("FIX SPARKLAYER" if args.fix_sparklayer else "LIVE"))
+    mode = "DRY-RUN" if args.dry_run else ("PRICELISTS ONLY" if args.pricelists_only else ("RESET + IMPORT" if args.reset else ("FIX SPARKLAYER" if args.fix_sparklayer else "LIVE")))
     print(f"\nreCarpet - ORAK Import [{mode}]")
     print(f"  CSV: {csv_path.name}")
     print(f"  Shopify: {SHOPIFY_SHOP or '(not active)'}\n")
@@ -749,6 +864,21 @@ def main():
 
     if args.pricelists_only:
         return
+
+    # ── --reset: ta bort alla produkter (utom tjänster) innan import ──────────
+    if args.reset:
+        if not SHOPIFY_SHOP or not SHOPIFY_TOKEN:
+            print("Error: set SHOPIFY_SHOP and SHOPIFY_TOKEN in .env")
+            sys.exit(1)
+        if args.dry_run:
+            print("\n[DRY-RUN] --reset: visar vad som skulle tas bort...")
+            delete_all_products(dry_run=True)
+        else:
+            print("\n⚠️  --reset: Tar bort alla produkter utom tjänster...")
+            print("    (Ctrl+C för att avbryta inom 5 sekunder)")
+            time.sleep(5)
+            delete_all_products(dry_run=False)
+        print()
 
     sync_log = load_sync_log()
     existing = {}
@@ -804,8 +934,11 @@ def main():
         product_type = PRODUCT_TYPE_MAP.get(normalise_label(label), "Carpet Tile")
 
         # Taggar: alla ORAK-produkter får "atervunna-mattor"; "Produit à venir" får dessutom "kommande"
+        # Produkter med qty > 300 → "storbatch" (låsta för silver, synliga för guld+krets)
         label_key = normalise_label(label) if label else ""
         extra_tags = ["kommande"] if label_key in KOMMANDE_LABELS else []
+        if quantity > 300:
+            extra_tags.append("storbatch")
         tags = ",".join(filter(None, [
             "b2b", "b2b-only", "orak", "atervunna-mattor",
             brand.lower(),
