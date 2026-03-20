@@ -1,27 +1,80 @@
 {
   "sections": {
-    "hero": { "type": "rc-page-hero", "settings": { "eyebrow": "För entreprenörer", "heading": "Erbjud cirkulära golvlösningar och stärk din konkurrenskraft", "subtext": "Stärk din konkurrenskraft med återbrukade textilplattor och helhetsservice från ReCarpet." } },
+    "hero": {
+      "type": "rc-page-hero",
+      "settings": {
+        "eyebrow": "För entreprenörer",
+        "heading": "Vi säkerställer rätt produkt, i rätt tid, med minimerat avfall",
+        "subtext": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Genom att välja och montera återbrukade textilplattor bidrar ni till en mer hållbar byggbransch."
+      }
+    },
     "kundgrupp": {
       "type": "rc-kundgrupp",
       "settings": {
         "eyebrow": "För entreprenörer",
-        "intro_heading": "Erbjud cirkulära golvlösningar och stärk din konkurrenskraft",
-        "intro_body": "ReCarpet är din partner för cirkulära golvlösningar. Vi levererar återbrukade och nya textilplattor till konkurrenskraftiga priser, och vi hjälper dig med hela projektet.",
-        "btn1_label": "Se produkter", "btn1_url": "/collections/all",
-        "btn2_label": "Kontakta oss", "btn2_url": "/pages/kontakta-oss",
-        "stats_heading": "Milliken – Marknadens mest hållbara textilplatta",
-        "stats_body": "Genom vår samarbeten med Milliken erbjuder vi marknadens mest hållbara textilplattor. Perfekt för er som vill erbjuda kunder hållbara alternativ.",
-        "stats_btn_label": "Kontakta oss", "stats_btn_url": "/pages/kontakta-oss"
+        "intro_heading": "Vi säkerställer rätt produkt, i rätt tid, med minimerat avfall",
+        "intro_body": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Vi har nära samarbeten med fastighetsägare och arkitekter för att leverera rätt platta till rätt lokal, även när färgvalen kan variera. Genom att välja och montera återbrukade textilplattor bidrar ni till en mer hållbar byggbransch.",
+        "intro_body_2": "Har du ett projekt med föreskrivna återbrukade textilplattor och vill lägga en beställning? Välkommen att kontakta oss!",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "Läs mer om oss",
+        "btn2_url": "/pages/om-oss",
+        "features_heading": "Fördelarna med ReCarpets textilplattor",
+        "stats_eyebrow": "Partnerskap",
+        "stats_heading": "Bli en ReCarpet Certifierad Återbrukspartner",
+        "stats_body": "Bli en \"ReCarpet Certifierad Återbrukspartner\" och gör skillnad i varje projekt. Tillsammans bidrar vi till miljön genom att skänka 5 kr/m² vid varje uppdrag. Är du intresserad av att jobba mer med återbrukade textilplattor i din stad eller att bli en samarbetspartner? Hör av dig!",
+        "stats_btn_label": "Kontakta oss för mer info",
+        "stats_btn_url": "/pages/kontakta-oss"
       },
       "blocks": {
-        "f1": { "type": "feature", "settings": { "title": "Återbrukade textilplattor", "text": "Brett sortiment av återbrukade textilplattor i hög kvalitet — levereras snabbt och till bra priser.", "link_url": "/collections/aterbrukade-textilplattor" } },
-        "f2": { "type": "feature", "settings": { "title": "Nya Milliken plattor", "text": "Nyproducerade textilplattor av marknadens högsta kvalitet och hållbarhet.", "link_url": "/collections/nya-textilplattor" } },
-        "f3": { "type": "feature", "settings": { "title": "Montering & installation", "text": "Vi stöttar era montageuppdrag med professionella golvtekniker från syd till norr.", "link_url": "/pages/vad-vi-gor#montering" } },
-        "f4": { "type": "feature", "settings": { "title": "Demontering & återbruk", "text": "Vi tar hand om demontering och vidareförmedling — allt för att maximera återbruksvärdet.", "link_url": "/pages/vad-vi-gor#demontering" } }
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "title": "Hållbar helhetslösning",
+            "text": "Vi tar ansvar för hela kedjan – från inventering och demontering till förmedling och återbruk. Med ReCarpet får ni en komplett och miljövänlig golvlösning som minskar avfall och CO₂-utsläpp.",
+            "link_url": "/pages/vad-vi-gor",
+            "link_label": "Läs mer om våra tjänster"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "title": "Prisvärda kvalitetsgolv",
+            "text": "Våra återbrukade textilplattor erbjuder hög kvalitet till ett lägre pris än nya plattor. Ni får hållbara golv utan att kompromissa med vare sig kvalitet eller budget.",
+            "link_url": "/collections/aterbrukade-textilplattor",
+            "link_label": "Se sortiment"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "title": "Smidigt samarbete",
+            "text": "Med nära samarbete och tydlig kommunikation säkerställer vi att rätt produkt levereras i rätt tid. Vi finns här för att stötta er genom hela processen och göra återbruk enkelt och tryggt.",
+            "link_url": "/pages/kontakta-oss",
+            "link_label": "Kontakta oss"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "title": "Skapa en bättre miljö med återbrukade textilplattor",
+            "text": "Återbrukade golv kan kännas ovant, men du kan lita på att alla våra plattor är noggrant rengjorda, sorterade och packade på EU-pall för enkel hantering. Slutresultatet blir unikt och vackert – ett hållbart val som uppskattas av många hyresgäster.",
+            "link_url": "/collections/all",
+            "link_label": "Se våra produkter"
+          }
+        }
       },
-      "block_order": ["f1","f2","f3","f4"]
+      "block_order": ["f1", "f2", "f3", "f4"]
     },
-    "contact_cta": { "type": "rc-contact-cta", "settings": { "heading": "Kontakta oss för ditt mattgolvprojekt", "body": "Beställ prover, boka en inventering eller ställ en fråga till oss!", "btn1_label": "Kontakta oss", "btn1_url": "/pages/kontakta-oss" } }
+    "contact_cta": {
+      "type": "rc-contact-cta",
+      "settings": {
+        "heading": "Bli en del av en hållbar byggbransch",
+        "body": "Som entreprenör kan du bidra till en mer hållbar golvbransch. Vi hjälper dig välja rätt återbrukade textilplattor och stöttar dig genom hela processen – från produktval till montering.",
+        "btn1_label": "Kontakta oss för mer information",
+        "btn1_url": "/pages/kontakta-oss"
+      }
+    }
   },
-  "order": ["hero","kundgrupp","contact_cta"]
+  "order": ["hero", "kundgrupp", "contact_cta"]
 }

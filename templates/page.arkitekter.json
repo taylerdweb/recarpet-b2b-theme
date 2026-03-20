@@ -1,26 +1,61 @@
 {
   "sections": {
-    "hero": { "type": "rc-page-hero", "settings": { "eyebrow": "För arkitekter", "heading": "Utforska vårt sortiment och beställ prover", "subtext": "Förskriv hållbara och återbrukade textilplattor för dina projekt. Enkelt och cirkulärt." } },
+    "hero": {
+      "type": "rc-page-hero",
+      "settings": {
+        "eyebrow": "För arkitekter",
+        "heading": "Utforska vårt sortiment och beställ prover",
+        "subtext": "Upptäck vårt utbud av återbrukade och nya textilplattor. Behöver du information inför föreskrift eller specifikationer? Hör av dig till oss – vi hjälper dig!"
+      }
+    },
     "kundgrupp": {
       "type": "rc-kundgrupp",
       "settings": {
         "eyebrow": "För arkitekter",
         "intro_heading": "Utforska vårt sortiment och beställ prover",
-        "intro_body": "Vill du föreskriva och beställa återbrukade textilplattor? Nedan hittar du svaret. I det läge du inte hittar det du söker i vårt digitala sortiment, har du chansen att se att du är välkommen att kontakta oss.",
-        "btn1_label": "Se produkter", "btn1_url": "/collections/all",
-        "btn2_label": "Kontakta oss för att föreskriva", "btn2_url": "/pages/kontakta-oss",
-        "features_heading": "Ta steget – Vi hjälper dig!",
+        "intro_body": "Upptäck vårt utbud av återbrukade och nya textilplattor. Behöver du information inför föreskrift eller behöver du specifikationer? Hör av dig till oss – vi hjälper dig!",
+        "intro_body_2": "Vill du föreskriva eller beställa återbrukade textilplattor? Vi guidar dig genom materialvalsprocessen. I de fall du inte hittar de du söker i vårt återbrukade sortiment, kan vi erbjuda ett brett sortiment av Millikens nytillverkade textilplattor. Dessa plattor installeras utan externt lim vilket gör dem garanterat återbrukbara och de har en livslängd som är 40-50% längre än en standardplatta.",
+        "btn1_label": "Se våra produkter",
+        "btn1_url": "/collections/all",
+        "btn2_label": "Kontakta oss för att beställa prov",
+        "btn2_url": "/pages/kontakta-oss",
+        "features_heading": "Våra mattor",
         "stats_heading": "ReCarpet – helhetsansvar för ett storskaligt återbruk",
-        "stats_body": "Vi hanterar hela processen, från demontering till säkerhetscertifierade och engagerade flytt för att göra dina projekt mer hållbara och kostnadseffektiva.",
-        "stats_btn_label": "Boka din tjänst", "stats_btn_url": "/pages/kontakta-oss"
+        "stats_body": "Vi hanterar hela processen, från demontering till lagerhållning och försäljning. Alla våra textilplattor är kontrollerade, sorterade och rengjorda. Redo för att göra nytta i många år framöver!",
+        "stats_btn_label": "Boka våra tjänster",
+        "stats_btn_url": "/pages/kontakta-oss"
       },
       "blocks": {
-        "f1": { "type": "feature", "settings": { "title": "Återbrukade textilplattor", "text": "Vi har ett sortiment av 10+ märkestextilplattor från ledande tillverkare för cirkulärt återbruk. Dessa plattor installeras utan omsorg på 40–50% längre än standard.", "link_url": "/collections/aterbrukade-textilplattor", "link_label": "Se lager och beställ prov" } },
-        "f2": { "type": "feature", "settings": { "title": "Nya textilplattor", "text": "Genom vår samarbeten med Milliken Focus erbjuder ni även nyproduktion av textilplattor. Se priser och beställ provmaterial för eran kund.", "link_url": "/collections/nya-textilplattor", "link_label": "Se lager och beställ prov" } }
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "title": "Återbrukade textilplattor",
+            "text": "Vi har ett sortiment av återbrukade kvalitetsmattor till marknadens bästa pris. Sortimentet varierar över tid.",
+            "link_url": "/collections/aterbrukade-textilplattor",
+            "link_label": "Se aktuellt lager och beställ prov"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "title": "Nya textilplattor",
+            "text": "Genom vårt samarbete med Milliken Floors erbjuder vi även nytillverkade textilplattor som är anpassade för senare återbruk.",
+            "link_url": "/collections/nya-textilplattor",
+            "link_label": "Se lager och beställ prov"
+          }
+        }
       },
-      "block_order": ["f1","f2"]
+      "block_order": ["f1", "f2"]
     },
-    "contact_cta": { "type": "rc-contact-cta", "settings": { "heading": "Kontakta oss för ditt mattgolvprojekt", "body": "Beställ prover, boka en inventering eller ställ en fråga till oss!", "btn1_label": "Kontakta oss", "btn1_url": "/pages/kontakta-oss" } }
+    "contact_cta": {
+      "type": "rc-contact-cta",
+      "settings": {
+        "heading": "Ta steget – Vi hjälper dig!",
+        "body": "Vill du föreskriva eller beställa återbrukade textilplattor? Vi guidar dig genom materialvalsprocessen.",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss"
+      }
+    }
   },
-  "order": ["hero","kundgrupp","contact_cta"]
+  "order": ["hero", "kundgrupp", "contact_cta"]
 }

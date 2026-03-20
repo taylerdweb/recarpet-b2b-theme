@@ -1,27 +1,79 @@
 {
   "sections": {
-    "hero": { "type": "rc-page-hero", "settings": { "eyebrow": "För hyresgäster", "heading": "Uppdatera ditt kontor med hållbara textilplattor", "subtext": "Enkla och miljövänliga golvlösningar — nya eller återbrukade textilplattor för er arbetsplats." } },
+    "hero": {
+      "type": "rc-page-hero",
+      "settings": {
+        "eyebrow": "För hyresgäster",
+        "heading": "Uppgradera kontorsgolvet – enkelt och prisvärt!",
+        "subtext": "Vi tar hand om allt från rivning till montering av nytt golv. Smidigt, miljövänligt och kostnadseffektivt – en kontakt och ett pris!"
+      }
+    },
     "kundgrupp": {
       "type": "rc-kundgrupp",
       "settings": {
         "eyebrow": "För hyresgäster",
-        "intro_heading": "Uppdatera ditt kontor med hållbara textilplattor",
-        "intro_body": "Vill du ge ert kontor ett nytt utseende med nya eller återbrukade textilplattor? ReCarpet gör det enkelt och miljövänligt. Vi hjälper er att hitta rätt produkt och levererar till er dörr.",
-        "btn1_label": "Se produkter", "btn1_url": "/collections/all",
-        "btn2_label": "Kontakta oss", "btn2_url": "/pages/kontakta-oss",
-        "stats_heading": "Vi erbjuder helhetslösningar för er som vill ta nästa steg i ert hållbarhetsarbete",
-        "stats_body": "Vi strävar efter att göra varje golvprojekt mer hållbart. Sedan start har vi demonstrerat och förmedlat 30 000m² textilplattor.",
-        "stats_btn_label": "Kontakta oss", "stats_btn_url": "/pages/kontakta-oss"
+        "intro_heading": "Uppgradera kontorsgolvet – enkelt och prisvärt!",
+        "intro_body": "Vi tar hand om allt från rivning till montering av nytt golv. Smidigt, miljövänligt och kostnadseffektivt – en kontakt och ett pris! Tillsammans gör vi golvbytet enkelt och prisvärt – med en enda aktör som tar hand om hela processen. Vi samarbetar med golventreprenörer i hela Sverige.",
+        "intro_body_2": "ReCarpet hjälper er med: rivning av gammalt golv, planering av arbetet för att inte störa verksamheten, konsultation om nytt golv, samt montering av nytt golv.",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "Se prover i lager",
+        "btn2_url": "/collections/all",
+        "features_heading": "Vad vi erbjuder hyresgäster",
+        "stats_heading": "Få en skräddarsydd golvlösning för ditt kontor",
+        "stats_body": "Vi erbjuder hållbara och prisvärda alternativ som passar era behov. Från rådgivning till montering – vi finns med er hela vägen.",
+        "stats_btn_label": "Kontakta oss",
+        "stats_btn_url": "/pages/kontakta-oss"
       },
       "blocks": {
-        "f1": { "type": "feature", "settings": { "title": "Återbrukade plattor", "text": "Hållbara, kvalitetssäkrade textilplattor i gott skick — till ett lägre pris och lägre klimatpåverkan.", "link_url": "/collections/aterbrukade-textilplattor", "link_label": "Se sortiment" } },
-        "f2": { "type": "feature", "settings": { "title": "Nya plattor", "text": "Nyproducerade textilplattor av högsta kvalitet från Milliken — världens mest hållbara textilplatta.", "link_url": "/collections/nya-textilplattor", "link_label": "Se sortiment" } },
-        "f3": { "type": "feature", "settings": { "title": "Montering", "text": "Vi monterar era nya plattor professionellt och snabbt med minimal störning i er arbetsplats.", "link_url": "/pages/vad-vi-gor#montering" } },
-        "f4": { "type": "feature", "settings": { "title": "Service & underhåll", "text": "Vi hjälper er med underhåll och service av era golv löpande.", "link_url": "/pages/vad-vi-gor#service" } }
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "title": "Återbrukade plattor",
+            "text": "Hållbara, kvalitetssäkrade textilplattor i gott skick — till ett lägre pris och lägre klimatpåverkan.",
+            "link_url": "/collections/aterbrukade-textilplattor",
+            "link_label": "Se sortiment"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "title": "Nya plattor från Milliken",
+            "text": "Nyproducerade textilplattor av högsta kvalitet från Milliken — världens mest hållbara textilplatta. Installeras utan externt lim.",
+            "link_url": "/collections/nya-textilplattor",
+            "link_label": "Se sortiment"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "title": "Montering",
+            "text": "Vi monterar era nya plattor professionellt och snabbt med minimal störning i er verksamhet. Vi planerar arbetet så att det inte stör ert dagliga arbete.",
+            "link_url": "/pages/vad-vi-gor#montering",
+            "link_label": "Läs mer om montering"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "title": "Rivning av gammalt golv",
+            "text": "Vi tar hand om rivning av ert befintliga golv och ser till att lokalen är redo för det nya golvet. Allt ingår i vår helhetslösning.",
+            "link_url": "/pages/vad-vi-gor#demontering",
+            "link_label": "Läs mer"
+          }
+        }
       },
-      "block_order": ["f1","f2","f3","f4"]
+      "block_order": ["f1", "f2", "f3", "f4"]
     },
-    "contact_cta": { "type": "rc-contact-cta", "settings": { "heading": "Kontakta oss för ditt mattgolvprojekt", "body": "Beställ prover, boka en inventering eller ställ en fråga till oss!", "btn1_label": "Kontakta oss", "btn1_url": "/pages/kontakta-oss" } }
+    "contact_cta": {
+      "type": "rc-contact-cta",
+      "settings": {
+        "heading": "Få en skräddarsydd golvlösning för ditt kontor",
+        "body": "Vi erbjuder hållbara och prisvärda alternativ som passar era behov. Från rådgivning till montering – vi finns med er hela vägen.",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss"
+      }
+    }
   },
-  "order": ["hero","kundgrupp","contact_cta"]
+  "order": ["hero", "kundgrupp", "contact_cta"]
 }
