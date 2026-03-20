@@ -1,0 +1,323 @@
+{% comment %}
+  reCarpet Om oss — page-specific sections
+  Background, stats, mission, passion, etc.
+{% endcomment %}
+
+<style>
+  /* Om oss — Vår bakgrund */
+  .rc-about-intro {
+    background: var(--rc-white, #fff);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-about-intro__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .rc-about-intro__heading {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 500;
+    color: var(--rc-text);
+    margin: 0 0 20px;
+  }
+  .rc-about-intro__body {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--rc-text-muted);
+    margin: 0 0 16px;
+  }
+  .rc-about-intro__image {
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .rc-about-intro__image img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .rc-about-intro__quote {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--rc-text);
+    border-left: 4px solid var(--rc-green);
+    padding-left: 24px;
+    margin: 32px 0;
+    font-style: italic;
+  }
+
+  /* Stats row */
+  .rc-about-stats {
+    background: var(--rc-cream, #F0EFEB);
+    padding: 48px 0;
+  }
+  .rc-about-stats__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    text-align: center;
+  }
+  .rc-stat__number {
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700;
+    color: var(--rc-green, #174237);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .rc-stat__label {
+    font-size: 14px;
+    color: var(--rc-text-muted);
+    line-height: 1.4;
+  }
+
+  /* Mission section */
+  .rc-about-mission {
+    background: var(--rc-white);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-about-mission__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .rc-about-mission__eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted);
+    margin-bottom: 12px;
+  }
+  .rc-about-mission__heading {
+    font-size: clamp(24px, 2.5vw, 36px);
+    font-weight: 500;
+    color: var(--rc-text);
+    margin: 0 0 20px;
+    line-height: 1.2;
+  }
+  .rc-about-mission__body { font-size: 16px; line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 16px; }
+  .rc-about-mission__list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rc-about-mission__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 15px;
+    color: var(--rc-text-muted);
+  }
+  .rc-about-mission__list li::before {
+    content: '✓';
+    color: var(--rc-green);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .rc-about-mission__image { border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
+  .rc-about-mission__image img { width: 100%; height: 100%; object-fit: cover; }
+
+  @media (max-width: 900px) {
+    .rc-about-intro__inner,
+    .rc-about-mission__inner { grid-template-columns: 1fr; gap: 32px; }
+    .rc-about-stats__inner { grid-template-columns: repeat(2, 1fr); }
+    .rc-about-intro__inner,
+    .rc-about-mission__inner,
+    .rc-about-stats__inner { padding: 0 20px; }
+  }
+  @media (max-width: 480px) {
+    .rc-about-stats__inner { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+
+<!-- Vår bakgrund -->
+<section class="rc-about-intro">
+  <div class="rc-about-intro__inner">
+    <div>
+      <h2 class="rc-about-intro__heading">{{ section.settings.intro_heading }}</h2>
+      <p class="rc-about-intro__body">{{ section.settings.intro_body_1 }}</p>
+      {%- if section.settings.intro_body_2 != blank -%}
+        <p class="rc-about-intro__body">{{ section.settings.intro_body_2 }}</p>
+      {%- endif -%}
+    </div>
+    <div>
+      {%- if section.settings.quote != blank -%}
+        <blockquote class="rc-about-intro__quote">{{ section.settings.quote }}</blockquote>
+      {%- endif -%}
+      {%- if section.settings.intro_image != blank -%}
+        <div class="rc-about-intro__image">
+          <img src="{{ section.settings.intro_image | image_url: width: 900 }}" alt="Om ReCarpet" loading="lazy">
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="rc-about-stats">
+  <div class="rc-about-stats__inner">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'stat' -%}
+        <div class="rc-stat">
+          <div class="rc-stat__number">{{ block.settings.number }}</div>
+          <div class="rc-stat__label">{{ block.settings.label }}</div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<!-- Mission / hållbara golv är vår passion -->
+<section class="rc-about-mission">
+  <div class="rc-about-mission__inner">
+    <div>
+      {%- if section.settings.mission_eyebrow != blank -%}
+        <p class="rc-about-mission__eyebrow">{{ section.settings.mission_eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="rc-about-mission__heading">{{ section.settings.mission_heading }}</h2>
+      <p class="rc-about-mission__body">{{ section.settings.mission_body }}</p>
+      {%- if section.settings.mission_list != blank -%}
+        <ul class="rc-about-mission__list">
+          {%- assign list_items = section.settings.mission_list | newline_to_br | split: '<br />' -%}
+          {%- for item in list_items -%}
+            {%- if item != blank -%}<li>{{ item | strip }}</li>{%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if section.settings.mission_btn_label != blank -%}
+        <a href="{{ section.settings.mission_btn_url }}" class="rc-btn rc-btn--primary">{{ section.settings.mission_btn_label }}</a>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.mission_image != blank -%}
+      <div class="rc-about-mission__image">
+        <img src="{{ section.settings.mission_image | image_url: width: 900 }}" alt="{{ section.settings.mission_heading }}" loading="lazy">
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Om oss",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Vår bakgrund"
+    },
+    {
+      "type": "text",
+      "id": "intro_heading",
+      "label": "Rubrik",
+      "default": "Vår bakgrund"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_body_1",
+      "label": "Text (stycke 1)",
+      "default": "Jonas Nilsson och Erik Friis grundade ReCarpet med en enkel idé: att ge textilplattor ett nytt liv och göra byggbranschen mer hållbar."
+    },
+    {
+      "type": "textarea",
+      "id": "intro_body_2",
+      "label": "Text (stycke 2)"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Citat",
+      "default": "En bild på sä lagret eller annan bild med människor i!"
+    },
+    {
+      "type": "image_picker",
+      "id": "intro_image",
+      "label": "Bild"
+    },
+    {
+      "type": "header",
+      "content": "Mission"
+    },
+    {
+      "type": "text",
+      "id": "mission_eyebrow",
+      "label": "Liten text",
+      "default": "Vår passion"
+    },
+    {
+      "type": "textarea",
+      "id": "mission_heading",
+      "label": "Rubrik",
+      "default": "Hållbara golv är vår passion"
+    },
+    {
+      "type": "textarea",
+      "id": "mission_body",
+      "label": "Text",
+      "default": "Vi strävar efter att göra varje golvprojekt mer hållbart genom att återbruka materialet på ett cirkulärt sätt."
+    },
+    {
+      "type": "textarea",
+      "id": "mission_list",
+      "label": "Lista (en rad per punkt)"
+    },
+    {
+      "type": "text",
+      "id": "mission_btn_label",
+      "label": "Knapptext"
+    },
+    {
+      "type": "url",
+      "id": "mission_btn_url",
+      "label": "Knapp länk"
+    },
+    {
+      "type": "image_picker",
+      "id": "mission_image",
+      "label": "Bild"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistik",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Nummer", "default": "2022" },
+        { "type": "text", "id": "label", "label": "Etikett", "default": "Grundades" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Om oss",
+      "settings": {
+        "intro_heading": "Vår bakgrund",
+        "intro_body_1": "Jonas Nilsson och Erik Friis grundade ReCarpet med en enkel vision: att ge textilplattor ett nytt liv och göra byggbranschen mer cirkulär och hållbar.",
+        "mission_eyebrow": "Vår passion",
+        "mission_heading": "Hållbara golv är vår passion",
+        "mission_body": "Vi strävar efter att göra varje golvprojekt mer hållbart. Sedan start har vi demonstrerat och förmedlat 30 000m² textilplattor och bidragit till ett mer cirkulärt byggande."
+      },
+      "blocks": [
+        { "type": "stat", "settings": { "number": "2022", "label": "Grundades" } },
+        { "type": "stat", "settings": { "number": "30 000m²", "label": "Lagd yta" } },
+        { "type": "stat", "settings": { "number": "300t", "label": "Återvunnet" } },
+        { "type": "stat", "settings": { "number": "25+", "label": "Nöjda kunder" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

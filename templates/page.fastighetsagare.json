@@ -1,0 +1,31 @@
+{
+  "sections": {
+    "hero": { "type": "rc-page-hero", "settings": { "eyebrow": "För fastighetsägare", "heading": "Vi tar ansvar för hela processen – maximerat utfall, minimerat avfall", "subtext": "Från inventering och demontering till intern återbruk och ny installation." } },
+    "kundgrupp": {
+      "type": "rc-kundgrupp",
+      "settings": {
+        "eyebrow": "Fastighetsägare",
+        "intro_heading": "Vi tar ansvar för hela processen – maximerat utfall, minimerat avfall",
+        "intro_body": "Vi hjälper fastighetsägare att hantera textilplattor på ett kostnadseffektivt och hållbart sätt. Från inventering och demontering till intern återbruk och ny installation.",
+        "btn1_label": "Se våra produkter", "btn1_url": "/collections/all",
+        "btn2_label": "Kontakta oss", "btn2_url": "/pages/kontakta-oss",
+        "features_heading": "Ta steget – Vi hjälper dig!",
+        "stats_eyebrow": "Hållbarhet",
+        "stats_heading": "Minska CO₂-utsläppen och kostnaderna med ReCarpet",
+        "stats_body": "Genom att återbruka textilplattor istället för att köpa nytt minskar ni koldioxidutsläppen och sparar pengar.",
+        "stats_btn_label": "Kontakta oss", "stats_btn_url": "/pages/kontakta-oss"
+      },
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "title": "Inventering", "text": "Vi inventerar era befintliga textilplattor och bedömer möjligheterna för återbruk.", "link_url": "/pages/vad-vi-gor#inventering", "link_label": "Läs mer om Inventering" } },
+        "f2": { "type": "feature", "settings": { "title": "Demontering", "text": "Professionell demontering av era textilplattor med minimal störning i fastigheten.", "link_url": "/pages/vad-vi-gor#demontering", "link_label": "Läs mer om Demontering" } },
+        "f3": { "type": "feature", "settings": { "title": "Förmedling", "text": "Vi förmedlar era återbrukade plattor vidare till nya kunder och projekt.", "link_url": "/pages/vad-vi-gor#formedling", "link_label": "Läs mer om Förmedling" } },
+        "f4": { "type": "feature", "settings": { "title": "Återbruka internt", "text": "Behåll golvet i fastigheten — vi uppgraderar och återanvänder befintliga plattor.", "link_url": "/pages/vad-vi-gor#internt-aterbruk", "link_label": "Läs mer om Internt återbruk" } },
+        "stat1": { "type": "stat", "settings": { "number": "15.95", "unit": "kg CO₂/m²", "label": "Besparing per m²" } },
+        "stat2": { "type": "stat", "settings": { "number": "7.9", "unit": "kg CO₂/m²", "label": "Vid intern återbruk" } }
+      },
+      "block_order": ["f1","f2","f3","f4","stat1","stat2"]
+    },
+    "contact_cta": { "type": "rc-contact-cta", "settings": { "heading": "Kontakta oss för ditt mattgolvprojekt", "body": "Beställ prover, boka en inventering eller ställ en fråga till oss!", "btn1_label": "Kontakta oss", "btn1_url": "/pages/kontakta-oss" } }
+  },
+  "order": ["hero","kundgrupp","contact_cta"]
+}

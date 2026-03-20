@@ -1,0 +1,363 @@
+{% comment %}
+  reCarpet Services Section
+  "Gör skillnad med hållbara golvlösningar!"
+  Timeline/alternating layout: Inventering, Demontering, Förmedling, Montering, Service & Underhåll, Internt återbruk
+{% endcomment %}
+
+<style>
+  .rc-services {
+    background: var(--rc-cream, #F0EFEB);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-services__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .rc-services__header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .rc-services__eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted, #555);
+    margin-bottom: 12px;
+  }
+  .rc-services__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: clamp(28px, 3vw, 44px);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--rc-text, #1a1a1a);
+    margin: 0 0 16px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .rc-services__intro {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--rc-text-muted, #555);
+    max-width: 640px;
+    margin: 0 auto 28px;
+  }
+
+  /* Timeline row: alternating image + text */
+  .rc-services__timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  /* Vertical line */
+  .rc-services__timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rc-cream-alt, #E8E7E2);
+    transform: translateX(-50%);
+  }
+  .rc-services__item {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    align-items: center;
+    gap: 0;
+    padding: 48px 0;
+  }
+  .rc-services__item--reverse .rc-services__item-text { order: -1; }
+
+  /* Center dot */
+  .rc-services__dot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .rc-services__dot-inner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--rc-green, #174237);
+    border: 3px solid var(--rc-cream, #F0EFEB);
+    box-shadow: 0 0 0 1px var(--rc-green, #174237);
+  }
+
+  .rc-services__item-image {
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .rc-services__item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .rc-services__item-text {
+    padding: 0 40px;
+  }
+  .rc-services__item--reverse .rc-services__item-text {
+    text-align: right;
+    padding: 0 40px;
+  }
+  .rc-services__item-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted, #555);
+    margin-bottom: 8px;
+  }
+  .rc-services__item-title {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-weight: 500;
+    color: var(--rc-text, #1a1a1a);
+    margin: 0 0 12px;
+  }
+  .rc-services__item-body {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--rc-text-muted, #555);
+    margin: 0 0 20px;
+  }
+  .rc-services__item-link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--rc-green, #174237);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .rc-services__item-link:hover { text-decoration: underline; }
+  .rc-services__item-link::after { content: ' →'; }
+  .rc-services__item--reverse .rc-services__item-link::before { content: '← '; }
+  .rc-services__item--reverse .rc-services__item-link::after { content: ''; }
+
+  @media (max-width: 900px) {
+    .rc-services__timeline::before { display: none; }
+    .rc-services__item {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 32px 0;
+    }
+    .rc-services__dot { display: none; }
+    .rc-services__item-text,
+    .rc-services__item--reverse .rc-services__item-text {
+      padding: 0;
+      text-align: left;
+      order: unset;
+    }
+    .rc-services__item--reverse .rc-services__item-link::before { content: ''; }
+    .rc-services__item--reverse .rc-services__item-link::after { content: ' →'; }
+    .rc-services__inner { padding: 0 20px; }
+  }
+</style>
+
+<section class="rc-services">
+  <div class="rc-services__inner">
+    <div class="rc-services__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rc-services__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="rc-services__heading">{{ section.settings.heading }}</h2>
+      {%- if section.settings.intro != blank -%}
+        <p class="rc-services__intro">{{ section.settings.intro }}</p>
+      {%- endif -%}
+      {%- if section.settings.btn_label != blank -%}
+        <a href="{{ section.settings.btn_url }}" class="rc-btn rc-btn--outline">{{ section.settings.btn_label }}</a>
+      {%- endif -%}
+    </div>
+
+    <div class="rc-services__timeline">
+      {%- for block in section.blocks -%}
+        {%- assign is_reverse = forloop.index | modulo: 2 -%}
+        <div class="rc-services__item{% if is_reverse == 0 %} rc-services__item--reverse{% endif %}">
+          {%- if is_reverse == 1 -%}
+            {%- comment %}Image left{% endcomment -%}
+            <div class="rc-services__item-image">
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title }}" loading="lazy">
+              {%- else -%}
+                <div style="background:var(--rc-cream-alt);height:100%;min-height:240px;"></div>
+              {%- endif -%}
+            </div>
+            <div class="rc-services__dot"><div class="rc-services__dot-inner"></div></div>
+            <div class="rc-services__item-text">
+              <p class="rc-services__item-eyebrow">{{ block.settings.eyebrow }}</p>
+              <h3 class="rc-services__item-title">{{ block.settings.title }}</h3>
+              <p class="rc-services__item-body">{{ block.settings.body }}</p>
+              {%- if block.settings.link_url != blank -%}
+                <a href="{{ block.settings.link_url }}" class="rc-services__item-link">Läs mer om {{ block.settings.title }}</a>
+              {%- endif -%}
+            </div>
+          {%- else -%}
+            {%- comment %}Text left, image right{% endcomment -%}
+            <div class="rc-services__item-text">
+              <p class="rc-services__item-eyebrow">{{ block.settings.eyebrow }}</p>
+              <h3 class="rc-services__item-title">{{ block.settings.title }}</h3>
+              <p class="rc-services__item-body">{{ block.settings.body }}</p>
+              {%- if block.settings.link_url != blank -%}
+                <a href="{{ block.settings.link_url }}" class="rc-services__item-link">Läs mer om {{ block.settings.title }}</a>
+              {%- endif -%}
+            </div>
+            <div class="rc-services__dot"><div class="rc-services__dot-inner"></div></div>
+            <div class="rc-services__item-image">
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title }}" loading="lazy">
+              {%- else -%}
+                <div style="background:var(--rc-cream-alt);height:100%;min-height:240px;"></div>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Tjänster",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Liten text",
+      "default": "Tjänster"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Rubrik",
+      "default": "Gör skillnad med hållbara golvlösningar!"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Inledningstext",
+      "default": "Vi erbjuder en helhetslösning för att återbruka textilplattor i stor skala. Från noggrann inventering och säker demontering till att förmedla plattorna vidare för ett nytt liv."
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Knapptext",
+      "default": "Se tjänster"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Knapp länk"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Tjänst",
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Liten text"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Text"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Bild"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Länk"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Tjänster",
+      "settings": {
+        "eyebrow": "Tjänster",
+        "heading": "Gör skillnad med hållbara golvlösningar!",
+        "btn_label": "Se tjänster",
+        "btn_url": "/pages/vad-vi-gor"
+      },
+      "blocks": [
+        {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Inventering",
+            "title": "Inventering",
+            "body": "Få en tydlig bild av skicket på dina golv och potentialen för återbruk. Vi hjälper dig att planera och maximera återanvändningen.",
+            "link_url": "/pages/vad-vi-gor"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Demontering",
+            "title": "Demontering",
+            "body": "Vi demonterar dina textilplattor med precision och tar hand om hela processen för ett hållbart resultat.",
+            "link_url": "/pages/vad-vi-gor"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Förmedling",
+            "title": "Förmedling",
+            "body": "Vi hjälper dina återbrukade textilplattor att få ett nytt liv. Med vår erfarenhet och vårt breda nätverk ser vi till att varje platta får en ny chans att göra nytta.",
+            "link_url": "/pages/vad-vi-gor"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Montering",
+            "title": "Montering",
+            "body": "Vi har samarbeten med entreprenörer från syd till norr och hjälper dig med ditt projekt från start till mål.",
+            "link_url": "/pages/vad-vi-gor"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Service & underhåll",
+            "title": "Service & underhåll",
+            "body": "Behöver du hjälp med fläckar eller trasiga plattor? Vi hjälper er med problem som kan uppstå med ditt nya eller återbrukade golv.",
+            "link_url": "/pages/vad-vi-gor"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Internt återbruk",
+            "title": "Internt återbruk av textilplattor",
+            "body": "Behåll golvet i fastigheten! Vi uppgraderar befintliga plattor och förbereder dem för nästa hyresgäst.",
+            "link_url": "/pages/vad-vi-gor"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

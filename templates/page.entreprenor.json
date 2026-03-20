@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "hero": { "type": "rc-page-hero", "settings": { "eyebrow": "För entreprenörer", "heading": "Erbjud cirkulära golvlösningar och stärk din konkurrenskraft", "subtext": "Stärk din konkurrenskraft med återbrukade textilplattor och helhetsservice från ReCarpet." } },
+    "kundgrupp": {
+      "type": "rc-kundgrupp",
+      "settings": {
+        "eyebrow": "För entreprenörer",
+        "intro_heading": "Erbjud cirkulära golvlösningar och stärk din konkurrenskraft",
+        "intro_body": "ReCarpet är din partner för cirkulära golvlösningar. Vi levererar återbrukade och nya textilplattor till konkurrenskraftiga priser, och vi hjälper dig med hela projektet.",
+        "btn1_label": "Se produkter", "btn1_url": "/collections/all",
+        "btn2_label": "Kontakta oss", "btn2_url": "/pages/kontakta-oss",
+        "stats_heading": "Milliken – Marknadens mest hållbara textilplatta",
+        "stats_body": "Genom vår samarbeten med Milliken erbjuder vi marknadens mest hållbara textilplattor. Perfekt för er som vill erbjuda kunder hållbara alternativ.",
+        "stats_btn_label": "Kontakta oss", "stats_btn_url": "/pages/kontakta-oss"
+      },
+      "blocks": {
+        "f1": { "type": "feature", "settings": { "title": "Återbrukade textilplattor", "text": "Brett sortiment av återbrukade textilplattor i hög kvalitet — levereras snabbt och till bra priser.", "link_url": "/collections/aterbrukade-textilplattor" } },
+        "f2": { "type": "feature", "settings": { "title": "Nya Milliken plattor", "text": "Nyproducerade textilplattor av marknadens högsta kvalitet och hållbarhet.", "link_url": "/collections/nya-textilplattor" } },
+        "f3": { "type": "feature", "settings": { "title": "Montering & installation", "text": "Vi stöttar era montageuppdrag med professionella golvtekniker från syd till norr.", "link_url": "/pages/vad-vi-gor#montering" } },
+        "f4": { "type": "feature", "settings": { "title": "Demontering & återbruk", "text": "Vi tar hand om demontering och vidareförmedling — allt för att maximera återbruksvärdet.", "link_url": "/pages/vad-vi-gor#demontering" } }
+      },
+      "block_order": ["f1","f2","f3","f4"]
+    },
+    "contact_cta": { "type": "rc-contact-cta", "settings": { "heading": "Kontakta oss för ditt mattgolvprojekt", "body": "Beställ prover, boka en inventering eller ställ en fråga till oss!", "btn1_label": "Kontakta oss", "btn1_url": "/pages/kontakta-oss" } }
+  },
+  "order": ["hero","kundgrupp","contact_cta"]
+}

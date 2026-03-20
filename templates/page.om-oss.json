@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "page_hero": {
+      "type": "rc-page-hero",
+      "settings": {
+        "eyebrow": "Om oss",
+        "heading": "Välkommen till ReCarpet",
+        "subtext": "Vi är ett team som brinner för cirkulära golvlösningar och hållbart byggande."
+      }
+    },
+    "om_oss": {
+      "type": "rc-om-oss",
+      "settings": {
+        "intro_heading": "Vår bakgrund",
+        "intro_body_1": "Jonas Nilsson och Erik Friis grundade ReCarpet med en enkel vision: att ge textilplattor ett nytt liv och göra byggbranschen mer cirkulär och hållbar.",
+        "mission_eyebrow": "Vår passion",
+        "mission_heading": "Hållbara golv är vår passion",
+        "mission_body": "Vi strävar efter att göra varje golvprojekt mer hållbart. Sedan start har vi demonstrerat och förmedlat 30 000m² textilplattor och bidragit till ett mer cirkulärt byggande.",
+        "mission_list": "Demontering av era gamla textilplattor\nLagerhållning och kvalitetssäkring\nMontering av nya eller återbrukade plattor\nService & underhåll för era golv\nInternt återbruk av befintliga plattor"
+      },
+      "blocks": {
+        "stat1": { "type": "stat", "settings": { "number": "2022", "label": "Grundades" } },
+        "stat2": { "type": "stat", "settings": { "number": "30 000m²", "label": "Lagd yta" } },
+        "stat3": { "type": "stat", "settings": { "number": "300t", "label": "Återvunnet" } },
+        "stat4": { "type": "stat", "settings": { "number": "25+", "label": "Nöjda kunder" } }
+      },
+      "block_order": ["stat1","stat2","stat3","stat4"]
+    },
+    "logo_bar": {
+      "type": "rc-logo-bar",
+      "settings": { "heading": "Några av våra kunder" },
+      "blocks": {
+        "l1": { "type": "logo", "settings": { "text": "Veidekke" } },
+        "l2": { "type": "logo", "settings": { "text": "Vasakronan" } },
+        "l3": { "type": "logo", "settings": { "text": "Lundbergs" } },
+        "l4": { "type": "logo", "settings": { "text": "Zengun" } },
+        "l5": { "type": "logo", "settings": { "text": "taylerd" } }
+      },
+      "block_order": ["l1","l2","l3","l4","l5"]
+    },
+    "contact_cta": {
+      "type": "rc-contact-cta",
+      "settings": {
+        "heading": "Kontakta oss för ditt mattgolvprojekt",
+        "body": "Oavsett om du vill beställa prover, boka en inventering eller bara ställa en fråga — vi hjälper dig gärna.",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss"
+      }
+    }
+  },
+  "order": ["page_hero","om_oss","logo_bar","contact_cta"]
+}

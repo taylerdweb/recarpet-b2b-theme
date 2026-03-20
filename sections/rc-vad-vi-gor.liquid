@@ -1,0 +1,241 @@
+{% comment %}
+  reCarpet Vad vi gör — Services overview + detail sections
+  Used on /pages/vad-vi-gor (Tjänster page)
+{% endcomment %}
+
+<style>
+  /* Quick-nav row */
+  .rc-services-nav {
+    background: var(--rc-green, #174237);
+    padding: 0;
+    overflow-x: auto;
+  }
+  .rc-services-nav__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: flex;
+    gap: 0;
+  }
+  .rc-services-nav a {
+    display: inline-block;
+    padding: 16px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .rc-services-nav a:hover,
+  .rc-services-nav a.active {
+    color: #fff;
+    border-bottom-color: rgba(255,255,255,0.8);
+  }
+
+  /* Service detail section */
+  .rc-service-detail {
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-service-detail:nth-child(even) { background: var(--rc-cream, #F0EFEB); }
+  .rc-service-detail:nth-child(odd) { background: var(--rc-white, #fff); }
+  .rc-service-detail__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .rc-service-detail--reverse .rc-service-detail__text { order: 2; }
+  .rc-service-detail--reverse .rc-service-detail__image { order: 1; }
+  .rc-service-detail__eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted);
+    margin-bottom: 8px;
+  }
+  .rc-service-detail__heading {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 500;
+    color: var(--rc-text);
+    margin: 0 0 16px;
+  }
+  .rc-service-detail__body { font-size: 16px; line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 12px; }
+  .rc-service-detail__list {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rc-service-detail__list li {
+    font-size: 15px;
+    color: var(--rc-text-muted);
+    padding-left: 20px;
+    position: relative;
+  }
+  .rc-service-detail__list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--rc-green);
+    font-weight: 700;
+  }
+  .rc-service-detail__image { border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
+  .rc-service-detail__image img { width: 100%; height: 100%; object-fit: cover; }
+
+  @media (max-width: 900px) {
+    .rc-service-detail__inner { grid-template-columns: 1fr; gap: 32px; }
+    .rc-service-detail--reverse .rc-service-detail__text,
+    .rc-service-detail--reverse .rc-service-detail__image { order: unset; }
+    .rc-service-detail__inner,
+    .rc-services-nav__inner { padding: 0 20px; }
+  }
+</style>
+
+<!-- Quick navigation -->
+<nav class="rc-services-nav" aria-label="Tjänster">
+  <div class="rc-services-nav__inner">
+    <a href="#inventering">Inventering</a>
+    <a href="#formedling">Förmedling</a>
+    <a href="#bemanning">Bemanning</a>
+    <a href="#demontering">Demontering</a>
+    <a href="#montering">Montering</a>
+    <a href="#internt-aterbruk">Internt återbruk</a>
+  </div>
+</nav>
+
+<!-- Service detail blocks -->
+{%- for block in section.blocks -%}
+  {%- assign is_reverse = forloop.index | modulo: 2 -%}
+  <section
+    class="rc-service-detail{% if is_reverse == 0 %} rc-service-detail--reverse{% endif %}"
+    id="{{ block.settings.anchor | default: block.settings.title | downcase | replace: ' ', '-' }}"
+  >
+    <div class="rc-service-detail__inner">
+      <div class="rc-service-detail__text">
+        {%- if block.settings.eyebrow != blank -%}
+          <p class="rc-service-detail__eyebrow">{{ block.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="rc-service-detail__heading">{{ block.settings.title }}</h2>
+        <p class="rc-service-detail__body">{{ block.settings.body }}</p>
+        {%- if block.settings.list != blank -%}
+          <ul class="rc-service-detail__list">
+            {%- assign items = block.settings.list | newline_to_br | split: '<br />' -%}
+            {%- for item in items -%}
+              {%- if item != blank -%}<li>{{ item | strip }}</li>{%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if block.settings.btn_label != blank -%}
+          <a href="{{ block.settings.btn_url | default: '/pages/kontakta-oss' }}" class="rc-btn rc-btn--outline">{{ block.settings.btn_label }}</a>
+        {%- endif -%}
+      </div>
+      <div class="rc-service-detail__image">
+        {%- if block.settings.image != blank -%}
+          <img src="{{ block.settings.image | image_url: width: 900 }}" alt="{{ block.settings.title }}" loading="lazy">
+        {%- else -%}
+          <div style="background:var(--rc-cream-alt);height:100%;min-height:260px;"></div>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endfor -%}
+
+{% schema %}
+{
+  "name": "reCarpet Vad vi gör",
+  "tag": "div",
+  "class": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Tjänst",
+      "settings": [
+        { "type": "text", "id": "anchor", "label": "Ankarlänk (t.ex. demontering)" },
+        { "type": "text", "id": "eyebrow", "label": "Liten text" },
+        { "type": "text", "id": "title", "label": "Titel" },
+        { "type": "textarea", "id": "body", "label": "Text" },
+        { "type": "textarea", "id": "list", "label": "Lista (en rad per punkt)" },
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "btn_label", "label": "Knapptext" },
+        { "type": "url", "id": "btn_url", "label": "Knapp länk" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Vad vi gör",
+      "blocks": [
+        {
+          "type": "service",
+          "settings": {
+            "anchor": "inventering",
+            "eyebrow": "Inventering",
+            "title": "Inspektion och bedömning av era mattor",
+            "body": "Känns det ogranskat om ni funderar på att återbruka era textilplattor? ReCarpet guidar er genom materialåterbruksprocessen. I det läge ni inte vet vart ni ska börja — vi hjälper med en inventering för att ge bild av plattornas skick.",
+            "btn_label": "Kontakta oss för inventering"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "anchor": "demontering",
+            "eyebrow": "Demontering",
+            "title": "Monterar bort och tvättar era befintliga mattor",
+            "body": "Vi tillhandahåller professionell demonteringstjänst för era textilplattor. Vi tar hand om hela processen för ett hållbart och smidigt resultat.",
+            "btn_label": "Kontakta oss för demontering"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "anchor": "formedling",
+            "eyebrow": "Förmedling",
+            "title": "Säljer återbrukade och nya textilplattor",
+            "body": "Vi förmedlar återbrukade och nya kvalitetstextilplattor till konkurrenskraftiga priser. Alla plattor är kvalitetssäkrade och redo för ett nytt hem.",
+            "btn_label": "Se vårt sortiment"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "anchor": "montering",
+            "eyebrow": "Montering",
+            "title": "Vi utför självklart montering av era nya mattor",
+            "body": "Vi har samarbeten med professionella montörer från syd till norr. Vi hjälper dig med ditt projekt från start till mål — enkelt och smidigt.",
+            "btn_label": "Kontakta oss för montering"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "anchor": "service",
+            "eyebrow": "Service & underhåll",
+            "title": "Vi underhåller era monterade mattor",
+            "body": "Behöver du hjälp med fläckar, trasiga plattor eller lösa kanter? Vi hjälper er med de problem som kan uppstå med ditt nya eller återbrukade golv.",
+            "btn_label": "Kontakta oss"
+          }
+        },
+        {
+          "type": "service",
+          "settings": {
+            "anchor": "internt-aterbruk",
+            "eyebrow": "Internt återbruk",
+            "title": "Återbruk av era tidigare mattor för er nästa hyresgäst",
+            "body": "Behåll golvet i fastigheten! Vi uppgraderar befintliga plattor och förbereder dem för nästa hyresgäst — ett kostnadseffektivt och hållbart alternativ.",
+            "btn_label": "Läs mer"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

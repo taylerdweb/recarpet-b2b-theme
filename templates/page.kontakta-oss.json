@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "rc_page_hero": {
+      "type": "rc-page-hero",
+      "settings": {
+        "eyebrow": "Kontakta oss",
+        "heading": "Hur kan vi hjälpa dig?",
+        "subtext": "Beställ prover, boka en inventering eller ställ en fråga till oss.",
+        "min_height": "320"
+      }
+    },
+    "rc_kontakta_oss": {
+      "type": "rc-kontakta-oss",
+      "settings": {
+        "eyebrow": "Kontakta oss",
+        "heading": "Hur kan vi hjälpa dig?",
+        "body": "Beställ prover, boka en inventering eller ställ en fråga. Vi svarar inom en arbetsdag.",
+        "email": "hej@recarpet.se",
+        "form_heading": "Skicka ett meddelande",
+        "submit_label": "Skicka meddelande"
+      }
+    }
+  },
+  "order": ["rc_page_hero", "rc_kontakta_oss"]
+}

@@ -1,3 +1,130 @@
+<!-- reCarpet header styling -->
+<style>
+  /* ── reCarpet Navbar ─────────────────────────────────── */
+  .header-wrapper {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e8e7e2 !important;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header {
+    max-width: 1200px !important;
+    padding: 0 48px !important;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 0 !important;
+  }
+
+  /* Logo */
+  .header__heading-link,
+  .header__heading-link:hover {
+    color: var(--rc-green, #174237) !important;
+    text-decoration: none;
+  }
+  .header__heading { margin: 0; }
+  .header__heading .h2 {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: var(--rc-green, #174237) !important;
+    letter-spacing: -0.02em;
+  }
+  .header__heading-logo { height: 36px; width: auto; }
+
+  /* Nav links */
+  .header__menu-item,
+  .header__menu-item span,
+  .header__menu-item .link {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    color: var(--rc-text, #1a1a1a) !important;
+    text-decoration: none !important;
+  }
+  .header__menu-item:hover span,
+  .header__menu-item:hover .link {
+    color: var(--rc-green, #174237) !important;
+  }
+  .header__active-menu-item {
+    text-decoration: underline !important;
+  }
+
+  /* Dropdown menus */
+  .header__submenu {
+    background: #ffffff !important;
+    border: 1px solid #e8e7e2 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+    padding: 8px 0 !important;
+    min-width: 200px !important;
+  }
+  .header__submenu .header__menu-item {
+    padding: 10px 20px !important;
+    border-radius: 0 !important;
+  }
+  .header__submenu .header__menu-item:hover {
+    background: var(--rc-cream, #F0EFEB) !important;
+  }
+
+  /* Header right side actions */
+  .header__icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+
+  /* B2B Login link */
+  .rc-header-login {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--rc-text, #1a1a1a);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+  .rc-header-login:hover {
+    background: var(--rc-cream, #F0EFEB);
+    color: var(--rc-green, #174237);
+  }
+
+  /* Kontakta oss CTA button in nav */
+  .rc-header-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 20px;
+    background: var(--rc-green, #174237);
+    color: #fff !important;
+    border-radius: 4px;
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .rc-header-cta:hover {
+    background: var(--rc-green-hover, #1e5547);
+    color: #fff !important;
+  }
+
+  /* Hide cart icon for B2B (SparkLayer handles cart) */
+  #cart-icon-bubble { display: none; }
+
+  /* Mobile: reduce padding */
+  @media (max-width: 989px) {
+    .header { padding: 0 20px !important; height: 64px; }
+  }
+</style>
+
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -269,6 +396,20 @@
             {% render block %}
         {%- endcase -%}
       {%- endfor -%}
+
+      <!-- reCarpet: B2B login + Kontakta oss -->
+      {%- unless customer -%}
+        <a href="{{ routes.account_login_url }}" class="rc-header-login small-hide" rel="nofollow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Logga in
+        </a>
+      {%- else -%}
+        <a href="{{ routes.account_url }}" class="rc-header-login small-hide" rel="nofollow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Mitt konto
+        </a>
+      {%- endunless -%}
+      <a href="/pages/kontakta-oss" class="rc-header-cta small-hide">Kontakta oss</a>
 
       <a href="{{ routes.cart_url }}" class="header__icon header__icon--cart link focus-inset" id="cart-icon-bubble">
           {% if cart == empty %}

@@ -1,0 +1,139 @@
+{% comment %}
+  reCarpet Logo Bar
+  "Några av våra nöjda kunder" with a row of customer logos
+{% endcomment %}
+
+<style>
+  .rc-logo-bar {
+    background: var(--rc-cream, #F0EFEB);
+    padding: 48px 0;
+    border-top: 1px solid var(--rc-cream-alt, #E8E7E2);
+    border-bottom: 1px solid var(--rc-cream-alt, #E8E7E2);
+  }
+  .rc-logo-bar__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .rc-logo-bar__label {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted, #555);
+    margin-bottom: 32px;
+  }
+  .rc-logo-bar__logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px 60px;
+  }
+  .rc-logo-bar__logo {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.65;
+    transition: opacity 0.2s, filter 0.2s;
+  }
+  .rc-logo-bar__logo:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+  }
+  @media (max-width: 768px) {
+    .rc-logo-bar__inner { padding: 0 20px; }
+    .rc-logo-bar__logos { gap: 28px 36px; }
+    .rc-logo-bar__logo { height: 24px; }
+  }
+</style>
+
+<section class="rc-logo-bar">
+  <div class="rc-logo-bar__inner">
+    {%- if section.settings.heading != blank -%}
+      <p class="rc-logo-bar__label">{{ section.settings.heading }}</p>
+    {%- endif -%}
+    <div class="rc-logo-bar__logos">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.logo != blank -%}
+          {%- if block.settings.url != blank -%}
+            <a href="{{ block.settings.url }}" target="_blank" rel="noopener nofollow">
+          {%- endif -%}
+          <img
+            src="{{ block.settings.logo | image_url: height: 80 }}"
+            alt="{{ block.settings.alt | default: 'Kund' }}"
+            class="rc-logo-bar__logo"
+            loading="lazy"
+          >
+          {%- if block.settings.url != blank -%}
+            </a>
+          {%- endif -%}
+        {%- elsif block.settings.text != blank -%}
+          <span style="font-size:18px;font-weight:700;color:var(--rc-text-muted);opacity:0.65;">{{ block.settings.text }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Logotyper",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Rubrik",
+      "default": "Några av våra nöjda kunder"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logotyp",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logotyp"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Eller text (om ingen bild)"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alternativtext"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Länk (valfritt)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Logotyper",
+      "settings": {
+        "heading": "Några av våra nöjda kunder"
+      },
+      "blocks": [
+        { "type": "logo", "settings": { "text": "Veidekke" } },
+        { "type": "logo", "settings": { "text": "Vasakronan" } },
+        { "type": "logo", "settings": { "text": "Lundbergs Fastigheter" } },
+        { "type": "logo", "settings": { "text": "Zengun" } },
+        { "type": "logo", "settings": { "text": "taylerd" } },
+        { "type": "logo", "settings": { "text": "EQ" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

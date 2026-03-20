@@ -1,0 +1,116 @@
+{% comment %}
+  reCarpet Contact CTA
+  "Vill du cirkulera golv?" — full-width CTA section before footer
+{% endcomment %}
+
+<style>
+  .rc-contact-cta {
+    background: var(--rc-cream, #F0EFEB);
+    padding: 64px 0;
+  }
+  .rc-contact-cta__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .rc-contact-cta__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--rc-text, #1a1a1a);
+    margin: 0;
+  }
+  .rc-contact-cta__body {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--rc-text-muted, #555);
+    margin: 0 0 28px;
+  }
+  .rc-contact-cta__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  @media (max-width: 768px) {
+    .rc-contact-cta__inner {
+      grid-template-columns: 1fr;
+      padding: 0 20px;
+      gap: 24px;
+    }
+    .rc-contact-cta { padding: 48px 0; }
+  }
+</style>
+
+<section class="rc-contact-cta">
+  <div class="rc-contact-cta__inner">
+    <h2 class="rc-contact-cta__heading">{{ section.settings.heading }}</h2>
+    <div>
+      {%- if section.settings.body != blank -%}
+        <p class="rc-contact-cta__body">{{ section.settings.body }}</p>
+      {%- endif -%}
+      <div class="rc-contact-cta__actions">
+        {%- if section.settings.btn1_label != blank -%}
+          <a href="{{ section.settings.btn1_url }}" class="rc-btn rc-btn--primary">{{ section.settings.btn1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.btn2_label != blank -%}
+          <a href="{{ section.settings.btn2_url }}" class="rc-btn rc-btn--outline">{{ section.settings.btn2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Kontakt CTA",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Rubrik",
+      "default": "Vill du cirkulera golv?"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Text",
+      "default": "Beställ prover, boka en inventering eller ställ en fråga till oss!"
+    },
+    {
+      "type": "text",
+      "id": "btn1_label",
+      "label": "Knapp 1 text",
+      "default": "Kontakta oss"
+    },
+    {
+      "type": "url",
+      "id": "btn1_url",
+      "label": "Knapp 1 länk"
+    },
+    {
+      "type": "text",
+      "id": "btn2_label",
+      "label": "Knapp 2 text"
+    },
+    {
+      "type": "url",
+      "id": "btn2_url",
+      "label": "Knapp 2 länk"
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Kontakt CTA",
+      "settings": {
+        "heading": "Vill du cirkulera golv?",
+        "body": "Beställ prover, boka en inventering eller ställ en fråga till oss!",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss"
+      }
+    }
+  ]
+}
+{% endschema %}

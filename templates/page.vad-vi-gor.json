@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "page_hero": {
+      "type": "rc-page-hero",
+      "settings": {
+        "eyebrow": "Vad vi gör",
+        "heading": "Vad vi gör",
+        "subtext": "Vi erbjuder heltäckande tjänster för textilplattor — från inventering och demontering till förmedling och montering."
+      }
+    },
+    "services": {
+      "type": "rc-vad-vi-gor",
+      "blocks": {
+        "s1": { "type": "service", "settings": { "anchor": "inventering", "eyebrow": "Inventering", "title": "Inspektion och bedömning av era mattor", "body": "Känns det osäkert om ni funderar på att återbruka era textilplattor? ReCarpet guidar er genom materialåterbruksprocessen. Vi hjälper med en inventering för att ge bild av plattornas skick.", "btn_label": "Kontakta oss för inventering", "btn_url": "/pages/kontakta-oss" } },
+        "s2": { "type": "service", "settings": { "anchor": "demontering", "eyebrow": "Demontering", "title": "Monterar bort och tvättar era befintliga mattor", "body": "Vi tillhandahåller professionell demonteringstjänst för era textilplattor. Vi tar hand om hela processen för ett hållbart och smidigt resultat.", "btn_label": "Kontakta oss för demontering", "btn_url": "/pages/kontakta-oss" } },
+        "s3": { "type": "service", "settings": { "anchor": "formedling", "eyebrow": "Förmedling", "title": "Säljer återbrukade och nya textilplattor", "body": "Vi förmedlar återbrukade och nya kvalitetstextilplattor till konkurrenskraftiga priser. Alla plattor är kvalitetssäkrade och redo för ett nytt liv.", "btn_label": "Se vårt sortiment", "btn_url": "/collections/all" } },
+        "s4": { "type": "service", "settings": { "anchor": "montering", "eyebrow": "Montering", "title": "Vi utför självklart montering av era nya mattor", "body": "Vi har samarbeten med professionella montörer från syd till norr. Vi hjälper dig med ditt projekt från start till mål.", "btn_label": "Kontakta oss för montering", "btn_url": "/pages/kontakta-oss" } },
+        "s5": { "type": "service", "settings": { "anchor": "service", "eyebrow": "Service & underhåll", "title": "Vi underhåller era monterade mattor", "body": "Behöver du hjälp med fläckar, trasiga plattor eller lösa kanter? Vi hjälper er med de problem som kan uppstå med ditt golv.", "btn_label": "Kontakta oss", "btn_url": "/pages/kontakta-oss" } },
+        "s6": { "type": "service", "settings": { "anchor": "internt-aterbruk", "eyebrow": "Internt återbruk", "title": "Återbruk av era tidigare mattor för er nästa hyresgäst", "body": "Behåll golvet i fastigheten! Vi uppgraderar befintliga plattor och förbereder dem för nästa hyresgäst.", "btn_label": "Läs mer", "btn_url": "/pages/kontakta-oss" } }
+      },
+      "block_order": ["s1","s2","s3","s4","s5","s6"]
+    },
+    "contact_cta": {
+      "type": "rc-contact-cta",
+      "settings": {
+        "heading": "Kontakta oss för ditt mattgolvprojekt",
+        "body": "Oavsett om du vill boka en inventering, demontering eller montering — vi hjälper dig gärna!",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss"
+      }
+    }
+  },
+  "order": ["page_hero","services","contact_cta"]
+}

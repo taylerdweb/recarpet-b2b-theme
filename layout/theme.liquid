@@ -21,6 +21,11 @@
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}
 
+    <!-- reCarpet brand fonts: DM Sans + Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+
     <title>
       {{ page_title }}
       {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
@@ -599,10 +604,10 @@
   
   :root {
     /* Set the brand styling */
-    --b2b-brand-color: #5b36f5; /* Main brand colour */
-    --b2b-brand-color-hover: #82ACFF; /* Main brand colour hover */
-    --b2b-brand-font: Roboto, sans-serif; /* Main brand font */
-    --b2b-brand-font-heading: Poppins, sans-serif; /* Main brand heading font */
+    --b2b-brand-color: #174237; /* Main brand colour — reCarpet dark green */
+    --b2b-brand-color-hover: #1e5547; /* Main brand colour hover */
+    --b2b-brand-font: 'DM Sans', Roboto, sans-serif; /* Main brand font */
+    --b2b-brand-font-heading: 'DM Sans', sans-serif; /* Main brand heading font */
   
     /* Update colours */
     --spark-default-body-color: #555555; /* Main body colour */
@@ -787,6 +792,122 @@
 
   <!-- End SparkLayer Sample CSS Code -->
   {%- endif -%}
+
+  <!-- reCarpet Global Design System -->
+  <style>
+  :root {
+    --rc-green:        #174237;
+    --rc-green-hover:  #1e5547;
+    --rc-green-light:  #2a5941;
+    --rc-cream:        #F0EFEB;
+    --rc-cream-alt:    #E8E7E2;
+    --rc-orange:       #E05A0C;
+    --rc-text:         #1A1A1A;
+    --rc-text-muted:   #555555;
+    --rc-white:        #FFFFFF;
+    --rc-font:         'DM Sans', system-ui, sans-serif;
+    --rc-font-alt:     'Roboto', sans-serif;
+    --rc-radius:       4px;
+    --rc-max-width:    1200px;
+    --rc-section-pad:  80px;
+  }
+
+  /* Global typography override */
+  body, h1, h2, h3, h4, h5, h6, p, a, button, input, select, textarea {
+    font-family: var(--rc-font);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--rc-text);
+  }
+
+  /* reCarpet button styles */
+  .rc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--rc-radius);
+    font-family: var(--rc-font);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .rc-btn--primary {
+    background: var(--rc-green);
+    color: var(--rc-white);
+    border-color: var(--rc-green);
+  }
+  .rc-btn--primary:hover {
+    background: var(--rc-green-hover);
+    border-color: var(--rc-green-hover);
+    color: var(--rc-white);
+  }
+  .rc-btn--outline {
+    background: transparent;
+    color: var(--rc-green);
+    border-color: var(--rc-green);
+  }
+  .rc-btn--outline:hover {
+    background: var(--rc-green);
+    color: var(--rc-white);
+  }
+  .rc-btn--outline-white {
+    background: transparent;
+    color: var(--rc-white);
+    border-color: var(--rc-white);
+  }
+  .rc-btn--outline-white:hover {
+    background: var(--rc-white);
+    color: var(--rc-green);
+  }
+  .rc-btn--ghost {
+    background: transparent;
+    color: var(--rc-green);
+    border-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .rc-btn--ghost:hover { text-decoration: underline; }
+  .rc-btn--ghost::after { content: ' →'; }
+
+  /* Section helpers */
+  .rc-section { padding: var(--rc-section-pad) 0; }
+  .rc-section--cream { background: var(--rc-cream); }
+  .rc-section--green { background: var(--rc-green); color: var(--rc-white); }
+  .rc-section--white { background: var(--rc-white); }
+  .rc-container {
+    max-width: var(--rc-max-width);
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  @media (max-width: 768px) {
+    .rc-container { padding: 0 20px; }
+    :root { --rc-section-pad: 48px; }
+  }
+
+  /* Section eyebrow label */
+  .rc-eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted);
+    margin-bottom: 12px;
+  }
+
+  /* Utility: hide Dawn default header/footer when we use custom ones */
+  .rc-hide { display: none !important; }
+
+  /* Hide the default Dawn footer (we use rc-footer section instead) */
+  .footer.gradient { display: none !important; }
+  </style>
 
   {%- comment -%} Force LOGGED-OUT visitors to login unless on allowed pages. Logged-in customers (awaiting B2B approval) may browse freely. {%- endcomment -%}
   {%- if is_b2b_customer -%}

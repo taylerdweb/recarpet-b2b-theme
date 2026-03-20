@@ -11,6 +11,14 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
+    "rc_footer": {
+      "type": "rc-footer",
+      "settings": {
+        "tagline": "Specialister på demontering, kvalitetssäkring och leverans av textilplattor.",
+        "phone": "0700733682",
+        "email": "jonas@recarpet.se"
+      }
+    },
     "footer": {
       "type": "footer",
       "blocks": {
@@ -57,6 +65,7 @@
     }
   },
   "order": [
+    "rc_footer",
     "footer"
   ]
 }

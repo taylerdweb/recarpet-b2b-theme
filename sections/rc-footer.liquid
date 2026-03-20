@@ -1,0 +1,263 @@
+{% comment %}
+  reCarpet Custom Footer
+  Dark green, 4-column layout matching old site design
+{% endcomment %}
+
+<style>
+  .rc-footer {
+    background: var(--rc-green, #174237);
+    color: rgba(255,255,255,0.85);
+    padding: 64px 0 0;
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+  }
+  .rc-footer__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+    gap: 48px;
+  }
+  /* Logo column */
+  .rc-footer__brand { padding-right: 20px; }
+  .rc-footer__logo {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    display: block;
+  }
+  .rc-footer__logo img { height: 36px; width: auto; }
+  .rc-footer__tagline {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.65);
+    margin: 0 0 24px;
+  }
+  .rc-footer__contact p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    margin: 0 0 4px;
+    line-height: 1.5;
+  }
+  .rc-footer__contact a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+  }
+  .rc-footer__contact a:hover { color: #fff; text-decoration: underline; }
+  .rc-footer__contact-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+
+  /* Nav columns */
+  .rc-footer__col-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin: 0 0 16px;
+  }
+  .rc-footer__nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .rc-footer__nav a {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: color 0.15s;
+    line-height: 1.4;
+  }
+  .rc-footer__nav a:hover { color: #fff; }
+
+  /* Bottom bar */
+  .rc-footer__bottom {
+    max-width: 1200px;
+    margin: 48px auto 0;
+    padding: 20px 48px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .rc-footer__copyright {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+  }
+  .rc-footer__legal {
+    display: flex;
+    gap: 20px;
+  }
+  .rc-footer__legal a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+  }
+  .rc-footer__legal a:hover { color: rgba(255,255,255,0.8); text-decoration: underline; }
+
+  @media (max-width: 1000px) {
+    .rc-footer__inner {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .rc-footer__brand { grid-column: 1 / -1; padding-right: 0; }
+  }
+  @media (max-width: 600px) {
+    .rc-footer__inner { grid-template-columns: 1fr; padding: 0 20px; }
+    .rc-footer__bottom { padding: 20px 20px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+
+<footer class="rc-footer" role="contentinfo">
+  <div class="rc-footer__inner">
+
+    <!-- Brand column -->
+    <div class="rc-footer__brand">
+      <a href="/" class="rc-footer__logo">
+        {%- if settings.logo != blank -%}
+          {{ settings.logo | image_url: width: 240 | image_tag: class: 'rc-footer__logo', alt: shop.name, loading: 'lazy' }}
+        {%- else -%}
+          ReCarpet
+        {%- endif -%}
+      </a>
+
+      <p class="rc-footer__tagline">{{ section.settings.tagline }}</p>
+
+      <p class="rc-footer__contact-label">Kontakt</p>
+      <div class="rc-footer__contact">
+        {%- if section.settings.phone != blank -%}
+          <p><a href="tel:{{ section.settings.phone | remove: ' ' }}">{{ section.settings.phone }}</a></p>
+        {%- endif -%}
+        {%- if section.settings.email != blank -%}
+          <p><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></p>
+        {%- endif -%}
+        {%- if section.settings.address != blank -%}
+          <p style="margin-top:8px;font-size:13px;">{{ section.settings.address }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Våra kunder -->
+    <div class="rc-footer__col">
+      <p class="rc-footer__col-title">Våra kunder</p>
+      <ul class="rc-footer__nav">
+        <li><a href="/pages/fastighetsagare">Fastighetsägare</a></li>
+        <li><a href="/pages/arkitekter">Arkitekt</a></li>
+        <li><a href="/pages/hyresgast">Hyresgäst</a></li>
+        <li><a href="/pages/entreprenor">Entreprenör</a></li>
+      </ul>
+    </div>
+
+    <!-- Vad vi gör -->
+    <div class="rc-footer__col">
+      <p class="rc-footer__col-title">Vad vi gör</p>
+      <ul class="rc-footer__nav">
+        <li><a href="/pages/vad-vi-gor#inventering">Inventering</a></li>
+        <li><a href="/pages/vad-vi-gor#demontering">Demontering</a></li>
+        <li><a href="/pages/vad-vi-gor#formedling">Förmedling</a></li>
+        <li><a href="/pages/vad-vi-gor#montering">Montering</a></li>
+        <li><a href="/pages/vad-vi-gor#service">Service & underhåll</a></li>
+        <li><a href="/pages/vad-vi-gor#internt-aterbruk">Internt återbruk</a></li>
+      </ul>
+    </div>
+
+    <!-- Våra golv -->
+    <div class="rc-footer__col">
+      <p class="rc-footer__col-title">Våra golv</p>
+      <ul class="rc-footer__nav">
+        <li><a href="/collections/aterbrukade-textilplattor">Återbrukade textilplattor</a></li>
+        <li><a href="/collections/nya-textilplattor">Milliken textilplattor</a></li>
+        <li><a href="/collections/all">Alla produkter</a></li>
+      </ul>
+    </div>
+
+    <!-- Kontakta ReCarpet -->
+    <div class="rc-footer__col">
+      <p class="rc-footer__col-title">Kontakta ReCarpet</p>
+      <ul class="rc-footer__nav">
+        <li><a href="/pages/kontakta-oss">Kontakta oss</a></li>
+        <li><a href="/pages/om-oss">Om oss</a></li>
+        <li><a href="{{ routes.account_login_url }}">Logga in B2B</a></li>
+        {%- if section.settings.linkedin_url != blank -%}
+          <li><a href="{{ section.settings.linkedin_url }}" target="_blank" rel="noopener nofollow">LinkedIn ReCarpet</a></li>
+        {%- endif -%}
+        {%- if section.settings.linkedin_jonas != blank -%}
+          <li><a href="{{ section.settings.linkedin_jonas }}" target="_blank" rel="noopener nofollow">LinkedIn Jonas</a></li>
+        {%- endif -%}
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="rc-footer__bottom">
+    <span class="rc-footer__copyright">&copy; {{ 'now' | date: '%Y' }} ReCarpet</span>
+    <div class="rc-footer__legal">
+      <a href="/pages/integritetspolicy">Integritetspolicy</a>
+      <a href="/pages/kopvillkor">Köpvillkor</a>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "reCarpet Footer",
+  "tag": "div",
+  "class": "rc-footer-wrapper",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Specialister på demontering, kvalitetssäkring och leverans av textilplattor."
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Telefon",
+      "default": "0700733682"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "E-post",
+      "default": "jonas@recarpet.se"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Adress"
+    },
+    {
+      "type": "url",
+      "id": "linkedin_url",
+      "label": "LinkedIn ReCarpet URL"
+    },
+    {
+      "type": "url",
+      "id": "linkedin_jonas",
+      "label": "LinkedIn Jonas URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Footer"
+    }
+  ]
+}
+{% endschema %}

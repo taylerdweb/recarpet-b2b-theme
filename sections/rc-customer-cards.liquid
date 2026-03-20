@@ -1,0 +1,208 @@
+{% comment %}
+  reCarpet Customer Cards
+  "Vi har lösningarna för era behov" — 4 customer group cards
+{% endcomment %}
+
+<style>
+  .rc-customer-cards {
+    background: var(--rc-cream, #F0EFEB);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-customer-cards__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .rc-customer-cards__heading {
+    text-align: center;
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 500;
+    margin: 0 0 48px;
+    color: var(--rc-text, #1a1a1a);
+  }
+  .rc-customer-cards__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .rc-card {
+    background: var(--rc-white, #fff);
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--rc-text, #1a1a1a);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .rc-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    color: var(--rc-text, #1a1a1a);
+  }
+  .rc-card__image {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+  }
+  .rc-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .rc-card:hover .rc-card__image img {
+    transform: scale(1.04);
+  }
+  .rc-card__body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .rc-card__title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .rc-card__text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--rc-text-muted, #555);
+    margin: 0 0 16px;
+    flex: 1;
+  }
+  .rc-card__link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--rc-green, #174237);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .rc-card__link::after { content: ' →'; }
+  @media (max-width: 900px) {
+    .rc-customer-cards__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .rc-customer-cards__grid { grid-template-columns: 1fr; }
+    .rc-customer-cards__inner { padding: 0 20px; }
+  }
+</style>
+
+<section class="rc-customer-cards">
+  <div class="rc-customer-cards__inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="rc-customer-cards__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    <div class="rc-customer-cards__grid">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.url | default: '#' }}" class="rc-card">
+          {%- if block.settings.image != blank -%}
+            <div class="rc-card__image">
+              <img
+                src="{{ block.settings.image | image_url: width: 600 }}"
+                alt="{{ block.settings.title }}"
+                loading="lazy"
+              >
+            </div>
+          {%- endif -%}
+          <div class="rc-card__body">
+            <h3 class="rc-card__title">{{ block.settings.title }}</h3>
+            {%- if block.settings.text != blank -%}
+              <p class="rc-card__text">{{ block.settings.text }}</p>
+            {%- endif -%}
+            <span class="rc-card__link">Läs mer</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Kundkort",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Rubrik",
+      "default": "Vi har lösningarna för era behov"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Kundkort",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Bild"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Fastighetsägare"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Vi demonterar, rengör, lagerhåller och förmedlar textilplattor."
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Länk"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Kundkort",
+      "settings": { "heading": "Vi har lösningarna för era behov" },
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "Fastighetsägare",
+            "text": "Vi demonterar, rengör, lagerhåller och förmedlar textilplattor.",
+            "url": "/pages/fastighetsagare"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Arkitekt",
+            "text": "Förskriv hållbara och återbrukade textilplattor för dina projekt. Enkelt och cirkulärt.",
+            "url": "/pages/arkitekter"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Hyresgäst",
+            "text": "Uppdatera ditt kontor med nya eller återbrukade textilplattor – enkelt och miljövänligt!",
+            "url": "/pages/hyresgast"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Entreprenör",
+            "text": "Erbjud cirkulära golvlösningar och stärk din konkurrenskraft med vårt återbrukade sortiment.",
+            "url": "/pages/entreprenor"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

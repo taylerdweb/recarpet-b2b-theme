@@ -1,0 +1,134 @@
+{% comment %}
+  reCarpet Page Hero
+  Dark overlay hero for interior pages (Vad vi gör, Om oss, etc.)
+{% endcomment %}
+
+<style>
+  .rc-page-hero {
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .rc-page-hero__bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}');
+    background-size: cover;
+    background-position: {{ section.settings.image_position | default: 'center center' }};
+  }
+  .rc-page-hero--no-image .rc-page-hero__bg {
+    background: var(--rc-green, #174237);
+  }
+  .rc-page-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,0.7) 0%,
+      rgba(0,0,0,0.4) 50%,
+      rgba(0,0,0,0.2) 100%
+    );
+  }
+  .rc-page-hero--no-image .rc-page-hero__overlay {
+    background: transparent;
+  }
+  .rc-page-hero__content {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 48px;
+    width: 100%;
+    color: #fff;
+  }
+  .rc-page-hero__eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 12px;
+  }
+  .rc-page-hero__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: clamp(30px, 4.5vw, 56px);
+    font-weight: 500;
+    line-height: 1.1;
+    color: #fff;
+    margin: 0 0 16px;
+    max-width: 680px;
+  }
+  .rc-page-hero__subtext {
+    font-size: 18px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.85);
+    max-width: 560px;
+    margin: 0;
+  }
+  @media (max-width: 768px) {
+    .rc-page-hero__content { padding: 40px 20px; }
+    .rc-page-hero { min-height: 300px; }
+  }
+</style>
+
+<section class="rc-page-hero{% if section.settings.background_image == blank %} rc-page-hero--no-image{% endif %}">
+  <div class="rc-page-hero__bg"></div>
+  <div class="rc-page-hero__overlay"></div>
+  <div class="rc-page-hero__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="rc-page-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <h1 class="rc-page-hero__heading">{{ section.settings.heading | default: page.title }}</h1>
+    {%- if section.settings.subtext != blank -%}
+      <p class="rc-page-hero__subtext">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Sidhero",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Bakgrundsbild"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Bildposition",
+      "options": [
+        { "value": "center center", "label": "Mitten" },
+        { "value": "top center", "label": "Topp" },
+        { "value": "bottom center", "label": "Botten" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Liten text"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Rubrik (tom = sidans titel)"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Undertext"
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Sidhero"
+    }
+  ]
+}
+{% endschema %}

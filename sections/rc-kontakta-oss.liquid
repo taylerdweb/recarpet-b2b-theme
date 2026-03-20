@@ -1,0 +1,325 @@
+{% comment %}
+  reCarpet Kontakta oss — Contact page section
+  Includes intro split + contact form + info blocks
+{% endcomment %}
+
+<style>
+  /* Intro */
+  .rc-contact-page {
+    background: var(--rc-white, #fff);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-contact-page__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  /* Left: Contact info */
+  .rc-contact-page__info-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted, #555);
+    margin-bottom: 10px;
+  }
+  .rc-contact-page__info-heading {
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 500;
+    color: var(--rc-text, #1a1a1a);
+    line-height: 1.2;
+    margin: 0 0 20px;
+  }
+  .rc-contact-page__info-body {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--rc-text-muted, #555);
+    margin: 0 0 40px;
+  }
+
+  .rc-contact-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .rc-contact-block {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .rc-contact-block__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--rc-cream, #F0EFEB);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .rc-contact-block__icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--rc-green, #174237);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .rc-contact-block__label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted, #555);
+    margin-bottom: 4px;
+  }
+  .rc-contact-block__value {
+    font-size: 15px;
+    color: var(--rc-text, #1a1a1a);
+    font-weight: 500;
+  }
+  .rc-contact-block__value a {
+    color: var(--rc-green, #174237);
+    text-decoration: none;
+  }
+  .rc-contact-block__value a:hover { text-decoration: underline; }
+
+  /* Right: Form */
+  .rc-contact-form-wrap {
+    background: var(--rc-cream, #F0EFEB);
+    border-radius: 12px;
+    padding: 40px;
+  }
+  .rc-contact-form-wrap h3 {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--rc-text, #1a1a1a);
+    margin: 0 0 24px;
+  }
+  .rc-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .rc-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .rc-form-group--full { grid-column: 1 / -1; }
+  .rc-form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rc-text, #1a1a1a);
+    letter-spacing: 0.02em;
+  }
+  .rc-form-group input,
+  .rc-form-group select,
+  .rc-form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--rc-cream-alt, #E8E7E2);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    color: var(--rc-text, #1a1a1a);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+  }
+  .rc-form-group input:focus,
+  .rc-form-group select:focus,
+  .rc-form-group textarea:focus {
+    border-color: var(--rc-green, #174237);
+  }
+  .rc-form-group textarea { resize: vertical; min-height: 120px; }
+  .rc-form-submit { margin-top: 8px; }
+  .rc-form-submit button {
+    width: 100%;
+    padding: 14px;
+    background: var(--rc-green, #174237);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .rc-form-submit button:hover { background: var(--rc-green-hover, #1e5547); }
+
+  /* Success message */
+  .rc-form-success {
+    display: none;
+    text-align: center;
+    padding: 32px 0;
+  }
+  .rc-form-success__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--rc-green, #174237);
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rc-form-success__icon svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .rc-form-success h4 { font-size: 20px; font-weight: 600; margin: 0 0 8px; }
+  .rc-form-success p { font-size: 15px; color: var(--rc-text-muted, #555); margin: 0; }
+
+  @media (max-width: 900px) {
+    .rc-contact-page__inner { grid-template-columns: 1fr; gap: 48px; padding: 0 20px; }
+    .rc-form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .rc-contact-form-wrap { padding: 28px 20px; }
+  }
+</style>
+
+<section class="rc-contact-page">
+  <div class="rc-contact-page__inner">
+    <!-- Info side -->
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rc-contact-page__info-eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="rc-contact-page__info-heading">{{ section.settings.heading }}</h2>
+      {%- if section.settings.body != blank -%}
+        <p class="rc-contact-page__info-body">{{ section.settings.body }}</p>
+      {%- endif -%}
+
+      <div class="rc-contact-blocks">
+        {%- if section.settings.phone != blank -%}
+          <div class="rc-contact-block">
+            <div class="rc-contact-block__icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.67 2 2 0 012-2.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 6.91a16 16 0 006.18 6.18l1.28-1.28a2 2 0 012.11-.45c.9.33 1.85.53 2.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div>
+              <div class="rc-contact-block__label">Telefon</div>
+              <div class="rc-contact-block__value"><a href="tel:{{ section.settings.phone | remove: ' ' }}">{{ section.settings.phone }}</a></div>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.email != blank -%}
+          <div class="rc-contact-block">
+            <div class="rc-contact-block__icon">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="rc-contact-block__label">E-post</div>
+              <div class="rc-contact-block__value"><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></div>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.address != blank -%}
+          <div class="rc-contact-block">
+            <div class="rc-contact-block__icon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="rc-contact-block__label">Adress</div>
+              <div class="rc-contact-block__value">{{ section.settings.address }}</div>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Form side -->
+    <div class="rc-contact-form-wrap">
+      <h3>{{ section.settings.form_heading | default: 'Skicka ett meddelande' }}</h3>
+      <div id="rc-contact-form-container">
+        {%- form 'contact', id: 'rc-contact-form' -%}
+          <div class="rc-form-row">
+            <div class="rc-form-group">
+              <label for="ContactFormName">Namn</label>
+              <input type="text" id="ContactFormName" name="contact[name]" autocomplete="name" value="{% if customer %}{{ customer.name }}{% endif %}" placeholder="Ditt namn" required>
+            </div>
+            <div class="rc-form-group">
+              <label for="ContactFormEmail">E-post</label>
+              <input type="email" id="ContactFormEmail" name="contact[email]" autocomplete="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="din@email.se" required>
+            </div>
+          </div>
+          <div class="rc-form-group">
+            <label for="ContactFormPhone">Telefon (valfritt)</label>
+            <input type="tel" id="ContactFormPhone" name="contact[phone]" autocomplete="tel" placeholder="Ditt telefonnummer">
+          </div>
+          <div class="rc-form-group">
+            <label for="ContactFormSubject">Ämne</label>
+            <select id="ContactFormSubject" name="contact[subject]">
+              <option value="">Välj ämne</option>
+              <option value="Inventering">Inventering</option>
+              <option value="Beställ prover">Beställ prover</option>
+              <option value="Offertförfrågan">Offertförfrågan</option>
+              <option value="Återbruk av golv">Återbruk av golv</option>
+              <option value="Ny textilplatta">Ny textilplatta</option>
+              <option value="Övrigt">Övrigt</option>
+            </select>
+          </div>
+          <div class="rc-form-group">
+            <label for="ContactFormMessage">Meddelande</label>
+            <textarea id="ContactFormMessage" name="contact[body]" placeholder="Berätta vad du behöver hjälp med..."></textarea>
+          </div>
+          <div class="rc-form-submit">
+            <button type="submit">{{ section.settings.submit_label | default: 'Skicka meddelande' }}</button>
+          </div>
+        {%- endform -%}
+      </div>
+
+      {%- if form.posted_successfully? -%}
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            var container = document.getElementById('rc-contact-form-container');
+            if (container) {
+              container.innerHTML = '<div class="rc-form-success" style="display:block"><div class="rc-form-success__icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><h4>Tack för ditt meddelande!</h4><p>Vi återkommer till dig så snart som möjligt.</p></div>';
+            }
+          });
+        </script>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Kontakta oss",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Liten text", "default": "Kontakta oss" },
+    { "type": "textarea", "id": "heading", "label": "Rubrik", "default": "Hur kan vi hjälpa dig?" },
+    { "type": "textarea", "id": "body", "label": "Text", "default": "Beställ prover, boka en inventering eller ställ en fråga. Vi svarar inom en arbetsdag." },
+    { "type": "text", "id": "phone", "label": "Telefon" },
+    { "type": "text", "id": "email", "label": "E-post" },
+    { "type": "text", "id": "address", "label": "Adress" },
+    { "type": "text", "id": "form_heading", "label": "Formulärrubrik", "default": "Skicka ett meddelande" },
+    { "type": "text", "id": "submit_label", "label": "Knapptext", "default": "Skicka meddelande" }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Kontakta oss",
+      "settings": {
+        "eyebrow": "Kontakta oss",
+        "heading": "Hur kan vi hjälpa dig?",
+        "body": "Beställ prover, boka en inventering eller ställ en fråga. Vi svarar inom en arbetsdag.",
+        "email": "hej@recarpet.se",
+        "form_heading": "Skicka ett meddelande",
+        "submit_label": "Skicka meddelande"
+      }
+    }
+  ]
+}
+{% endschema %}

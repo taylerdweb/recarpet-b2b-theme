@@ -1,0 +1,275 @@
+{% comment %}
+  reCarpet Products CTA
+  "Prisvärda textilplattor av hög kvalitet" — image + text split with featured products
+{% endcomment %}
+
+<style>
+  .rc-products-cta {
+    background: var(--rc-white, #fff);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-products-cta__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .rc-products-cta__split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    margin-bottom: 64px;
+  }
+  .rc-products-cta__image {
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .rc-products-cta__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .rc-products-cta__eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted, #555);
+    margin-bottom: 12px;
+  }
+  .rc-products-cta__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 500;
+    color: var(--rc-text, #1a1a1a);
+    margin: 0 0 20px;
+    line-height: 1.2;
+  }
+  .rc-products-cta__body {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--rc-text-muted, #555);
+    margin: 0 0 28px;
+  }
+  .rc-products-cta__actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Subcategory cards */
+  .rc-products-cta__cats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .rc-cat-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    text-decoration: none;
+    display: block;
+  }
+  .rc-cat-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .rc-cat-card:hover img { transform: scale(1.04); }
+  .rc-cat-card__label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .rc-cat-card__tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    background: var(--rc-orange, #E05A0C);
+    color: #fff;
+  }
+
+  @media (max-width: 900px) {
+    .rc-products-cta__split { grid-template-columns: 1fr; gap: 32px; }
+    .rc-products-cta__inner { padding: 0 20px; }
+  }
+  @media (max-width: 600px) {
+    .rc-products-cta__cats { grid-template-columns: 1fr; }
+  }
+</style>
+
+<section class="rc-products-cta">
+  <div class="rc-products-cta__inner">
+    <div class="rc-products-cta__split">
+      <div class="rc-products-cta__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="rc-products-cta__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="rc-products-cta__heading">{{ section.settings.heading }}</h2>
+        {%- if section.settings.body != blank -%}
+          <p class="rc-products-cta__body">{{ section.settings.body }}</p>
+        {%- endif -%}
+        <div class="rc-products-cta__actions">
+          {%- if section.settings.btn1_label != blank -%}
+            <a href="{{ section.settings.btn1_url }}" class="rc-btn rc-btn--primary">{{ section.settings.btn1_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.btn2_label != blank -%}
+            <a href="{{ section.settings.btn2_url }}" class="rc-btn rc-btn--outline">{{ section.settings.btn2_label }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="rc-products-cta__image">
+        {%- if section.settings.image != blank -%}
+          <img src="{{ section.settings.image | image_url: width: 900 }}" alt="{{ section.settings.heading }}" loading="lazy">
+        {%- else -%}
+          <div style="background:var(--rc-cream);height:100%;min-height:300px;"></div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="rc-products-cta__cats">
+        {%- for block in section.blocks -%}
+          <a href="{{ block.settings.url | default: '#' }}" class="rc-cat-card">
+            {%- if block.settings.image != blank -%}
+              <img src="{{ block.settings.image | image_url: width: 700 }}" alt="{{ block.settings.title }}" loading="lazy">
+            {%- else -%}
+              <div style="background:var(--rc-cream-alt);height:100%;"></div>
+            {%- endif -%}
+            <div class="rc-cat-card__label">
+              {%- if block.settings.tag != blank -%}
+                <div class="rc-cat-card__tag">{{ block.settings.tag }}</div>
+              {%- endif -%}
+              <div>{{ block.settings.title }}</div>
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Produkter CTA",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Liten text",
+      "default": "Prisvärda textilplattor av hög kvalitet"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Rubrik",
+      "default": "Prisvärda mattor av hög kvalitet"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "Text",
+      "default": "Vi erbjuder ett brett sortiment av både återbrukade och nya textilplattor till konkurrenskraftiga priser."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Bild"
+    },
+    {
+      "type": "text",
+      "id": "btn1_label",
+      "label": "Knapp 1 text",
+      "default": "Beställ prover"
+    },
+    {
+      "type": "url",
+      "id": "btn1_url",
+      "label": "Knapp 1 länk"
+    },
+    {
+      "type": "text",
+      "id": "btn2_label",
+      "label": "Knapp 2 text",
+      "default": "Se alla produkter"
+    },
+    {
+      "type": "url",
+      "id": "btn2_url",
+      "label": "Knapp 2 länk"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Kategori",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Bild"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Återbrukade textilplattor"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Taggetikett (t.ex. ÅTERBRUK)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Länk"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Produkter CTA",
+      "settings": {
+        "eyebrow": "Sortiment",
+        "heading": "Prisvärda mattor av hög kvalitet",
+        "body": "Vi erbjuder ett brett sortiment av både återbrukade och nya textilplattor till konkurrenskraftiga priser. Alla produkter är kvalitetssäkrade och redo att monteras.",
+        "btn1_label": "Beställ prover",
+        "btn2_label": "Se alla produkter",
+        "btn2_url": "/collections/all"
+      },
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Återbrukade textilplattor",
+            "tag": "ÅTERBRUK",
+            "url": "/collections/aterbrukade-textilplattor"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Nya textilplattor",
+            "tag": "NY",
+            "url": "/collections/nya-textilplattor"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

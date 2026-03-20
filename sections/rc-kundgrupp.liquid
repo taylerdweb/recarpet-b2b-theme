@@ -1,0 +1,285 @@
+{% comment %}
+  reCarpet Kundgrupp — Customer group landing page section
+  Used for: Fastighetsägare, Arkitekt, Hyresgäst, Entreprenör
+{% endcomment %}
+
+<style>
+  /* Intro split */
+  .rc-kg-intro {
+    background: var(--rc-white);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-kg-intro__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .rc-kg-intro__eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--rc-text-muted);
+    margin-bottom: 10px;
+  }
+  .rc-kg-intro__heading {
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 500;
+    color: var(--rc-text);
+    line-height: 1.15;
+    margin: 0 0 20px;
+  }
+  .rc-kg-intro__body { font-size: 16px; line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 12px; }
+  .rc-kg-intro__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+  .rc-kg-intro__image { border-radius: 8px; overflow: hidden; aspect-ratio: 3/2; }
+  .rc-kg-intro__image img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Feature cards */
+  .rc-kg-features {
+    background: var(--rc-cream);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-kg-features__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .rc-kg-features__heading {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 500;
+    margin: 0 0 40px;
+  }
+  .rc-kg-features__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .rc-kg-feature {
+    background: var(--rc-white);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .rc-kg-feature__image { aspect-ratio: 16/9; overflow: hidden; }
+  .rc-kg-feature__image img { width: 100%; height: 100%; object-fit: cover; }
+  .rc-kg-feature__placeholder { background: var(--rc-cream-alt); height: 200px; }
+  .rc-kg-feature__body { padding: 24px; }
+  .rc-kg-feature__title { font-size: 20px; font-weight: 700; margin: 0 0 10px; }
+  .rc-kg-feature__text { font-size: 14px; line-height: 1.65; color: var(--rc-text-muted); margin: 0 0 16px; }
+  .rc-kg-feature__link {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--rc-green);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .rc-kg-feature__link::after { content: ' →'; }
+  .rc-kg-feature__link:hover { text-decoration: underline; }
+
+  /* Stats / highlight section */
+  .rc-kg-stats {
+    background: var(--rc-white);
+    padding: 64px 0;
+  }
+  .rc-kg-stats__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .rc-kg-stats__heading { font-size: clamp(22px, 2.5vw, 32px); font-weight: 500; margin: 0 0 16px; }
+  .rc-kg-stats__body { font-size: 16px; line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 12px; }
+  .rc-kg-stat-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .rc-kg-stat { text-align: left; }
+  .rc-kg-stat__number { font-size: 40px; font-weight: 700; color: var(--rc-green); line-height: 1; }
+  .rc-kg-stat__unit { font-size: 16px; color: var(--rc-text-muted); }
+  .rc-kg-stat__label { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rc-text-muted); margin-top: 4px; }
+  .rc-kg-stats__image { border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
+  .rc-kg-stats__image img { width: 100%; height: 100%; object-fit: cover; }
+
+  @media (max-width: 900px) {
+    .rc-kg-intro__inner,
+    .rc-kg-stats__inner,
+    .rc-kg-features__grid { grid-template-columns: 1fr; gap: 32px; }
+    .rc-kg-intro__inner,
+    .rc-kg-features__inner,
+    .rc-kg-stats__inner { padding: 0 20px; }
+  }
+</style>
+
+<!-- Intro -->
+<section class="rc-kg-intro">
+  <div class="rc-kg-intro__inner">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="rc-kg-intro__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="rc-kg-intro__heading">{{ section.settings.intro_heading }}</h2>
+      <p class="rc-kg-intro__body">{{ section.settings.intro_body }}</p>
+      {%- if section.settings.intro_body_2 != blank -%}
+        <p class="rc-kg-intro__body">{{ section.settings.intro_body_2 }}</p>
+      {%- endif -%}
+      <div class="rc-kg-intro__actions">
+        {%- if section.settings.btn1_label != blank -%}
+          <a href="{{ section.settings.btn1_url }}" class="rc-btn rc-btn--primary">{{ section.settings.btn1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.btn2_label != blank -%}
+          <a href="{{ section.settings.btn2_url }}" class="rc-btn rc-btn--outline">{{ section.settings.btn2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- if section.settings.intro_image != blank -%}
+      <div class="rc-kg-intro__image">
+        <img src="{{ section.settings.intro_image | image_url: width: 900 }}" alt="{{ section.settings.intro_heading }}" loading="lazy">
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<!-- Feature cards -->
+{%- assign feature_blocks = section.blocks | where: 'type', 'feature' -%}
+{%- if feature_blocks.size > 0 -%}
+  <section class="rc-kg-features">
+    <div class="rc-kg-features__inner">
+      {%- if section.settings.features_heading != blank -%}
+        <h2 class="rc-kg-features__heading">{{ section.settings.features_heading }}</h2>
+      {%- endif -%}
+      <div class="rc-kg-features__grid">
+        {%- for block in feature_blocks -%}
+          <div class="rc-kg-feature">
+            <div class="rc-kg-feature__image">
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 700 }}" alt="{{ block.settings.title }}" loading="lazy">
+              {%- else -%}
+                <div class="rc-kg-feature__placeholder"></div>
+              {%- endif -%}
+            </div>
+            <div class="rc-kg-feature__body">
+              <h3 class="rc-kg-feature__title">{{ block.settings.title }}</h3>
+              <p class="rc-kg-feature__text">{{ block.settings.text }}</p>
+              {%- if block.settings.link_url != blank -%}
+                <a href="{{ block.settings.link_url }}" class="rc-kg-feature__link">{{ block.settings.link_label | default: 'Läs mer' }}</a>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<!-- Stats / highlight -->
+{%- assign stat_blocks = section.blocks | where: 'type', 'stat' -%}
+{%- if section.settings.stats_heading != blank or stat_blocks.size > 0 -%}
+  <section class="rc-kg-stats">
+    <div class="rc-kg-stats__inner">
+      <div>
+        {%- if section.settings.stats_eyebrow != blank -%}
+          <p class="rc-kg-intro__eyebrow">{{ section.settings.stats_eyebrow }}</p>
+        {%- endif -%}
+        {%- if section.settings.stats_heading != blank -%}
+          <h2 class="rc-kg-stats__heading">{{ section.settings.stats_heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.stats_body != blank -%}
+          <p class="rc-kg-stats__body">{{ section.settings.stats_body }}</p>
+        {%- endif -%}
+        {%- if stat_blocks.size > 0 -%}
+          <div class="rc-kg-stat-row">
+            {%- for block in stat_blocks -%}
+              <div class="rc-kg-stat">
+                <div class="rc-kg-stat__number">{{ block.settings.number }}<span class="rc-kg-stat__unit">{{ block.settings.unit }}</span></div>
+                <div class="rc-kg-stat__label">{{ block.settings.label }}</div>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.stats_btn_label != blank -%}
+          <a href="{{ section.settings.stats_btn_url }}" class="rc-btn rc-btn--primary" style="margin-top:28px;">{{ section.settings.stats_btn_label }}</a>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.stats_image != blank -%}
+        <div class="rc-kg-stats__image">
+          <img src="{{ section.settings.stats_image | image_url: width: 900 }}" alt="{{ section.settings.stats_heading }}" loading="lazy">
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "reCarpet Kundgrupp",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Intro"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Liten text" },
+    { "type": "textarea", "id": "intro_heading", "label": "Rubrik", "default": "Välkommen" },
+    { "type": "textarea", "id": "intro_body", "label": "Text 1" },
+    { "type": "textarea", "id": "intro_body_2", "label": "Text 2" },
+    { "type": "image_picker", "id": "intro_image", "label": "Bild" },
+    { "type": "text", "id": "btn1_label", "label": "Knapp 1 text" },
+    { "type": "url", "id": "btn1_url", "label": "Knapp 1 länk" },
+    { "type": "text", "id": "btn2_label", "label": "Knapp 2 text" },
+    { "type": "url", "id": "btn2_url", "label": "Knapp 2 länk" },
+    {
+      "type": "header",
+      "content": "Tjänstekort"
+    },
+    { "type": "text", "id": "features_heading", "label": "Rubrik för tjänstekort" },
+    {
+      "type": "header",
+      "content": "Statistik / highlight"
+    },
+    { "type": "text", "id": "stats_eyebrow", "label": "Liten text" },
+    { "type": "textarea", "id": "stats_heading", "label": "Rubrik" },
+    { "type": "textarea", "id": "stats_body", "label": "Text" },
+    { "type": "image_picker", "id": "stats_image", "label": "Bild" },
+    { "type": "text", "id": "stats_btn_label", "label": "Knapptext" },
+    { "type": "url", "id": "stats_btn_url", "label": "Knapp länk" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Tjänstekort",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "title", "label": "Titel" },
+        { "type": "textarea", "id": "text", "label": "Text" },
+        { "type": "url", "id": "link_url", "label": "Länk" },
+        { "type": "text", "id": "link_label", "label": "Länktext", "default": "Läs mer" }
+      ]
+    },
+    {
+      "type": "stat",
+      "name": "Statistik",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Nummer" },
+        { "type": "text", "id": "unit", "label": "Enhet (t.ex. m², t, %)" },
+        { "type": "text", "id": "label", "label": "Etikett" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Kundgrupp"
+    }
+  ]
+}
+{% endschema %}
