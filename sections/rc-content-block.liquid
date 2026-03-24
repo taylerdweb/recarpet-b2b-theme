@@ -1,0 +1,449 @@
+<div class="rc-content-block" style="background-color: {{ section.settings.bg_color | default: '#FFFFFF' }}">
+  <div class="rc-content-block__container">
+    <div class="rc-content-block__grid" data-reverse="{{ section.settings.image_position | default: 'right' }}">
+      <!-- Text Content -->
+      <div class="rc-content-block__text">
+        {% if section.settings.eyebrow %}
+          <div class="rc-content-block__eyebrow">{{ section.settings.eyebrow }}</div>
+        {% endif %}
+
+        {% if section.settings.heading %}
+          <h2 class="rc-content-block__heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.body %}
+          <div class="rc-content-block__body">
+            {{ section.settings.body }}
+          </div>
+        {% endif %}
+
+        <!-- Stats -->
+        {% if section.blocks %}
+          <div class="rc-content-block__stats">
+            {% for block in section.blocks %}
+              {% if block.type == "stat" %}
+                <div class="rc-content-block__stat">
+                  <div class="rc-content-block__stat-number">{{ block.settings.number }}</div>
+                  <div class="rc-content-block__stat-unit">{{ block.settings.unit }}</div>
+                  <div class="rc-content-block__stat-label">{{ block.settings.label }}</div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- Buttons -->
+        <div class="rc-content-block__buttons">
+          {% if section.settings.btn1_label %}
+            <a href="{{ section.settings.btn1_url | default: '#' }}" class="rc-content-block__btn rc-content-block__btn--primary">
+              {{ section.settings.btn1_label }}
+            </a>
+          {% endif %}
+          {% if section.settings.btn2_label %}
+            <a href="{{ section.settings.btn2_url | default: '#' }}" class="rc-content-block__btn rc-content-block__btn--secondary">
+              {{ section.settings.btn2_label }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Image Content -->
+      {% if section.settings.image %}
+        <div class="rc-content-block__image">
+          {{ section.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: section.settings.heading, class: 'rc-content-block__img' }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --rc-green: #1E4433;
+    --rc-cream: #F6F6F6;
+    --rc-text: #1a1a1a;
+    --rc-muted: #666666;
+  }
+
+  .rc-content-block {
+    width: 100%;
+    padding: 80px 20px;
+  }
+
+  .rc-content-block__container {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .rc-content-block__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .rc-content-block__grid[data-reverse="left"] {
+    direction: rtl;
+  }
+
+  .rc-content-block__grid[data-reverse="left"] > * {
+    direction: ltr;
+  }
+
+  .rc-content-block__text {
+    flex: 1;
+  }
+
+  .rc-content-block__eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--rc-green);
+    margin-bottom: 12px;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .rc-content-block__heading {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 24px 0;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--rc-text);
+  }
+
+  /* White text on green backgrounds */
+  [style*="--rc-green"],
+  [style*="#1E4433"] {
+    color: white;
+  }
+
+  [style*="--rc-green"] .rc-content-block__heading,
+  [style*="#1E4433"] .rc-content-block__heading {
+    color: white;
+  }
+
+  [style*="--rc-green"] .rc-content-block__body,
+  [style*="#1E4433"] .rc-content-block__body {
+    color: white;
+  }
+
+  [style*="--rc-green"] .rc-content-block__eyebrow,
+  [style*="#1E4433"] .rc-content-block__eyebrow {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .rc-content-block__body {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    color: var(--rc-text);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .rc-content-block__body p {
+    margin: 0 0 16px 0;
+  }
+
+  .rc-content-block__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Stats */
+  .rc-content-block__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 40px;
+    margin: 40px 0;
+    padding: 40px 0;
+    border-top: 1px solid rgba(30, 68, 51, 0.1);
+    border-bottom: 1px solid rgba(30, 68, 51, 0.1);
+  }
+
+  [style*="--rc-green"] .rc-content-block__stats,
+  [style*="#1E4433"] .rc-content-block__stats {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .rc-content-block__stat {
+    text-align: left;
+  }
+
+  .rc-content-block__stat-number {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--rc-green);
+  }
+
+  [style*="--rc-green"] .rc-content-block__stat-number,
+  [style*="#1E4433"] .rc-content-block__stat-number {
+    color: white;
+  }
+
+  .rc-content-block__stat-unit {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--rc-text);
+  }
+
+  [style*="--rc-green"] .rc-content-block__stat-unit,
+  [style*="#1E4433"] .rc-content-block__stat-unit {
+    color: white;
+  }
+
+  .rc-content-block__stat-label {
+    font-size: 13px;
+    line-height: 1.4;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--rc-muted);
+  }
+
+  [style*="--rc-green"] .rc-content-block__stat-label,
+  [style*="#1E4433"] .rc-content-block__stat-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Buttons */
+  .rc-content-block__buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+
+  .rc-content-block__btn {
+    display: inline-block;
+    padding: 14px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    border: 2px solid transparent;
+  }
+
+  .rc-content-block__btn--primary {
+    background-color: var(--rc-green);
+    color: white;
+  }
+
+  .rc-content-block__btn--primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  .rc-content-block__btn--secondary {
+    background-color: transparent;
+    color: var(--rc-green);
+    border-color: var(--rc-green);
+  }
+
+  .rc-content-block__btn--secondary:hover {
+    background-color: var(--rc-green);
+    color: white;
+  }
+
+  [style*="--rc-green"] .rc-content-block__btn--secondary,
+  [style*="#1E4433"] .rc-content-block__btn--secondary {
+    color: white;
+    border-color: white;
+  }
+
+  [style*="--rc-green"] .rc-content-block__btn--secondary:hover,
+  [style*="#1E4433"] .rc-content-block__btn--secondary:hover {
+    background-color: white;
+    color: var(--rc-green);
+  }
+
+  /* Image */
+  .rc-content-block__image {
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .rc-content-block__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .rc-content-block {
+      padding: 60px 20px;
+    }
+
+    .rc-content-block__grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .rc-content-block__grid[data-reverse="left"] {
+      direction: ltr;
+    }
+
+    .rc-content-block__heading {
+      margin-bottom: 20px;
+    }
+
+    .rc-content-block__body {
+      font-size: 15px;
+      margin-bottom: 32px;
+    }
+
+    .rc-content-block__stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin: 32px 0;
+      padding: 32px 0;
+    }
+
+    .rc-content-block__buttons {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .rc-content-block__btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "RC Content Block",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text",
+      "placeholder": "e.g., Our Process",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "placeholder": "e.g., Sustainable Flooring Solutions",
+      "default": ""
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body Text",
+      "default": ""
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "select",
+      "id": "bg_color",
+      "label": "Background Color",
+      "options": [
+        {
+          "value": "#FFFFFF",
+          "label": "White"
+        },
+        {
+          "value": "var(--rc-cream, #F6F6F6)",
+          "label": "Cream"
+        },
+        {
+          "value": "var(--rc-green, #1E4433)",
+          "label": "Green"
+        }
+      ],
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "text",
+      "id": "btn1_label",
+      "label": "Button 1 Label",
+      "placeholder": "e.g., Learn More",
+      "default": ""
+    },
+    {
+      "type": "url",
+      "id": "btn1_url",
+      "label": "Button 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "btn2_label",
+      "label": "Button 2 Label (Optional)",
+      "placeholder": "e.g., View Products",
+      "default": ""
+    },
+    {
+      "type": "url",
+      "id": "btn2_url",
+      "label": "Button 2 URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "placeholder": "e.g., 85",
+          "default": ""
+        },
+        {
+          "type": "text",
+          "id": "unit",
+          "label": "Unit",
+          "placeholder": "e.g., %",
+          "default": ""
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "placeholder": "e.g., Recycled Materials",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RC Content Block"
+    }
+  ]
+}
+{% endschema %}

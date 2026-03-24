@@ -5,18 +5,18 @@
 
 <style>
   .rc-customer-cards {
-    background: var(--rc-cream, #F0EFEB);
+    background: var(--rc-cream, #F6F6F6);
     padding: var(--rc-section-pad, 80px) 0;
   }
   .rc-customer-cards__inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 48px;
   }
   .rc-customer-cards__heading {
     text-align: center;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: clamp(28px, 3vw, 40px);
+    font-size: clamp(32px, 3.5vw, 48px);
     font-weight: 500;
     margin: 0 0 48px;
     color: var(--rc-text, #1a1a1a);
@@ -27,7 +27,7 @@
     gap: 24px;
   }
   .rc-card {
-    background: var(--rc-white, #fff);
+    background: transparent;
     border-radius: 8px;
     overflow: hidden;
     text-decoration: none;
@@ -37,8 +37,6 @@
     flex-direction: column;
   }
   .rc-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
     color: var(--rc-text, #1a1a1a);
   }
   .rc-card__image {
@@ -59,11 +57,13 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    text-align: center;
   }
   .rc-card__title {
     font-size: 18px;
     font-weight: 700;
     margin: 0 0 8px;
+    text-align: center;
   }
   .rc-card__text {
     font-size: 14px;
@@ -71,15 +71,17 @@
     color: var(--rc-text-muted, #555);
     margin: 0 0 16px;
     flex: 1;
+    text-align: center;
   }
   .rc-card__link {
     font-size: 14px;
     font-weight: 500;
-    color: var(--rc-green, #174237);
+    color: var(--rc-green, #1E4433);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    justify-content: center;
   }
   .rc-card__link::after { content: ' →'; }
   @media (max-width: 900px) {

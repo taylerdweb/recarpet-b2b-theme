@@ -1,0 +1,82 @@
+{% comment %}
+  reCarpet Global Styles
+  Shared CSS custom properties and button styles used across all rc-* sections
+{% endcomment %}
+
+<style>
+  :root {
+    --rc-font: 'DM Sans', sans-serif;
+    --rc-green: #1E4433;
+    --rc-green-hover: #264f3f;
+    --rc-cream: #F6F6F6;
+    --rc-cream-alt: #E6E3DE;
+    --rc-orange: #E05A0C;
+    --rc-text: #121212;
+    --rc-text-muted: #555555;
+    --rc-white: #ffffff;
+    --rc-section-pad: 80px;
+    --rc-max-width: 1280px;
+  }
+
+  /* Global button styles */
+  .rc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-family: var(--rc-font);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+  }
+  .rc-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Primary: green bg, white text */
+  .rc-btn--primary {
+    background: var(--rc-green);
+    color: #fff;
+    border-color: var(--rc-green);
+  }
+  .rc-btn--primary:hover {
+    background: var(--rc-green-hover);
+    border-color: var(--rc-green-hover);
+    color: #fff;
+  }
+
+  /* Outline: transparent bg, dark border */
+  .rc-btn--outline {
+    background: transparent;
+    color: var(--rc-green);
+    border: 1px solid var(--rc-green);
+  }
+  .rc-btn--outline:hover {
+    background: var(--rc-green);
+    color: #fff;
+  }
+
+  /* Outline white: for dark backgrounds */
+  .rc-btn--outline-white {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.85);
+  }
+  .rc-btn--outline-white:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+  }
+
+  @media (max-width: 600px) {
+    .rc-btn {
+      padding: 10px 20px;
+      font-size: 15px;
+    }
+  }
+</style>

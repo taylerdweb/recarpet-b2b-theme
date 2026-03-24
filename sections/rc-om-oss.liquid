@@ -1,16 +1,17 @@
 {% comment %}
-  reCarpet Om oss — page-specific sections
-  Background, stats, mission, passion, etc.
+  reCarpet Om oss — comprehensive page with 9 distinct sections
+  A. Intro, B. Founder Quote, C. Team, D. Stats, E. Projects Portfolio,
+  F. Expertise Quote, G. Services Summary, H. Vision, I. Sustainable Solution
 {% endcomment %}
 
 <style>
-  /* Om oss — Vår bakgrund */
+  /* ===== A. Intro Section ===== */
   .rc-about-intro {
     background: var(--rc-white, #fff);
     padding: var(--rc-section-pad, 80px) 0;
   }
   .rc-about-intro__inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 48px;
     display: grid;
@@ -21,13 +22,13 @@
   .rc-about-intro__heading {
     font-size: clamp(28px, 3vw, 40px);
     font-weight: 500;
-    color: var(--rc-text);
+    color: var(--rc-text, #000);
     margin: 0 0 20px;
   }
   .rc-about-intro__body {
     font-size: 16px;
     line-height: 1.75;
-    color: var(--rc-text-muted);
+    color: var(--rc-text-muted, #666);
     margin: 0 0 16px;
   }
   .rc-about-intro__image {
@@ -36,26 +37,131 @@
     aspect-ratio: 4/3;
   }
   .rc-about-intro__image img {
-    width: 100%; height: 100%; object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .rc-about-intro__quote {
     font-size: 24px;
     font-weight: 500;
     line-height: 1.4;
-    color: var(--rc-text);
-    border-left: 4px solid var(--rc-green);
+    color: var(--rc-text, #000);
+    border-left: 4px solid var(--rc-green, #1E4433);
     padding-left: 24px;
     margin: 32px 0;
     font-style: italic;
   }
 
-  /* Stats row */
+  /* ===== B. Founder Quote Section ===== */
+  .rc-about-quote-banner {
+    background: var(--rc-green, #1E4433);
+    padding: 80px 48px;
+    text-align: center;
+  }
+  .rc-about-quote-banner__inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .rc-about-quote-banner__text {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 500;
+    color: var(--rc-white, #fff);
+    font-style: italic;
+    line-height: 1.3;
+    margin: 0 0 24px;
+  }
+  .rc-about-quote-banner__attribution {
+    font-size: 16px;
+    color: var(--rc-white, #fff);
+    opacity: 0.9;
+  }
+  .rc-about-quote-banner__author {
+    font-weight: 500;
+  }
+  .rc-about-quote-banner__title {
+    opacity: 0.8;
+  }
+
+  /* ===== C. Team Section ===== */
+  .rc-about-team {
+    background: var(--rc-white, #fff);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-about-team__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .rc-about-team__heading {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 500;
+    color: var(--rc-text, #000);
+    margin: 0 0 48px;
+    text-align: center;
+  }
+  .rc-about-team__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+  }
+  .rc-team-card {
+    display: flex;
+    gap: 24px;
+  }
+  .rc-team-card__photo {
+    flex-shrink: 0;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--rc-cream, #F6F6F6);
+  }
+  .rc-team-card__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .rc-team-card__content {
+    flex: 1;
+  }
+  .rc-team-card__name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--rc-text, #000);
+    margin: 0 0 4px;
+  }
+  .rc-team-card__title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--rc-green, #1E4433);
+    margin: 0 0 12px;
+  }
+  .rc-team-card__bio {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--rc-text-muted, #666);
+    margin: 0 0 12px;
+  }
+  .rc-team-card__contact {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+  }
+  .rc-team-card__contact a {
+    color: var(--rc-green, #1E4433);
+    text-decoration: none;
+  }
+  .rc-team-card__contact a:hover {
+    text-decoration: underline;
+  }
+
+  /* ===== D. Stats Row ===== */
   .rc-about-stats {
-    background: var(--rc-cream, #F0EFEB);
+    background: var(--rc-cream, #F6F6F6);
     padding: 48px 0;
   }
   .rc-about-stats__inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 48px;
     display: grid;
@@ -66,23 +172,65 @@
   .rc-stat__number {
     font-size: clamp(36px, 4vw, 56px);
     font-weight: 700;
-    color: var(--rc-green, #174237);
+    color: var(--rc-green, #1E4433);
     line-height: 1;
     margin-bottom: 6px;
   }
   .rc-stat__label {
     font-size: 14px;
-    color: var(--rc-text-muted);
+    color: var(--rc-text-muted, #666);
     line-height: 1.4;
   }
 
-  /* Mission section */
-  .rc-about-mission {
-    background: var(--rc-white);
+  /* ===== E. Projects Portfolio ===== */
+  .rc-about-projects {
+    background: var(--rc-white, #fff);
     padding: var(--rc-section-pad, 80px) 0;
   }
-  .rc-about-mission__inner {
-    max-width: 1200px;
+  .rc-about-projects__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .rc-about-projects__heading {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 500;
+    color: var(--rc-text, #000);
+    margin: 0 0 48px;
+    text-align: center;
+  }
+  .rc-about-projects__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+  }
+  .rc-project-category__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--rc-text, #000);
+    margin: 0 0 20px;
+  }
+  .rc-project-category__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rc-project-category__item {
+    font-size: 15px;
+    color: var(--rc-text-muted, #666);
+    line-height: 1.6;
+  }
+
+  /* ===== F. Expertise Quote ===== */
+  .rc-about-expertise {
+    background: var(--rc-white, #fff);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-about-expertise__inner {
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 48px;
     display: grid;
@@ -90,61 +238,206 @@
     gap: 64px;
     align-items: center;
   }
-  .rc-about-mission__eyebrow {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--rc-text-muted);
-    margin-bottom: 12px;
+  .rc-about-expertise__body {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--rc-text-muted, #666);
+    margin: 0 0 24px;
   }
-  .rc-about-mission__heading {
-    font-size: clamp(24px, 2.5vw, 36px);
+  .rc-about-expertise__quote {
+    font-size: 28px;
     font-weight: 500;
-    color: var(--rc-text);
-    margin: 0 0 20px;
-    line-height: 1.2;
+    line-height: 1.4;
+    color: var(--rc-text, #000);
+    font-style: italic;
+    margin: 0;
   }
-  .rc-about-mission__body { font-size: 16px; line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 16px; }
-  .rc-about-mission__list {
+
+  /* ===== G. Services Summary ===== */
+  .rc-about-services {
+    background: var(--rc-cream, #F6F6F6);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-about-services__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  .rc-about-services__heading {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 500;
+    color: var(--rc-text, #000);
+    margin: 0 0 32px;
+  }
+  .rc-about-services__list {
     list-style: none;
     padding: 0;
-    margin: 16px 0 24px;
+    margin: 0 0 32px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
   }
-  .rc-about-mission__list li {
+  .rc-about-services__item {
+    font-size: 16px;
+    color: var(--rc-text-muted, #666);
+    line-height: 1.6;
+    padding-left: 24px;
+    position: relative;
+  }
+  .rc-about-services__item::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--rc-green, #1E4433);
+    font-weight: 600;
+  }
+  .rc-about-services__buttons {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 15px;
-    color: var(--rc-text-muted);
+    gap: 16px;
+    flex-wrap: wrap;
   }
-  .rc-about-mission__list li::before {
-    content: '✓';
-    color: var(--rc-green);
-    font-weight: 700;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .rc-about-mission__image { border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
-  .rc-about-mission__image img { width: 100%; height: 100%; object-fit: cover; }
 
+  /* ===== H. Vision Section ===== */
+  .rc-about-vision {
+    background: var(--rc-white, #fff);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-about-vision__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .rc-about-vision__heading {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 500;
+    color: var(--rc-text, #000);
+    margin: 0 0 20px;
+  }
+  .rc-about-vision__body {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--rc-text-muted, #666);
+    margin: 0;
+  }
+  .rc-about-vision__image {
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .rc-about-vision__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ===== I. Sustainable Solution ===== */
+  .rc-about-sustainability {
+    background: var(--rc-white, #fff);
+    padding: var(--rc-section-pad, 80px) 0;
+  }
+  .rc-about-sustainability__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .rc-about-sustainability__image {
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .rc-about-sustainability__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .rc-about-sustainability__heading {
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 500;
+    color: var(--rc-text, #000);
+    margin: 0 0 8px;
+  }
+  .rc-about-sustainability__subtitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--rc-green, #1E4433);
+    margin: 0 0 24px;
+  }
+  .rc-about-sustainability__body {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--rc-text-muted, #666);
+    margin: 0 0 24px;
+  }
+  .rc-about-sustainability__body p {
+    margin: 0 0 16px;
+  }
+  .rc-about-sustainability__body p:last-child {
+    margin: 0;
+  }
+
+  /* ===== Responsive ===== */
   @media (max-width: 900px) {
     .rc-about-intro__inner,
-    .rc-about-mission__inner { grid-template-columns: 1fr; gap: 32px; }
-    .rc-about-stats__inner { grid-template-columns: repeat(2, 1fr); }
+    .rc-about-expertise__inner,
+    .rc-about-vision__inner,
+    .rc-about-sustainability__inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .rc-about-team__grid {
+      grid-template-columns: 1fr;
+    }
+    .rc-about-projects__grid {
+      grid-template-columns: 1fr;
+    }
+    .rc-about-stats__inner {
+      grid-template-columns: repeat(2, 1fr);
+    }
     .rc-about-intro__inner,
     .rc-about-mission__inner,
-    .rc-about-stats__inner { padding: 0 20px; }
+    .rc-about-stats__inner,
+    .rc-about-team__inner,
+    .rc-about-projects__inner,
+    .rc-about-expertise__inner,
+    .rc-about-services__inner,
+    .rc-about-vision__inner,
+    .rc-about-sustainability__inner {
+      padding: 0 20px;
+    }
   }
+
   @media (max-width: 480px) {
-    .rc-about-stats__inner { grid-template-columns: repeat(2, 1fr); }
+    .rc-about-stats__inner {
+      grid-template-columns: 1fr;
+    }
+    .rc-team-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .rc-team-card__photo {
+      width: 120px;
+      height: 120px;
+    }
+    .rc-team-card__contact {
+      flex-direction: column;
+      align-items: center;
+    }
+    .rc-about-services__buttons {
+      flex-direction: column;
+    }
   }
 </style>
 
-<!-- Vår bakgrund -->
+<!-- A. Intro Section -->
 <section class="rc-about-intro">
   <div class="rc-about-intro__inner">
     <div>
@@ -155,9 +448,6 @@
       {%- endif -%}
     </div>
     <div>
-      {%- if section.settings.quote != blank -%}
-        <blockquote class="rc-about-intro__quote">{{ section.settings.quote }}</blockquote>
-      {%- endif -%}
       {%- if section.settings.intro_image != blank -%}
         <div class="rc-about-intro__image">
           <img src="{{ section.settings.intro_image | image_url: width: 900 }}" alt="Om ReCarpet" loading="lazy">
@@ -167,48 +457,199 @@
   </div>
 </section>
 
-<!-- Stats -->
-<section class="rc-about-stats">
-  <div class="rc-about-stats__inner">
-    {%- for block in section.blocks -%}
-      {%- if block.type == 'stat' -%}
-        <div class="rc-stat">
-          <div class="rc-stat__number">{{ block.settings.number }}</div>
-          <div class="rc-stat__label">{{ block.settings.label }}</div>
-        </div>
+<!-- B. Founder Quote Banner -->
+{%- if section.settings.quote != blank -%}
+  <section class="rc-about-quote-banner">
+    <div class="rc-about-quote-banner__inner">
+      <p class="rc-about-quote-banner__text">{{ section.settings.quote }}</p>
+      {%- if section.settings.quote_author != blank -%}
+        <p class="rc-about-quote-banner__attribution">
+          <span class="rc-about-quote-banner__author">{{ section.settings.quote_author }}</span>
+          {%- if section.settings.quote_title != blank -%}
+            <br><span class="rc-about-quote-banner__title">{{ section.settings.quote_title }}</span>
+          {%- endif -%}
+        </p>
       {%- endif -%}
-    {%- endfor -%}
-  </div>
-</section>
+    </div>
+  </section>
+{%- endif -%}
 
-<!-- Mission / hållbara golv är vår passion -->
-<section class="rc-about-mission">
-  <div class="rc-about-mission__inner">
-    <div>
-      {%- if section.settings.mission_eyebrow != blank -%}
-        <p class="rc-about-mission__eyebrow">{{ section.settings.mission_eyebrow }}</p>
+<!-- C. Team Section -->
+{%- assign team_blocks = section.blocks | where: "type", "team_member" -%}
+{%- if team_blocks.size > 0 -%}
+  <section class="rc-about-team">
+    <div class="rc-about-team__inner">
+      {%- if section.settings.team_heading != blank -%}
+        <h2 class="rc-about-team__heading">{{ section.settings.team_heading }}</h2>
       {%- endif -%}
-      <h2 class="rc-about-mission__heading">{{ section.settings.mission_heading }}</h2>
-      <p class="rc-about-mission__body">{{ section.settings.mission_body }}</p>
-      {%- if section.settings.mission_list != blank -%}
-        <ul class="rc-about-mission__list">
-          {%- assign list_items = section.settings.mission_list | newline_to_br | split: '<br />' -%}
-          {%- for item in list_items -%}
-            {%- if item != blank -%}<li>{{ item | strip }}</li>{%- endif -%}
+      <div class="rc-about-team__grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'team_member' -%}
+            <div class="rc-team-card">
+              {%- if block.settings.image != blank -%}
+                <div class="rc-team-card__photo">
+                  <img src="{{ block.settings.image | image_url: width: 300 }}" alt="{{ block.settings.name }}" loading="lazy">
+                </div>
+              {%- endif -%}
+              <div class="rc-team-card__content">
+                <h3 class="rc-team-card__name">{{ block.settings.name }}</h3>
+                <p class="rc-team-card__title">{{ block.settings.title }}</p>
+                <p class="rc-team-card__bio">{{ block.settings.bio }}</p>
+                {%- if block.settings.email != blank or block.settings.phone != blank -%}
+                  <div class="rc-team-card__contact">
+                    {%- if block.settings.email != blank -%}
+                      <a href="mailto:{{ block.settings.email }}">{{ block.settings.email }}</a>
+                    {%- endif -%}
+                    {%- if block.settings.phone != blank -%}
+                      <a href="tel:{{ block.settings.phone }}">{{ block.settings.phone }}</a>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<!-- D. Stats Row -->
+{%- assign stat_blocks = section.blocks | where: "type", "stat" -%}
+{%- if stat_blocks.size > 0 -%}
+  <section class="rc-about-stats">
+    <div class="rc-about-stats__inner">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'stat' -%}
+          <div class="rc-stat">
+            <div class="rc-stat__number">{{ block.settings.number }}</div>
+            <div class="rc-stat__label">{{ block.settings.label }}</div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </section>
+{%- endif -%}
+
+<!-- E. Projects Portfolio -->
+{%- assign project_blocks = section.blocks | where: "type", "project_category" -%}
+{%- if project_blocks.size > 0 -%}
+  <section class="rc-about-projects">
+    <div class="rc-about-projects__inner">
+      {%- if section.settings.projects_heading != blank -%}
+        <h2 class="rc-about-projects__heading">{{ section.settings.projects_heading }}</h2>
+      {%- endif -%}
+      <div class="rc-about-projects__grid">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'project_category' -%}
+            <div>
+              <h3 class="rc-project-category__title">{{ block.settings.title }}</h3>
+              {%- if block.settings.items != blank -%}
+                <ul class="rc-project-category__list">
+                  {%- assign items = block.settings.items | newline_to_br | split: '<br />' -%}
+                  {%- for item in items -%}
+                    {%- if item != blank -%}
+                      <li class="rc-project-category__item">{{ item | strip }}</li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<!-- F. Expertise Quote Section -->
+{%- if section.settings.expertise_body != blank or section.settings.expertise_quote != blank -%}
+  <section class="rc-about-expertise">
+    <div class="rc-about-expertise__inner">
+      <div>
+        {%- if section.settings.expertise_body != blank -%}
+          <p class="rc-about-expertise__body">{{ section.settings.expertise_body }}</p>
+        {%- endif -%}
+      </div>
+      <div>
+        {%- if section.settings.expertise_quote != blank -%}
+          <blockquote class="rc-about-expertise__quote">{{ section.settings.expertise_quote }}</blockquote>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<!-- G. Services Summary Section -->
+{%- if section.settings.services_heading != blank -%}
+  <section class="rc-about-services">
+    <div class="rc-about-services__inner">
+      <h2 class="rc-about-services__heading">{{ section.settings.services_heading }}</h2>
+      {%- if section.settings.services_list != blank -%}
+        <ul class="rc-about-services__list">
+          {%- assign services = section.settings.services_list | newline_to_br | split: '<br />' -%}
+          {%- for service in services -%}
+            {%- if service != blank -%}
+              <li class="rc-about-services__item">{{ service | strip }}</li>
+            {%- endif -%}
           {%- endfor -%}
         </ul>
       {%- endif -%}
-      {%- if section.settings.mission_btn_label != blank -%}
-        <a href="{{ section.settings.mission_btn_url }}" class="rc-btn rc-btn--primary">{{ section.settings.mission_btn_label }}</a>
+      <div class="rc-about-services__buttons">
+        {%- if section.settings.services_btn1_label != blank -%}
+          <a href="{{ section.settings.services_btn1_url }}" class="rc-btn rc-btn--primary">{{ section.settings.services_btn1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.services_btn2_label != blank -%}
+          <a href="{{ section.settings.services_btn2_url }}" class="rc-btn rc-btn--secondary">{{ section.settings.services_btn2_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+<!-- H. Vision Section -->
+{%- if section.settings.vision_heading != blank or section.settings.vision_body != blank -%}
+  <section class="rc-about-vision">
+    <div class="rc-about-vision__inner">
+      <div>
+        <h2 class="rc-about-vision__heading">{{ section.settings.vision_heading }}</h2>
+        <p class="rc-about-vision__body">{{ section.settings.vision_body }}</p>
+      </div>
+      {%- if section.settings.vision_image != blank -%}
+        <div class="rc-about-vision__image">
+          <img src="{{ section.settings.vision_image | image_url: width: 900 }}" alt="{{ section.settings.vision_heading }}" loading="lazy">
+        </div>
       {%- endif -%}
     </div>
-    {%- if section.settings.mission_image != blank -%}
-      <div class="rc-about-mission__image">
-        <img src="{{ section.settings.mission_image | image_url: width: 900 }}" alt="{{ section.settings.mission_heading }}" loading="lazy">
+  </section>
+{%- endif -%}
+
+<!-- I. Sustainable Solution Section -->
+{%- if section.settings.sustainability_heading != blank -%}
+  <section class="rc-about-sustainability">
+    <div class="rc-about-sustainability__inner">
+      {%- if section.settings.sustainability_image != blank -%}
+        <div class="rc-about-sustainability__image">
+          <img src="{{ section.settings.sustainability_image | image_url: width: 900 }}" alt="{{ section.settings.sustainability_heading }}" loading="lazy">
+        </div>
+      {%- endif -%}
+      <div>
+        <h2 class="rc-about-sustainability__heading">{{ section.settings.sustainability_heading }}</h2>
+        {%- if section.settings.sustainability_subtitle != blank -%}
+          <p class="rc-about-sustainability__subtitle">{{ section.settings.sustainability_subtitle }}</p>
+        {%- endif -%}
+        {%- if section.settings.sustainability_body != blank -%}
+          <div class="rc-about-sustainability__body">
+            {{ section.settings.sustainability_body | newline_to_br }}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.sustainability_btn_label != blank -%}
+          <a href="{{ section.settings.sustainability_btn_url }}" class="rc-btn rc-btn--primary">{{ section.settings.sustainability_btn_label }}</a>
+        {%- endif -%}
       </div>
-    {%- endif -%}
-  </div>
-</section>
+    </div>
+  </section>
+{%- endif -%}
 
 {% schema %}
 {
@@ -218,30 +659,23 @@
   "settings": [
     {
       "type": "header",
-      "content": "Vår bakgrund"
+      "content": "A. Vår bakgrund (Intro)"
     },
     {
       "type": "text",
       "id": "intro_heading",
       "label": "Rubrik",
-      "default": "Vår bakgrund"
+      "default": "Välkommen till ReCarpet"
     },
     {
       "type": "textarea",
       "id": "intro_body_1",
-      "label": "Text (stycke 1)",
-      "default": "Jonas Nilsson och Erik Friis grundade ReCarpet med en enkel idé: att ge textilplattor ett nytt liv och göra byggbranschen mer hållbar."
+      "label": "Text (stycke 1)"
     },
     {
       "type": "textarea",
       "id": "intro_body_2",
       "label": "Text (stycke 2)"
-    },
-    {
-      "type": "textarea",
-      "id": "quote",
-      "label": "Citat",
-      "default": "En bild på sä lagret eller annan bild med människor i!"
     },
     {
       "type": "image_picker",
@@ -250,45 +684,143 @@
     },
     {
       "type": "header",
-      "content": "Mission"
+      "content": "B. Founder Quote"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Citat"
     },
     {
       "type": "text",
-      "id": "mission_eyebrow",
-      "label": "Liten text",
-      "default": "Vår passion"
+      "id": "quote_author",
+      "label": "Författare"
     },
     {
-      "type": "textarea",
-      "id": "mission_heading",
+      "type": "text",
+      "id": "quote_title",
+      "label": "Titel"
+    },
+    {
+      "type": "header",
+      "content": "C. Team"
+    },
+    {
+      "type": "text",
+      "id": "team_heading",
       "label": "Rubrik",
-      "default": "Hållbara golv är vår passion"
+      "default": "Vårt team"
+    },
+    {
+      "type": "header",
+      "content": "E. Projects Portfolio"
+    },
+    {
+      "type": "text",
+      "id": "projects_heading",
+      "label": "Rubrik",
+      "default": "Några av våra lyckade projekt"
+    },
+    {
+      "type": "header",
+      "content": "F. Expertise Quote"
     },
     {
       "type": "textarea",
-      "id": "mission_body",
-      "label": "Text",
-      "default": "Vi strävar efter att göra varje golvprojekt mer hållbart genom att återbruka materialet på ett cirkulärt sätt."
+      "id": "expertise_body",
+      "label": "Brödtext"
     },
     {
       "type": "textarea",
-      "id": "mission_list",
+      "id": "expertise_quote",
+      "label": "Citat"
+    },
+    {
+      "type": "header",
+      "content": "G. Services Summary"
+    },
+    {
+      "type": "text",
+      "id": "services_heading",
+      "label": "Rubrik"
+    },
+    {
+      "type": "textarea",
+      "id": "services_list",
       "label": "Lista (en rad per punkt)"
     },
     {
       "type": "text",
-      "id": "mission_btn_label",
+      "id": "services_btn1_label",
+      "label": "Knapp 1 text"
+    },
+    {
+      "type": "url",
+      "id": "services_btn1_url",
+      "label": "Knapp 1 länk"
+    },
+    {
+      "type": "text",
+      "id": "services_btn2_label",
+      "label": "Knapp 2 text"
+    },
+    {
+      "type": "url",
+      "id": "services_btn2_url",
+      "label": "Knapp 2 länk"
+    },
+    {
+      "type": "header",
+      "content": "H. Vision"
+    },
+    {
+      "type": "text",
+      "id": "vision_heading",
+      "label": "Rubrik"
+    },
+    {
+      "type": "textarea",
+      "id": "vision_body",
+      "label": "Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "vision_image",
+      "label": "Bild"
+    },
+    {
+      "type": "header",
+      "content": "I. Sustainable Solution"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_heading",
+      "label": "Rubrik"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_subtitle",
+      "label": "Underrubrik"
+    },
+    {
+      "type": "textarea",
+      "id": "sustainability_body",
+      "label": "Text (flerrader)"
+    },
+    {
+      "type": "image_picker",
+      "id": "sustainability_image",
+      "label": "Bild"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_btn_label",
       "label": "Knapptext"
     },
     {
       "type": "url",
-      "id": "mission_btn_url",
+      "id": "sustainability_btn_url",
       "label": "Knapp länk"
-    },
-    {
-      "type": "image_picker",
-      "id": "mission_image",
-      "label": "Bild"
     }
   ],
   "blocks": [
@@ -296,8 +828,73 @@
       "type": "stat",
       "name": "Statistik",
       "settings": [
-        { "type": "text", "id": "number", "label": "Nummer", "default": "2022" },
-        { "type": "text", "id": "label", "label": "Etikett", "default": "Grundades" }
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Nummer",
+          "default": "0"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Etikett",
+          "default": "Label"
+        }
+      ]
+    },
+    {
+      "type": "team_member",
+      "name": "Teammedlem",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Namn",
+          "default": "Namn"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titel",
+          "default": "Titel"
+        },
+        {
+          "type": "textarea",
+          "id": "bio",
+          "label": "Bio"
+        },
+        {
+          "type": "email",
+          "id": "email",
+          "label": "E-post"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Telefon"
+        }
+      ]
+    },
+    {
+      "type": "project_category",
+      "name": "Projektkategori",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Kategori",
+          "default": "Kategori"
+        },
+        {
+          "type": "textarea",
+          "id": "items",
+          "label": "Projekt (en rad per projekt)"
+        }
       ]
     }
   ],
@@ -305,18 +902,12 @@
     {
       "name": "reCarpet Om oss",
       "settings": {
-        "intro_heading": "Vår bakgrund",
-        "intro_body_1": "Jonas Nilsson och Erik Friis grundade ReCarpet med en enkel vision: att ge textilplattor ett nytt liv och göra byggbranschen mer cirkulär och hållbar.",
-        "mission_eyebrow": "Vår passion",
-        "mission_heading": "Hållbara golv är vår passion",
-        "mission_body": "Vi strävar efter att göra varje golvprojekt mer hållbart. Sedan start har vi demonstrerat och förmedlat 30 000m² textilplattor och bidragit till ett mer cirkulärt byggande."
-      },
-      "blocks": [
-        { "type": "stat", "settings": { "number": "2022", "label": "Grundades" } },
-        { "type": "stat", "settings": { "number": "30 000m²", "label": "Lagd yta" } },
-        { "type": "stat", "settings": { "number": "300t", "label": "Återvunnet" } },
-        { "type": "stat", "settings": { "number": "25+", "label": "Nöjda kunder" } }
-      ]
+        "intro_heading": "Välkommen till ReCarpet",
+        "projects_heading": "Några av våra lyckade projekt",
+        "team_heading": "Vårt team",
+        "vision_heading": "Vår vision",
+        "sustainability_heading": "En hållbar lösning"
+      }
     }
   ]
 }

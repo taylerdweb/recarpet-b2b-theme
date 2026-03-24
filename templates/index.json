@@ -1,16 +1,25 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "rc_hero": {
       "type": "rc-hero",
       "settings": {
+        "background_image": "shopify://shop_images/recarpet-hero.jpg",
+        "image_position": "center center",
+        "min_height": 750,
+        "eyebrow": "",
         "heading": "Hållbara mattor till marknadens bästa priser",
         "subtext": "ReCarpet är specialister på demontering, kvalitetssäkring och leverans av textilplattor. För cirkulära lösningar i både ombyggnad och nyproduktion.",
         "btn1_label": "Se våra produkter",
-        "btn1_url": "/collections/all",
-        "btn2_label": "Kontakta oss",
-        "btn2_url": "/pages/kontakta-oss",
-        "min_height": 750,
-        "image_position": "center center"
+        "btn1_url": "/collections/all"
       }
     },
     "rc_cta_banner": {
@@ -19,68 +28,240 @@
         "heading": "Ska du demontera eller föreskriva textilplattor?",
         "body": "ReCarpet hanterar hela processen – från demontering till vidareförmedling – med högsta kvalitet. Boka demontering eller förskriv våra textilplattor. Tillsammans gör vi stor skillnad!",
         "btn_label": "Kontakta oss",
-        "btn_url": "/pages/kontakta-oss"
+        "btn_url": "shopify://pages/kontakta-oss"
       }
     },
     "rc_logo_bar": {
       "type": "rc-logo-bar",
-      "settings": { "heading": "Några av våra nöjda kunder" },
       "blocks": {
-        "logo1": { "type": "logo", "settings": { "text": "Veidekke" } },
-        "logo2": { "type": "logo", "settings": { "text": "Vasakronan" } },
-        "logo3": { "type": "logo", "settings": { "text": "Lundbergs Fastigheter" } },
-        "logo4": { "type": "logo", "settings": { "text": "Zengun" } },
-        "logo5": { "type": "logo", "settings": { "text": "taylerd" } },
-        "logo6": { "type": "logo", "settings": { "text": "EQ" } }
+        "logo1": {
+          "type": "logo",
+          "settings": {
+            "text": "Veidekke",
+            "alt": "",
+            "url": ""
+          }
+        },
+        "logo2": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/rc-kundlogo-lundbergs.png",
+            "text": "Vasakronan",
+            "alt": "",
+            "url": ""
+          }
+        },
+        "logo3": {
+          "type": "logo",
+          "settings": {
+            "text": "Lundbergs Fastigheter",
+            "alt": "",
+            "url": ""
+          }
+        },
+        "logo4": {
+          "type": "logo",
+          "settings": {
+            "text": "Zengun",
+            "alt": "",
+            "url": ""
+          }
+        },
+        "logo5": {
+          "type": "logo",
+          "settings": {
+            "text": "taylerd",
+            "alt": "",
+            "url": ""
+          }
+        },
+        "logo6": {
+          "type": "logo",
+          "settings": {
+            "text": "EQ",
+            "alt": "",
+            "url": ""
+          }
+        }
       },
-      "block_order": ["logo1","logo2","logo3","logo4","logo5","logo6"]
+      "block_order": [
+        "logo1",
+        "logo2",
+        "logo3",
+        "logo4",
+        "logo5",
+        "logo6"
+      ],
+      "settings": {
+        "heading": "Några av våra nöjda kunder"
+      }
     },
     "rc_customer_cards": {
       "type": "rc-customer-cards",
-      "settings": { "heading": "Vi har lösningarna för era behov" },
       "blocks": {
-        "card1": { "type": "card", "settings": { "title": "Fastighetsägare", "text": "Vi demonterar, rengör, lagerhåller och förmedlar textilplattor.", "url": "/pages/fastighetsagare" } },
-        "card2": { "type": "card", "settings": { "title": "Arkitekt", "text": "Förskriv hållbara och återbrukade textilplattor för dina projekt. Enkelt och cirkulärt.", "url": "/pages/arkitekter" } },
-        "card3": { "type": "card", "settings": { "title": "Hyresgäst", "text": "Uppdatera ditt kontor med nya eller återbrukade textilplattor – enkelt och miljövänligt!", "url": "/pages/hyresgast" } },
-        "card4": { "type": "card", "settings": { "title": "Entreprenör", "text": "Erbjud cirkulära golvlösningar och stärk din konkurrenskraft med vårt återbrukade sortiment.", "url": "/pages/entreprenor" } }
+        "card1": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/rc-card-fastighetsagare.jpg",
+            "title": "Fastighetsägare",
+            "text": "Vi demonterar, rengör, lagerhåller och förmedlar textilplattor.",
+            "url": "shopify://pages/fastighetsagare"
+          }
+        },
+        "card2": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/rc-card-arkitekt.jpg",
+            "title": "Arkitekt",
+            "text": "Förskriv hållbara och återbrukade textilplattor för dina projekt. Enkelt och cirkulärt.",
+            "url": "shopify://pages/arkitekter"
+          }
+        },
+        "card3": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/rc-card-hyresgast.jpg",
+            "title": "Hyresgäst",
+            "text": "Uppdatera ditt kontor med nya eller återbrukade textilplattor – enkelt och miljövänligt!",
+            "url": "shopify://pages/hyresgast"
+          }
+        },
+        "card4": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/rc-card-entreprenor.jpg",
+            "title": "Entreprenör",
+            "text": "Erbjud cirkulära golvlösningar och stärk din konkurrenskraft med vårt återbrukade sortiment.",
+            "url": "shopify://pages/entreprenor"
+          }
+        }
       },
-      "block_order": ["card1","card2","card3","card4"]
+      "block_order": [
+        "card1",
+        "card2",
+        "card3",
+        "card4"
+      ],
+      "settings": {
+        "heading": "Vi har lösningarna för era behov"
+      }
     },
     "rc_services": {
       "type": "rc-services",
+      "blocks": {
+        "s1": {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Inventering",
+            "title": "Inventering",
+            "body": "Få en tydlig bild av skicket på dina golv och potentialen för återbruk. Vi hjälper dig att planera och maximera återanvändningen.",
+            "image": "shopify://shop_images/rc-tjanst-inventering.jpg",
+            "link_url": "shopify://pages/vad-vi-gor"
+          }
+        },
+        "s2": {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Demontering",
+            "title": "Demontering",
+            "body": "Vi demonterar dina textilplattor med precision och tar hand om hela processen för ett hållbart resultat.",
+            "image": "shopify://shop_images/rc-tjanst-demontering.jpg",
+            "link_url": "shopify://pages/vad-vi-gor"
+          }
+        },
+        "s3": {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Förmedling",
+            "title": "Förmedling",
+            "body": "Vi hjälper dina återbrukade textilplattor att få ett nytt liv med vår erfarenhet och breda nätverk.",
+            "image": "shopify://shop_images/rc-tjanst-formedling.jpg",
+            "link_url": "shopify://pages/vad-vi-gor"
+          }
+        },
+        "s4": {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Montering",
+            "title": "Montering",
+            "body": "Vi samarbetar med entreprenörer från syd till norr och hjälper dig med ditt projekt från start till mål.",
+            "image": "shopify://shop_images/rc-service-montering.jpg",
+            "link_url": "shopify://pages/vad-vi-gor"
+          }
+        },
+        "s5": {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Service & underhåll",
+            "title": "Service & underhåll",
+            "body": "Behöver du hjälp med fläckar eller trasiga plattor? Vi hjälper er med problem som kan uppstå med ditt nya eller återbrukade golv.",
+            "image": "shopify://shop_images/rc-service-underhall.jpg",
+            "link_url": "shopify://pages/vad-vi-gor"
+          }
+        },
+        "s6": {
+          "type": "service",
+          "settings": {
+            "eyebrow": "Internt återbruk",
+            "title": "Internt återbruk av textilplattor",
+            "body": "Behåll golvet i fastigheten! Vi uppgraderar befintliga plattor och förbereder dem för nästa hyresgäst.",
+            "image": "shopify://shop_images/rc-service-internt-aterbruk.jpg",
+            "link_url": "shopify://pages/vad-vi-gor"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
       "settings": {
         "eyebrow": "Tjänster",
         "heading": "Gör skillnad med hållbara golvlösningar!",
         "intro": "Vi erbjuder en helhetslösning för att återbruka textilplattor i stor skala. Från noggrann inventering och säker demontering till att förmedla plattorna vidare för ett nytt liv.",
         "btn_label": "Se tjänster",
         "btn_url": "/pages/vad-vi-gor"
-      },
-      "blocks": {
-        "s1": { "type": "service", "settings": { "eyebrow": "Inventering", "title": "Inventering", "body": "Få en tydlig bild av skicket på dina golv och potentialen för återbruk. Vi hjälper dig att planera och maximera återanvändningen.", "link_url": "/pages/vad-vi-gor" } },
-        "s2": { "type": "service", "settings": { "eyebrow": "Demontering", "title": "Demontering", "body": "Vi demonterar dina textilplattor med precision och tar hand om hela processen för ett hållbart resultat.", "link_url": "/pages/vad-vi-gor" } },
-        "s3": { "type": "service", "settings": { "eyebrow": "Förmedling", "title": "Förmedling", "body": "Vi hjälper dina återbrukade textilplattor att få ett nytt liv med vår erfarenhet och breda nätverk.", "link_url": "/pages/vad-vi-gor" } },
-        "s4": { "type": "service", "settings": { "eyebrow": "Montering", "title": "Montering", "body": "Vi samarbetar med entreprenörer från syd till norr och hjälper dig med ditt projekt från start till mål.", "link_url": "/pages/vad-vi-gor" } },
-        "s5": { "type": "service", "settings": { "eyebrow": "Service & underhåll", "title": "Service & underhåll", "body": "Behöver du hjälp med fläckar eller trasiga plattor? Vi hjälper er med problem som kan uppstå med ditt nya eller återbrukade golv.", "link_url": "/pages/vad-vi-gor" } },
-        "s6": { "type": "service", "settings": { "eyebrow": "Internt återbruk", "title": "Internt återbruk av textilplattor", "body": "Behåll golvet i fastigheten! Vi uppgraderar befintliga plattor och förbereder dem för nästa hyresgäst.", "link_url": "/pages/vad-vi-gor" } }
-      },
-      "block_order": ["s1","s2","s3","s4","s5","s6"]
+      }
     },
     "rc_products_cta": {
       "type": "rc-products-cta",
+      "blocks": {
+        "cat1": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/rc-service-internt-aterbruk.jpg",
+            "title": "Återbrukade textilplattor",
+            "tag": "ÅTERBRUK",
+            "url": "/collections/aterbrukade-textilplattor"
+          }
+        },
+        "cat2": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/rc-card-arkitekt.jpg",
+            "title": "Nya textilplattor",
+            "tag": "NY",
+            "url": "/collections/nya-textilplattor"
+          }
+        }
+      },
+      "block_order": [
+        "cat1",
+        "cat2"
+      ],
       "settings": {
         "eyebrow": "Sortiment",
         "heading": "Prisvärda mattor av hög kvalitet",
         "body": "Vi erbjuder ett brett sortiment av både återbrukade och nya textilplattor till konkurrenskraftiga priser. Alla produkter är kvalitetssäkrade och redo att monteras.",
+        "image": "shopify://shop_images/rc-omoss-hallbarhet.jpg",
         "btn1_label": "Beställ prover",
         "btn1_url": "/pages/kontakta-oss",
         "btn2_label": "Se alla produkter",
         "btn2_url": "/collections/all"
-      },
-      "blocks": {
-        "cat1": { "type": "category", "settings": { "title": "Återbrukade textilplattor", "tag": "ÅTERBRUK", "url": "/collections/aterbrukade-textilplattor" } },
-        "cat2": { "type": "category", "settings": { "title": "Nya textilplattor", "tag": "NY", "url": "/collections/nya-textilplattor" } }
-      },
-      "block_order": ["cat1","cat2"]
+      }
     },
     "rc_contact_cta": {
       "type": "rc-contact-cta",
@@ -88,9 +269,19 @@
         "heading": "Vill du cirkulera golv?",
         "body": "Beställ prover, boka en inventering eller ställ en fråga till oss!",
         "btn1_label": "Kontakta oss",
-        "btn1_url": "/pages/kontakta-oss"
+        "btn1_url": "shopify://pages/kontakta-oss",
+        "btn2_label": "",
+        "btn2_url": ""
       }
     }
   },
-  "order": ["rc_hero","rc_cta_banner","rc_logo_bar","rc_customer_cards","rc_services","rc_products_cta","rc_contact_cta"]
+  "order": [
+    "rc_hero",
+    "rc_cta_banner",
+    "rc_logo_bar",
+    "rc_customer_cards",
+    "rc_services",
+    "rc_products_cta",
+    "rc_contact_cta"
+  ]
 }

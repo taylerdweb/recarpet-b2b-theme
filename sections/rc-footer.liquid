@@ -5,13 +5,13 @@
 
 <style>
   .rc-footer {
-    background: var(--rc-green, #174237);
+    background: var(--rc-green, #1E4433);
     color: rgba(255,255,255,0.85);
     padding: 64px 0 0;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
   }
   .rc-footer__inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 48px;
     display: grid;
@@ -30,12 +30,7 @@
     display: block;
   }
   .rc-footer__logo img { height: 36px; width: auto; }
-  .rc-footer__tagline {
-    font-size: 14px;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.65);
-    margin: 0 0 24px;
-  }
+
   .rc-footer__contact p {
     font-size: 14px;
     color: rgba(255,255,255,0.75);
@@ -85,7 +80,7 @@
 
   /* Bottom bar */
   .rc-footer__bottom {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 48px auto 0;
     padding: 20px 48px;
     border-top: 1px solid rgba(255,255,255,0.15);
@@ -136,7 +131,7 @@
         {%- endif -%}
       </a>
 
-      <p class="rc-footer__tagline">{{ section.settings.tagline }}</p>
+
 
       <p class="rc-footer__contact-label">Kontakt</p>
       <div class="rc-footer__contact">
@@ -220,12 +215,7 @@
   "tag": "div",
   "class": "rc-footer-wrapper",
   "settings": [
-    {
-      "type": "textarea",
-      "id": "tagline",
-      "label": "Tagline",
-      "default": "Specialister på demontering, kvalitetssäkring och leverans av textilplattor."
-    },
+
     {
       "type": "text",
       "id": "phone",

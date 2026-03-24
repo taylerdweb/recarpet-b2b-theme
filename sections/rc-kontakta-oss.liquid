@@ -10,7 +10,7 @@
     padding: var(--rc-section-pad, 80px) 0;
   }
   .rc-contact-page__inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 48px;
     display: grid;
@@ -56,7 +56,7 @@
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    background: var(--rc-cream, #F0EFEB);
+    background: var(--rc-cream, #F6F6F6);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,7 +65,7 @@
   .rc-contact-block__icon svg {
     width: 20px;
     height: 20px;
-    stroke: var(--rc-green, #174237);
+    stroke: var(--rc-green, #1E4433);
     fill: none;
     stroke-width: 1.8;
     stroke-linecap: round;
@@ -85,14 +85,14 @@
     font-weight: 500;
   }
   .rc-contact-block__value a {
-    color: var(--rc-green, #174237);
+    color: var(--rc-green, #1E4433);
     text-decoration: none;
   }
   .rc-contact-block__value a:hover { text-decoration: underline; }
 
   /* Right: Form */
   .rc-contact-form-wrap {
-    background: var(--rc-cream, #F0EFEB);
+    background: var(--rc-cream, #F6F6F6);
     border-radius: 12px;
     padding: 40px;
   }
@@ -125,7 +125,7 @@
   .rc-form-group textarea {
     width: 100%;
     padding: 12px 14px;
-    border: 1.5px solid var(--rc-cream-alt, #E8E7E2);
+    border: 1.5px solid var(--rc-cream-alt, #E6E3DE);
     border-radius: 6px;
     font-size: 15px;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
@@ -139,14 +139,100 @@
   .rc-form-group input:focus,
   .rc-form-group select:focus,
   .rc-form-group textarea:focus {
-    border-color: var(--rc-green, #174237);
+    border-color: var(--rc-green, #1E4433);
   }
   .rc-form-group textarea { resize: vertical; min-height: 120px; }
-  .rc-form-submit { margin-top: 8px; }
+
+  /* Radio button group */
+  .rc-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .rc-radio-group__label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rc-text, #1a1a1a);
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+  }
+  .rc-radio-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .rc-radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rc-radio-option input[type="radio"] {
+    width: auto;
+    padding: 0;
+    border: none;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--rc-green, #1E4433);
+  }
+  .rc-radio-option label {
+    margin: 0;
+    cursor: pointer;
+    padding: 10px 14px;
+    border: 1.5px solid var(--rc-cream-alt, #E6E3DE);
+    border-radius: 6px;
+    background: #fff;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .rc-radio-option input[type="radio"]:checked + label {
+    border-color: var(--rc-green, #1E4433);
+    background: rgba(30, 68, 51, 0.05);
+    color: var(--rc-green, #1E4433);
+  }
+
+  /* Checkbox */
+  .rc-checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .rc-checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    accent-color: var(--rc-green, #1E4433);
+    border: 1.5px solid var(--rc-cream-alt, #E6E3DE);
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .rc-checkbox-group label {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+  .rc-checkbox-group a {
+    color: var(--rc-green, #1E4433);
+    text-decoration: none;
+  }
+  .rc-checkbox-group a:hover {
+    text-decoration: underline;
+  }
+
+  .rc-form-submit { margin-top: 24px; }
   .rc-form-submit button {
     width: 100%;
     padding: 14px;
-    background: var(--rc-green, #174237);
+    background: var(--rc-green, #1E4433);
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -156,7 +242,7 @@
     cursor: pointer;
     transition: background 0.2s;
   }
-  .rc-form-submit button:hover { background: var(--rc-green-hover, #1e5547); }
+  .rc-form-submit button:hover { background: var(--rc-green-hover, #264f3f); }
 
   /* Success message */
   .rc-form-success {
@@ -168,7 +254,7 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: var(--rc-green, #174237);
+    background: var(--rc-green, #1E4433);
     margin: 0 auto 16px;
     display: flex;
     align-items: center;
@@ -178,12 +264,66 @@
   .rc-form-success h4 { font-size: 20px; font-weight: 600; margin: 0 0 8px; }
   .rc-form-success p { font-size: 15px; color: var(--rc-text-muted, #555); margin: 0; }
 
+  /* Contact persons section */
+  .rc-contact-persons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 60px;
+    padding-top: 60px;
+    border-top: 1px solid var(--rc-cream-alt, #E6E3DE);
+  }
+  .rc-contact-person {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rc-contact-person__name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--rc-text, #1a1a1a);
+    margin: 0;
+  }
+  .rc-contact-person__title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--rc-green, #1E4433);
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+  .rc-contact-person__phone {
+    font-size: 15px;
+    color: var(--rc-text, #1a1a1a);
+    margin: 4px 0 0 0;
+  }
+  .rc-contact-person__phone a {
+    color: var(--rc-text, #1a1a1a);
+    text-decoration: none;
+  }
+  .rc-contact-person__phone a:hover {
+    color: var(--rc-green, #1E4433);
+  }
+  .rc-contact-person__email {
+    font-size: 15px;
+    color: var(--rc-text, #1a1a1a);
+    margin: 0;
+  }
+  .rc-contact-person__email a {
+    color: var(--rc-green, #1E4433);
+    text-decoration: none;
+  }
+  .rc-contact-person__email a:hover {
+    text-decoration: underline;
+  }
+
   @media (max-width: 900px) {
     .rc-contact-page__inner { grid-template-columns: 1fr; gap: 48px; padding: 0 20px; }
     .rc-form-row { grid-template-columns: 1fr; }
+    .rc-contact-persons { grid-template-columns: 1fr; gap: 32px; }
   }
   @media (max-width: 600px) {
     .rc-contact-form-wrap { padding: 28px 20px; }
+    .rc-radio-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>
 
@@ -249,29 +389,74 @@
               <input type="text" id="ContactFormName" name="contact[name]" autocomplete="name" value="{% if customer %}{{ customer.name }}{% endif %}" placeholder="Ditt namn" required>
             </div>
             <div class="rc-form-group">
+              <label for="ContactFormCompany">Företag</label>
+              <input type="text" id="ContactFormCompany" name="contact[company]" autocomplete="organization" placeholder="Företagets namn" required>
+            </div>
+          </div>
+          <div class="rc-form-row">
+            <div class="rc-form-group">
               <label for="ContactFormEmail">E-post</label>
               <input type="email" id="ContactFormEmail" name="contact[email]" autocomplete="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="din@email.se" required>
             </div>
+            <div class="rc-form-group">
+              <label for="ContactFormPhone">Telefonnummer</label>
+              <input type="tel" id="ContactFormPhone" name="contact[phone]" autocomplete="tel" placeholder="Ditt telefonnummer" required>
+            </div>
           </div>
-          <div class="rc-form-group">
-            <label for="ContactFormPhone">Telefon (valfritt)</label>
-            <input type="tel" id="ContactFormPhone" name="contact[phone]" autocomplete="tel" placeholder="Ditt telefonnummer">
+          <div class="rc-form-group rc-form-group--full">
+            <div class="rc-radio-group">
+              <div class="rc-radio-group__label">Välj vad du vill ha hjälp med</div>
+              <div class="rc-radio-grid">
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp01" name="contact[body_type]" value="Fråga pris">
+                  <label for="ContactFormHelp01">Fråga pris</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp02" name="contact[body_type]" value="Beställa prov">
+                  <label for="ContactFormHelp02">Beställa prov</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp03" name="contact[body_type]" value="Inventering">
+                  <label for="ContactFormHelp03">Inventering</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp04" name="contact[body_type]" value="Föreskriftsfrågor">
+                  <label for="ContactFormHelp04">Föreskriftsfrågor</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp05" name="contact[body_type]" value="Demontering">
+                  <label for="ContactFormHelp05">Demontering</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp06" name="contact[body_type]" value="Boka möte">
+                  <label for="ContactFormHelp06">Boka möte</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp07" name="contact[body_type]" value="Produktfråga">
+                  <label for="ContactFormHelp07">Produktfråga</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp08" name="contact[body_type]" value="Service & Underhåll">
+                  <label for="ContactFormHelp08">Service & Underhåll</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp09" name="contact[body_type]" value="Samarbeten">
+                  <label for="ContactFormHelp09">Samarbeten</label>
+                </div>
+                <div class="rc-radio-option">
+                  <input type="radio" id="ContactFormHelp10" name="contact[body_type]" value="Annat">
+                  <label for="ContactFormHelp10">Annat</label>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="rc-form-group">
-            <label for="ContactFormSubject">Ämne</label>
-            <select id="ContactFormSubject" name="contact[subject]">
-              <option value="">Välj ämne</option>
-              <option value="Inventering">Inventering</option>
-              <option value="Beställ prover">Beställ prover</option>
-              <option value="Offertförfrågan">Offertförfrågan</option>
-              <option value="Återbruk av golv">Återbruk av golv</option>
-              <option value="Ny textilplatta">Ny textilplatta</option>
-              <option value="Övrigt">Övrigt</option>
-            </select>
-          </div>
-          <div class="rc-form-group">
+          <div class="rc-form-group rc-form-group--full">
             <label for="ContactFormMessage">Meddelande</label>
-            <textarea id="ContactFormMessage" name="contact[body]" placeholder="Berätta vad du behöver hjälp med..."></textarea>
+            <textarea id="ContactFormMessage" name="contact[body]" placeholder="Berätta vad du behöver hjälp med..." required></textarea>
+          </div>
+          <div class="rc-checkbox-group">
+            <input type="checkbox" id="ContactFormPrivacy" name="contact[privacy]" value="accepted" required>
+            <label for="ContactFormPrivacy">Jag accepterar <a href="/pages/integritetspolicy">Integritetspolicyn</a></label>
           </div>
           <div class="rc-form-submit">
             <button type="submit">{{ section.settings.submit_label | default: 'Skicka meddelande' }}</button>
@@ -289,6 +474,24 @@
           });
         </script>
       {%- endif -%}
+    </div>
+  </div>
+
+  <!-- Contact persons section -->
+  <div class="rc-contact-page__inner">
+    <div class="rc-contact-persons">
+      <div class="rc-contact-person">
+        <h4 class="rc-contact-person__name">Jonas Hallman</h4>
+        <p class="rc-contact-person__title">Demonteringar, Samarbeten</p>
+        <p class="rc-contact-person__phone"><a href="tel:+46700733682">070-073 36 82</a></p>
+        <p class="rc-contact-person__email"><a href="mailto:jonas@recarpet.se">jonas@recarpet.se</a></p>
+      </div>
+      <div class="rc-contact-person">
+        <h4 class="rc-contact-person__name">Tim Aronsson</h4>
+        <p class="rc-contact-person__title">Försäljningschef</p>
+        <p class="rc-contact-person__phone"><a href="tel:+46700733681">070-073 36 81</a></p>
+        <p class="rc-contact-person__email"><a href="mailto:tim.aronsson@recarpet.se">tim.aronsson@recarpet.se</a></p>
+      </div>
     </div>
   </div>
 </section>

@@ -123,6 +123,23 @@
   @media (max-width: 989px) {
     .header { padding: 0 20px !important; height: 64px; }
   }
+
+  /* Hover dropdown menus on desktop */
+  @media (min-width: 990px) {
+    header-menu details[open] > .header__submenu {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+    
+    header-menu details:not([open]) > .header__submenu {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    }
+  }
 </style>
 
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -545,6 +562,43 @@
   }
 
   customElements.define('sticky-header', StickyHeader);
+
+  // Hover dropdown menus on desktop
+  class HeaderMenu extends HTMLElement {
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      // Only enable hover on desktop (min-width: 990px)
+      if (window.innerWidth < 990) return;
+
+      const details = this.querySelector('details');
+      if (!details) return;
+
+      let closeTimeout;
+
+      details.addEventListener('mouseenter', () => {
+        clearTimeout(closeTimeout);
+        details.open = true;
+      });
+
+      details.addEventListener('mouseleave', () => {
+        closeTimeout = setTimeout(() => {
+          details.open = false;
+        }, 150);
+      });
+
+      // Handle window resize to disable/enable hover on responsive change
+      window.addEventListener('resize', () => {
+        if (window.innerWidth < 990) {
+          details.open = false;
+        }
+      });
+    }
+  }
+
+  customElements.define('header-menu', HeaderMenu);
 {% endjavascript %}
 
 <script type="application/ld+json">

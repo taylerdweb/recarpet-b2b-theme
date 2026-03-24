@@ -31,7 +31,7 @@
   .rc-hero__content {
     position: relative;
     z-index: 2;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 80px 48px;
     width: 100%;
@@ -48,7 +48,7 @@
   }
   .rc-hero__heading {
     font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: clamp(36px, 5vw, 64px);
+    font-size: clamp(40px, 5vw, 56px);
     font-weight: 500;
     line-height: 1.1;
     color: #fff;
@@ -89,11 +89,6 @@
       {%- if section.settings.btn1_label != blank -%}
         <a href="{{ section.settings.btn1_url }}" class="rc-btn rc-btn--primary">
           {{ section.settings.btn1_label }}
-        </a>
-      {%- endif -%}
-      {%- if section.settings.btn2_label != blank -%}
-        <a href="{{ section.settings.btn2_url }}" class="rc-btn rc-btn--outline-white">
-          {{ section.settings.btn2_label }}
         </a>
       {%- endif -%}
     </div>
@@ -161,17 +156,6 @@
       "type": "url",
       "id": "btn1_url",
       "label": "Knapp 1 – länk"
-    },
-    {
-      "type": "text",
-      "id": "btn2_label",
-      "label": "Knapp 2 – text",
-      "default": "Kontakta oss"
-    },
-    {
-      "type": "url",
-      "id": "btn2_url",
-      "label": "Knapp 2 – länk"
     }
   ],
   "presets": [
@@ -181,7 +165,6 @@
         "heading": "Hållbara mattor till marknadens bästa priser",
         "subtext": "ReCarpet är specialister på demontering, kvalitetssäkring och leverans av textilplattor. För cirkulära lösningar i både ombyggnad och nyproduktion.",
         "btn1_label": "Se våra produkter",
-        "btn2_label": "Kontakta oss",
         "min_height": 750
       }
     }

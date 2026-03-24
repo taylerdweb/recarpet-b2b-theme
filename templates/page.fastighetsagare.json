@@ -1,8 +1,19 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "rc-page-hero",
       "settings": {
+        "background_image": "shopify://shop_images/rc-card-fastighetsagare.jpg",
+        "image_position": "center center",
         "eyebrow": "För fastighetsägare",
         "heading": "Vi tar ansvar för hela processen – maximerat utfall, minimerat avfall",
         "subtext": "En noggrann inventering är grunden för ett lyckat projekt. Vilka golv har ni, hur mycket och i vilket skick? Tillsammans utvärderar vi era möjligheter för att maximera återbruk och minska avfall."
@@ -10,57 +21,45 @@
     },
     "kundgrupp": {
       "type": "rc-kundgrupp",
-      "settings": {
-        "eyebrow": "Fastighetsägare",
-        "intro_heading": "Vi tar ansvar för hela processen – maximerat utfall, minimerat avfall",
-        "intro_body": "En noggrann inventering är grunden för ett lyckat projekt. Vilka golv har ni, hur mycket och i vilket skick? Tillsammans utvärderar vi era möjligheter för att maximera återbruk och minska avfall.",
-        "intro_body_2": "Kunskap om produkternas potential ger nöjda kunder och hållbara lokaler. Vi har ett brett nätverk som hjälper oss att förmedla erat gamla golv vidare. Låt inte osorterat golv stå oanvänt, skicka det till oss – vi ser till att plattorna får ett nytt liv.",
-        "btn1_label": "Upptäck våra tjänster",
-        "btn1_url": "/pages/vad-vi-gor",
-        "btn2_label": "Boka inventering",
-        "btn2_url": "/pages/kontakta-oss",
-        "features_heading": "Våra tjänster för fastighetsägare",
-        "stats_eyebrow": "Hållbarhet",
-        "stats_heading": "Minska CO₂-utsläppen och kostnaderna med ReCarpet",
-        "stats_body": "Genom att välja våra textilplattor minskar du utsläppen per kvadratmeter avsevärt. Med våra produkter och tjänster minskar vi era CO₂-utsläpp per kvadratmeter med ca 70% och kostnaderna med upp till 60%. Då textilplattor står för en stor del av den totala CO₂-kostnaden sett till inredningsmaterial så kan ditt företag göra en stor miljötjänst tillsammans med oss.",
-        "stats_btn_label": "Boka demontering",
-        "stats_btn_url": "/pages/kontakta-oss"
-      },
       "blocks": {
         "f1": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/rc-tjanst-inventering.jpg",
             "title": "Inventering",
             "text": "Vi vet att textilplattor ofta byts ut, men hur mycket av det gamla golvet kan återbrukas? Vi genomför en grundlig inventering där ni får detaljerad information om varje platta och vad som kan sparas vid en demontering. Som produktexperter hjälper vi er förstå förutsättningarna för att maximera återbruket i just ert projekt.",
-            "link_url": "/pages/vad-vi-gor#inventering",
+            "link_url": "shopify://pages/kontakta-oss",
             "link_label": "Boka inventering"
           }
         },
         "f2": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/rc-tjanst-demontering.jpg",
             "title": "Demontering",
             "text": "Efter inventeringen har vi en klar bild av vad som kan återanvändas. Vi utför demonteringen snabbt och effektivt, och lämnar lokalen redo för nästa steg. Vi rekommenderar alltid att demontering utförs innan övrig rivning påbörjas.",
-            "link_url": "/pages/vad-vi-gor#demontering",
+            "link_url": "shopify://pages/kontakta-oss",
             "link_label": "Boka demontering"
           }
         },
         "f3": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/rc-tjanst-formedling.jpg",
             "title": "Förmedling",
             "text": "Vi lagerhåller textilplattor under optimala förhållanden. Om en ny hyresgäst är intresserad av återbrukat golv kan ni vara säkra på att de plattor ni beställer från ReCarpet håller högsta kvalitet.",
-            "link_url": "/pages/vad-vi-gor#formedling",
+            "link_url": "shopify://collections/all",
             "link_label": "Se aktuellt sortiment"
           }
         },
         "f4": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/rc-service-internt-aterbruk.jpg",
             "title": "Återbruka internt",
             "text": "Vill ni behålla golvet för intern användning? Vi hjälper er att rengöra, kontrollera och sortera plattorna. Om nästa hyresgäst vill behålla golvet eller bara byta ut vissa delar, anpassar vi golvet efter behov med återbrukat eller nytt material.",
-            "link_url": "/pages/vad-vi-gor#internt-aterbruk",
-            "link_label": "Läs mer om internt återbruk"
+            "link_url": "shopify://collections/aterbrukade-mattor",
+            "link_label": "Se återbrukade mattor"
           }
         },
         "stat1": {
@@ -88,7 +87,73 @@
           }
         }
       },
-      "block_order": ["f1", "f2", "f3", "f4", "stat1", "stat2", "stat3"]
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "stat1",
+        "stat2",
+        "stat3"
+      ],
+      "settings": {
+        "eyebrow": "Fastighetsägare",
+        "intro_heading": "Våra tjänster",
+        "intro_body": "Vi erbjuder en komplett hantering av textilplattor för fastighetsägare.",
+        "intro_body_2": "",
+        "btn1_label": "",
+        "btn1_url": "",
+        "btn2_label": "",
+        "btn2_url": "",
+        "features_heading": "Våra tjänster för fastighetsägare",
+        "stats_eyebrow": "Hållbarhet",
+        "stats_heading": "Minska CO₂-utsläppen och kostnaderna med ReCarpet",
+        "stats_body": "Genom att välja våra textilplattor minskar du utsläppen per kvadratmeter avsevärt. Med våra produkter och tjänster minskar vi era CO₂-utsläpp per kvadratmeter med ca 70% och kostnaderna med upp till 60%. Då textilplattor står för en stor del av den totala CO₂-kostnaden sett till inredningsmaterial så kan ditt företag göra en stor miljötjänst tillsammans med oss.",
+        "stats_btn_label": "Boka demontering",
+        "stats_btn_url": "/pages/kontakta-oss"
+      }
+    },
+    "content_kunskap": {
+      "type": "rc-content-block",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Kunskap om produkternas potential ger nöjda kunder och hållbara lokaler",
+        "body": "Vi har ett brett nätverk som hjälper oss att förmedla erat gamla golv vidare. Låt inte osorterat golv stå oanvänt, skicka det till oss – vi ser till att plattorna får ett nytt liv.\n\nFör att återbruk ska lyckas behöver både arkitekter och hyresgäster veta vad som finns att föreskriva. Vi tillhandahåller prover, priser och all information som behövs för en trygg och smidig process.",
+        "bg_color": "white",
+        "image_position": "right",
+        "btn1_label": "Boka inventering",
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "",
+        "btn2_url": ""
+      }
+    },
+    "content_hallbarhet": {
+      "type": "rc-content-block",
+      "settings": {
+        "eyebrow": "Hållbarhet",
+        "heading": "Nå era hållbarhetsmål med ReCarpet",
+        "body": "Varje återbrukad kvadratmeter textilplatta sparar 7,1 kg CO₂ genom att undvika deponi. Med våra professionella inom materialåterbruk får ni en effektiv lösning. Väljer ni dessutom att installera återbrukade plattor gör ni både miljön och ekonomin en tjänst.",
+        "bg_color": "cream",
+        "image_position": "left",
+        "btn1_label": "Boka demontering",
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "",
+        "btn2_url": ""
+      }
+    },
+    "content_milliken": {
+      "type": "rc-content-block",
+      "settings": {
+        "eyebrow": "Nyproducerat",
+        "heading": "Ett hållbart golvalternativ",
+        "body": "Efterfrågan på återbrukade textilplattor är större än utbudet, och hyresgäster har ofta specifika önskemål. Därför erbjuder vi även nya plattor från Milliken, som är ledande inom hållbarhet.\n\nMed Millikens TractionBack-teknik kan vi enkelt återbruka plattorna vid nästa hyresgästanpassning, vilket eliminerar avfall och minskar ert CO₂-avtryck. Med TractionBack är det omöjligt att installera golvet fel, vilket annars är en risk vid klassisk montering.",
+        "bg_color": "white",
+        "image_position": "right",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "Se Millikens plattor",
+        "btn2_url": "/collections/nya-textilplattor"
+      }
     },
     "contact_cta": {
       "type": "rc-contact-cta",
@@ -96,9 +161,18 @@
         "heading": "Få full kontroll över golven i era fastigheter",
         "body": "Vill ni ha bättre koll på era golv och optimera kostnader och miljöpåverkan? Vi inventerar och ger er en tydlig bild av möjligheter och besparingar inför nästa steg.",
         "btn1_label": "Boka inventering",
-        "btn1_url": "/pages/kontakta-oss"
+        "btn1_url": "shopify://pages/kontakta-oss",
+        "btn2_label": "",
+        "btn2_url": ""
       }
     }
   },
-  "order": ["hero", "kundgrupp", "contact_cta"]
+  "order": [
+    "hero",
+    "kundgrupp",
+    "content_kunskap",
+    "content_hallbarhet",
+    "content_milliken",
+    "contact_cta"
+  ]
 }

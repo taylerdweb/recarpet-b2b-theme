@@ -1,14 +1,14 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "rc_page_hero": {
-      "type": "rc-page-hero",
-      "settings": {
-        "eyebrow": "Kontakta oss",
-        "heading": "Hur kan vi hjälpa dig?",
-        "subtext": "Beställ prover, boka en inventering eller ställ en fråga till oss.",
-        "min_height": "320"
-      }
-    },
     "rc_kontakta_oss": {
       "type": "rc-kontakta-oss",
       "settings": {
@@ -19,7 +19,16 @@
         "form_heading": "Skicka ett meddelande",
         "submit_label": "Skicka meddelande"
       }
+    },
+    "rc_logo_bar": {
+      "type": "rc-logo-bar",
+      "settings": {
+        "heading": "Några av våra nöjda kunder"
+      }
     }
   },
-  "order": ["rc_page_hero", "rc_kontakta_oss"]
+  "order": [
+    "rc_kontakta_oss",
+    "rc_logo_bar"
+  ]
 }

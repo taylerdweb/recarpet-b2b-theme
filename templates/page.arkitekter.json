@@ -1,8 +1,19 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "rc-page-hero",
       "settings": {
+        "background_image": "shopify://shop_images/recarpet-arkitekt-hero.jpg",
+        "image_position": "center center",
         "eyebrow": "För arkitekter",
         "heading": "Utforska vårt sortiment och beställ prover",
         "subtext": "Upptäck vårt utbud av återbrukade och nya textilplattor. Behöver du information inför föreskrift eller specifikationer? Hör av dig till oss – vi hjälper dig!"
@@ -10,25 +21,11 @@
     },
     "kundgrupp": {
       "type": "rc-kundgrupp",
-      "settings": {
-        "eyebrow": "För arkitekter",
-        "intro_heading": "Utforska vårt sortiment och beställ prover",
-        "intro_body": "Upptäck vårt utbud av återbrukade och nya textilplattor. Behöver du information inför föreskrift eller behöver du specifikationer? Hör av dig till oss – vi hjälper dig!",
-        "intro_body_2": "Vill du föreskriva eller beställa återbrukade textilplattor? Vi guidar dig genom materialvalsprocessen. I de fall du inte hittar de du söker i vårt återbrukade sortiment, kan vi erbjuda ett brett sortiment av Millikens nytillverkade textilplattor. Dessa plattor installeras utan externt lim vilket gör dem garanterat återbrukbara och de har en livslängd som är 40-50% längre än en standardplatta.",
-        "btn1_label": "Se våra produkter",
-        "btn1_url": "/collections/all",
-        "btn2_label": "Kontakta oss för att beställa prov",
-        "btn2_url": "/pages/kontakta-oss",
-        "features_heading": "Våra mattor",
-        "stats_heading": "ReCarpet – helhetsansvar för ett storskaligt återbruk",
-        "stats_body": "Vi hanterar hela processen, från demontering till lagerhållning och försäljning. Alla våra textilplattor är kontrollerade, sorterade och rengjorda. Redo för att göra nytta i många år framöver!",
-        "stats_btn_label": "Boka våra tjänster",
-        "stats_btn_url": "/pages/kontakta-oss"
-      },
       "blocks": {
         "f1": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/rc-service-internt-aterbruk.jpg",
             "title": "Återbrukade textilplattor",
             "text": "Vi har ett sortiment av återbrukade kvalitetsmattor till marknadens bästa pris. Sortimentet varierar över tid.",
             "link_url": "/collections/aterbrukade-textilplattor",
@@ -38,6 +35,7 @@
         "f2": {
           "type": "feature",
           "settings": {
+            "image": "shopify://shop_images/rc-card-arkitekt.jpg",
             "title": "Nya textilplattor",
             "text": "Genom vårt samarbete med Milliken Floors erbjuder vi även nytillverkade textilplattor som är anpassade för senare återbruk.",
             "link_url": "/collections/nya-textilplattor",
@@ -45,7 +43,27 @@
           }
         }
       },
-      "block_order": ["f1", "f2"]
+      "block_order": [
+        "f1",
+        "f2"
+      ],
+      "settings": {
+        "eyebrow": "För arkitekter",
+        "intro_heading": "Våra mattor",
+        "intro_body": "Utforska vårt sortiment av återbrukade och nya textilplattor. Beställ prover eller kontakta oss för specifikationer.",
+        "intro_body_2": "",
+        "btn1_label": "Se våra produkter",
+        "btn1_url": "/collections/all",
+        "btn2_label": "Kontakta oss för att beställa prov",
+        "btn2_url": "/pages/kontakta-oss",
+        "features_heading": "Våra mattor",
+        "stats_eyebrow": "",
+        "stats_heading": "ReCarpet – helhetsansvar för ett storskaligt återbruk",
+        "stats_body": "Vi hanterar hela processen, från demontering till lagerhållning och försäljning. Alla våra textilplattor är kontrollerade, sorterade och rengjorda. Redo för att göra nytta i många år framöver!",
+        "stats_image": "shopify://shop_images/rc-omoss-hallbarhet.jpg",
+        "stats_btn_label": "Boka våra tjänster",
+        "stats_btn_url": "/pages/kontakta-oss"
+      }
     },
     "contact_cta": {
       "type": "rc-contact-cta",
@@ -53,9 +71,15 @@
         "heading": "Ta steget – Vi hjälper dig!",
         "body": "Vill du föreskriva eller beställa återbrukade textilplattor? Vi guidar dig genom materialvalsprocessen.",
         "btn1_label": "Kontakta oss",
-        "btn1_url": "/pages/kontakta-oss"
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "",
+        "btn2_url": ""
       }
     }
   },
-  "order": ["hero", "kundgrupp", "contact_cta"]
+  "order": [
+    "hero",
+    "kundgrupp",
+    "contact_cta"
+  ]
 }

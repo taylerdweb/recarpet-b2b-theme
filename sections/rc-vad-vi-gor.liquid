@@ -4,44 +4,98 @@
 {% endcomment %}
 
 <style>
-  /* Quick-nav row */
+  /* Timeline navigation */
   .rc-services-nav {
-    background: var(--rc-green, #174237);
-    padding: 0;
+    background: var(--rc-green, #1E4433);
+    padding: 40px 48px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
     overflow-x: auto;
+    overflow-y: hidden;
   }
   .rc-services-nav__inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 48px;
     display: flex;
     gap: 0;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    min-height: 120px;
   }
-  .rc-services-nav a {
-    display: inline-block;
-    padding: 16px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    border-bottom: 3px solid transparent;
-    white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
+  /* Timeline line */
+  .rc-services-nav__inner::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%);
+    z-index: 1;
   }
-  .rc-services-nav a:hover,
-  .rc-services-nav a.active {
+  /* Timeline node wrapper */
+  .rc-services-nav__node {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    text-align: center;
+  }
+  /* Node circle */
+  .rc-services-nav__node-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
     color: #fff;
-    border-bottom-color: rgba(255,255,255,0.8);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    flex-shrink: 0;
+  }
+  .rc-services-nav__node.active .rc-services-nav__node-circle {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #fff;
+    transform: scale(1.1);
+  }
+  .rc-services-nav__node:hover .rc-services-nav__node-circle {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+  }
+  /* Node text/label */
+  .rc-services-nav__node-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    transition: color 0.3s ease;
+    text-decoration: none;
+  }
+  .rc-services-nav__node.active .rc-services-nav__node-label {
+    color: #fff;
+  }
+  .rc-services-nav__node:hover .rc-services-nav__node-label {
+    color: #fff;
   }
 
   /* Service detail section */
   .rc-service-detail {
     padding: var(--rc-section-pad, 80px) 0;
   }
-  .rc-service-detail:nth-child(even) { background: var(--rc-cream, #F0EFEB); }
+  .rc-service-detail:nth-child(even) { background: var(--rc-cream, #F6F6F6); }
   .rc-service-detail:nth-child(odd) { background: var(--rc-white, #fff); }
   .rc-service-detail__inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 48px;
     display: grid;
@@ -94,20 +148,98 @@
     .rc-service-detail__inner { grid-template-columns: 1fr; gap: 32px; }
     .rc-service-detail--reverse .rc-service-detail__text,
     .rc-service-detail--reverse .rc-service-detail__image { order: unset; }
-    .rc-service-detail__inner,
-    .rc-services-nav__inner { padding: 0 20px; }
+    .rc-service-detail__inner { padding: 0 20px; }
+    .rc-services-nav {
+      padding: 32px 20px;
+    }
+    .rc-services-nav__inner {
+      min-height: 100px;
+    }
+    .rc-services-nav__node-circle {
+      width: 40px;
+      height: 40px;
+      font-size: 14px;
+    }
+    .rc-services-nav__node-label {
+      font-size: 12px;
+    }
   }
 </style>
 
-<!-- Quick navigation -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const nav = document.querySelector('.rc-services-nav');
+    const nodes = document.querySelectorAll('.rc-services-nav__node');
+    const sections = document.querySelectorAll('[data-service-section]');
+
+    // Smooth scroll on node click
+    nodes.forEach(node => {
+      node.addEventListener('click', function(e) {
+        e.preventDefault();
+        const anchor = this.dataset.anchor;
+        const target = document.querySelector(`[data-service-section="${anchor}"]`);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Intersection Observer for active state tracking
+    const observerOptions = {
+      root: null,
+      rootMargin: '-25% 0px -75% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(entry => {
+        const anchor = entry.target.dataset.serviceSection;
+        const node = document.querySelector(`[data-anchor="${anchor}"]`);
+        
+        if (entry.isIntersecting) {
+          // Remove active from all nodes
+          nodes.forEach(n => n.classList.remove('active'));
+          // Add active to current node
+          if (node) {
+            node.classList.add('active');
+          }
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  });
+</script>
+
+<!-- Timeline navigation -->
 <nav class="rc-services-nav" aria-label="Tjänster">
   <div class="rc-services-nav__inner">
-    <a href="#inventering">Inventering</a>
-    <a href="#formedling">Förmedling</a>
-    <a href="#bemanning">Bemanning</a>
-    <a href="#demontering">Demontering</a>
-    <a href="#montering">Montering</a>
-    <a href="#internt-aterbruk">Internt återbruk</a>
+    <div class="rc-services-nav__node active" data-anchor="inventering" role="button" tabindex="0">
+      <div class="rc-services-nav__node-circle">1</div>
+      <a href="#inventering" class="rc-services-nav__node-label">Inventering</a>
+    </div>
+    <div class="rc-services-nav__node" data-anchor="demontering" role="button" tabindex="0">
+      <div class="rc-services-nav__node-circle">2</div>
+      <a href="#demontering" class="rc-services-nav__node-label">Demontering</a>
+    </div>
+    <div class="rc-services-nav__node" data-anchor="formedling" role="button" tabindex="0">
+      <div class="rc-services-nav__node-circle">3</div>
+      <a href="#formedling" class="rc-services-nav__node-label">Förmedling</a>
+    </div>
+    <div class="rc-services-nav__node" data-anchor="montering" role="button" tabindex="0">
+      <div class="rc-services-nav__node-circle">4</div>
+      <a href="#montering" class="rc-services-nav__node-label">Montering</a>
+    </div>
+    <div class="rc-services-nav__node" data-anchor="service" role="button" tabindex="0">
+      <div class="rc-services-nav__node-circle">5</div>
+      <a href="#service" class="rc-services-nav__node-label">Service & underhåll</a>
+    </div>
+    <div class="rc-services-nav__node" data-anchor="internt-aterbruk" role="button" tabindex="0">
+      <div class="rc-services-nav__node-circle">6</div>
+      <a href="#internt-aterbruk" class="rc-services-nav__node-label">Internt återbruk</a>
+    </div>
   </div>
 </nav>
 
@@ -117,6 +249,7 @@
   <section
     class="rc-service-detail{% if is_reverse == 0 %} rc-service-detail--reverse{% endif %}"
     id="{{ block.settings.anchor | default: block.settings.title | downcase | replace: ' ', '-' }}"
+    data-service-section="{{ block.settings.anchor | default: block.settings.title | downcase | replace: ' ', '-' }}"
   >
     <div class="rc-service-detail__inner">
       <div class="rc-service-detail__text">

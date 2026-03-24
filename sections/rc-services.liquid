@@ -6,11 +6,11 @@
 
 <style>
   .rc-services {
-    background: var(--rc-cream, #F0EFEB);
+    background: var(--rc-cream, #F6F6F6);
     padding: var(--rc-section-pad, 80px) 0;
   }
   .rc-services__inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 48px;
   }
@@ -60,7 +60,7 @@
     top: 0;
     bottom: 0;
     width: 1px;
-    background: var(--rc-cream-alt, #E8E7E2);
+    background: var(--rc-cream-alt, #E6E3DE);
     transform: translateX(-50%);
   }
   .rc-services__item {
@@ -84,9 +84,16 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--rc-green, #174237);
-    border: 3px solid var(--rc-cream, #F0EFEB);
-    box-shadow: 0 0 0 1px var(--rc-green, #174237);
+    background: var(--rc-green, #1E4433);
+    border: 3px solid var(--rc-cream, #F6F6F6);
+    box-shadow: 0 0 0 1px var(--rc-green, #1E4433);
+    transition: width 0.3s, height 0.3s, transform 0.3s;
+  }
+  .rc-services__dot-inner.active {
+    width: 24px;
+    height: 24px;
+    background: var(--rc-text, #1a1a1a);
+    box-shadow: 0 0 0 3px var(--rc-green, #1E4433);
   }
 
   .rc-services__item-image {
@@ -130,7 +137,7 @@
   .rc-services__item-link {
     font-size: 14px;
     font-weight: 600;
-    color: var(--rc-green, #174237);
+    color: var(--rc-green, #1E4433);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -140,6 +147,20 @@
   .rc-services__item-link::after { content: ' →'; }
   .rc-services__item--reverse .rc-services__item-link::before { content: '← '; }
   .rc-services__item--reverse .rc-services__item-link::after { content: ''; }
+
+  /* Progress line overlay */
+  .rc-services__timeline::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1px;
+    height: 0%;
+    background: var(--rc-green, #1E4433);
+    transform: translateX(-50%);
+    z-index: 3;
+    transition: height 0.1s linear;
+  }
 
   @media (max-width: 900px) {
     .rc-services__timeline::before { display: none; }
@@ -172,7 +193,7 @@
         <p class="rc-services__intro">{{ section.settings.intro }}</p>
       {%- endif -%}
       {%- if section.settings.btn_label != blank -%}
-        <a href="{{ section.settings.btn_url }}" class="rc-btn rc-btn--outline">{{ section.settings.btn_label }}</a>
+        <a href="{{ section.settings.btn_url }}" class="rc-btn rc-btn--outline" style="border: 1px solid;">{{ section.settings.btn_label }}</a>
       {%- endif -%}
     </div>
 
@@ -222,6 +243,55 @@
     </div>
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const timeline = document.querySelector('.rc-services__timeline');
+  const dots = document.querySelectorAll('.rc-services__dot-inner');
+  
+  if (!timeline || dots.length === 0) return;
+  
+  function updateProgress() {
+    const timelineRect = timeline.getBoundingClientRect();
+    const timelineTop = timelineRect.top;
+    const timelineHeight = timelineRect.height;
+    const viewportCenter = window.innerHeight / 2;
+    
+    // Calculate progress: from top of timeline to center of viewport
+    let progress = (viewportCenter - timelineTop) / timelineHeight;
+    progress = Math.max(0, Math.min(1, progress));
+    
+    // Update progress line height
+    timeline.style.setProperty('--progress', progress * 100 + '%');
+    
+    // Update active dots
+    dots.forEach((dot, index) => {
+      const dotRect = dot.parentElement.parentElement.getBoundingClientRect();
+      const dotCenter = dotRect.top + dotRect.height / 2;
+      const distanceFromCenter = Math.abs(dotCenter - viewportCenter);
+      
+      // Consider a dot "active" if it's within 200px of viewport center
+      if (distanceFromCenter < 200) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+  }
+  
+  // Use CSS variables for better performance
+  const style = document.createElement('style');
+  style.textContent = `
+    .rc-services__timeline::after {
+      height: var(--progress, 0%);
+    }
+  `;
+  document.head.appendChild(style);
+  
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress(); // Initial call
+});
+</script>
 
 {% schema %}
 {

@@ -11,32 +11,157 @@
     "om_oss": {
       "type": "rc-om-oss",
       "settings": {
-        "intro_heading": "Vår bakgrund",
-        "intro_body_1": "Jonas Nilsson och Erik Friis grundade ReCarpet med en enkel vision: att ge textilplattor ett nytt liv och göra byggbranschen mer cirkulär och hållbar.",
-        "mission_eyebrow": "Vår passion",
-        "mission_heading": "Hållbara golv är vår passion",
-        "mission_body": "Vi strävar efter att göra varje golvprojekt mer hållbart. Sedan start har vi demonstrerat och förmedlat 30 000m² textilplattor och bidragit till ett mer cirkulärt byggande.",
-        "mission_list": "Demontering av era gamla textilplattor\nLagerhållning och kvalitetssäkring\nMontering av nya eller återbrukade plattor\nService & underhåll för era golv\nInternt återbruk av befintliga plattor"
+        "intro_heading": "Välkommen till ReCarpet",
+        "intro_body_1": "ReCarpet grundades 2022 och är idag verksamma i hela Sverige. För att motverka byggbranschens stora problem med att cirkulera material tar vi nu saken i egna händer.",
+        "intro_body_2": "Som oberoende part bidrar vi med kunskap om golvmaterial och golventreprenad som främjar framtida återbruk. ReCarpet är en komplett leverantör inom produktkategorin textilplattor och utför jobbet från demontering till förmedling.",
+        "quote": "Vi demonterar inte bara golven – vi cirkulerar dem!",
+        "quote_author": "Jonas Hallman",
+        "quote_title": "Ägare",
+        "team_heading": "Vårt team",
+        "projects_heading": "Några av våra lyckade projekt",
+        "expertise_body": "Med vår erfarenhet kan ReCarpet stötta våra kunder genom hela processen – från förberedelser på betonggolv till montering av plattor som ger lokalen sin färdiga, funktionell toppyta.",
+        "expertise_quote": "En textilplatta är inte återbrukad förrän den är monterad på nytt.",
+        "services_heading": "Våra tjänster",
+        "services_list": "Demontering befintligt golv\nLagerhållning\nFörsäljning\nMontering\nService & underhåll för bättre hållbarhet",
+        "services_btn1_label": "Se våra tjänster",
+        "services_btn1_url": "/pages/tjanster",
+        "services_btn2_label": "Gör en offertförfrågan",
+        "services_btn2_url": "/pages/offertkalkyl",
+        "vision_heading": "Vår vision",
+        "vision_body": "Vi vill göra textilplattor helt cirkulära genom att minimera avfall och maximera återbruk. Genom innovativa återbrukslösningar skapar vi hållbara och vackra miljöer för framtidens arbetsplatser.",
+        "sustainability_heading": "En hållbar lösning",
+        "sustainability_subtitle": "Hållbara golv är vår passion",
+        "sustainability_body": "Vi jobbar för miljön, men vi behöver beslutsfattare som också vill förändra. ReCarpet är redo att leverera återbrukade textilplattor till alla som vill göra skillnad.",
+        "sustainability_btn_label": "Läs mer om hållbarhet",
+        "sustainability_btn_url": "/pages/hallbarhet"
       },
       "blocks": {
-        "stat1": { "type": "stat", "settings": { "number": "2022", "label": "Grundades" } },
-        "stat2": { "type": "stat", "settings": { "number": "30 000m²", "label": "Lagd yta" } },
-        "stat3": { "type": "stat", "settings": { "number": "300t", "label": "Återvunnet" } },
-        "stat4": { "type": "stat", "settings": { "number": "25+", "label": "Nöjda kunder" } }
+        "team1": {
+          "type": "team_member",
+          "settings": {
+            "name": "Jonas Hallman",
+            "title": "Ägare",
+            "bio": "Lång erfarenhet i golvbranschen och försäljning av olika golvmaterial. Inklusive två år som försäljningschef på en framstående leverantör av elastiska golv.",
+            "email": "jonas@recarpet.se",
+            "phone": "+46 70 123 45 67"
+          }
+        },
+        "team2": {
+          "type": "team_member",
+          "settings": {
+            "name": "Tim Aronsson",
+            "title": "Försäljningschef Projekt",
+            "bio": "Ansvarig för att optimera fastighetsägares köp av nya och återbrukade textilplattor. Drivande inom försäljning av lösningar för företag.",
+            "email": "tim@recarpet.se",
+            "phone": "+46 70 234 56 78"
+          }
+        },
+        "stat1": {
+          "type": "stat",
+          "settings": {
+            "number": "2022",
+            "label": "Grundat"
+          }
+        },
+        "stat2": {
+          "type": "stat",
+          "settings": {
+            "number": "40 000m²",
+            "label": "Återbrukade textilplattor"
+          }
+        },
+        "stat3": {
+          "type": "stat",
+          "settings": {
+            "number": "450 ton",
+            "label": "Undviket avfall"
+          }
+        },
+        "stat4": {
+          "type": "stat",
+          "settings": {
+            "number": "100+",
+            "label": "Nöjda kunder"
+          }
+        },
+        "projects1": {
+          "type": "project_category",
+          "settings": {
+            "title": "Demontering",
+            "items": "Kv Yrket (NCC)\nUpplands Väsby Kommunhus (ByggDialog)\nKåkenhusen (Huvudstaden)"
+          }
+        },
+        "projects2": {
+          "type": "project_category",
+          "settings": {
+            "title": "Återbrukade",
+            "items": "Veidekke HK\nSkanska HK\nVossloh"
+          }
+        },
+        "projects3": {
+          "type": "project_category",
+          "settings": {
+            "title": "Milliken",
+            "items": "Deloitte HK\nMeta HK\nDisney HK"
+          }
+        }
       },
-      "block_order": ["stat1","stat2","stat3","stat4"]
+      "block_order": [
+        "team1",
+        "team2",
+        "stat1",
+        "stat2",
+        "stat3",
+        "stat4",
+        "projects1",
+        "projects2",
+        "projects3"
+      ]
     },
     "logo_bar": {
       "type": "rc-logo-bar",
-      "settings": { "heading": "Några av våra kunder" },
-      "blocks": {
-        "l1": { "type": "logo", "settings": { "text": "Veidekke" } },
-        "l2": { "type": "logo", "settings": { "text": "Vasakronan" } },
-        "l3": { "type": "logo", "settings": { "text": "Lundbergs" } },
-        "l4": { "type": "logo", "settings": { "text": "Zengun" } },
-        "l5": { "type": "logo", "settings": { "text": "taylerd" } }
+      "settings": {
+        "heading": "Några av våra kunder"
       },
-      "block_order": ["l1","l2","l3","l4","l5"]
+      "blocks": {
+        "l1": {
+          "type": "logo",
+          "settings": {
+            "text": "Veidekke"
+          }
+        },
+        "l2": {
+          "type": "logo",
+          "settings": {
+            "text": "Vasakronan"
+          }
+        },
+        "l3": {
+          "type": "logo",
+          "settings": {
+            "text": "Lundbergs"
+          }
+        },
+        "l4": {
+          "type": "logo",
+          "settings": {
+            "text": "Zengun"
+          }
+        },
+        "l5": {
+          "type": "logo",
+          "settings": {
+            "text": "taylerd"
+          }
+        }
+      },
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4",
+        "l5"
+      ]
     },
     "contact_cta": {
       "type": "rc-contact-cta",
@@ -48,5 +173,10 @@
       }
     }
   },
-  "order": ["page_hero","om_oss","logo_bar","contact_cta"]
+  "order": [
+    "page_hero",
+    "om_oss",
+    "logo_bar",
+    "contact_cta"
+  ]
 }

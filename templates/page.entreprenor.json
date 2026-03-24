@@ -1,8 +1,19 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "rc-page-hero",
       "settings": {
+        "background_image": "shopify://shop_images/rc-card-entreprenor.jpg",
+        "image_position": "center center",
         "eyebrow": "För entreprenörer",
         "heading": "Vi säkerställer rätt produkt, i rätt tid, med minimerat avfall",
         "subtext": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Genom att välja och montera återbrukade textilplattor bidrar ni till en mer hållbar byggbransch."
@@ -10,22 +21,6 @@
     },
     "kundgrupp": {
       "type": "rc-kundgrupp",
-      "settings": {
-        "eyebrow": "För entreprenörer",
-        "intro_heading": "Vi säkerställer rätt produkt, i rätt tid, med minimerat avfall",
-        "intro_body": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Vi har nära samarbeten med fastighetsägare och arkitekter för att leverera rätt platta till rätt lokal, även när färgvalen kan variera. Genom att välja och montera återbrukade textilplattor bidrar ni till en mer hållbar byggbransch.",
-        "intro_body_2": "Har du ett projekt med föreskrivna återbrukade textilplattor och vill lägga en beställning? Välkommen att kontakta oss!",
-        "btn1_label": "Kontakta oss",
-        "btn1_url": "/pages/kontakta-oss",
-        "btn2_label": "Läs mer om oss",
-        "btn2_url": "/pages/om-oss",
-        "features_heading": "Fördelarna med ReCarpets textilplattor",
-        "stats_eyebrow": "Partnerskap",
-        "stats_heading": "Bli en ReCarpet Certifierad Återbrukspartner",
-        "stats_body": "Bli en \"ReCarpet Certifierad Återbrukspartner\" och gör skillnad i varje projekt. Tillsammans bidrar vi till miljön genom att skänka 5 kr/m² vid varje uppdrag. Är du intresserad av att jobba mer med återbrukade textilplattor i din stad eller att bli en samarbetspartner? Hör av dig!",
-        "stats_btn_label": "Kontakta oss för mer info",
-        "stats_btn_url": "/pages/kontakta-oss"
-      },
       "blocks": {
         "f1": {
           "type": "feature",
@@ -57,14 +52,88 @@
         "f4": {
           "type": "feature",
           "settings": {
-            "title": "Skapa en bättre miljö med återbrukade textilplattor",
-            "text": "Återbrukade golv kan kännas ovant, men du kan lita på att alla våra plattor är noggrant rengjorda, sorterade och packade på EU-pall för enkel hantering. Slutresultatet blir unikt och vackert – ett hållbart val som uppskattas av många hyresgäster.",
+            "title": "Miljövänligt val",
+            "text": "Genom att välja återbrukade textilplattor minskar ni miljöpåverkan och bidrar till en mer cirkulär ekonomi i byggbranschen.",
             "link_url": "/collections/all",
             "link_label": "Se våra produkter"
           }
         }
       },
-      "block_order": ["f1", "f2", "f3", "f4"]
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ],
+      "settings": {
+        "eyebrow": "För entreprenörer",
+        "intro_heading": "Fördelarna med ReCarpets textilplattor",
+        "intro_body": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Vi har nära samarbeten med fastighetsägare och arkitekter för att leverera rätt platta till rätt lokal.",
+        "intro_body_2": "Har du ett projekt med föreskrivna återbrukade textilplattor och vill lägga en beställning? Välkommen att kontakta oss!",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "Läs mer om oss",
+        "btn2_url": "/pages/om-oss",
+        "features_heading": "Fördelarna med ReCarpets textilplattor",
+        "stats_eyebrow": "Partnerskap",
+        "stats_heading": "Bli en ReCarpet Certifierad Återbrukspartner",
+        "stats_body": "Bli en \"ReCarpet Certifierad Återbrukspartner\" och gör skillnad i varje projekt. Tillsammans bidrar vi till miljön genom att skänka 5 kr/m² vid varje uppdrag. Är du intresserad av att jobba mer med återbrukade textilplattor i din stad eller att bli en samarbetspartner? Hör av dig!",
+        "stats_btn_label": "Kontakta oss för mer info",
+        "stats_btn_url": "/pages/kontakta-oss"
+      }
+    },
+    "content_product": {
+      "type": "rc-content-block",
+      "settings": {
+        "heading": "Skapa en bättre miljö med återbrukade textilplattor",
+        "body": "Återbrukade golv kan kännas ovant, men du kan lita på att alla våra plattor är noggrant rengjorda, sorterade och packade på EU-pall för enkel hantering. Slutresultatet blir unikt och vackert – ett hållbart val som uppskattas av många hyresgäster.\n\nLägg återbrukade textilplattor och var stolt över att ni bidrar till en bättre miljö.",
+        "bg_color": "cream",
+        "image_position": "left",
+        "btn1_label": "Se våra produkter",
+        "btn1_url": "/collections/all"
+      }
+    },
+    "faq": {
+      "type": "rc-faq",
+      "blocks": {
+        "faq1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Hur monterar man återbrukade textilplattor?",
+            "answer": "Det beror på typ av produkt, men generellt är det ingen stor skillnad mot att lägga nya plattor. Om installationsmetod inte föreskrivits rekommenderar vi att undvika lim i möjligaste mån. Är ni osäkra, kontakta oss för rådgivning."
+          }
+        },
+        "faq2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Har ni garanti på materialet?",
+            "answer": "Vanligtvis har vi ingen garanti eftersom vi inte tillverkat produkterna. Att ge garanti på återbrukat material kan vara svårt. Däremot står vi bakom vår expertis gällande de produkter vi förmedlar. Om specifik materialgaranti krävs, kontakta oss så ser vi vad vi kan göra."
+          }
+        },
+        "faq3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Hur kommer slutresultatet bli?",
+            "answer": "Eftersom plattorna har använts tidigare kan det finnas variationer i färg. Produkterna kan ha legat i olika delar av tidigare lokaler, vilket påverkat deras utseende. Detta kan ge ett unikt utseende vid montering i en ny miljö. För bästa resultat, var extra noggrann vid läggningen."
+          }
+        },
+        "faq4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Kan man få en provbit för att visa kund?",
+            "answer": "Absolut! Kontakta oss med era önskemål om färg och kvantitet, så hjälper vi er med lämpliga alternativ."
+          }
+        }
+      },
+      "block_order": [
+        "faq1",
+        "faq2",
+        "faq3",
+        "faq4"
+      ],
+      "settings": {
+        "heading": "Vanliga frågor"
+      }
     },
     "contact_cta": {
       "type": "rc-contact-cta",
@@ -72,9 +141,17 @@
         "heading": "Bli en del av en hållbar byggbransch",
         "body": "Som entreprenör kan du bidra till en mer hållbar golvbransch. Vi hjälper dig välja rätt återbrukade textilplattor och stöttar dig genom hela processen – från produktval till montering.",
         "btn1_label": "Kontakta oss för mer information",
-        "btn1_url": "/pages/kontakta-oss"
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "",
+        "btn2_url": ""
       }
     }
   },
-  "order": ["hero", "kundgrupp", "contact_cta"]
+  "order": [
+    "hero",
+    "kundgrupp",
+    "content_product",
+    "faq",
+    "contact_cta"
+  ]
 }
