@@ -76,6 +76,14 @@
     background: var(--base-color-neutral--neutral-lighter);
   }
 
+  /* Override Dawn base.css: div:empty { display:none } — these are decorative elements */
+  .rc-services__progress-line,
+  .rc-services__progress-cover,
+  .rc-services__fade-top,
+  .rc-services__fade-bottom {
+    display: block !important;
+  }
+
   /* Black progress line — sticky at viewport top, 50vh tall, offset by -50vh
      so the visible bottom edge sits at viewport center */
   .rc-services__progress-line {
