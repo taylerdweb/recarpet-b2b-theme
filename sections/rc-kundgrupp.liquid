@@ -4,19 +4,23 @@
 {% endcomment %}
 
 <style>
-  /* Intro split */
+  /* Intro — full-bleed edge-to-edge split */
   .rc-kg-intro {
-    background: var(--rc-white);
-    padding: var(--rc-section-pad, 80px) 0;
+    background: var(--rc-cream, #F6F6F6);
+    margin-top: -72px;
+    padding-top: 72px;
   }
   .rc-kg-intro__inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 48px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: center;
+    min-height: 600px;
+  }
+  .rc-kg-intro__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Keep text within the max-width zone on the left */
+    padding: 80px 64px 80px calc(max(48px, (100vw - 1280px) / 2));
   }
   .rc-kg-intro__eyebrow {
     font-size: 12px;
@@ -35,8 +39,17 @@
   }
   .rc-kg-intro__body { font-size: 16px; line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 12px; }
   .rc-kg-intro__actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
-  .rc-kg-intro__image { border-radius: 8px; overflow: hidden; aspect-ratio: 3/2; }
-  .rc-kg-intro__image img { width: 100%; height: 100%; object-fit: cover; }
+  .rc-kg-intro__image {
+    position: relative;
+    overflow: hidden;
+  }
+  .rc-kg-intro__image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   /* Feature cards */
   .rc-kg-features {
@@ -109,19 +122,28 @@
   .rc-kg-stats__image img { width: 100%; height: 100%; object-fit: cover; }
 
   @media (max-width: 900px) {
-    .rc-kg-intro__inner,
+    .rc-kg-intro__inner {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+    .rc-kg-intro__text {
+      padding: 48px 20px;
+    }
+    .rc-kg-intro__image {
+      position: relative;
+      min-height: 300px;
+    }
     .rc-kg-stats__inner,
     .rc-kg-features__grid { grid-template-columns: 1fr; gap: 32px; }
-    .rc-kg-intro__inner,
     .rc-kg-features__inner,
     .rc-kg-stats__inner { padding: 0 20px; }
   }
 </style>
 
-<!-- Intro -->
+<!-- Intro — full-bleed split -->
 <section class="rc-kg-intro">
   <div class="rc-kg-intro__inner">
-    <div>
+    <div class="rc-kg-intro__text">
       {%- if section.settings.eyebrow != blank -%}
         <p class="rc-kg-intro__eyebrow">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
@@ -141,8 +163,10 @@
     </div>
     {%- if section.settings.intro_image != blank -%}
       <div class="rc-kg-intro__image">
-        <img src="{{ section.settings.intro_image | image_url: width: 900 }}" alt="{{ section.settings.intro_heading }}" loading="lazy">
+        {{ section.settings.intro_image | image_url: width: 1200 | image_tag: loading: 'eager', sizes: '50vw' }}
       </div>
+    {%- else -%}
+      <div class="rc-kg-intro__image" style="background: var(--rc-cream-alt, #E6E3DE);"></div>
     {%- endif -%}
   </div>
 </section>
