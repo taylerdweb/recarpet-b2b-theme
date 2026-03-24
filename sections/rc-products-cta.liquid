@@ -123,9 +123,6 @@
           {%- if section.settings.btn1_label != blank -%}
             <a href="{{ section.settings.btn1_url }}" class="rc-btn rc-btn--primary">{{ section.settings.btn1_label }}</a>
           {%- endif -%}
-          {%- if section.settings.btn2_label != blank -%}
-            <a href="{{ section.settings.btn2_url }}" class="rc-btn rc-btn--outline">{{ section.settings.btn2_label }}</a>
-          {%- endif -%}
         </div>
       </div>
       <div class="rc-products-cta__image">
@@ -191,24 +188,13 @@
     {
       "type": "text",
       "id": "btn1_label",
-      "label": "Knapp 1 text",
-      "default": "Beställ prover"
-    },
-    {
-      "type": "url",
-      "id": "btn1_url",
-      "label": "Knapp 1 länk"
-    },
-    {
-      "type": "text",
-      "id": "btn2_label",
-      "label": "Knapp 2 text",
+      "label": "Knapptext",
       "default": "Se alla produkter"
     },
     {
       "type": "url",
-      "id": "btn2_url",
-      "label": "Knapp 2 länk"
+      "id": "btn1_url",
+      "label": "Knapp länk"
     }
   ],
   "blocks": [
@@ -247,9 +233,8 @@
         "eyebrow": "Sortiment",
         "heading": "Prisvärda mattor av hög kvalitet",
         "body": "Vi erbjuder ett brett sortiment av både återbrukade och nya textilplattor till konkurrenskraftiga priser. Alla produkter är kvalitetssäkrade och redo att monteras.",
-        "btn1_label": "Beställ prover",
-        "btn2_label": "Se alla produkter",
-        "btn2_url": "/collections/all"
+        "btn1_label": "Se alla produkter",
+        "btn1_url": "/collections/all"
       },
       "blocks": [
         {
