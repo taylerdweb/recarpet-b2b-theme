@@ -12,23 +12,16 @@
 </div>
 
 <style>
-  :root {
-    --rc-cream: #F6F6F6;
-    --rc-green: #1E4433;
-    --rc-text: #1a1a1a;
-    --rc-muted: #666666;
-  }
-
   .rc-quote {
     width: 100%;
-    padding: 80px 20px;
+    padding: var(--rc-section-md) 20px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .rc-quote__container {
-    max-width: 800px;
+    max-width: 50rem;
     width: 100%;
     text-align: center;
   }
@@ -50,7 +43,7 @@
     line-height: 1.6;
     margin: 0;
     margin-bottom: 40px;
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--rc-font);
     color: inherit;
   }
 
@@ -59,18 +52,18 @@
   }
 
   .rc-quote__author {
-    font-size: 16px;
+    font-size: var(--rc-text-base);
     font-weight: 600;
     margin-bottom: 4px;
     color: var(--rc-text);
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--rc-font);
   }
 
   .rc-quote__title {
-    font-size: 14px;
+    font-size: var(--rc-text-sm);
     font-weight: 400;
-    color: var(--rc-muted);
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--rc-text-muted);
+    font-family: var(--rc-font);
   }
 
   /* Dark text on green background */
@@ -97,7 +90,7 @@
 
   @media (max-width: 768px) {
     .rc-quote {
-      padding: 60px 20px;
+      padding: var(--rc-section-md) 20px;
     }
 
     .rc-quote__mark {

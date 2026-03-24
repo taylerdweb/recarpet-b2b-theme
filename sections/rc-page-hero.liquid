@@ -22,7 +22,7 @@
     object-position: {{ section.settings.image_position | default: 'center center' }};
   }
   .rc-page-hero--no-image .rc-page-hero__bg {
-    background: var(--rc-green, #1E4433);
+    background: var(--rc-green);
   }
   .rc-page-hero__overlay {
     position: absolute;
@@ -40,14 +40,14 @@
   .rc-page-hero__content {
     position: relative;
     z-index: 2;
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 60px 48px;
+    padding: var(--rc-section-md) var(--rc-page-padding);
     width: 100%;
     color: #fff;
   }
   .rc-page-hero__eyebrow {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -55,8 +55,7 @@
     margin-bottom: 12px;
   }
   .rc-page-hero__heading {
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: clamp(30px, 4.5vw, 56px);
+    font-size: clamp(30px, 4.5vw, var(--rc-h1));
     font-weight: 500;
     line-height: 1.1;
     color: #fff;
@@ -64,7 +63,7 @@
     max-width: 680px;
   }
   .rc-page-hero__subtext {
-    font-size: 18px;
+    font-size: var(--rc-text-md);
     line-height: 1.6;
     color: rgba(255,255,255,0.85);
     max-width: 560px;

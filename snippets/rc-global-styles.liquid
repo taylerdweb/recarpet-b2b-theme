@@ -1,82 +1,181 @@
 {% comment %}
   reCarpet Global Styles
-  Shared CSS custom properties and button styles used across all rc-* sections
+  Design tokens and shared styles — single source of truth for all rc-* sections.
+  Values extracted from recarpet.se Webflow export.
 {% endcomment %}
 
 <style>
   :root {
+    /* ===== Font ===== */
     --rc-font: 'DM Sans', sans-serif;
-    --rc-green: #1E4433;
+
+    /* ===== Brand Colors ===== */
+    --rc-green: #1e4433;
     --rc-green-hover: #264f3f;
-    --rc-cream: #F6F6F6;
-    --rc-cream-alt: #E6E3DE;
-    --rc-orange: #E05A0C;
-    --rc-text: #121212;
-    --rc-text-muted: #555555;
+    --rc-sage: #6c9985;
+    --rc-yellow: #edb81e;
+    --rc-beige: #e6e3de;
+    --rc-off-white: #f6f6f6;
+    --rc-off-black: #121212;
     --rc-white: #ffffff;
-    --rc-section-pad: 80px;
-    --rc-max-width: 1280px;
+    --rc-black: #000000;
+
+    /* ===== Neutrals ===== */
+    --rc-neutral-lightest: #eeeeee;
+    --rc-neutral-lighter: #cccccc;
+    --rc-neutral-light: #aaaaaa;
+    --rc-neutral: #666666;
+    --rc-neutral-dark: #444444;
+    --rc-neutral-darker: #222222;
+
+    /* ===== Semantic ===== */
+    --rc-text: var(--rc-off-black);
+    --rc-text-muted: var(--rc-neutral);
+    --rc-bg-primary: var(--rc-white);
+    --rc-bg-secondary: var(--rc-off-white);
+    --rc-bg-alt: var(--rc-beige);
+    --rc-border: var(--rc-neutral-light);
+
+    /* Backwards-compat aliases used by existing sections */
+    --rc-cream: var(--rc-off-white);
+    --rc-cream-alt: var(--rc-beige);
+
+    /* ===== Heading sizes ===== */
+    --rc-h1: 56px;
+    --rc-h2: 48px;
+    --rc-h3: 40px;
+    --rc-h4: 32px;
+    --rc-h5: 24px;
+    --rc-h6: 20px;
+
+    /* ===== Heading weights ===== */
+    --rc-heading-weight: 500;
+    --rc-heading-weight-bold: 700;
+    --rc-heading-lh: 1.2;
+
+    /* ===== Body text ===== */
+    --rc-text-base: 1rem;
+    --rc-text-sm: 0.875rem;
+    --rc-text-xs: 0.75rem;
+    --rc-text-md: 1.125rem;
+    --rc-text-lg: 1.25rem;
+    --rc-body-lh: 1.5;
+    --rc-body-weight: 400;
+
+    /* ===== Layout ===== */
+    --rc-max-width: 80rem;
+    --rc-page-padding: 5%;
+
+    /* ===== Section padding ===== */
+    --rc-section-lg: 7rem;
+    --rc-section-md: 5rem;
+    --rc-section-sm: 3rem;
+    /* Legacy alias */
+    --rc-section-pad: var(--rc-section-md);
+
+    /* ===== Border radius ===== */
+    --rc-radius: 8px;
+    --rc-radius-sm: 4px;
+    --rc-radius-lg: 12px;
   }
 
-  /* Global button styles */
+  /* ===== Global typography for rc sections ===== */
+  [class^="rc-"], [class*=" rc-"] {
+    font-family: var(--rc-font);
+  }
+
+  /* Heading resets */
+  [class^="rc-"] h1 { font-size: var(--rc-h1); font-weight: var(--rc-heading-weight); line-height: var(--rc-heading-lh); color: var(--rc-text); margin: 0; }
+  [class^="rc-"] h2 { font-size: var(--rc-h2); font-weight: var(--rc-heading-weight); line-height: var(--rc-heading-lh); color: var(--rc-text); margin: 0; }
+  [class^="rc-"] h3 { font-size: var(--rc-h3); font-weight: var(--rc-heading-weight); line-height: var(--rc-heading-lh); color: var(--rc-text); margin: 0; }
+  [class^="rc-"] h4 { font-size: var(--rc-h4); font-weight: var(--rc-heading-weight); line-height: 1.3; color: var(--rc-text); margin: 0; }
+  [class^="rc-"] h5 { font-size: var(--rc-h5); font-weight: var(--rc-heading-weight-bold); line-height: 1.4; color: var(--rc-text); margin: 0; }
+  [class^="rc-"] h6 { font-size: var(--rc-h6); font-weight: var(--rc-heading-weight-bold); line-height: 1.4; color: var(--rc-text); margin: 0; }
+
+  /* ===== Global button styles ===== */
   .rc-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 24px;
+    padding: 0.75rem 1.5rem;
     font-family: var(--rc-font);
-    font-size: 16px;
+    font-size: var(--rc-text-base);
     font-weight: 500;
     line-height: 1.4;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: var(--rc-radius);
     border: 1px solid transparent;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
-  }
-  .rc-btn:hover {
-    transform: translateY(-1px);
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
 
   /* Primary: green bg, white text */
   .rc-btn--primary {
     background: var(--rc-green);
-    color: #fff;
+    color: var(--rc-white);
     border-color: var(--rc-green);
   }
   .rc-btn--primary:hover {
     background: var(--rc-green-hover);
     border-color: var(--rc-green-hover);
-    color: #fff;
+    color: var(--rc-white);
   }
 
-  /* Outline: transparent bg, dark border */
+  /* Outline: transparent bg, green border */
   .rc-btn--outline {
     background: transparent;
     color: var(--rc-green);
-    border: 1px solid var(--rc-green);
+    border-color: var(--rc-green);
   }
   .rc-btn--outline:hover {
     background: var(--rc-green);
-    color: #fff;
+    color: var(--rc-white);
   }
 
   /* Outline white: for dark backgrounds */
   .rc-btn--outline-white {
     background: transparent;
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.85);
+    color: var(--rc-white);
+    border-color: rgba(255,255,255,0.85);
   }
   .rc-btn--outline-white:hover {
     background: rgba(255,255,255,0.15);
-    color: #fff;
+    color: var(--rc-white);
   }
 
-  @media (max-width: 600px) {
+  /* Small button */
+  .rc-btn--sm {
+    padding: 0.5rem 1.25rem;
+    font-size: var(--rc-text-sm);
+  }
+
+  /* Link-style button */
+  .rc-btn--link {
+    padding: 0.25rem 0;
+    background: transparent;
+    border: none;
+    color: var(--rc-green);
+    line-height: 1;
+  }
+
+  /* ===== Responsive breakpoints ===== */
+  @media (max-width: 991px) {
+    :root {
+      --rc-section-lg: 6rem;
+      --rc-section-md: 4rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    :root {
+      --rc-section-lg: 4rem;
+      --rc-section-md: 3rem;
+      --rc-section-sm: 2rem;
+    }
     .rc-btn {
-      padding: 10px 20px;
-      font-size: 15px;
+      padding: 0.625rem 1.25rem;
+      font-size: var(--rc-text-sm);
     }
   }
 </style>

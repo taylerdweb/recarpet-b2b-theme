@@ -23,29 +23,23 @@
 </div>
 
 <style>
-  :root {
-    --rc-cream-alt: #EFEFEF;
-    --rc-green: #1E4433;
-    --rc-text: #1a1a1a;
-  }
-
   .rc-faq {
     width: 100%;
-    padding: 80px 20px;
-    background-color: white;
+    padding: var(--rc-section-md) 20px;
+    background-color: var(--rc-white);
   }
 
   .rc-faq__container {
-    max-width: 800px;
+    max-width: 50rem;
     margin: 0 auto;
   }
 
   .rc-faq__heading {
-    font-size: clamp(28px, 3vw, 36px);
-    font-weight: 600;
+    font-size: clamp(28px, 3vw, var(--rc-h3));
+    font-weight: var(--rc-heading-weight);
     margin: 0 0 60px 0;
     text-align: center;
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--rc-font);
     color: var(--rc-text);
   }
 
@@ -55,7 +49,7 @@
   }
 
   .rc-faq__item {
-    border-bottom: 1px solid var(--rc-cream-alt);
+    border-bottom: 1px solid var(--rc-neutral-lightest);
   }
 
   .rc-faq__item:last-child {
@@ -70,7 +64,7 @@
     cursor: pointer;
     list-style: none;
     user-select: none;
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--rc-font);
   }
 
   .rc-faq__summary::-webkit-details-marker {
@@ -78,8 +72,8 @@
   }
 
   .rc-faq__question {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: var(--rc-text-base);
+    font-weight: var(--rc-heading-weight-bold);
     color: var(--rc-text);
     flex: 1;
     padding-right: 20px;
@@ -124,11 +118,11 @@
 
   .rc-faq__answer {
     padding: 0 0 24px 0;
-    font-size: 15px;
+    font-size: var(--rc-text-sm);
     font-weight: 400;
     line-height: 1.6;
     color: var(--rc-text);
-    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--rc-font);
     animation: slideDown 0.3s ease-out;
   }
 
@@ -145,7 +139,7 @@
 
   @media (max-width: 768px) {
     .rc-faq {
-      padding: 60px 20px;
+      padding: var(--rc-section-md) 20px;
     }
 
     .rc-faq__heading {
@@ -157,12 +151,12 @@
     }
 
     .rc-faq__question {
-      font-size: 15px;
+      font-size: var(--rc-text-sm);
       padding-right: 16px;
     }
 
     .rc-faq__answer {
-      font-size: 14px;
+      font-size: var(--rc-text-sm);
       padding-bottom: 20px;
     }
   }

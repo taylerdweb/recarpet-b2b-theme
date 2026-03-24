@@ -6,8 +6,8 @@
 <style>
   /* Timeline navigation */
   .rc-services-nav {
-    background: var(--rc-green, #1E4433);
-    padding: 40px 48px;
+    background: var(--rc-green);
+    padding: var(--rc-section-sm) var(--rc-page-padding);
     position: sticky;
     top: 0;
     z-index: 50;
@@ -15,7 +15,7 @@
     overflow-y: hidden;
   }
   .rc-services-nav__inner {
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
     display: flex;
     gap: 0;
@@ -56,7 +56,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: var(--rc-text-base);
     font-weight: 600;
     color: #fff;
     transition: all 0.3s ease;
@@ -74,7 +74,7 @@
   }
   /* Node text/label */
   .rc-services-nav__node-label {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     font-weight: 500;
     color: rgba(255, 255, 255, 0.8);
     white-space: nowrap;
@@ -90,14 +90,14 @@
 
   /* Service detail section */
   .rc-service-detail {
-    padding: var(--rc-section-pad, 80px) 0;
+    padding: var(--rc-section-md) 0;
   }
-  .rc-service-detail:nth-child(even) { background: var(--rc-cream, #F6F6F6); }
-  .rc-service-detail:nth-child(odd) { background: var(--rc-white, #fff); }
+  .rc-service-detail:nth-child(even) { background: var(--rc-cream); }
+  .rc-service-detail:nth-child(odd) { background: var(--rc-white); }
   .rc-service-detail__inner {
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 var(--rc-page-padding);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 64px;
@@ -106,7 +106,7 @@
   .rc-service-detail--reverse .rc-service-detail__text { order: 2; }
   .rc-service-detail--reverse .rc-service-detail__image { order: 1; }
   .rc-service-detail__eyebrow {
-    font-size: 12px;
+    font-size: var(--rc-text-xs);
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -114,12 +114,12 @@
     margin-bottom: 8px;
   }
   .rc-service-detail__heading {
-    font-size: clamp(24px, 3vw, 36px);
+    font-size: clamp(24px, 3vw, var(--rc-h3));
     font-weight: 500;
     color: var(--rc-text);
     margin: 0 0 16px;
   }
-  .rc-service-detail__body { font-size: 16px; line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 12px; }
+  .rc-service-detail__body { font-size: var(--rc-text-base); line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 12px; }
   .rc-service-detail__list {
     list-style: none;
     padding: 0;
@@ -129,7 +129,7 @@
     gap: 8px;
   }
   .rc-service-detail__list li {
-    font-size: 15px;
+    font-size: var(--rc-text-sm);
     color: var(--rc-text-muted);
     padding-left: 20px;
     position: relative;
@@ -141,7 +141,7 @@
     color: var(--rc-green);
     font-weight: 700;
   }
-  .rc-service-detail__image { border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
+  .rc-service-detail__image { border-radius: var(--rc-radius); overflow: hidden; aspect-ratio: 4/3; }
   .rc-service-detail__image img { width: 100%; height: 100%; object-fit: cover; }
 
   @media (max-width: 900px) {

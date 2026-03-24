@@ -5,21 +5,21 @@
 
 <style>
   .rc-customer-cards {
-    background: var(--rc-cream, #F6F6F6);
-    padding: var(--rc-section-pad, 80px) 0;
+    background: var(--rc-cream);
+    padding: var(--rc-section-md) 0;
   }
   .rc-customer-cards__inner {
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 var(--rc-page-padding);
   }
   .rc-customer-cards__heading {
     text-align: center;
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: clamp(32px, 3.5vw, 48px);
+    font-family: var(--rc-font);
+    font-size: clamp(32px, 3.5vw, var(--rc-h2));
     font-weight: 500;
     margin: 0 0 48px;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
   }
   .rc-customer-cards__grid {
     display: grid;
@@ -28,16 +28,16 @@
   }
   .rc-card {
     background: transparent;
-    border-radius: 8px;
+    border-radius: var(--rc-radius);
     overflow: hidden;
     text-decoration: none;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: column;
   }
   .rc-card:hover {
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
   }
   .rc-card__image {
     aspect-ratio: 4/3;
@@ -60,23 +60,23 @@
     text-align: center;
   }
   .rc-card__title {
-    font-size: 18px;
+    font-size: var(--rc-text-md);
     font-weight: 700;
     margin: 0 0 8px;
     text-align: center;
   }
   .rc-card__text {
-    font-size: 14px;
+    font-size: var(--rc-text-sm);
     line-height: 1.6;
-    color: var(--rc-text-muted, #555);
+    color: var(--rc-text-muted);
     margin: 0 0 16px;
     flex: 1;
     text-align: center;
   }
   .rc-card__link {
-    font-size: 14px;
+    font-size: var(--rc-text-sm);
     font-weight: 500;
-    color: var(--rc-green, #1E4433);
+    color: var(--rc-green);
     text-decoration: none;
     display: inline-flex;
     align-items: center;

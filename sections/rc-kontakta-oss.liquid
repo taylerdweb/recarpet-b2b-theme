@@ -6,13 +6,13 @@
 <style>
   /* Intro */
   .rc-contact-page {
-    background: var(--rc-white, #fff);
-    padding: var(--rc-section-pad, 80px) 0;
+    background: var(--rc-white);
+    padding: var(--rc-section-md) 0;
   }
   .rc-contact-page__inner {
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 var(--rc-page-padding);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
@@ -21,24 +21,24 @@
 
   /* Left: Contact info */
   .rc-contact-page__info-eyebrow {
-    font-size: 12px;
+    font-size: var(--rc-text-xs);
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--rc-text-muted, #555);
+    color: var(--rc-text-muted);
     margin-bottom: 10px;
   }
   .rc-contact-page__info-heading {
-    font-size: clamp(26px, 3vw, 40px);
+    font-size: clamp(26px, 3vw, var(--rc-h3));
     font-weight: 500;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     line-height: 1.2;
     margin: 0 0 20px;
   }
   .rc-contact-page__info-body {
-    font-size: 16px;
+    font-size: var(--rc-text-base);
     line-height: 1.75;
-    color: var(--rc-text-muted, #555);
+    color: var(--rc-text-muted);
     margin: 0 0 40px;
   }
 
@@ -55,8 +55,8 @@
   .rc-contact-block__icon {
     width: 40px;
     height: 40px;
-    border-radius: 8px;
-    background: var(--rc-cream, #F6F6F6);
+    border-radius: var(--rc-radius);
+    background: var(--rc-cream);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,41 +65,41 @@
   .rc-contact-block__icon svg {
     width: 20px;
     height: 20px;
-    stroke: var(--rc-green, #1E4433);
+    stroke: var(--rc-green);
     fill: none;
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
   .rc-contact-block__label {
-    font-size: 11px;
+    font-size: var(--rc-text-xs);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--rc-text-muted, #555);
+    color: var(--rc-text-muted);
     margin-bottom: 4px;
   }
   .rc-contact-block__value {
-    font-size: 15px;
-    color: var(--rc-text, #1a1a1a);
+    font-size: var(--rc-text-sm);
+    color: var(--rc-text);
     font-weight: 500;
   }
   .rc-contact-block__value a {
-    color: var(--rc-green, #1E4433);
+    color: var(--rc-green);
     text-decoration: none;
   }
   .rc-contact-block__value a:hover { text-decoration: underline; }
 
   /* Right: Form */
   .rc-contact-form-wrap {
-    background: var(--rc-cream, #F6F6F6);
-    border-radius: 12px;
+    background: var(--rc-cream);
+    border-radius: var(--rc-radius-lg);
     padding: 40px;
   }
   .rc-contact-form-wrap h3 {
-    font-size: 22px;
+    font-size: var(--rc-h5);
     font-weight: 500;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     margin: 0 0 24px;
   }
   .rc-form-row {
@@ -115,9 +115,9 @@
   }
   .rc-form-group--full { grid-column: 1 / -1; }
   .rc-form-group label {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     font-weight: 600;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     letter-spacing: 0.02em;
   }
   .rc-form-group input,
@@ -125,12 +125,12 @@
   .rc-form-group textarea {
     width: 100%;
     padding: 12px 14px;
-    border: 1.5px solid var(--rc-cream-alt, #E6E3DE);
-    border-radius: 6px;
-    font-size: 15px;
+    border: 1.5px solid var(--rc-cream-alt);
+    border-radius: var(--rc-radius-sm);
+    font-size: var(--rc-text-sm);
     font-family: var(--rc-font, 'DM Sans', sans-serif);
-    color: var(--rc-text, #1a1a1a);
-    background: #fff;
+    color: var(--rc-text);
+    background: var(--rc-white);
     outline: none;
     transition: border-color 0.15s;
     box-sizing: border-box;
@@ -139,7 +139,7 @@
   .rc-form-group input:focus,
   .rc-form-group select:focus,
   .rc-form-group textarea:focus {
-    border-color: var(--rc-green, #1E4433);
+    border-color: var(--rc-green);
   }
   .rc-form-group textarea { resize: vertical; min-height: 120px; }
 
@@ -150,9 +150,9 @@
     gap: 12px;
   }
   .rc-radio-group__label {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     font-weight: 600;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     letter-spacing: 0.02em;
     margin-bottom: 12px;
   }
@@ -172,27 +172,27 @@
     border: none;
     margin: 0;
     cursor: pointer;
-    accent-color: var(--rc-green, #1E4433);
+    accent-color: var(--rc-green);
   }
   .rc-radio-option label {
     margin: 0;
     cursor: pointer;
     padding: 10px 14px;
-    border: 1.5px solid var(--rc-cream-alt, #E6E3DE);
-    border-radius: 6px;
-    background: #fff;
+    border: 1.5px solid var(--rc-cream-alt);
+    border-radius: var(--rc-radius-sm);
+    background: var(--rc-white);
     transition: all 0.15s;
     display: flex;
     align-items: center;
     gap: 8px;
     flex: 1;
-    font-size: 14px;
+    font-size: var(--rc-text-sm);
     font-weight: 500;
   }
   .rc-radio-option input[type="radio"]:checked + label {
-    border-color: var(--rc-green, #1E4433);
+    border-color: var(--rc-green);
     background: rgba(30, 68, 51, 0.05);
-    color: var(--rc-green, #1E4433);
+    color: var(--rc-green);
   }
 
   /* Checkbox */
@@ -209,19 +209,19 @@
     margin: 0;
     padding: 0;
     cursor: pointer;
-    accent-color: var(--rc-green, #1E4433);
-    border: 1.5px solid var(--rc-cream-alt, #E6E3DE);
-    border-radius: 4px;
+    accent-color: var(--rc-green);
+    border: 1.5px solid var(--rc-cream-alt);
+    border-radius: var(--rc-radius-sm);
     flex-shrink: 0;
   }
   .rc-checkbox-group label {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--rc-text-sm);
     line-height: 1.5;
     cursor: pointer;
   }
   .rc-checkbox-group a {
-    color: var(--rc-green, #1E4433);
+    color: var(--rc-green);
     text-decoration: none;
   }
   .rc-checkbox-group a:hover {
@@ -232,17 +232,17 @@
   .rc-form-submit button {
     width: 100%;
     padding: 14px;
-    background: var(--rc-green, #1E4433);
-    color: #fff;
+    background: var(--rc-green);
+    color: var(--rc-white);
     border: none;
-    border-radius: 6px;
-    font-size: 15px;
+    border-radius: var(--rc-radius-sm);
+    font-size: var(--rc-text-sm);
     font-weight: 600;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
     cursor: pointer;
     transition: background 0.2s;
   }
-  .rc-form-submit button:hover { background: var(--rc-green-hover, #264f3f); }
+  .rc-form-submit button:hover { background: var(--rc-green-hover); }
 
   /* Success message */
   .rc-form-success {
@@ -254,15 +254,15 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: var(--rc-green, #1E4433);
+    background: var(--rc-green);
     margin: 0 auto 16px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .rc-form-success__icon svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-  .rc-form-success h4 { font-size: 20px; font-weight: 600; margin: 0 0 8px; }
-  .rc-form-success p { font-size: 15px; color: var(--rc-text-muted, #555); margin: 0; }
+  .rc-form-success__icon svg { width: 28px; height: 28px; stroke: var(--rc-white); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .rc-form-success h4 { font-size: var(--rc-h6); font-weight: 600; margin: 0 0 8px; }
+  .rc-form-success p { font-size: var(--rc-text-sm); color: var(--rc-text-muted); margin: 0; }
 
   /* Contact persons section */
   .rc-contact-persons {
@@ -271,7 +271,7 @@
     gap: 40px;
     margin-top: 60px;
     padding-top: 60px;
-    border-top: 1px solid var(--rc-cream-alt, #E6E3DE);
+    border-top: 1px solid var(--rc-cream-alt);
   }
   .rc-contact-person {
     display: flex;
@@ -279,37 +279,37 @@
     gap: 8px;
   }
   .rc-contact-person__name {
-    font-size: 18px;
+    font-size: var(--rc-text-md);
     font-weight: 600;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     margin: 0;
   }
   .rc-contact-person__title {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     font-weight: 500;
-    color: var(--rc-green, #1E4433);
+    color: var(--rc-green);
     letter-spacing: 0.02em;
     margin: 0;
   }
   .rc-contact-person__phone {
-    font-size: 15px;
-    color: var(--rc-text, #1a1a1a);
+    font-size: var(--rc-text-sm);
+    color: var(--rc-text);
     margin: 4px 0 0 0;
   }
   .rc-contact-person__phone a {
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     text-decoration: none;
   }
   .rc-contact-person__phone a:hover {
-    color: var(--rc-green, #1E4433);
+    color: var(--rc-green);
   }
   .rc-contact-person__email {
-    font-size: 15px;
-    color: var(--rc-text, #1a1a1a);
+    font-size: var(--rc-text-sm);
+    color: var(--rc-text);
     margin: 0;
   }
   .rc-contact-person__email a {
-    color: var(--rc-green, #1E4433);
+    color: var(--rc-green);
     text-decoration: none;
   }
   .rc-contact-person__email a:hover {

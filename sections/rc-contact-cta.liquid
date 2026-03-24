@@ -5,30 +5,30 @@
 
 <style>
   .rc-contact-cta {
-    background: var(--rc-white, #fff);
-    padding: 64px 0;
+    background: var(--rc-white);
+    padding: var(--rc-section-md) 0;
   }
   .rc-contact-cta__inner {
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 var(--rc-page-padding);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
     align-items: center;
   }
   .rc-contact-cta__heading {
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: clamp(28px, 3.5vw, 48px);
+    font-family: var(--rc-font);
+    font-size: clamp(28px, 3.5vw, var(--rc-h2));
     font-weight: 500;
     line-height: 1.15;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     margin: 0;
   }
   .rc-contact-cta__body {
-    font-size: 17px;
+    font-size: var(--rc-text-md);
     line-height: 1.6;
-    color: var(--rc-text-muted, #555);
+    color: var(--rc-text-muted);
     margin: 0 0 28px;
   }
   .rc-contact-cta__actions { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -38,7 +38,7 @@
       padding: 0 20px;
       gap: 24px;
     }
-    .rc-contact-cta { padding: 48px 0; }
+    .rc-contact-cta { padding: var(--rc-section-sm) 0; }
   }
 </style>
 

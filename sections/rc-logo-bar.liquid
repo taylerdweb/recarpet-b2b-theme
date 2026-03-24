@@ -5,23 +5,23 @@
 
 <style>
   .rc-logo-bar {
-    background: var(--rc-cream, #F6F6F6);
-    padding: 48px 0;
-    border-top: 1px solid var(--rc-cream-alt, #E6E3DE);
-    border-bottom: 1px solid var(--rc-cream-alt, #E6E3DE);
+    background: var(--rc-cream);
+    padding: var(--rc-section-sm) 0;
+    border-top: 1px solid var(--rc-cream-alt);
+    border-bottom: 1px solid var(--rc-cream-alt);
   }
   .rc-logo-bar__inner {
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 var(--rc-page-padding);
   }
   .rc-logo-bar__label {
     text-align: center;
-    font-size: 14px;
+    font-size: var(--rc-text-sm);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--rc-text-muted, #555);
+    color: var(--rc-text-muted);
     margin-bottom: 32px;
   }
   .rc-logo-bar__logos {

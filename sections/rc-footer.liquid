@@ -5,15 +5,15 @@
 
 <style>
   .rc-footer {
-    background: var(--rc-green, #1E4433);
+    background: var(--rc-green);
     color: rgba(255,255,255,0.85);
-    padding: 64px 0 0;
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    padding: var(--rc-section-md) 0 0;
+    font-family: var(--rc-font);
   }
   .rc-footer__inner {
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 var(--rc-page-padding);
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
     gap: 48px;
@@ -32,7 +32,7 @@
   .rc-footer__logo img { height: 36px; width: auto; }
 
   .rc-footer__contact p {
-    font-size: 14px;
+    font-size: var(--rc-text-sm);
     color: rgba(255,255,255,0.75);
     margin: 0 0 4px;
     line-height: 1.5;
@@ -43,7 +43,7 @@
   }
   .rc-footer__contact a:hover { color: #fff; text-decoration: underline; }
   .rc-footer__contact-label {
-    font-size: 12px;
+    font-size: var(--rc-text-xs);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -54,7 +54,7 @@
 
   /* Nav columns */
   .rc-footer__col-title {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -70,7 +70,7 @@
     gap: 10px;
   }
   .rc-footer__nav a {
-    font-size: 14px;
+    font-size: var(--rc-text-sm);
     color: rgba(255,255,255,0.8);
     text-decoration: none;
     transition: color 0.15s;
@@ -80,9 +80,9 @@
 
   /* Bottom bar */
   .rc-footer__bottom {
-    max-width: 1280px;
-    margin: 48px auto 0;
-    padding: 20px 48px;
+    max-width: var(--rc-max-width);
+    margin: var(--rc-section-sm) auto 0;
+    padding: 20px var(--rc-page-padding);
     border-top: 1px solid rgba(255,255,255,0.15);
     display: flex;
     justify-content: space-between;
@@ -91,7 +91,7 @@
     gap: 12px;
   }
   .rc-footer__copyright {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     color: rgba(255,255,255,0.45);
   }
   .rc-footer__legal {
@@ -99,7 +99,7 @@
     gap: 20px;
   }
   .rc-footer__legal a {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     color: rgba(255,255,255,0.45);
     text-decoration: none;
   }

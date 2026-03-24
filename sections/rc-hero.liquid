@@ -10,7 +10,7 @@
     display: flex;
     align-items: flex-end;
     overflow: hidden;
-    background-color: var(--rc-green, #1E4433);
+    background-color: var(--rc-green);
     margin-top: -72px;
     padding-top: 72px;
   }
@@ -42,15 +42,15 @@
   .rc-hero__content {
     position: relative;
     z-index: 2;
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 80px 48px;
+    padding: var(--rc-section-md) var(--rc-page-padding);
     width: 100%;
     color: #fff;
   }
   .rc-hero__eyebrow {
     display: inline-block;
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -58,8 +58,7 @@
     margin-bottom: 16px;
   }
   .rc-hero__heading {
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: clamp(40px, 5vw, 56px);
+    font-size: clamp(40px, 5vw, var(--rc-h1));
     font-weight: 500;
     line-height: 1.1;
     color: #fff;
@@ -67,8 +66,7 @@
     max-width: 700px;
   }
   .rc-hero__subtext {
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: 18px;
+    font-size: var(--rc-text-md);
     line-height: 1.6;
     color: rgba(255,255,255,0.88);
     max-width: 560px;
@@ -80,7 +78,7 @@
     gap: 12px;
   }
   @media (max-width: 768px) {
-    .rc-hero__content { padding: 48px 20px; }
+    .rc-hero__content { padding: var(--rc-section-sm) 20px; }
     .rc-hero { min-height: 500px; }
   }
 </style>

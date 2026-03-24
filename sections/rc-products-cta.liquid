@@ -5,13 +5,13 @@
 
 <style>
   .rc-products-cta {
-    background: var(--rc-white, #fff);
-    padding: var(--rc-section-pad, 80px) 0;
+    background: var(--rc-white);
+    padding: var(--rc-section-md) 0;
   }
   .rc-products-cta__inner {
-    max-width: 1280px;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
-    padding: 0 48px;
+    padding: 0 var(--rc-page-padding);
   }
   .rc-products-cta__split {
     display: grid;
@@ -21,7 +21,7 @@
     margin-bottom: 64px;
   }
   .rc-products-cta__image {
-    border-radius: 8px;
+    border-radius: var(--rc-radius);
     overflow: hidden;
     aspect-ratio: 4/3;
   }
@@ -31,25 +31,25 @@
     object-fit: cover;
   }
   .rc-products-cta__eyebrow {
-    font-size: 13px;
+    font-size: var(--rc-text-sm);
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--rc-text-muted, #555);
+    color: var(--rc-text-muted);
     margin-bottom: 12px;
   }
   .rc-products-cta__heading {
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: clamp(26px, 3vw, 40px);
+    font-family: var(--rc-font);
+    font-size: clamp(26px, 3vw, var(--rc-h3));
     font-weight: 500;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-text);
     margin: 0 0 20px;
     line-height: 1.2;
   }
   .rc-products-cta__body {
-    font-size: 16px;
+    font-size: var(--rc-text-base);
     line-height: 1.7;
-    color: var(--rc-text-muted, #555);
+    color: var(--rc-text-muted);
     margin: 0 0 28px;
   }
   .rc-products-cta__actions { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -62,7 +62,7 @@
   }
   .rc-cat-card {
     position: relative;
-    border-radius: 8px;
+    border-radius: var(--rc-radius);
     overflow: hidden;
     aspect-ratio: 16/9;
     text-decoration: none;
@@ -83,19 +83,19 @@
     padding: 12px 16px;
     background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
     color: #fff;
-    font-size: 15px;
+    font-size: var(--rc-text-sm);
     font-weight: 600;
   }
   .rc-cat-card__tag {
     display: inline-block;
     padding: 2px 8px;
-    border-radius: 3px;
-    font-size: 11px;
+    border-radius: var(--rc-radius-sm);
+    font-size: var(--rc-text-xs);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     margin-bottom: 4px;
-    background: var(--rc-orange, #E05A0C);
+    background: var(--rc-orange);
     color: #fff;
   }
 

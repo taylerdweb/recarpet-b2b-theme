@@ -2,16 +2,16 @@
 <style>
   /* ── reCarpet Navbar ─────────────────────────────────── */
   .header-wrapper {
-    background: #ffffff !important;
-    border-bottom: 1px solid #e8e7e2 !important;
+    background: var(--rc-off-white) !important;
+    border-bottom: 1px solid var(--rc-off-black) !important;
     position: sticky;
     top: 0;
     z-index: 100;
   }
 
   .header {
-    max-width: 1200px !important;
-    padding: 0 48px !important;
+    max-width: var(--rc-max-width) !important;
+    padding: 0 var(--rc-page-padding) !important;
     height: 72px;
     display: flex;
     align-items: center;
@@ -21,32 +21,33 @@
   /* Logo */
   .header__heading-link,
   .header__heading-link:hover {
-    color: var(--rc-green, #174237) !important;
+    color: var(--rc-green) !important;
     text-decoration: none;
   }
   .header__heading { margin: 0; }
   .header__heading .h2 {
-    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 22px !important;
+    font-family: var(--rc-font) !important;
+    font-size: var(--rc-h5) !important;
     font-weight: 700 !important;
-    color: var(--rc-green, #174237) !important;
+    color: var(--rc-green) !important;
     letter-spacing: -0.02em;
   }
-  .header__heading-logo { height: 36px; width: auto; }
+  .header__heading-logo { max-width: 120px; height: auto; width: auto; }
 
   /* Nav links */
   .header__menu-item,
   .header__menu-item span,
   .header__menu-item .link {
-    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 15px !important;
+    font-family: var(--rc-font) !important;
+    font-size: var(--rc-text-sm) !important;
     font-weight: 500 !important;
-    color: var(--rc-text, #1a1a1a) !important;
+    color: var(--rc-off-black) !important;
     text-decoration: none !important;
+    line-height: 120% !important;
   }
   .header__menu-item:hover span,
   .header__menu-item:hover .link {
-    color: var(--rc-green, #174237) !important;
+    color: var(--rc-green) !important;
   }
   .header__active-menu-item {
     text-decoration: underline !important;
@@ -54,9 +55,9 @@
 
   /* Dropdown menus */
   .header__submenu {
-    background: #ffffff !important;
-    border: 1px solid #e8e7e2 !important;
-    border-radius: 6px !important;
+    background: var(--rc-white) !important;
+    border: 1px solid var(--rc-beige) !important;
+    border-radius: var(--rc-radius-sm) !important;
     box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
     padding: 8px 0 !important;
     min-width: 200px !important;
@@ -79,41 +80,41 @@
 
   /* B2B Login link */
   .rc-header-login {
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: 14px;
+    font-family: var(--rc-font);
+    font-size: var(--rc-text-sm);
     font-weight: 500;
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-off-black);
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 6px 12px;
-    border-radius: 4px;
+    border-radius: var(--rc-radius-sm);
     transition: background 0.15s;
   }
   .rc-header-login:hover {
-    background: var(--rc-cream, #F0EFEB);
-    color: var(--rc-green, #174237);
+    background: var(--rc-cream);
+    color: var(--rc-green);
   }
 
   /* Kontakta oss CTA button in nav */
   .rc-header-cta {
     display: inline-flex;
     align-items: center;
-    padding: 10px 20px;
-    background: var(--rc-green, #174237);
-    color: #fff !important;
-    border-radius: 4px;
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: 14px;
+    padding: 0.5rem 1.25rem;
+    background: var(--rc-green);
+    color: var(--rc-white) !important;
+    border-radius: var(--rc-radius);
+    font-family: var(--rc-font);
+    font-size: var(--rc-text-sm);
     font-weight: 500;
     text-decoration: none;
     transition: background 0.15s;
     white-space: nowrap;
   }
   .rc-header-cta:hover {
-    background: var(--rc-green-hover, #1e5547);
-    color: #fff !important;
+    background: var(--rc-green-hover);
+    color: var(--rc-white) !important;
   }
 
   /* Hide cart icon for B2B (SparkLayer handles cart) */
@@ -160,30 +161,30 @@
   }
   /* Scrolled state — solid white */
   .header-wrapper--scrolled {
-    background: #ffffff !important;
-    border-bottom: 1px solid #e8e7e2 !important;
+    background: var(--rc-off-white) !important;
+    border-bottom: 1px solid var(--rc-off-black) !important;
   }
   .header-wrapper--scrolled .header__heading .h2,
   .header-wrapper--scrolled .header__heading-link {
-    color: var(--rc-green, #1E4433) !important;
+    color: var(--rc-green) !important;
   }
   .header-wrapper--scrolled .header__menu-item span,
   .header-wrapper--scrolled .header__menu-item .link,
   .header-wrapper--scrolled .header__menu-item {
-    color: var(--rc-text, #1a1a1a) !important;
+    color: var(--rc-off-black) !important;
   }
   .header-wrapper--scrolled .rc-header-login {
-    color: var(--rc-text, #1a1a1a);
+    color: var(--rc-off-black);
   }
   .header-wrapper--scrolled .rc-header-cta {
-    background: var(--rc-green, #1E4433);
+    background: var(--rc-green);
     border: 1px solid transparent;
-    color: #fff !important;
+    color: var(--rc-white) !important;
   }
   .header-wrapper--scrolled .header__icon,
   .header-wrapper--scrolled .header__icon svg {
-    color: var(--rc-text, #1a1a1a) !important;
-    fill: var(--rc-text, #1a1a1a) !important;
+    color: var(--rc-off-black) !important;
+    fill: var(--rc-off-black) !important;
   }
 
   /* Hover dropdown menus on desktop */
