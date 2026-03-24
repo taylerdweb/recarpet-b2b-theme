@@ -3,6 +3,14 @@
   .mega-menu-container {
     position: relative;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
+    grid-area: navigation;
+    display: none;
+  }
+
+  @media screen and (min-width: 990px) {
+    .mega-menu-container {
+      display: block;
+    }
   }
 
   /* Nav list styling */
@@ -16,7 +24,7 @@
 
   /* Individual nav link */
   .mega-menu-item {
-    position: relative;
+    position: static;
   }
 
   .mega-menu-link {
@@ -29,6 +37,10 @@
     font-weight: 500;
     font-size: 1rem;
     transition: color 0.3s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
   }
 
   .mega-menu-link:hover {
@@ -51,21 +63,22 @@
     transform: rotate(180deg);
   }
 
-  /* Dropdown panel */
+  /* Dropdown panel — full viewport width */
   .mega-menu-panel {
     position: absolute;
     top: 100%;
-    left: 0;
-    right: 0;
+    left: 50%;
+    right: auto;
+    width: 100vw;
+    margin-left: -50vw;
     background: var(--rc-off-white, #f6f6f6);
     border-top: 1px solid var(--rc-beige, #e6e3de);
     border-bottom: 1px solid var(--rc-beige, #e6e3de);
     padding: 3rem var(--rc-page-padding, 5%);
-    min-height: 300px;
+    min-height: 200px;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     z-index: 100;
     pointer-events: none;
   }
@@ -73,7 +86,6 @@
   .mega-menu-item.is-open .mega-menu-panel {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
     pointer-events: auto;
   }
 

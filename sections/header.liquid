@@ -167,6 +167,12 @@
   .header-wrapper--transparent .header__menu-item {
     color: #fff !important;
   }
+  .header-wrapper--transparent .mega-menu-link {
+    color: #fff !important;
+  }
+  .header-wrapper--transparent .mega-menu-link:hover {
+    color: rgba(255,255,255,0.7) !important;
+  }
   .header-wrapper--transparent .rc-header-login {
     color: #fff;
   }
@@ -198,6 +204,9 @@
   .header-wrapper--scrolled .header__menu-item span,
   .header-wrapper--scrolled .header__menu-item .link,
   .header-wrapper--scrolled .header__menu-item {
+    color: var(--rc-off-black) !important;
+  }
+  .header-wrapper--scrolled .mega-menu-link {
     color: var(--rc-off-black) !important;
   }
   .header-wrapper--scrolled .rc-header-login {
@@ -435,9 +444,11 @@
 
     {%- liquid
       if section.settings.menu != blank
-        if section.settings.menu_type_desktop == 'dropdown'
-          render 'header-dropdown-menu'
-        elsif section.settings.menu_type_desktop != 'drawer'
+        if section.settings.menu_type_desktop == 'drawer'
+          comment
+            Drawer-only mode: skip inline nav
+          endcomment
+        else
           render 'header-mega-menu'
         endif
       endif
