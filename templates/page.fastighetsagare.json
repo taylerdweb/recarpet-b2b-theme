@@ -106,7 +106,7 @@
       "settings": {
         "eyebrow": "",
         "heading": "Kunskap om produkternas potential ger nöjda kunder och hållbara lokaler",
-        "body": "Vi har ett brett nätverk som hjälper oss att förmedla erat gamla golv vidare. Låt inte osorterat golv stå oanvänt, skicka det till oss – vi ser till att plattorna får ett nytt liv.\n\nFör att återbruk ska lyckas behöver både arkitekter och hyresgäster veta vad som finns att föreskriva. Vi tillhandahåller prover, priser och all information som behövs för en trygg och smidig process.",
+        "body": "<p>Vi har ett brett nätverk som hjälper oss att förmedla erat gamla golv vidare. Låt inte osorterat golv stå oanvänt, skicka det till oss – vi ser till att plattorna får ett nytt liv.</p><p>För att återbruk ska lyckas behöver både arkitekter och hyresgäster veta vad som finns att föreskriva. Vi tillhandahåller prover, priser och all information som behövs för en trygg och smidig process.</p>",
         "bg_color": "white",
         "image_position": "right",
         "btn1_label": "Boka inventering",
@@ -120,7 +120,7 @@
       "settings": {
         "eyebrow": "Hållbarhet",
         "heading": "Nå era hållbarhetsmål med ReCarpet",
-        "body": "Varje återbrukad kvadratmeter textilplatta sparar 7,1 kg CO₂ genom att undvika deponi. Med våra professionella inom materialåterbruk får ni en effektiv lösning. Väljer ni dessutom att installera återbrukade plattor gör ni både miljön och ekonomin en tjänst.",
+        "body": "<p>Varje återbrukad kvadratmeter textilplatta sparar 7,1 kg CO₂ genom att undvika deponi. Med våra professionella inom materialåterbruk får ni en effektiv lösning. Väljer ni dessutom att installera återbrukade plattor gör ni både miljön och ekonomin en tjänst.</p>",
         "bg_color": "cream",
         "image_position": "left",
         "btn1_label": "Boka demontering",
@@ -134,7 +134,7 @@
       "settings": {
         "eyebrow": "Nyproducerat",
         "heading": "Ett hållbart golvalternativ",
-        "body": "Efterfrågan på återbrukade textilplattor är större än utbudet, och hyresgäster har ofta specifika önskemål. Därför erbjuder vi även nya plattor från Milliken, som är ledande inom hållbarhet.\n\nMed Millikens TractionBack-teknik kan vi enkelt återbruka plattorna vid nästa hyresgästanpassning, vilket eliminerar avfall och minskar ert CO₂-avtryck. Med TractionBack är det omöjligt att installera golvet fel, vilket annars är en risk vid klassisk montering.",
+        "body": "<p>Efterfrågan på återbrukade textilplattor är större än utbudet, och hyresgäster har ofta specifika önskemål. Därför erbjuder vi även nya plattor från Milliken, som är ledande inom hållbarhet.</p><p>Med Millikens TractionBack-teknik kan vi enkelt återbruka plattorna vid nästa hyresgästanpassning, vilket eliminerar avfall och minskar ert CO₂-avtryck. Med TractionBack är det omöjligt att installera golvet fel, vilket annars är en risk vid klassisk montering.</p>",
         "bg_color": "white",
         "image_position": "right",
         "btn1_label": "Kontakta oss",
