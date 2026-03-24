@@ -8,8 +8,61 @@
   :root {
     /* ===== Font ===== */
     --rc-font: 'DM Sans', sans-serif;
+    --recarpet-dm-sans: 'DM Sans', sans-serif;
 
-    /* ===== Brand Colors ===== */
+    /* ===== Base Colors — Brand ===== */
+    --base-color-brand--rc-re-green: #1e4433;
+    --base-color-brand--rc-sage-green: #6c9985;
+    --base-color-brand--rc-yellow: #edb81e;
+    --base-color-brand--rc-beige: #e6e3de;
+    --base-color-brand--rc-white: #f6f6f6;
+    --base-color-brand--rc-off-black: #121212;
+    --base-color-brand--white: white;
+    --base-color-brand--black: black;
+
+    /* ===== Base Colors — Neutral ===== */
+    --base-color-neutral--white: white;
+    --base-color-neutral--black: black;
+    --base-color-neutral--neutral-lightest: #eee;
+    --base-color-neutral--neutral-lighter: #ccc;
+    --base-color-neutral--neutral-light: #aaa;
+    --base-color-neutral--neutral: #666;
+    --base-color-neutral--neutral-dark: #444;
+    --base-color-neutral--neutral-darker: #222;
+    --base-color-neutral--neutral-darkest: #111;
+
+    /* ===== Base Colors — System ===== */
+    --base-color-system--success-green: #027a48;
+    --base-color-system--success-green-light: #ecfdf3;
+    --base-color-system--error-red: #b42318;
+    --base-color-system--error-red-light: #fef3f2;
+
+    /* ===== Semantic — Background ===== */
+    --background-color--background-primary: var(--base-color-neutral--white);
+    --background-color--background-secondary: var(--base-color-neutral--neutral-lightest);
+    --background-color--background-tertiary: var(--base-color-neutral--neutral-light);
+    --background-color--background-alternate: var(--base-color-neutral--black);
+    --background-color--background-success: var(--base-color-system--success-green-light);
+    --background-color--background-error: var(--base-color-system--error-red-light);
+
+    /* ===== Semantic — Text ===== */
+    --text-color--text-primary: var(--base-color-neutral--black);
+    --text-color--text-secondary: var(--base-color-neutral--black);
+    --text-color--text-alternate: var(--base-color-neutral--white);
+    --text-color--text-success: var(--base-color-system--success-green);
+    --text-color--text-error: var(--base-color-system--error-red);
+
+    /* ===== Semantic — Link ===== */
+    --link-color--link-primary: var(--base-color-neutral--black);
+    --link-color--link-secondary: var(--base-color-neutral--black);
+    --link-color--link-alternate: var(--base-color-neutral--white);
+
+    /* ===== Semantic — Border ===== */
+    --border-color--border-primary: var(--base-color-neutral--black);
+    --border-color--border-secondary: var(--base-color-neutral--neutral-light);
+    --border-color--border-alternate: var(--base-color-neutral--white);
+
+    /* ===== Short aliases (used by existing rc-* sections) ===== */
     --rc-green: #1e4433;
     --rc-green-hover: #264f3f;
     --rc-sage: #6c9985;
@@ -19,16 +72,18 @@
     --rc-off-black: #121212;
     --rc-white: #ffffff;
     --rc-black: #000000;
+    --rc-orange: #E05A0C;
 
-    /* ===== Neutrals ===== */
+    /* Neutral aliases */
     --rc-neutral-lightest: #eeeeee;
     --rc-neutral-lighter: #cccccc;
     --rc-neutral-light: #aaaaaa;
     --rc-neutral: #666666;
     --rc-neutral-dark: #444444;
     --rc-neutral-darker: #222222;
+    --rc-neutral-darkest: #111111;
 
-    /* ===== Semantic ===== */
+    /* Semantic aliases */
     --rc-text: var(--rc-off-black);
     --rc-text-muted: var(--rc-neutral);
     --rc-bg-primary: var(--rc-white);
@@ -36,7 +91,7 @@
     --rc-bg-alt: var(--rc-beige);
     --rc-border: var(--rc-neutral-light);
 
-    /* Backwards-compat aliases used by existing sections */
+    /* Backwards-compat aliases */
     --rc-cream: var(--rc-off-white);
     --rc-cream-alt: var(--rc-beige);
 
@@ -70,7 +125,6 @@
     --rc-section-lg: 7rem;
     --rc-section-md: 5rem;
     --rc-section-sm: 3rem;
-    /* Legacy alias */
     --rc-section-pad: var(--rc-section-md);
 
     /* ===== Border radius ===== */
@@ -79,12 +133,16 @@
     --rc-radius-lg: 12px;
   }
 
-  /* ===== Global typography for rc sections ===== */
+  /* ===== Global typography ===== */
+  body, h1, h2, h3, h4, h5, h6, p, a, button, input, select, textarea {
+    font-family: var(--rc-font);
+  }
+
   [class^="rc-"], [class*=" rc-"] {
     font-family: var(--rc-font);
   }
 
-  /* Heading resets */
+  /* ===== Heading resets for rc-* sections ===== */
   [class^="rc-"] h1 { font-size: var(--rc-h1); font-weight: var(--rc-heading-weight); line-height: var(--rc-heading-lh); color: var(--rc-text); margin: 0; }
   [class^="rc-"] h2 { font-size: var(--rc-h2); font-weight: var(--rc-heading-weight); line-height: var(--rc-heading-lh); color: var(--rc-text); margin: 0; }
   [class^="rc-"] h3 { font-size: var(--rc-h3); font-weight: var(--rc-heading-weight); line-height: var(--rc-heading-lh); color: var(--rc-text); margin: 0; }
@@ -92,7 +150,94 @@
   [class^="rc-"] h5 { font-size: var(--rc-h5); font-weight: var(--rc-heading-weight-bold); line-height: 1.4; color: var(--rc-text); margin: 0; }
   [class^="rc-"] h6 { font-size: var(--rc-h6); font-weight: var(--rc-heading-weight-bold); line-height: 1.4; color: var(--rc-text); margin: 0; }
 
-  /* ===== Global button styles ===== */
+  /* ===== Webflow heading utility classes ===== */
+  .heading-style-h2 {
+    font-family: var(--recarpet-dm-sans);
+    color: var(--base-color-brand--rc-off-black);
+    font-size: 48px;
+    font-weight: 500;
+    line-height: 120%;
+  }
+
+  .heading-style-h4 {
+    font-family: var(--recarpet-dm-sans);
+    color: var(--base-color-brand--rc-off-black);
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 130%;
+  }
+  .heading-style-h4.center { text-align: center; }
+  .heading-style-h4.white,
+  .heading-style-h4.center.white {
+    color: var(--base-color-brand--white);
+  }
+
+  .heading-style-h5 {
+    font-family: var(--recarpet-dm-sans);
+    color: var(--base-color-brand--rc-off-black);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 140%;
+  }
+
+  /* ===== Webflow text utility classes ===== */
+  .text-size-medium {
+    font-family: var(--recarpet-dm-sans);
+    color: var(--base-color-brand--rc-off-black);
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
+
+  .text-style-tagline {
+    color: var(--base-color-brand--rc-off-black);
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .text_menu {
+    font-family: var(--recarpet-dm-sans);
+    color: var(--base-color-brand--rc-off-black);
+    font-size: 16px;
+    line-height: 120%;
+  }
+
+  /* ===== Webflow button classes ===== */
+  .button {
+    border: 1px solid var(--base-color-brand--rc-re-green);
+    background-color: var(--base-color-brand--rc-re-green);
+    color: var(--base-color-neutral--white);
+    text-align: center;
+    border-radius: 8px;
+    padding: .75rem 1.5rem;
+    text-decoration: none;
+    font-family: var(--recarpet-dm-sans);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .button:hover {
+    background-color: var(--rc-green-hover);
+    border-color: var(--rc-green-hover);
+    color: var(--base-color-neutral--white);
+  }
+
+  .button.is-secondary {
+    color: var(--base-color-brand--rc-re-green);
+    background-color: transparent;
+  }
+  .button.is-secondary:hover {
+    background-color: var(--base-color-brand--rc-re-green);
+    color: var(--base-color-neutral--white);
+  }
+
+  /* ===== rc-btn styles (existing sections) ===== */
   .rc-btn {
     display: inline-flex;
     align-items: center;
@@ -110,7 +255,6 @@
     transition: background 0.2s, color 0.2s, border-color 0.2s;
   }
 
-  /* Primary: green bg, white text */
   .rc-btn--primary {
     background: var(--rc-green);
     color: var(--rc-white);
@@ -122,7 +266,6 @@
     color: var(--rc-white);
   }
 
-  /* Outline: transparent bg, green border */
   .rc-btn--outline {
     background: transparent;
     color: var(--rc-green);
@@ -133,7 +276,6 @@
     color: var(--rc-white);
   }
 
-  /* Outline white: for dark backgrounds */
   .rc-btn--outline-white {
     background: transparent;
     color: var(--rc-white);
@@ -144,13 +286,11 @@
     color: var(--rc-white);
   }
 
-  /* Small button */
   .rc-btn--sm {
     padding: 0.5rem 1.25rem;
     font-size: var(--rc-text-sm);
   }
 
-  /* Link-style button */
   .rc-btn--link {
     padding: 0.25rem 0;
     background: transparent;
@@ -159,12 +299,20 @@
     line-height: 1;
   }
 
+  /* ===== Layout utility ===== */
+  .padding-global {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
   /* ===== Responsive breakpoints ===== */
   @media (max-width: 991px) {
     :root {
       --rc-section-lg: 6rem;
       --rc-section-md: 4rem;
     }
+    .heading-style-h2 { font-size: 36px; }
+    .heading-style-h4 { font-size: 26px; }
   }
 
   @media (max-width: 767px) {
@@ -173,9 +321,12 @@
       --rc-section-md: 3rem;
       --rc-section-sm: 2rem;
     }
-    .rc-btn {
+    .rc-btn, .button {
       padding: 0.625rem 1.25rem;
       font-size: var(--rc-text-sm);
     }
+    .heading-style-h2 { font-size: 28px; }
+    .heading-style-h4 { font-size: 22px; }
+    .heading-style-h5 { font-size: 20px; }
   }
 </style>
