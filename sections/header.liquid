@@ -9,6 +9,32 @@
     z-index: 100;
   }
 
+  /* Logo styling */
+  .rc-logo {
+    max-width: 7.5rem;
+    height: auto;
+  }
+
+  .rc-logo--white {
+    display: none;
+  }
+
+  .header-wrapper--transparent .rc-logo--green {
+    display: none;
+  }
+
+  .header-wrapper--transparent .rc-logo--white {
+    display: block;
+  }
+
+  .header-wrapper--scrolled .rc-logo--green {
+    display: block;
+  }
+
+  .header-wrapper--scrolled .rc-logo--white {
+    display: none;
+  }
+
   .header {
     max-width: none !important;
     width: 100% !important;
@@ -351,7 +377,38 @@
         <h1 class="header__heading">
       {%- endif -%}
           <a href="{{ routes.root_url }}" class="header__heading-link link link--text focus-inset">
-            {%- if settings.logo != blank -%}
+            {%- if section.settings.rc_logo != blank or section.settings.rc_logo_white != blank -%}
+              <div class="header__heading-logo-wrapper">
+                {%- if section.settings.rc_logo != blank -%}
+                  {%- assign logo_alt = section.settings.rc_logo.alt | default: shop.name | escape -%}
+                  {%- assign logo_height = 120 | divided_by: section.settings.rc_logo.aspect_ratio -%}
+                  {% capture sizes %}(max-width: 240px) 50vw, 120px{% endcapture %}
+                  {% capture widths %}120, 180, 240{% endcapture %}
+                  {{ section.settings.rc_logo | image_url: width: 240 | image_tag:
+                    class: 'rc-logo rc-logo--green motion-reduce',
+                    widths: widths,
+                    height: logo_height,
+                    width: 120,
+                    alt: logo_alt,
+                    sizes: sizes,
+                    preload: true
+                  }}
+                {%- endif -%}
+                {%- if section.settings.rc_logo_white != blank -%}
+                  {%- assign logo_white_alt = section.settings.rc_logo_white.alt | default: shop.name | escape -%}
+                  {%- assign logo_white_height = 120 | divided_by: section.settings.rc_logo_white.aspect_ratio -%}
+                  {{ section.settings.rc_logo_white | image_url: width: 240 | image_tag:
+                    class: 'rc-logo rc-logo--white motion-reduce',
+                    widths: widths,
+                    height: logo_white_height,
+                    width: 120,
+                    alt: logo_white_alt,
+                    sizes: sizes,
+                    preload: true
+                  }}
+                {%- endif -%}
+              </div>
+            {%- elsif settings.logo != blank -%}
               <div class="header__heading-logo-wrapper">
                 {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
                 {%- assign logo_height = settings.logo_width | divided_by: settings.logo.aspect_ratio -%}
@@ -736,6 +793,20 @@
   "class": "section-header",
   "max_blocks": 3,
   "settings": [
+    {
+      "type": "header",
+      "content": "reCarpet logotyp"
+    },
+    {
+      "type": "image_picker",
+      "id": "rc_logo",
+      "label": "Logotyp (grön)"
+    },
+    {
+      "type": "image_picker",
+      "id": "rc_logo_white",
+      "label": "Logotyp (vit, för transparent header)"
+    },
     {
       "type": "select",
       "id": "logo_position",
