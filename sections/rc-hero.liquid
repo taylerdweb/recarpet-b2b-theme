@@ -10,11 +10,14 @@
     display: flex;
     align-items: flex-end;
     overflow: hidden;
+    background-color: var(--rc-green, #1E4433);
   }
   .rc-hero__bg {
     position: absolute;
     inset: 0;
-    background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}');
+    {%- if section.settings.background_image != blank -%}
+      background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}');
+    {%- endif -%}
     background-size: cover;
     background-position: {{ section.settings.image_position }};
   }
