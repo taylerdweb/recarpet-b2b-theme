@@ -68,17 +68,17 @@
     transform: rotate(180deg);
   }
 
-  /* Dropdown panel — fixed full-width, semi-transparent */
+  /* Dropdown panel — inset from edges, semi-transparent */
   .mega-menu-panel {
     position: fixed;
-    left: 0;
-    right: 0;
-    background: rgba(246, 246, 246, 0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(230, 227, 222, 0.6);
-    border-bottom: 1px solid rgba(230, 227, 222, 0.6);
-    padding: 2.5rem var(--rc-page-padding, 5%);
+    left: 3rem;
+    right: 3rem;
+    background: rgba(246, 246, 246, 0.88);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(230, 227, 222, 0.5);
+    border-radius: 0.5rem;
+    padding: 2.5rem 4rem;
     min-height: auto;
     opacity: 0;
     visibility: hidden;
@@ -202,7 +202,12 @@
                 <ul class="mega-menu-grid columns-{{ link.links | size }}">
                   {%- for child_link in link.links -%}
                     {%- assign handle = child_link.handle -%}
+                    {%- assign display_title = child_link.title -%}
                     {%- assign description = '' -%}
+                    {%- comment -%} Title overrides {%- endcomment -%}
+                    {%- if handle == 'nya-mattor' -%}
+                      {%- assign display_title = 'Nya textilplattor' -%}
+                    {%- endif -%}
                     {%- case handle -%}
                       {%- when 'fastighetsagare' -%}
                         {%- assign description = 'Utforska våra tjänster och maximera återbruket' -%}
@@ -226,12 +231,14 @@
                         {%- assign description = 'Ge era befintliga golv nytt liv' -%}
                       {%- when 'aterbrukade-textilplattor' -%}
                         {%- assign description = 'Vårt eget sortiment av återbrukade kvalitetsmattor' -%}
-                      {%- when 'nya-textilplattor' -%}
-                        {%- assign description = 'Kompletterande sortiment av nya textilplattor från Milliken Floors' -%}
+                      {%- when 'nya-textilplattor' or 'nya-mattor' -%}
+                        {%- assign description = 'Vårt kompletterande sortiment av nya textilplattor från Milliken Floors' -%}
+                      {%- when 'tjanster' or 'tjänster' -%}
+                        {%- assign description = 'Inventering, demontering, montering och service av textilplattor' -%}
                     {%- endcase -%}
                     <li class="mega-menu-grid-item">
                       <a href="{{ child_link.url }}" class="mega-menu-grid-link">
-                        <h3 class="mega-menu-grid-title">{{ child_link.title }}</h3>
+                        <h3 class="mega-menu-grid-title">{{ display_title }}</h3>
                         {%- if description != blank -%}
                           <p class="mega-menu-grid-description">{{ description }}</p>
                         {%- endif -%}
