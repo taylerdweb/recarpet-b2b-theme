@@ -27,20 +27,22 @@
     margin-bottom: 0.75rem;
   }
   .rc-services__heading {
-    font-family: var(--rc-font);
-    font-size: clamp(1.75rem, 3vw, var(--rc-h3));
+    font-family: var(--recarpet-dm-sans);
+    font-size: clamp(1.75rem, 4vw, var(--rc-h2));
     font-weight: 500;
-    line-height: 1.2;
-    color: var(--rc-text);
-    margin: 0 0 1rem;
-    max-width: 37.5rem;
+    line-height: 120%;
+    color: var(--base-color-brand--rc-off-black);
+    margin: 0 0 1.25rem;
+    max-width: 50rem;
     margin-left: auto;
     margin-right: auto;
   }
   .rc-services__intro {
-    font-size: var(--rc-text-md);
+    font-family: var(--recarpet-dm-sans);
+    font-size: 1.125rem;
+    font-weight: 400;
     line-height: 1.65;
-    color: var(--rc-text-muted);
+    color: var(--base-color-brand--rc-off-black);
     max-width: 40rem;
     margin: 0 auto 1.75rem;
   }
@@ -52,7 +54,7 @@
     gap: 0;
     position: relative;
   }
-  /* Vertical line */
+  /* Vertical line (grey background track) */
   .rc-services__timeline::before {
     content: '';
     position: absolute;
@@ -60,7 +62,7 @@
     top: 0;
     bottom: 0;
     width: 1px;
-    background: var(--rc-cream-alt);
+    background: var(--base-color-neutral--neutral-lighter);
     transform: translateX(-50%);
   }
   .rc-services__item {
@@ -81,19 +83,24 @@
     z-index: 2;
   }
   .rc-services__dot-inner {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: var(--base-color-neutral--neutral-lighter);
+    border: none;
+    box-shadow: none;
+    transition: background 0.3s, width 0.3s, height 0.3s, box-shadow 0.3s;
+  }
+  /* Dot passed by scroll progress → brand green */
+  .rc-services__dot-inner.is-passed {
+    background: var(--base-color-brand--rc-re-green);
+  }
+  /* Currently active dot → larger, green with ring */
+  .rc-services__dot-inner.is-active {
     width: 1rem;
     height: 1rem;
-    border-radius: 50%;
-    background: var(--rc-green);
-    border: 0.1875rem solid var(--rc-cream);
-    box-shadow: 0 0 0 1px var(--rc-green);
-    transition: width 0.3s, height 0.3s, transform 0.3s;
-  }
-  .rc-services__dot-inner.active {
-    width: 1.5rem;
-    height: 1.5rem;
-    background: var(--rc-text);
-    box-shadow: 0 0 0 3px var(--rc-green);
+    background: var(--base-color-brand--rc-re-green);
+    box-shadow: 0 0 0 3px var(--rc-cream), 0 0 0 4px var(--base-color-brand--rc-re-green);
   }
 
   .rc-services__item-image {
@@ -122,16 +129,18 @@
     margin-bottom: 0.5rem;
   }
   .rc-services__item-title {
-    font-family: var(--rc-font);
+    font-family: var(--recarpet-dm-sans);
     font-size: clamp(1.375rem, 2.5vw, var(--rc-h4));
     font-weight: 500;
-    color: var(--rc-text);
+    line-height: 130%;
+    color: var(--base-color-brand--rc-off-black);
     margin: 0 0 0.75rem;
   }
   .rc-services__item-body {
-    font-size: var(--rc-text-sm);
+    font-family: var(--recarpet-dm-sans);
+    font-size: 1rem;
     line-height: 1.7;
-    color: var(--rc-text-muted);
+    color: var(--base-color-brand--rc-off-black);
     margin: 0 0 1.25rem;
   }
   .rc-services__item-link {
@@ -148,7 +157,7 @@
   .rc-services__item--reverse .rc-services__item-link::before { content: '← '; }
   .rc-services__item--reverse .rc-services__item-link::after { content: ''; }
 
-  /* Progress line overlay */
+  /* Progress line overlay (black fill on scroll) */
   .rc-services__timeline::after {
     content: '';
     position: absolute;
@@ -156,9 +165,9 @@
     top: 0;
     width: 1px;
     height: 0%;
-    background: var(--rc-green);
+    background: var(--base-color-neutral--black);
     transform: translateX(-50%);
-    z-index: 3;
+    z-index: 1;
     transition: height 0.1s linear;
   }
 
@@ -248,48 +257,44 @@
 document.addEventListener('DOMContentLoaded', function() {
   const timeline = document.querySelector('.rc-services__timeline');
   const dots = document.querySelectorAll('.rc-services__dot-inner');
-  
+
   if (!timeline || dots.length === 0) return;
-  
+
+  /* Inject the CSS-variable-driven height rule once */
+  const style = document.createElement('style');
+  style.textContent = '.rc-services__timeline::after{height:var(--progress,0%)}';
+  document.head.appendChild(style);
+
   function updateProgress() {
-    const timelineRect = timeline.getBoundingClientRect();
-    const timelineTop = timelineRect.top;
-    const timelineHeight = timelineRect.height;
-    const viewportCenter = window.innerHeight / 2;
-    
-    // Calculate progress: from top of timeline to center of viewport
-    let progress = (viewportCenter - timelineTop) / timelineHeight;
+    const rect   = timeline.getBoundingClientRect();
+    const center = window.innerHeight / 2;
+
+    /* Progress 0→1 as center of viewport travels down the timeline */
+    let progress = (center - rect.top) / rect.height;
     progress = Math.max(0, Math.min(1, progress));
-    
-    // Update progress line height
     timeline.style.setProperty('--progress', progress * 100 + '%');
-    
-    // Update active dots
-    dots.forEach((dot, index) => {
-      const dotRect = dot.parentElement.parentElement.getBoundingClientRect();
-      const dotCenter = dotRect.top + dotRect.height / 2;
-      const distanceFromCenter = Math.abs(dotCenter - viewportCenter);
-      
-      // Consider a dot "active" if it's within 200px of viewport center
-      if (distanceFromCenter < 200) {
-        dot.classList.add('active');
-      } else {
-        dot.classList.remove('active');
+
+    /* Absolute Y of the progress line's bottom edge */
+    const progressY = rect.top + rect.height * progress;
+
+    dots.forEach(dot => {
+      const dotY = dot.getBoundingClientRect().top + dot.getBoundingClientRect().height / 2;
+
+      dot.classList.remove('is-passed', 'is-active');
+
+      if (progressY >= dotY + 20) {
+        /* Line has passed this dot → solid green */
+        dot.classList.add('is-passed');
+      } else if (progressY >= dotY - 20) {
+        /* Line is right at this dot → active (larger, ring) */
+        dot.classList.add('is-active');
       }
+      /* Otherwise stays grey (default) */
     });
   }
-  
-  // Use CSS variables for better performance
-  const style = document.createElement('style');
-  style.textContent = `
-    .rc-services__timeline::after {
-      height: var(--progress, 0%);
-    }
-  `;
-  document.head.appendChild(style);
-  
+
   window.addEventListener('scroll', updateProgress, { passive: true });
-  updateProgress(); // Initial call
+  updateProgress();
 });
 </script>
 
