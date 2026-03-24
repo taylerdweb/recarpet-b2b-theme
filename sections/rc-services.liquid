@@ -57,11 +57,11 @@
   /* ===== Progress track (centered absolute column) ===== */
   .rc-services__progress {
     position: absolute;
-    left: 50%;
+    left: calc(50% - 1rem);
     top: 0;
     bottom: 0;
     width: 2rem;
-    transform: translateX(-50%);
+    /* No transform! transform creates a new containing block and breaks position:sticky */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -69,12 +69,10 @@
     z-index: 1;
   }
 
-  /* Grey background line — full height of timeline */
+  /* Grey background line — flex child fills full height of progress wrapper */
   .rc-services__track {
-    position: absolute;
-    top: 0;
-    bottom: 0;
     width: 3px;
+    height: 100%;
     background: var(--base-color-neutral--neutral-lighter);
   }
 
@@ -140,6 +138,7 @@
     width: 2rem;
   }
   .rc-services__dot-inner {
+    display: block !important; /* Override Dawn base.css div:empty { display:none } */
     width: 0.9375rem;
     height: 0.9375rem;
     border-radius: 50%;
