@@ -1,6 +1,6 @@
 {% comment %}
   reCarpet Hero Section
-  Full-bleed hero with headline, subtitle and two CTAs
+  Full-bleed hero with headline, subtitle and CTA — centered layout
 {% endcomment %}
 
 <style>
@@ -8,9 +8,10 @@
     position: relative;
     min-height: {{ section.settings.min_height }}px;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    background-color: var(--rc-green);
+    background-color: var(--base-color-brand--rc-re-green);
     margin-top: -72px;
     padding-top: 72px;
   }
@@ -46,10 +47,15 @@
     margin: 0 auto;
     padding: var(--rc-section-md) var(--rc-page-padding);
     width: 100%;
-    color: #fff;
+    color: var(--base-color-neutral--white);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .rc-hero__eyebrow {
     display: inline-block;
+    font-family: var(--recarpet-dm-sans);
     font-size: var(--rc-text-sm);
     font-weight: 600;
     letter-spacing: 0.1em;
@@ -58,28 +64,50 @@
     margin-bottom: 16px;
   }
   .rc-hero__heading {
+    font-family: var(--recarpet-dm-sans);
     font-size: clamp(40px, 5vw, var(--rc-h1));
-    font-weight: 500;
+    font-weight: var(--rc-heading-weight);
     line-height: 1.1;
-    color: #fff;
+    color: var(--base-color-neutral--white);
     margin: 0 0 20px;
-    max-width: 700px;
+    max-width: 800px;
   }
   .rc-hero__subtext {
-    font-size: var(--rc-text-md);
-    line-height: 1.6;
-    color: rgba(255,255,255,0.88);
-    max-width: 560px;
+    font-family: var(--recarpet-dm-sans);
+    font-size: 32px;
+    font-weight: var(--rc-heading-weight);
+    line-height: 1.3;
+    color: var(--base-color-brand--white);
+    max-width: 700px;
     margin: 0 0 36px;
   }
   .rc-hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
+    justify-content: center;
   }
-  @media (max-width: 768px) {
+
+  /* Hero button uses .button class from global styles, override for white outline */
+  .rc-hero .rc-btn--outline-white,
+  .rc-hero .button.is-hero-outline {
+    background: transparent;
+    color: var(--base-color-neutral--white);
+    border-color: rgba(255,255,255,0.85);
+  }
+  .rc-hero .rc-btn--outline-white:hover,
+  .rc-hero .button.is-hero-outline:hover {
+    background: rgba(255,255,255,0.15);
+    color: var(--base-color-neutral--white);
+  }
+
+  @media (max-width: 991px) {
+    .rc-hero__subtext { font-size: 26px; }
+  }
+  @media (max-width: 767px) {
     .rc-hero__content { padding: var(--rc-section-sm) 20px; }
     .rc-hero { min-height: 500px; }
+    .rc-hero__subtext { font-size: 22px; }
   }
 </style>
 
