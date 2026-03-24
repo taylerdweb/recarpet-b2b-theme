@@ -5,6 +5,7 @@
     font-family: var(--rc-font, 'DM Sans', sans-serif);
     grid-area: navigation;
     display: none;
+    margin-left: 2rem;
   }
 
   @media screen and (min-width: 990px) {
@@ -20,6 +21,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    align-items: center;
   }
 
   /* Individual nav link */
@@ -27,55 +29,57 @@
     position: static;
   }
 
+  /* Shared styling for both <button> and <a> nav links */
   .mega-menu-link {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
     padding: 1rem 0;
     color: inherit;
     text-decoration: none;
     font-weight: 500;
     font-size: 1rem;
+    line-height: 1;
     transition: color 0.3s ease;
     background: none;
     border: none;
     cursor: pointer;
     font-family: inherit;
+    white-space: nowrap;
+  }
+
+  a.mega-menu-link {
+    padding: 1rem 0;
   }
 
   .mega-menu-link:hover {
     color: var(--rc-green, #1e4433);
   }
 
-  /* Chevron icon */
+  /* Chevron icon — use SVG for consistency */
   .mega-menu-chevron {
-    display: inline-block;
-    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.65rem;
     transition: transform 0.3s ease;
-    margin-top: 2px;
-  }
-
-  .mega-menu-item.has-dropdown .mega-menu-chevron {
-    display: inline-block;
   }
 
   .mega-menu-item.is-open .mega-menu-chevron {
     transform: rotate(180deg);
   }
 
-  /* Dropdown panel — full viewport width */
+  /* Dropdown panel — fixed full-width, semi-transparent */
   .mega-menu-panel {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    right: auto;
-    width: 100vw;
-    margin-left: -50vw;
-    background: var(--rc-off-white, #f6f6f6);
-    border-top: 1px solid var(--rc-beige, #e6e3de);
-    border-bottom: 1px solid var(--rc-beige, #e6e3de);
-    padding: 3rem var(--rc-page-padding, 5%);
-    min-height: 200px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    background: rgba(246, 246, 246, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(230, 227, 222, 0.6);
+    border-bottom: 1px solid rgba(230, 227, 222, 0.6);
+    padding: 2.5rem var(--rc-page-padding, 5%);
+    min-height: auto;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -89,10 +93,11 @@
     pointer-events: auto;
   }
 
-  /* Dropdown content wrapper */
+  /* Dropdown content wrapper — centered */
   .mega-menu-grid-wrapper {
     max-width: var(--rc-max-width, 80rem);
     margin: 0 auto;
+    padding: 0 3rem;
   }
 
   /* Grid layout for dropdown items */
@@ -109,8 +114,16 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .mega-menu-grid.columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   .mega-menu-grid.columns-4 {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .mega-menu-grid.columns-5 {
+    grid-template-columns: repeat(5, 1fr);
   }
 
   .mega-menu-grid.columns-6 {
@@ -243,65 +256,68 @@
     <!-- Menu interaction script -->
     <script>
       (function() {
-        const triggers = document.querySelectorAll('[data-menu-trigger]');
         const menuItems = document.querySelectorAll('.mega-menu-item.has-dropdown');
         let hoverTimeout;
 
-        menuItems.forEach(item => {
+        function positionPanel(panel) {
+          const header = document.querySelector('.section-header');
+          if (header) {
+            const rect = header.getBoundingClientRect();
+            panel.style.top = rect.bottom + 'px';
+          }
+        }
+
+        function openMenu(item) {
           const trigger = item.querySelector('.mega-menu-link');
           const panel = item.querySelector('.mega-menu-panel');
+          positionPanel(panel);
+          item.classList.add('is-open');
+          trigger.setAttribute('aria-expanded', 'true');
+          panel.removeAttribute('hidden');
+        }
 
+        function closeMenu(item) {
+          const trigger = item.querySelector('.mega-menu-link');
+          const panel = item.querySelector('.mega-menu-panel');
+          item.classList.remove('is-open');
+          trigger.setAttribute('aria-expanded', 'false');
+          panel.setAttribute('hidden', '');
+        }
+
+        menuItems.forEach(item => {
           // Desktop hover behavior
           item.addEventListener('mouseenter', () => {
             clearTimeout(hoverTimeout);
-            item.classList.add('is-open');
-            trigger.setAttribute('aria-expanded', 'true');
-            panel.removeAttribute('hidden');
+            menuItems.forEach(other => { if (other !== item) closeMenu(other); });
+            openMenu(item);
           });
 
           item.addEventListener('mouseleave', () => {
-            hoverTimeout = setTimeout(() => {
-              item.classList.remove('is-open');
-              trigger.setAttribute('aria-expanded', 'false');
-              panel.setAttribute('hidden', '');
-            }, 100);
+            hoverTimeout = setTimeout(() => closeMenu(item), 150);
           });
 
+          // Keep panel open when hovering it
+          const panel = item.querySelector('.mega-menu-panel');
+          if (panel) {
+            panel.addEventListener('mouseenter', () => clearTimeout(hoverTimeout));
+            panel.addEventListener('mouseleave', () => {
+              hoverTimeout = setTimeout(() => closeMenu(item), 150);
+            });
+          }
+
           // Click behavior for mobile/touch
-          trigger.addEventListener('click', (e) => {
+          item.querySelector('.mega-menu-link').addEventListener('click', (e) => {
             e.preventDefault();
             const isOpen = item.classList.contains('is-open');
-            
-            // Close all other menus
-            menuItems.forEach(otherItem => {
-              if (otherItem !== item) {
-                otherItem.classList.remove('is-open');
-                otherItem.querySelector('.mega-menu-link').setAttribute('aria-expanded', 'false');
-                otherItem.querySelector('.mega-menu-panel').setAttribute('hidden', '');
-              }
-            });
-
-            // Toggle current menu
-            if (isOpen) {
-              item.classList.remove('is-open');
-              trigger.setAttribute('aria-expanded', 'false');
-              panel.setAttribute('hidden', '');
-            } else {
-              item.classList.add('is-open');
-              trigger.setAttribute('aria-expanded', 'true');
-              panel.removeAttribute('hidden');
-            }
+            menuItems.forEach(other => closeMenu(other));
+            if (!isOpen) openMenu(item);
           });
         });
 
         // Close menus when clicking outside
         document.addEventListener('click', (e) => {
-          if (!e.target.closest('.mega-menu-container')) {
-            menuItems.forEach(item => {
-              item.classList.remove('is-open');
-              item.querySelector('.mega-menu-link').setAttribute('aria-expanded', 'false');
-              item.querySelector('.mega-menu-panel').setAttribute('hidden', '');
-            });
+          if (!e.target.closest('.mega-menu-container') && !e.target.closest('.mega-menu-panel')) {
+            menuItems.forEach(item => closeMenu(item));
           }
         });
       })();
