@@ -2,9 +2,23 @@
   reCarpet Global Styles
   Design tokens and shared styles — single source of truth for all rc-* sections.
   Values extracted from recarpet.se Webflow export.
+
+  Root font-size override: Dawn sets html to 62.5% (1rem = 10px).
+  We reset to 100% so 1rem = 16px (browser default / best practice).
+  Dawn's own body font-size is overridden accordingly.
 {% endcomment %}
 
 <style>
+  /* ===== Root font-size reset ===== */
+  html {
+    font-size: 100% !important; /* 1rem = 16px */
+  }
+
+  body {
+    font-size: 1rem; /* Override Dawn's 1.5rem (which assumed 10px base) */
+    line-height: 1.5;
+  }
+
   :root {
     /* ===== Font ===== */
     --rc-font: 'DM Sans', sans-serif;
@@ -95,13 +109,13 @@
     --rc-cream: var(--rc-off-white);
     --rc-cream-alt: var(--rc-beige);
 
-    /* ===== Heading sizes ===== */
-    --rc-h1: 56px;
-    --rc-h2: 48px;
-    --rc-h3: 40px;
-    --rc-h4: 32px;
-    --rc-h5: 24px;
-    --rc-h6: 20px;
+    /* ===== Heading sizes (rem, 1rem = 16px) ===== */
+    --rc-h1: 3.5rem;    /* 56px */
+    --rc-h2: 3rem;       /* 48px */
+    --rc-h3: 2.5rem;     /* 40px */
+    --rc-h4: 2rem;        /* 32px */
+    --rc-h5: 1.5rem;     /* 24px */
+    --rc-h6: 1.25rem;    /* 20px */
 
     /* ===== Heading weights ===== */
     --rc-heading-weight: 500;
@@ -109,28 +123,28 @@
     --rc-heading-lh: 1.2;
 
     /* ===== Body text ===== */
-    --rc-text-base: 1rem;
-    --rc-text-sm: 0.875rem;
-    --rc-text-xs: 0.75rem;
-    --rc-text-md: 1.125rem;
-    --rc-text-lg: 1.25rem;
+    --rc-text-base: 1rem;        /* 16px */
+    --rc-text-sm: 0.875rem;      /* 14px */
+    --rc-text-xs: 0.75rem;       /* 12px */
+    --rc-text-md: 1.125rem;      /* 18px */
+    --rc-text-lg: 1.25rem;       /* 20px */
     --rc-body-lh: 1.5;
     --rc-body-weight: 400;
 
     /* ===== Layout ===== */
-    --rc-max-width: 80rem;
+    --rc-max-width: 80rem;       /* 1280px */
     --rc-page-padding: 5%;
 
     /* ===== Section padding ===== */
-    --rc-section-lg: 7rem;
-    --rc-section-md: 5rem;
-    --rc-section-sm: 3rem;
+    --rc-section-lg: 7rem;       /* 112px */
+    --rc-section-md: 5rem;       /* 80px */
+    --rc-section-sm: 3rem;       /* 48px */
     --rc-section-pad: var(--rc-section-md);
 
     /* ===== Border radius ===== */
-    --rc-radius: 8px;
-    --rc-radius-sm: 4px;
-    --rc-radius-lg: 12px;
+    --rc-radius: 0.5rem;         /* 8px */
+    --rc-radius-sm: 0.25rem;     /* 4px */
+    --rc-radius-lg: 0.75rem;     /* 12px */
   }
 
   /* ===== Global typography ===== */
@@ -154,7 +168,7 @@
   .heading-style-h2 {
     font-family: var(--recarpet-dm-sans);
     color: var(--base-color-brand--rc-off-black);
-    font-size: 48px;
+    font-size: 3rem;
     font-weight: 500;
     line-height: 120%;
   }
@@ -162,7 +176,7 @@
   .heading-style-h4 {
     font-family: var(--recarpet-dm-sans);
     color: var(--base-color-brand--rc-off-black);
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 500;
     line-height: 130%;
   }
@@ -175,7 +189,7 @@
   .heading-style-h5 {
     font-family: var(--recarpet-dm-sans);
     color: var(--base-color-brand--rc-off-black);
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 700;
     line-height: 140%;
   }
@@ -200,7 +214,7 @@
   .text_menu {
     font-family: var(--recarpet-dm-sans);
     color: var(--base-color-brand--rc-off-black);
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 120%;
   }
 
@@ -210,8 +224,8 @@
     background-color: var(--base-color-brand--rc-re-green);
     color: var(--base-color-neutral--white);
     text-align: center;
-    border-radius: 8px;
-    padding: .75rem 1.5rem;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
     font-size: 1rem;
     text-decoration: none;
     font-family: var(--recarpet-dm-sans);
@@ -221,7 +235,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 0.5rem;
   }
   .button:hover {
     background-color: var(--rc-green-hover);
@@ -243,7 +257,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 0.5rem;
     padding: 0.75rem 1.5rem;
     font-family: var(--rc-font);
     font-size: 1rem;
@@ -312,8 +326,8 @@
       --rc-section-lg: 6rem;
       --rc-section-md: 4rem;
     }
-    .heading-style-h2 { font-size: 36px; }
-    .heading-style-h4 { font-size: 26px; }
+    .heading-style-h2 { font-size: 2.25rem; }  /* 36px */
+    .heading-style-h4 { font-size: 1.625rem; }  /* 26px */
   }
 
   @media (max-width: 767px) {
@@ -324,10 +338,9 @@
     }
     .rc-btn, .button {
       padding: 0.625rem 1.25rem;
-      font-size: 1rem;
     }
-    .heading-style-h2 { font-size: 28px; }
-    .heading-style-h4 { font-size: 22px; }
-    .heading-style-h5 { font-size: 20px; }
+    .heading-style-h2 { font-size: 1.75rem; }   /* 28px */
+    .heading-style-h4 { font-size: 1.375rem; }   /* 22px */
+    .heading-style-h5 { font-size: 1.25rem; }    /* 20px */
   }
 </style>

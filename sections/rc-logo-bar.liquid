@@ -22,17 +22,17 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--rc-text-muted);
-    margin-bottom: 32px;
+    margin-bottom: 2rem;
   }
   .rc-logo-bar__logos {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 40px 60px;
+    gap: 2.5rem 3.75rem;
   }
   .rc-logo-bar__logo {
-    height: 32px;
+    height: 2rem;
     width: auto;
     object-fit: contain;
     filter: grayscale(100%);
@@ -44,9 +44,9 @@
     filter: grayscale(0%);
   }
   @media (max-width: 768px) {
-    .rc-logo-bar__inner { padding: 0 20px; }
-    .rc-logo-bar__logos { gap: 28px 36px; }
-    .rc-logo-bar__logo { height: 24px; }
+    .rc-logo-bar__inner { padding: 0 1.25rem; }
+    .rc-logo-bar__logos { gap: 1.75rem 2.25rem; }
+    .rc-logo-bar__logo { height: 1.5rem; }
   }
 </style>
 
@@ -71,7 +71,7 @@
             </a>
           {%- endif -%}
         {%- elsif block.settings.text != blank -%}
-          <span style="font-size:18px;font-weight:700;color:var(--rc-text-muted);opacity:0.65;">{{ block.settings.text }}</span>
+          <span style="font-size:1.125rem;font-weight:700;color:var(--rc-text-muted);opacity:0.65;">{{ block.settings.text }}</span>
         {%- endif -%}
       {%- endfor -%}
     </div>

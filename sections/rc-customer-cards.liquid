@@ -16,15 +16,15 @@
   .rc-customer-cards__heading {
     text-align: center;
     font-family: var(--rc-font);
-    font-size: clamp(32px, 3.5vw, var(--rc-h2));
+    font-size: clamp(2rem, 3.5vw, var(--rc-h2));
     font-weight: 500;
-    margin: 0 0 48px;
+    margin: 0 0 3rem;
     color: var(--rc-text);
   }
   .rc-customer-cards__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
+    gap: 1.5rem;
   }
   .rc-card {
     background: transparent;
@@ -53,7 +53,7 @@
     transform: scale(1.04);
   }
   .rc-card__body {
-    padding: 20px;
+    padding: 1.25rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -62,14 +62,14 @@
   .rc-card__title {
     font-size: var(--rc-text-md);
     font-weight: 700;
-    margin: 0 0 8px;
+    margin: 0 0 0.5rem;
     text-align: center;
   }
   .rc-card__text {
     font-size: var(--rc-text-sm);
     line-height: 1.6;
     color: var(--rc-text-muted);
-    margin: 0 0 16px;
+    margin: 0 0 1rem;
     flex: 1;
     text-align: center;
   }
@@ -80,7 +80,7 @@
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 0.25rem;
     justify-content: center;
   }
   .rc-card__link::after { content: ' →'; }
@@ -89,7 +89,7 @@
   }
   @media (max-width: 600px) {
     .rc-customer-cards__grid { grid-template-columns: 1fr; }
-    .rc-customer-cards__inner { padding: 0 20px; }
+    .rc-customer-cards__inner { padding: 0 1.25rem; }
   }
 </style>
 

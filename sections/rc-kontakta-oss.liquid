@@ -15,7 +15,7 @@
     padding: 0 var(--rc-page-padding);
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 80px;
+    gap: 5rem;
     align-items: start;
   }
 
@@ -26,35 +26,35 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--rc-text-muted);
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
   }
   .rc-contact-page__info-heading {
-    font-size: clamp(26px, 3vw, var(--rc-h3));
+    font-size: clamp(1.625rem, 3vw, var(--rc-h3));
     font-weight: 500;
     color: var(--rc-text);
     line-height: 1.2;
-    margin: 0 0 20px;
+    margin: 0 0 1.25rem;
   }
   .rc-contact-page__info-body {
     font-size: var(--rc-text-base);
     line-height: 1.75;
     color: var(--rc-text-muted);
-    margin: 0 0 40px;
+    margin: 0 0 2.5rem;
   }
 
   .rc-contact-blocks {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 1.5rem;
   }
   .rc-contact-block {
     display: flex;
-    gap: 16px;
+    gap: 1rem;
     align-items: flex-start;
   }
   .rc-contact-block__icon {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: var(--rc-radius);
     background: var(--rc-cream);
     display: flex;
@@ -63,8 +63,8 @@
     flex-shrink: 0;
   }
   .rc-contact-block__icon svg {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
     stroke: var(--rc-green);
     fill: none;
     stroke-width: 1.8;
@@ -77,7 +77,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--rc-text-muted);
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
   }
   .rc-contact-block__value {
     font-size: var(--rc-text-sm);
@@ -94,24 +94,24 @@
   .rc-contact-form-wrap {
     background: var(--rc-cream);
     border-radius: var(--rc-radius-lg);
-    padding: 40px;
+    padding: 2.5rem;
   }
   .rc-contact-form-wrap h3 {
     font-size: var(--rc-h5);
     font-weight: 500;
     color: var(--rc-text);
-    margin: 0 0 24px;
+    margin: 0 0 1.5rem;
   }
   .rc-form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 1rem;
   }
   .rc-form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    margin-bottom: 16px;
+    gap: 0.375rem;
+    margin-bottom: 1rem;
   }
   .rc-form-group--full { grid-column: 1 / -1; }
   .rc-form-group label {
@@ -124,7 +124,7 @@
   .rc-form-group select,
   .rc-form-group textarea {
     width: 100%;
-    padding: 12px 14px;
+    padding: 0.75rem 0.875rem;
     border: 1.5px solid var(--rc-cream-alt);
     border-radius: var(--rc-radius-sm);
     font-size: var(--rc-text-sm);
@@ -141,30 +141,30 @@
   .rc-form-group textarea:focus {
     border-color: var(--rc-green);
   }
-  .rc-form-group textarea { resize: vertical; min-height: 120px; }
+  .rc-form-group textarea { resize: vertical; min-height: 7.5rem; }
 
   /* Radio button group */
   .rc-radio-group {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 0.75rem;
   }
   .rc-radio-group__label {
     font-size: var(--rc-text-sm);
     font-weight: 600;
     color: var(--rc-text);
     letter-spacing: 0.02em;
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
   }
   .rc-radio-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 0.75rem;
   }
   .rc-radio-option {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
   }
   .rc-radio-option input[type="radio"] {
     width: auto;
@@ -177,14 +177,14 @@
   .rc-radio-option label {
     margin: 0;
     cursor: pointer;
-    padding: 10px 14px;
+    padding: 0.625rem 0.875rem;
     border: 1.5px solid var(--rc-cream-alt);
     border-radius: var(--rc-radius-sm);
     background: var(--rc-white);
     transition: all 0.15s;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     flex: 1;
     font-size: var(--rc-text-sm);
     font-weight: 500;
@@ -199,13 +199,13 @@
   .rc-checkbox-group {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
   }
   .rc-checkbox-group input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    min-width: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
+    min-width: 1.25rem;
     margin: 0;
     padding: 0;
     cursor: pointer;
@@ -228,10 +228,10 @@
     text-decoration: underline;
   }
 
-  .rc-form-submit { margin-top: 24px; }
+  .rc-form-submit { margin-top: 1.5rem; }
   .rc-form-submit button {
     width: 100%;
-    padding: 14px;
+    padding: 0.875rem;
     background: var(--rc-green);
     color: var(--rc-white);
     border: none;
@@ -248,35 +248,35 @@
   .rc-form-success {
     display: none;
     text-align: center;
-    padding: 32px 0;
+    padding: 2rem 0;
   }
   .rc-form-success__icon {
-    width: 56px;
-    height: 56px;
+    width: 3.5rem;
+    height: 3.5rem;
     border-radius: 50%;
     background: var(--rc-green);
-    margin: 0 auto 16px;
+    margin: 0 auto 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .rc-form-success__icon svg { width: 28px; height: 28px; stroke: var(--rc-white); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-  .rc-form-success h4 { font-size: var(--rc-h6); font-weight: 600; margin: 0 0 8px; }
+  .rc-form-success__icon svg { width: 1.75rem; height: 1.75rem; stroke: var(--rc-white); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .rc-form-success h4 { font-size: var(--rc-h6); font-weight: 600; margin: 0 0 0.5rem; }
   .rc-form-success p { font-size: var(--rc-text-sm); color: var(--rc-text-muted); margin: 0; }
 
   /* Contact persons section */
   .rc-contact-persons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    margin-top: 60px;
-    padding-top: 60px;
+    gap: 2.5rem;
+    margin-top: 3.75rem;
+    padding-top: 3.75rem;
     border-top: 1px solid var(--rc-cream-alt);
   }
   .rc-contact-person {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.5rem;
   }
   .rc-contact-person__name {
     font-size: var(--rc-text-md);
@@ -294,7 +294,7 @@
   .rc-contact-person__phone {
     font-size: var(--rc-text-sm);
     color: var(--rc-text);
-    margin: 4px 0 0 0;
+    margin: 0.25rem 0 0 0;
   }
   .rc-contact-person__phone a {
     color: var(--rc-text);
@@ -317,12 +317,12 @@
   }
 
   @media (max-width: 900px) {
-    .rc-contact-page__inner { grid-template-columns: 1fr; gap: 48px; padding: 0 20px; }
+    .rc-contact-page__inner { grid-template-columns: 1fr; gap: 3rem; padding: 0 1.25rem; }
     .rc-form-row { grid-template-columns: 1fr; }
-    .rc-contact-persons { grid-template-columns: 1fr; gap: 32px; }
+    .rc-contact-persons { grid-template-columns: 1fr; gap: 2rem; }
   }
   @media (max-width: 600px) {
-    .rc-contact-form-wrap { padding: 28px 20px; }
+    .rc-contact-form-wrap { padding: 1.75rem 1.25rem; }
     .rc-radio-grid { grid-template-columns: repeat(2, 1fr); }
   }
 </style>

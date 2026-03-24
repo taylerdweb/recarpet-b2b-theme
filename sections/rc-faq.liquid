@@ -25,7 +25,7 @@
 <style>
   .rc-faq {
     width: 100%;
-    padding: var(--rc-section-md) 20px;
+    padding: var(--rc-section-md) 1.25rem;
     background-color: var(--rc-white);
   }
 
@@ -35,9 +35,9 @@
   }
 
   .rc-faq__heading {
-    font-size: clamp(28px, 3vw, var(--rc-h3));
+    font-size: clamp(1.75rem, 3vw, var(--rc-h3));
     font-weight: var(--rc-heading-weight);
-    margin: 0 0 60px 0;
+    margin: 0 0 3.75rem 0;
     text-align: center;
     font-family: var(--rc-font);
     color: var(--rc-text);
@@ -60,7 +60,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 0;
+    padding: 1.5rem 0;
     cursor: pointer;
     list-style: none;
     user-select: none;
@@ -76,13 +76,13 @@
     font-weight: var(--rc-heading-weight-bold);
     color: var(--rc-text);
     flex: 1;
-    padding-right: 20px;
+    padding-right: 1.25rem;
     text-align: left;
   }
 
   .rc-faq__icon {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
     flex-shrink: 0;
     position: relative;
     display: flex;
@@ -93,16 +93,16 @@
   /* Plus icon created with CSS */
   .rc-faq__icon::before {
     content: '';
-    width: 16px;
-    height: 2px;
+    width: 1rem;
+    height: 0.125rem;
     background-color: var(--rc-green);
     position: absolute;
   }
 
   .rc-faq__icon::after {
     content: '';
-    width: 2px;
-    height: 16px;
+    width: 0.125rem;
+    height: 1rem;
     background-color: var(--rc-green);
     position: absolute;
   }
@@ -117,7 +117,7 @@
   }
 
   .rc-faq__answer {
-    padding: 0 0 24px 0;
+    padding: 0 0 1.5rem 0;
     font-size: var(--rc-text-sm);
     font-weight: 400;
     line-height: 1.6;
@@ -129,7 +129,7 @@
   @keyframes slideDown {
     from {
       opacity: 0;
-      transform: translateY(-10px);
+      transform: translateY(-0.625rem);
     }
     to {
       opacity: 1;
@@ -139,25 +139,25 @@
 
   @media (max-width: 768px) {
     .rc-faq {
-      padding: var(--rc-section-md) 20px;
+      padding: var(--rc-section-md) 1.25rem;
     }
 
     .rc-faq__heading {
-      margin-bottom: 40px;
+      margin-bottom: 2.5rem;
     }
 
     .rc-faq__summary {
-      padding: 20px 0;
+      padding: 1.25rem 0;
     }
 
     .rc-faq__question {
       font-size: var(--rc-text-sm);
-      padding-right: 16px;
+      padding-right: 1rem;
     }
 
     .rc-faq__answer {
       font-size: var(--rc-text-sm);
-      padding-bottom: 20px;
+      padding-bottom: 1.25rem;
     }
   }
 </style>
