@@ -76,11 +76,8 @@
     background: var(--base-color-neutral--neutral-lighter);
   }
 
-  /* Override Dawn base.css: div:empty { display:none } — these are decorative elements */
-  .rc-services__progress-line,
-  .rc-services__progress-cover,
-  .rc-services__fade-top,
-  .rc-services__fade-bottom {
+  /* Override Dawn base.css: div:empty { display:none } */
+  .rc-services__progress-line {
     display: block !important;
   }
 
@@ -94,37 +91,6 @@
     position: sticky;
     top: 0;
     z-index: 1;
-  }
-
-  /* Cover: hides the progress line above the timeline start.
-     Same bg as section so the line appears to "start" at the timeline top */
-  .rc-services__progress-cover {
-    background: var(--rc-cream-alt);
-    width: 100%;
-    height: 50vh;
-    position: absolute;
-    top: -50vh;
-    z-index: 2;
-  }
-
-  /* Fade overlay top — blends the line start into the background */
-  .rc-services__fade-top {
-    position: absolute;
-    top: 0;
-    width: 4px;
-    height: 4rem;
-    background: linear-gradient(180deg, var(--rc-cream-alt), transparent);
-    z-index: 3;
-  }
-
-  /* Fade overlay bottom — blends the line end into the background */
-  .rc-services__fade-bottom {
-    position: absolute;
-    bottom: 0;
-    width: 4px;
-    height: 4rem;
-    background: linear-gradient(0deg, var(--rc-cream-alt), transparent);
-    z-index: 3;
   }
 
   /* ===== Timeline row ===== */
@@ -261,12 +227,9 @@
     <div class="rc-services__timeline">
       {%- comment -%}Progress track — CSS-only sticky scroll indicator{%- endcomment -%}
       <div class="rc-services__progress" aria-hidden="true">
-        <div class="rc-services__progress-cover"></div>
-        <div class="rc-services__fade-top"></div>
         <div class="rc-services__track">
           <div class="rc-services__progress-line"></div>
         </div>
-        <div class="rc-services__fade-bottom"></div>
       </div>
 
       {%- for block in section.blocks -%}
