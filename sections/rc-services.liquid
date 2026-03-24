@@ -54,42 +54,29 @@
     position: relative;
   }
 
-  /* ===== Progress track (centered absolute column) ===== */
-  .rc-services__progress {
+  /* ===== Progress track — pseudo-elements, no child divs needed ===== */
+  /* Grey background line */
+  .rc-services__timeline::before {
+    content: '';
     position: absolute;
-    left: calc(50% - 1rem);
+    left: 50%;
     top: 0;
     bottom: 0;
-    width: 2rem;
-    /* No transform! transform creates a new containing block and breaks position:sticky */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    pointer-events: none;
+    width: 3px;
+    background: var(--base-color-neutral--neutral-lighter);
+    transform: translateX(-50%);
     z-index: 1;
   }
-
-  /* Grey background line — flex child fills full height of progress wrapper */
-  .rc-services__track {
-    width: 3px;
-    height: 100%;
-    background: var(--base-color-neutral--neutral-lighter);
-  }
-
-  /* Override Dawn base.css: div:empty { display:none } */
-  .rc-services__progress-line {
-    display: block !important;
-  }
-
-  /* Black progress line — sticky at viewport top, 50vh tall, offset by -50vh
-     so the visible bottom edge sits at viewport center */
-  .rc-services__progress-line {
-    background: var(--base-color-neutral--black);
-    width: 3px;
-    height: 50vh;
-    margin-top: -50vh;
-    position: sticky;
+  /* Black progress fill — height driven by JS via --progress custom property */
+  .rc-services__timeline::after {
+    content: '';
+    position: absolute;
+    left: 50%;
     top: 0;
+    width: 3px;
+    height: var(--progress, 0%);
+    background: var(--base-color-neutral--black);
+    transform: translateX(-50%);
     z-index: 1;
   }
 
@@ -191,7 +178,8 @@
     .rc-services__timeline {
       gap: 4rem;
     }
-    .rc-services__progress { display: none; }
+    .rc-services__timeline::before,
+    .rc-services__timeline::after { display: none; }
     .rc-services__item {
       grid-template-columns: 1fr;
       gap: 1.25rem;
@@ -225,13 +213,6 @@
     </div>
 
     <div class="rc-services__timeline">
-      {%- comment -%}Progress track — CSS-only sticky scroll indicator{%- endcomment -%}
-      <div class="rc-services__progress" aria-hidden="true">
-        <div class="rc-services__track">
-          <div class="rc-services__progress-line"></div>
-        </div>
-      </div>
-
       {%- for block in section.blocks -%}
         {%- assign is_reverse = forloop.index | modulo: 2 -%}
         <div class="rc-services__item{% if is_reverse == 0 %} rc-services__item--reverse{% endif %}">
@@ -277,6 +258,26 @@
     </div>
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const timeline = document.querySelector('.rc-services__timeline');
+  if (!timeline) return;
+
+  function updateProgress() {
+    const rect = timeline.getBoundingClientRect();
+    const center = window.innerHeight / 2;
+
+    /* Progress: 0→1 as viewport center travels from timeline top to bottom */
+    let progress = (center - rect.top) / rect.height;
+    progress = Math.max(0, Math.min(1, progress));
+    timeline.style.setProperty('--progress', (progress * 100) + '%');
+  }
+
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+});
+</script>
 
 {% schema %}
 {
