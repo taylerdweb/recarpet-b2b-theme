@@ -9,16 +9,6 @@
  */
 {
   "sections": {
-    "hero": {
-      "type": "rc-page-hero",
-      "settings": {
-        "background_image": "shopify://shop_images/rc-card-fastighetsagare.jpg",
-        "image_position": "center center",
-        "eyebrow": "För fastighetsägare",
-        "heading": "Vi tar ansvar för hela processen – maximerat utfall, minimerat avfall",
-        "subtext": "En noggrann inventering är grunden för ett lyckat projekt. Vilka golv har ni, hur mycket och i vilket skick? Tillsammans utvärderar vi era möjligheter för att maximera återbruk och minska avfall."
-      }
-    },
     "kundgrupp": {
       "type": "rc-kundgrupp",
       "blocks": {
@@ -97,14 +87,12 @@
         "stat3"
       ],
       "settings": {
-        "eyebrow": "Fastighetsägare",
-        "intro_heading": "Våra tjänster",
-        "intro_body": "Vi erbjuder en komplett hantering av textilplattor för fastighetsägare.",
-        "intro_body_2": "",
-        "btn1_label": "",
-        "btn1_url": "",
-        "btn2_label": "",
-        "btn2_url": "",
+        "eyebrow": "För fastighetsägare",
+        "intro_heading": "Vi tar ansvar för hela processen – maximerat utfall, minimerat avfall",
+        "intro_body": "En noggrann inventering är grunden för ett lyckat projekt. Vilka golv har ni, hur mycket och i vilket skick? Tillsammans utvärderar vi era möjligheter för att maximera återbruk och minska avfall.",
+        "intro_image": "shopify://shop_images/rc-card-fastighetsagare.jpg",
+        "btn1_label": "Upptäck våra tjänster",
+        "btn1_url": "/pages/vad-vi-gor",
         "features_heading": "Våra tjänster för fastighetsägare",
         "stats_eyebrow": "Hållbarhet",
         "stats_heading": "Minska CO₂-utsläppen och kostnaderna med ReCarpet",
@@ -168,7 +156,6 @@
     }
   },
   "order": [
-    "hero",
     "kundgrupp",
     "content_kunskap",
     "content_hallbarhet",

@@ -124,6 +124,68 @@
     .header { padding: 0 20px !important; height: 64px; }
   }
 
+  /* ── Transparent header on homepage over hero ── */
+  .header-wrapper--transparent {
+    background: transparent !important;
+    border-bottom: 1px solid transparent !important;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .header-wrapper--transparent .header__heading .h2,
+  .header-wrapper--transparent .header__heading-link {
+    color: #fff !important;
+  }
+  .header-wrapper--transparent .header__menu-item span,
+  .header-wrapper--transparent .header__menu-item .link,
+  .header-wrapper--transparent .header__menu-item {
+    color: #fff !important;
+  }
+  .header-wrapper--transparent .rc-header-login {
+    color: #fff;
+  }
+  .header-wrapper--transparent .header__menu-item:hover span,
+  .header-wrapper--transparent .header__menu-item:hover .link {
+    color: rgba(255,255,255,0.7) !important;
+  }
+  .header-wrapper--transparent .rc-header-cta {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.85);
+  }
+  .header-wrapper--transparent .rc-header-cta:hover {
+    background: rgba(255,255,255,0.15);
+  }
+  .header-wrapper--transparent .header__icon,
+  .header-wrapper--transparent .header__icon svg {
+    color: #fff !important;
+    fill: #fff !important;
+  }
+  /* Scrolled state — solid white */
+  .header-wrapper--scrolled {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e8e7e2 !important;
+  }
+  .header-wrapper--scrolled .header__heading .h2,
+  .header-wrapper--scrolled .header__heading-link {
+    color: var(--rc-green, #1E4433) !important;
+  }
+  .header-wrapper--scrolled .header__menu-item span,
+  .header-wrapper--scrolled .header__menu-item .link,
+  .header-wrapper--scrolled .header__menu-item {
+    color: var(--rc-text, #1a1a1a) !important;
+  }
+  .header-wrapper--scrolled .rc-header-login {
+    color: var(--rc-text, #1a1a1a);
+  }
+  .header-wrapper--scrolled .rc-header-cta {
+    background: var(--rc-green, #1E4433);
+    border: 1px solid transparent;
+    color: #fff !important;
+  }
+  .header-wrapper--scrolled .header__icon,
+  .header-wrapper--scrolled .header__icon svg {
+    color: var(--rc-text, #1a1a1a) !important;
+    fill: var(--rc-text, #1a1a1a) !important;
+  }
+
   /* Hover dropdown menus on desktop */
   @media (min-width: 990px) {
     header-menu details[open] > .header__submenu {
@@ -258,7 +320,7 @@
   endif
 %}
 
-<{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}">
+<{{ header_tag }} {% if header_tag == 'sticky-header' %}data-sticky-type="{{ section.settings.sticky_header_type }}"{% endif %} class="header-wrapper color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator %} header-wrapper--border-bottom{% endif %}{% if request.page_type == 'index' %} header-wrapper--transparent{% endif %}">
   {%- liquid
     assign social_links = false
     assign localization_forms = false
@@ -600,6 +662,31 @@
 
   customElements.define('header-menu', HeaderMenu);
 {% endjavascript %}
+
+{%- if request.page_type == 'index' -%}
+<script>
+  (function() {
+    const header = document.querySelector('.header-wrapper--transparent');
+    if (!header) return;
+
+    function onScroll() {
+      const hero = document.querySelector('.rc-hero');
+      const threshold = hero ? hero.offsetHeight - 80 : 300;
+
+      if (window.scrollY > threshold) {
+        header.classList.add('header-wrapper--scrolled');
+        header.classList.remove('header-wrapper--transparent');
+      } else {
+        header.classList.remove('header-wrapper--scrolled');
+        header.classList.add('header-wrapper--transparent');
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+{%- endif -%}
 
 <script type="application/ld+json">
   {

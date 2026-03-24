@@ -9,16 +9,6 @@
  */
 {
   "sections": {
-    "hero": {
-      "type": "rc-page-hero",
-      "settings": {
-        "background_image": "shopify://shop_images/rc-card-entreprenor.jpg",
-        "image_position": "center center",
-        "eyebrow": "För entreprenörer",
-        "heading": "Vi säkerställer rätt produkt, i rätt tid, med minimerat avfall",
-        "subtext": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Genom att välja och montera återbrukade textilplattor bidrar ni till en mer hållbar byggbransch."
-      }
-    },
     "kundgrupp": {
       "type": "rc-kundgrupp",
       "blocks": {
@@ -67,9 +57,9 @@
       ],
       "settings": {
         "eyebrow": "För entreprenörer",
-        "intro_heading": "Fördelarna med ReCarpets textilplattor",
-        "intro_body": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Vi har nära samarbeten med fastighetsägare och arkitekter för att leverera rätt platta till rätt lokal.",
-        "intro_body_2": "Har du ett projekt med föreskrivna återbrukade textilplattor och vill lägga en beställning? Välkommen att kontakta oss!",
+        "intro_heading": "Vi säkerställer rätt produkt, i rätt tid, med minimerat avfall",
+        "intro_body": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Vi har nära samarbeten med fastighetsägare och arkitekter för att leverera rätt platta till rätt lokal, även när färgvalen kan variera.\n\nHar du ett projekt med föreskrivna återbrukade textilplattor och vill lägga en beställning? Välkommen att kontakta oss!",
+        "intro_image": "shopify://shop_images/rc-card-entreprenor.jpg",
         "btn1_label": "Kontakta oss",
         "btn1_url": "/pages/kontakta-oss",
         "btn2_label": "Läs mer om oss",
@@ -97,28 +87,28 @@
       "type": "rc-faq",
       "blocks": {
         "faq1": {
-          "type": "faq_item",
+          "type": "faq",
           "settings": {
             "question": "Hur monterar man återbrukade textilplattor?",
             "answer": "Det beror på typ av produkt, men generellt är det ingen stor skillnad mot att lägga nya plattor. Om installationsmetod inte föreskrivits rekommenderar vi att undvika lim i möjligaste mån. Är ni osäkra, kontakta oss för rådgivning."
           }
         },
         "faq2": {
-          "type": "faq_item",
+          "type": "faq",
           "settings": {
             "question": "Har ni garanti på materialet?",
             "answer": "Vanligtvis har vi ingen garanti eftersom vi inte tillverkat produkterna. Att ge garanti på återbrukat material kan vara svårt. Däremot står vi bakom vår expertis gällande de produkter vi förmedlar. Om specifik materialgaranti krävs, kontakta oss så ser vi vad vi kan göra."
           }
         },
         "faq3": {
-          "type": "faq_item",
+          "type": "faq",
           "settings": {
             "question": "Hur kommer slutresultatet bli?",
             "answer": "Eftersom plattorna har använts tidigare kan det finnas variationer i färg. Produkterna kan ha legat i olika delar av tidigare lokaler, vilket påverkat deras utseende. Detta kan ge ett unikt utseende vid montering i en ny miljö. För bästa resultat, var extra noggrann vid läggningen."
           }
         },
         "faq4": {
-          "type": "faq_item",
+          "type": "faq",
           "settings": {
             "question": "Kan man få en provbit för att visa kund?",
             "answer": "Absolut! Kontakta oss med era önskemål om färg och kvantitet, så hjälper vi er med lämpliga alternativ."
@@ -148,7 +138,6 @@
     }
   },
   "order": [
-    "hero",
     "kundgrupp",
     "content_product",
     "faq",

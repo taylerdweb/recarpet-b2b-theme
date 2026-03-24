@@ -9,16 +9,6 @@
  */
 {
   "sections": {
-    "hero": {
-      "type": "rc-page-hero",
-      "settings": {
-        "background_image": "shopify://shop_images/rc-card-hyresgast.jpg",
-        "image_position": "center center",
-        "eyebrow": "För hyresgäster",
-        "heading": "Uppgradera kontorsgolvet – enkelt och prisvärt!",
-        "subtext": "Vi tar hand om allt från rivning till montering av nytt golv. Smidigt, miljövänligt och kostnadseffektivt – en kontakt och ett pris!"
-      }
-    },
     "kundgrupp": {
       "type": "rc-kundgrupp",
       "blocks": {
@@ -57,9 +47,9 @@
       ],
       "settings": {
         "eyebrow": "För hyresgäster",
-        "intro_heading": "En helhetslösning för ditt kontor",
-        "intro_body": "Vi tar hand om allt från rivning till montering av nytt golv — helt enkelt och utan krångel.",
-        "intro_body_2": "",
+        "intro_heading": "Uppgradera kontorsgolvet – enkelt och prisvärt!",
+        "intro_body": "Vi tar hand om allt från rivning till montering av nytt golv. Smidigt, miljövänligt och kostnadseffektivt – en kontakt och ett pris!",
+        "intro_image": "shopify://shop_images/rc-card-hyresgast.jpg",
         "btn1_label": "Kontakta oss",
         "btn1_url": "/pages/kontakta-oss",
         "btn2_label": "Se prover i lager",
@@ -75,10 +65,10 @@
     "quote": {
       "type": "rc-quote",
       "settings": {
-        "quote": "Vi har fått återbrukade textilplattor installerade av ReCarpet och vi är mycket nöjda. Snabb service och kvaliteten och stilen överträffade våra förväntningar.",
+        "quote_text": "Vi har fått återbrukade textilplattor installerade av ReCarpet och vi är mycket nöjda. Snabb service och kvaliteten och stilen överträffade våra förväntningar.",
         "author_name": "Rasmus Andersson",
         "author_title": "VD och grundare",
-        "bg_color": "cream"
+        "background_color": "var(--rc-cream, #F6F6F6)"
       }
     },
     "contact_cta": {
@@ -94,7 +84,6 @@
     }
   },
   "order": [
-    "hero",
     "kundgrupp",
     "quote",
     "contact_cta"
