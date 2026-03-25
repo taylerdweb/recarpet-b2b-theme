@@ -607,8 +607,18 @@
 
 /* B2B Logged-out CTA on product cards */
 .card__cta-logged-out {
-  padding: 0 0 0.5rem;
-  margin-top: 2rem;
+  padding: 0;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+/* Tighter spacing between button and product name/price below */
+.card__content:has(.card__cta-logged-out) .card__information {
+  padding: 0.4rem 0;
+}
+
+.card__content:has(.card__cta-logged-out) {
+  padding: 0.5rem 0;
 }
 
 .card__cta-logged-out .button.button {
