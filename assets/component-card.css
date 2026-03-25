@@ -635,6 +635,11 @@
   margin-bottom: 0.5rem;
 }
 
+.card__cta-logged-out .button.button::after {
+  display: none !important;
+  box-shadow: none !important;
+}
+
 .card__cta-logged-out .button.button:hover {
   background: var(--rc-green, #1e4433) !important;
   border-color: var(--rc-green, #1e4433) !important;
