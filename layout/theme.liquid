@@ -441,14 +441,37 @@
           });
           bodyObs.observe(document.body, { childList: true, subtree: true });
 
-          // ── Fakturauppgifter: replace customer-reference input with 3 labelled inputs ──
-          // SparkLayer renders <input id="customer-reference"> inside spark-drawer's shadow root
+          // ── Fakturauppgifter: replace customer-reference / notes input with 3 labelled inputs ──
+          // SparkLayer may render the field as <input> or <textarea>, with id "customer-reference"
+          // or with our placeholder text, inside a shadow root OR in the regular DOM.
 
           function injectFakturaFields(root) {
-            var input = root.querySelector('input#customer-reference, input[placeholder*="Org.nr"]');
+            // Broad selector: input OR textarea, by id OR placeholder content
+            var selectors = [
+              'input#customer-reference',
+              'textarea#customer-reference',
+              'input[placeholder*="Org.nr"]',
+              'textarea[placeholder*="Org.nr"]',
+              'input[id*="reference"]',
+              'textarea[id*="reference"]',
+              'input[id*="note"]',
+              'textarea[id*="note"]'
+            ];
+            var input = null;
+            for (var s = 0; s < selectors.length; s++) {
+              input = root.querySelector(selectors[s]);
+              if (input && !input.dataset.fakSplitted) break;
+              input = null;
+            }
             if (!input || input.dataset.fakSplitted) return;
             input.dataset.fakSplitted = '1';
             input.style.display = 'none';
+
+            // Also hide the parent label/wrapper if it contains our placeholder
+            var parent = input.parentElement;
+            if (parent && parent.querySelector('label')) {
+              // keep the parent visible, just hide the original input
+            }
 
             var FIELDS = [
               { key: 'orgnr',  label: 'Org.nr',          type: 'text',  ph: 'ex. 556123-4567' },
@@ -465,7 +488,13 @@
                 var el = wrap.querySelector('[data-fk="' + f.key + '"]');
                 return f.label + ': ' + (el ? el.value.trim() : '');
               });
-              input.value = vals.join(' | ');
+              var combined = vals.join(' | ');
+              // Handle both input and textarea
+              var nativeSetter = Object.getOwnPropertyDescriptor(
+                input.tagName === 'TEXTAREA' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype,
+                'value'
+              ).set;
+              nativeSetter.call(input, combined);
               ['input', 'change'].forEach(function(ev) {
                 input.dispatchEvent(new Event(ev, { bubbles: true, composed: true }));
               });
@@ -484,6 +513,7 @@
               inp.placeholder = f.ph;
               inp.dataset.fk  = f.key;
               inp.className   = input.className;
+              inp.style.cssText = 'padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;width:100%;box-sizing:border-box;';
               inp.addEventListener('input', sync);
 
               row.appendChild(lbl);
@@ -492,19 +522,28 @@
             });
 
             input.parentNode.insertBefore(wrap, input);
+            console.log('[reCarpet] Fakturauppgifter: injected 3 fields, replaced', input.tagName, input.id || input.placeholder);
           }
 
-          // Target spark-drawer shadow root specifically + fallback
+          // Scan regular DOM + all shadow roots (drawer, checkout, cart, etc.)
           function runFakturaInjection() {
-            var drawer = document.querySelector('spark-drawer');
-            if (drawer && drawer.shadowRoot) injectFakturaFields(drawer.shadowRoot);
+            // 1. Regular DOM (in case SparkLayer renders outside shadow root)
+            injectFakturaFields(document);
+
+            // 2. Known SparkLayer components
+            var sparkEls = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout, spark-pdp, [class*="spark"]');
+            sparkEls.forEach(function(el) {
+              if (el.shadowRoot) injectFakturaFields(el.shadowRoot);
+            });
+
+            // 3. Broader fallback: any element with a shadow root
             document.querySelectorAll('*').forEach(function(el) {
               if (el.shadowRoot) injectFakturaFields(el.shadowRoot);
             });
           }
 
-          var fakPoll = setInterval(runFakturaInjection, 400);
-          setTimeout(function() { clearInterval(fakPoll); }, 60000);
+          var fakPoll = setInterval(runFakturaInjection, 500);
+          setTimeout(function() { clearInterval(fakPoll); }, 120000);
 
           // ── Montering-tillval: auto-add vid köp ────────────────────────────────
           // Variant-ID hämtas automatiskt via Liquid (all_products lookup)
