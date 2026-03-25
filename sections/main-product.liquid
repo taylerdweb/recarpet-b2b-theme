@@ -118,8 +118,8 @@
                 {%- assign _pdp_is_guld_or_krets = false -%}
                 {%- if _pdp_ctags contains 'entrepreneur' or _pdp_ctags contains 'krets' -%}{%- assign _pdp_is_guld_or_krets = true -%}{%- endif -%}
 
-                {%- if _pdp_is_storbatch and _pdp_is_guld_or_krets == false -%}
-                  {%- comment -%} Silver-kund + storbatch → låst produkt, ingen SparkLayer PDP {%- endcomment -%}
+                {%- if _pdp_is_storbatch and _pdp_is_guld_or_krets == false and _pdp_ctags contains 'b2b' -%}
+                  {%- comment -%} Silver B2B-kund + storbatch → låst produkt, ingen SparkLayer PDP {%- endcomment -%}
                   <div class="storbatch-lock-pdp">
                     <p class="storbatch-lock-pdp__title">Storbatch — endast för Guld-medlemmar</p>
                     <p class="storbatch-lock-pdp__text">Denna produkt finns i stora kvantiteter och är reserverad för Guld-medlemmar. Kontakta oss för att uppgradera ditt konto.</p>
