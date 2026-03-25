@@ -394,6 +394,26 @@
             setTimeout(function () { obs.disconnect(); }, 10000);
           }
 
+          // Set default quantity to 5 on all product cards
+          function setDefaultQty(el) {
+            var inputs = (el.shadowRoot || el).querySelectorAll('input[type="number"]');
+            inputs.forEach(function(input) {
+              if (input.value === '1' || input.value === '') {
+                var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+                nativeInputValueSetter.call(input, '5');
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+              }
+            });
+          }
+
+          document.querySelectorAll('spark-product-card').forEach(function(card) {
+            setDefaultQty(card);
+            var obs = new MutationObserver(function() { setDefaultQty(card); });
+            obs.observe(card.shadowRoot || card, { childList: true, subtree: true });
+            setTimeout(function() { obs.disconnect(); }, 5000);
+          });
+
           // Patch light DOM (by class only — safe for whole document)
           patchRoot(document, false);
 
