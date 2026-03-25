@@ -607,14 +607,34 @@
 
 /* B2B Logged-out CTA on product cards */
 .card__cta-logged-out {
-  padding: 0 1.5rem 0.5rem;
+  padding: 0 0 0.5rem;
   margin-top: 2rem;
 }
 
 .card__cta-logged-out .button {
-  font-size: 1.2rem;
-  padding: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--rc-font, 'DM Sans', sans-serif);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-decoration: none;
+  border-radius: var(--rc-radius, 0.5rem);
+  border: 1px solid var(--rc-off-black, #121212);
+  background: var(--rc-off-black, #121212);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
   margin-bottom: 0.5rem;
+}
+
+.card__cta-logged-out .button:hover {
+  background: var(--rc-green, #1e4433);
+  border-color: var(--rc-green, #1e4433);
+  color: #fff;
 }
 
 .b2b-card-awaiting-note {
