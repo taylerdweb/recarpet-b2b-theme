@@ -512,7 +512,7 @@
 
       {%- if shop.customer_accounts_enabled -%}
         <a
-          href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+          href="{%- if customer -%}{{ routes.account_url }}{%- else -%}/pages/b2b-login{%- endif -%}"
           class="header__icon header__icon--account link focus-inset{% if section.settings.menu != blank %} small-hide{% endif %}"
           rel="nofollow"
         >
@@ -548,7 +548,7 @@
 
       <!-- reCarpet: B2B login + Kontakta oss -->
       {%- unless customer -%}
-        <a href="{{ routes.account_login_url }}" class="rc-header-login small-hide" rel="nofollow">
+        <a href="/pages/b2b-login" class="rc-header-login small-hide" rel="nofollow">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Logga in
         </a>
