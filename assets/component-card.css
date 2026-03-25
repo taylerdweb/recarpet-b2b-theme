@@ -621,6 +621,32 @@
   padding: 0.5rem 0;
 }
 
+/* Smaller font for product title & price on cards, no underline hover */
+.card__content:has(.card__cta-logged-out) .card__heading {
+  font-size: var(--rc-text-sm, 0.875rem);
+  line-height: 1.4;
+}
+
+.card__content:has(.card__cta-logged-out) .card__heading a {
+  text-decoration: none !important;
+}
+
+.card__content:has(.card__cta-logged-out) .card__heading a:hover {
+  text-decoration: none !important;
+}
+
+.card-wrapper:has(.card__cta-logged-out):hover a {
+  text-decoration: none !important;
+}
+
+.card__content:has(.card__cta-logged-out) .price-item {
+  font-size: var(--rc-text-sm, 0.875rem);
+}
+
+.card__content:has(.card__cta-logged-out) .price-unit {
+  font-size: var(--rc-text-xs, 0.75rem);
+}
+
 .card__cta-logged-out .button.button {
   display: inline-flex;
   align-items: center;
