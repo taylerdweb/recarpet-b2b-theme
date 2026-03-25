@@ -53,10 +53,11 @@
 
     {{ content_for_header }}
 
-    {%- comment -%} Hide B2C-only price/UI when customer is logged out (no SparkLayer B2B auth) {%- endcomment -%}
-    {%- unless customer -%}
-      <style>body [data-spark="b2c-only"] { display: none !important; }</style>
-    {%- endunless -%}
+    {%- comment -%}
+      Previously hid all [data-spark="b2c-only"] for logged-out users.
+      Removed: anonymous visitors can now browse products and see bruttopris.
+      SparkLayer B2B UI only loads for authenticated B2B customers.
+    {%- endcomment -%}
 
     {%- liquid
       assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'

@@ -161,25 +161,11 @@
                 {% assign productTags = product.tags | join: ', ' %}
                 {% assign customerTags = customer.tags | join: ',' | downcase %}
 
-                {% if productTags contains 'b2b-only' %}
-                  {% if customerTags contains 'b2b' %}
-                    <li class="grid__item">
-                      {% render 'card-product',
-                        card_product: product,
-                        media_aspect_ratio: section.settings.image_ratio,
-                        show_secondary_image: section.settings.show_secondary_image,
-                        show_vendor: section.settings.show_vendor,
-                        show_rating: section.settings.show_rating,
-                        lazy_load: lazy_load,
-                        skip_styles: skip_card_product_styles,
-                        show_quick_add: section.settings.enable_quick_add,
-                        section_id: section.id
-                      %}
-                      {%- assign skip_card_product_styles = true -%}
-                    </li>
-                  {% else %}
-                    <!-- Don't show anything for logged out customers-->
-                  {% endif %}
+                {% comment %} All products are now visible to all users.
+                   b2b-only tag no longer hides products from the collection grid.
+                   Non-logged-in users see bruttopris + "Registrera dig" button. {% endcomment %}
+                {% if false %}
+                  <!-- b2b-only gating removed -->
                 {% else %}
                   <li
                     class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"

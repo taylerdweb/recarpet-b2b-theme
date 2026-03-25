@@ -1,16 +1,7 @@
 {% assign productTags = product.tags | join: ', ' %}
 
-
-{% if productTags contains 'b2b-only' %}
-  {%- assign _tags_str = customer.tags | join: ',' | downcase -%}
-  {%- if _tags_str contains 'b2b' -%}
-
-  {%- else-%}
-    <script>
-      window.location.href = '/collections/all';
-    </script>
-  {%- endif -%}
-{% endif %}
+{% comment %} b2b-only product redirect removed — all products now viewable by all users.
+   Non-logged-in users see bruttopris + "Registrera dig" button. {% endcomment %}
 
 <product-info
   id="MainProduct-{{ section.id }}"
