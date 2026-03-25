@@ -611,30 +611,34 @@
   margin-top: 2rem;
 }
 
-.card__cta-logged-out .button {
+.card__cta-logged-out .button.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0.75rem 1.5rem;
-  font-family: var(--rc-font, 'DM Sans', sans-serif);
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.4;
-  text-decoration: none;
-  border-radius: var(--rc-radius, 0.5rem);
-  border: 1px solid var(--rc-off-black, #121212);
-  background: var(--rc-off-black, #121212);
-  color: #fff;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  padding: 0.75rem 1.5rem !important;
+  font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  line-height: 1.4 !important;
+  text-decoration: none !important;
+  border-radius: var(--rc-radius, 0.5rem) !important;
+  border: 1px solid var(--rc-off-black, #121212) !important;
+  background: var(--rc-off-black, #121212) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  outline: none !important;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
   margin-bottom: 0.5rem;
 }
 
-.card__cta-logged-out .button:hover {
-  background: var(--rc-green, #1e4433);
-  border-color: var(--rc-green, #1e4433);
-  color: #fff;
+.card__cta-logged-out .button.button:hover {
+  background: var(--rc-green, #1e4433) !important;
+  border-color: var(--rc-green, #1e4433) !important;
+  color: #fff !important;
 }
 
 .b2b-card-awaiting-note {
