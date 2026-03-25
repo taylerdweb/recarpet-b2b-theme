@@ -607,17 +607,14 @@
 
 /* B2B Logged-out CTA on product cards */
 .card__cta-logged-out {
-  padding: 0.5rem 1.5rem 1.5rem;
+  padding: 0 1.5rem 0.5rem;
+  margin-top: 2rem;
 }
 
 .card__cta-logged-out .button {
   font-size: 1.2rem;
   padding: 1rem;
-}
-
-/* Spacing: 1.5rem from image to button area, tighter price-to-button gap */
-.card-wrapper .card__content .card-information {
-  padding-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .b2b-card-awaiting-note {
