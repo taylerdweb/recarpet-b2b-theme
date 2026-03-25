@@ -623,8 +623,9 @@
 
 /* Smaller font for product title & price on cards, no underline hover */
 .card__content:has(.card__cta-logged-out) .card__heading {
-  font-size: var(--rc-text-sm, 0.875rem);
+  font-size: 1.25rem;
   line-height: 1.4;
+  margin-bottom: 0.25rem;
 }
 
 .card__content:has(.card__cta-logged-out) .card__heading a {
@@ -639,8 +640,12 @@
   text-decoration: none !important;
 }
 
+.card__content:has(.card__cta-logged-out) .price {
+  margin-top: 0;
+}
+
 .card__content:has(.card__cta-logged-out) .price-item {
-  font-size: var(--rc-text-sm, 0.875rem);
+  font-size: 1rem;
 }
 
 .card__content:has(.card__cta-logged-out) .price-unit {
