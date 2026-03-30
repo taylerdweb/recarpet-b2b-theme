@@ -854,45 +854,15 @@
             var _monteringBusy = false;
             var _monteringUserRemoved = false; // respect manual removal
 
-            // ── Toast suppression ──
-            // Simple approach: hide the spark-toast HOST element while suppressing.
-            // Don't touch the shadow DOM internals (breaks Lit rendering).
-            var _suppressToast = false;
-            var _suppressTimer = null;
-
-            function hideToast() {
-              _suppressToast = true;
-              if (_suppressTimer) clearTimeout(_suppressTimer);
-              var t = document.querySelector('spark-toast');
-              if (t) t.style.cssText = 'display:none !important;visibility:hidden !important;';
-            }
-            function showToast() {
-              _suppressTimer = setTimeout(function() {
-                _suppressToast = false;
-                var t = document.querySelector('spark-toast');
-                if (t) t.style.cssText = '';
-              }, 3500);
-            }
-
-            // Continuously enforce hiding while _suppressToast is true
-            setInterval(function() {
-              if (!_suppressToast) return;
-              var t = document.querySelector('spark-toast');
-              if (t && t.style.display !== 'none') {
-                t.style.cssText = 'display:none !important;visibility:hidden !important;';
-              }
-            }, 50);
-
+            // ── Silent cart update (no toast needed — Shopify's cart-notification
+            //    is permanently hidden via CSS for B2B customers) ──
             function silentUpdateCart(payload) {
-              hideToast();
               _monteringBusy = true;
               return _origSparkUpdateCart(payload).then(function(r) {
                 _monteringBusy = false;
-                showToast();
                 return r;
               }).catch(function(err) {
                 _monteringBusy = false;
-                showToast();
               });
             }
 
@@ -948,25 +918,8 @@
                 // Skip everything for our own silent calls
                 if (_monteringBusy) return _origSparkUpdateCart(payload, t, n);
 
-                // Is this a PDP add? (not from cart drawer, adding new qty)
-                var isPDPAdd = false;
-                if (payload && payload.products) {
-                  var drawer = document.querySelector('spark-drawer');
-                  var drawerVisible = drawer && drawer.offsetHeight > 0;
-                  var hasNewQty = payload.products.some(function(p) {
-                    return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
-                  });
-                  isPDPAdd = hasNewQty && !drawerVisible;
-                }
-
-                // Suppress toast for ALL cart-internal changes
-                if (!isPDPAdd) hideToast();
-
-                // Call original — never modify this promise
+                // Call original
                 var result = _origSparkUpdateCart(payload, t, n);
-
-                // Restore toast after cart-internal changes
-                if (!isPDPAdd) showToast();
 
                 // Ignore calls that only touch montering
                 var isOwnCall = payload && payload.products &&
@@ -974,21 +927,25 @@
                 if (isOwnCall) return result;
 
                 // On PDP add with checkbox: add montering after carpet add completes
-                if (isPDPAdd && checkboxEl && checkboxEl.checked) {
-                  _monteringUserRemoved = false;
+                if (checkboxEl && checkboxEl.checked && payload && payload.products) {
                   var addedQty = 0;
                   payload.products.forEach(function(p) {
-                    if (p.adjustQuantity > 0 && p.sku !== MONTERING_SKU) addedQty += p.adjustQuantity;
+                    if (p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU) {
+                      addedQty += p.adjustQuantity;
+                    }
                   });
-                  if (addedQty > 0 && result && typeof result.then === 'function') {
-                    result.then(function() {
-                      silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] });
-                    });
+                  if (addedQty > 0) {
+                    _monteringUserRemoved = false;
+                    if (result && typeof result.then === 'function') {
+                      result.then(function() {
+                        silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] });
+                      });
+                    }
+                    return result;
                   }
-                  return result;
                 }
 
-                // For cart-internal changes: sync montering after completion
+                // For all other cart changes: sync montering after completion
                 if (result && typeof result.then === 'function') {
                   result.then(function() {
                     setTimeout(syncMonteringWithCart, 800);
@@ -997,7 +954,6 @@
 
                 return result;
               } catch (e) {
-                // Fail-safe: if anything errors, pass through to original
                 console.warn('[reCarpet] updateCart wrapper error:', e);
                 return _origSparkUpdateCart(payload, t, n);
               }
@@ -1195,7 +1151,9 @@
   product-form,
   quick-add,
   quick-add-bulk,
-  cart-drawer {
+  cart-drawer,
+  cart-notification,
+  #cart-notification {
     display: none !important;
   }
 
