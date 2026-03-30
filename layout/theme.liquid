@@ -332,19 +332,142 @@
           token: {{ customer.metafields.sparklayer.authentication | json }},
         },
 
-        // Override SparkLayer text labels — keys confirmed via showTranslations: true
+        // Override SparkLayer text labels — Swedish as default
+        showTranslations: false, // Set to true temporarily to discover all available keys
         translations: {
           "en": {
+            // PDP
             "pdp.price-breaks.qty": "m\u00B2",
+            "pdp.add-to-cart": "L\u00E4gg i varukorg",
+            "pdp.quantity": "Antal",
+            "pdp.price-breaks.title": "Prisbrytningar",
+            "pdp.price-breaks.price": "Pris",
+
+            // Cart / Drawer
+            "cart.title": "Min varukorg",
+            "cart.empty": "Din varukorg \u00E4r tom",
+            "cart.item.remove": "Ta bort",
+            "cart.item.in-stock": "I lager",
+            "cart.item.out-of-stock": "Slut i lager",
+            "cart.item.per-unit": "per styck",
+            "cart.subtotal": "Delsumma",
+            "cart.checkout-button": "G\u00E5 till kassan",
+            "cart.continue-shopping": "Forts\u00E4tt handla",
+            "cart.actions": "\u00C5tg\u00E4rder",
+            "cart.expand": "Expandera",
+            "cart.close": "St\u00E4ng & redigera varukorg",
+            "cart.search.placeholder": "S\u00F6k produkter via namn, SKU eller streckkod",
+
+            // Checkout steps
+            "cart.checkout.steps.cart": "Min varukorg",
+            "cart.checkout.steps.shipping": "Leverans",
+            "cart.checkout.steps.review": "Granska & betala",
+            "cart.checkout.steps.complete": "Klart",
+
+            // Checkout - Shipping
+            "cart.checkout.shipping.title": "Leveransmetod",
+            "cart.checkout.shipping.no-methods": "Tyv\u00E4rr finns inga leveransmetoder f\u00F6r din valda adress",
+            "cart.checkout.shipping.address-title": "Leveransadress",
+            "cart.checkout.shipping.add-address": "L\u00E4gg till ny adress",
+            "cart.checkout.shipping.edit-addresses": "Du kan redigera befintliga adresser fr\u00E5n",
+            "cart.checkout.shipping.your-account": "ditt konto",
+            "cart.checkout.shipping.continue": "Forts\u00E4tt",
+
+            // Checkout - Payment
+            "cart.checkout.payment.title": "Betalningsmetod",
+            "cart.checkout.payment.pay-by-invoice": "Betala med faktura",
+
+            // Checkout - Summary
+            "cart.checkout.summary.subtotal": "Delsumma",
+            "cart.checkout.summary.shipping": "Frakt",
+            "cart.checkout.summary.tax": "Moms",
+            "cart.checkout.summary.total": "Totalt",
+            "cart.checkout.summary.complete-order": "Slutf\u00F6r best\u00E4llning",
+
+            // Checkout - Terms
+            "cart.checkout.terms.agree": "Jag godk\u00E4nner",
+            "cart.checkout.terms.terms-and-conditions": "villkoren",
+
+            // Checkout - Notes (Fakturauppgifter)
             "cart.checkout.notes.label": "Fakturauppgifter",
             "cart.checkout.notes.placeholder": "Org.nr: ___ | Faktura-e-post: ___ | Referensnummer: ___",
             "cart.checkout.notes.default-helper-text": "Fyll i alla tre f\u00E4lten s\u00E5 att vi kan skicka er faktura r\u00E4tt.",
+
+            // Checkout - Complete
+            "cart.checkout.complete.title": "Tack f\u00F6r din best\u00E4llning!",
+            "cart.checkout.complete.order-number": "Ordernummer",
+            "cart.checkout.complete.message": "Vi har tagit emot din best\u00E4llning och \u00E5terkommer med leveransinformation.",
+
+            // Account
+            "account.title": "Mitt konto",
+            "account.orders": "Best\u00E4llningar",
+            "account.quotes": "Offerter",
+            "account.addresses": "Adresser",
+            "account.sign-out": "Logga ut",
+            "account.my-cart": "Min varukorg",
+            "account.my-account": "Mitt konto",
           },
           "sv": {
             "pdp.price-breaks.qty": "m\u00B2",
+            "pdp.add-to-cart": "L\u00E4gg i varukorg",
+            "pdp.quantity": "Antal",
+            "pdp.price-breaks.title": "Prisbrytningar",
+            "pdp.price-breaks.price": "Pris",
+
+            "cart.title": "Min varukorg",
+            "cart.empty": "Din varukorg \u00E4r tom",
+            "cart.item.remove": "Ta bort",
+            "cart.item.in-stock": "I lager",
+            "cart.item.out-of-stock": "Slut i lager",
+            "cart.item.per-unit": "per styck",
+            "cart.subtotal": "Delsumma",
+            "cart.checkout-button": "G\u00E5 till kassan",
+            "cart.continue-shopping": "Forts\u00E4tt handla",
+            "cart.actions": "\u00C5tg\u00E4rder",
+            "cart.expand": "Expandera",
+            "cart.close": "St\u00E4ng & redigera varukorg",
+            "cart.search.placeholder": "S\u00F6k produkter via namn, SKU eller streckkod",
+
+            "cart.checkout.steps.cart": "Min varukorg",
+            "cart.checkout.steps.shipping": "Leverans",
+            "cart.checkout.steps.review": "Granska & betala",
+            "cart.checkout.steps.complete": "Klart",
+
+            "cart.checkout.shipping.title": "Leveransmetod",
+            "cart.checkout.shipping.no-methods": "Tyv\u00E4rr finns inga leveransmetoder f\u00F6r din valda adress",
+            "cart.checkout.shipping.address-title": "Leveransadress",
+            "cart.checkout.shipping.add-address": "L\u00E4gg till ny adress",
+            "cart.checkout.shipping.edit-addresses": "Du kan redigera befintliga adresser fr\u00E5n",
+            "cart.checkout.shipping.your-account": "ditt konto",
+            "cart.checkout.shipping.continue": "Forts\u00E4tt",
+
+            "cart.checkout.payment.title": "Betalningsmetod",
+            "cart.checkout.payment.pay-by-invoice": "Betala med faktura",
+
+            "cart.checkout.summary.subtotal": "Delsumma",
+            "cart.checkout.summary.shipping": "Frakt",
+            "cart.checkout.summary.tax": "Moms",
+            "cart.checkout.summary.total": "Totalt",
+            "cart.checkout.summary.complete-order": "Slutf\u00F6r best\u00E4llning",
+
+            "cart.checkout.terms.agree": "Jag godk\u00E4nner",
+            "cart.checkout.terms.terms-and-conditions": "villkoren",
+
             "cart.checkout.notes.label": "Fakturauppgifter",
             "cart.checkout.notes.placeholder": "Org.nr: ___ | Faktura-e-post: ___ | Referensnummer: ___",
             "cart.checkout.notes.default-helper-text": "Fyll i alla tre f\u00E4lten s\u00E5 att vi kan skicka er faktura r\u00E4tt.",
+
+            "cart.checkout.complete.title": "Tack f\u00F6r din best\u00E4llning!",
+            "cart.checkout.complete.order-number": "Ordernummer",
+            "cart.checkout.complete.message": "Vi har tagit emot din best\u00E4llning och \u00E5terkommer med leveransinformation.",
+
+            "account.title": "Mitt konto",
+            "account.orders": "Best\u00E4llningar",
+            "account.quotes": "Offerter",
+            "account.addresses": "Adresser",
+            "account.sign-out": "Logga ut",
+            "account.my-cart": "Min varukorg",
+            "account.my-account": "Mitt konto",
           },
         },
 
