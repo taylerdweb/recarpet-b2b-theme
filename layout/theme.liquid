@@ -854,36 +854,30 @@
             var _monteringBusy = false;
             var _monteringUserRemoved = false; // respect manual removal
 
-            // ── Toast suppress: hide SparkLayer toast while cart drawer is open ──
-            var _toastStyle = null;
-            function suppressToast() {
-              var toast = document.querySelector('spark-toast');
-              if (!toast || !toast.shadowRoot) return;
-              if (!_toastStyle) {
-                _toastStyle = document.createElement('style');
-                _toastStyle.textContent = '[data-theme] { display: none !important; }';
-              }
-              if (!_toastStyle.parentNode) {
-                toast.shadowRoot.appendChild(_toastStyle);
-              }
+            // ── Toast suppression: hide spark-toast element while cart drawer is open ──
+            // Uses official SparkLayer method: spark-toast { display: none }
+            // Applied directly on the custom element (regular DOM, no shadow root needed)
+            function hideToast() {
+              var el = document.querySelector('spark-toast');
+              if (el) el.style.setProperty('display', 'none', 'important');
             }
-            function restoreToast() {
-              if (_toastStyle && _toastStyle.parentNode) {
-                _toastStyle.remove();
-              }
+            function showToast() {
+              var el = document.querySelector('spark-toast');
+              if (el) el.style.removeProperty('display');
             }
 
-            // ── Silent cart update (always suppress toast) ──
+            // ── Silent cart update (always hides toast) ──
             function silentUpdateCart(payload) {
               _monteringBusy = true;
-              suppressToast();
+              hideToast();
               return _origSparkUpdateCart(payload).then(function(r) {
                 _monteringBusy = false;
-                restoreToast();
+                // Keep toast hidden briefly so SparkLayer's animation doesn't flash
+                setTimeout(showToast, 500);
                 return r;
               }).catch(function(err) {
                 _monteringBusy = false;
-                restoreToast();
+                setTimeout(showToast, 500);
               });
             }
 
@@ -944,17 +938,18 @@
                   payload.products.length === 1 && payload.products[0].sku === MONTERING_SKU;
                 if (isOwnCall) return _origSparkUpdateCart(payload, t, n);
 
-                // Check if cart drawer is open — if so, suppress toast for this update
+                // If cart drawer is open, hide toast for this update
                 var drawer = document.querySelector('spark-drawer');
                 var drawerOpen = drawer && drawer.offsetHeight > 0;
-                if (drawerOpen) suppressToast();
+                if (drawerOpen) hideToast();
 
                 // Call original
                 var result = _origSparkUpdateCart(payload, t, n);
 
                 if (result && typeof result.then === 'function') {
                   result.then(function() {
-                    if (drawerOpen) restoreToast();
+                    // Restore toast after cart-internal update completes
+                    if (drawerOpen) setTimeout(showToast, 500);
 
                     // If this was a PDP add (adjustQuantity > 0), add montering if checkbox checked
                     var hasPDPAdd = payload && payload.products && payload.products.some(function(p) {
