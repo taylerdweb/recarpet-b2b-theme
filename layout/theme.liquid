@@ -736,11 +736,42 @@
               inp.placeholder = f.ph;
               inp.dataset.fk  = f.key;
               inp.className   = input.className;
-              inp.style.cssText = 'padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;width:100%;box-sizing:border-box;';
+              inp.style.cssText = 'padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;width:100%;box-sizing:border-box;transition:border-color 0.2s;';
+              if (f.type === 'email') {
+                inp.setAttribute('pattern', '[^@\\s]+@[^@\\s]+\\.[^@\\s]+');
+                inp.setAttribute('autocomplete', 'email');
+                inp.setAttribute('inputmode', 'email');
+              }
+              if (f.key === 'orgnr') {
+                inp.setAttribute('pattern', '\\d{6}-?\\d{4}');
+                inp.setAttribute('inputmode', 'numeric');
+              }
+
+              var errMsg = document.createElement('span');
+              errMsg.style.cssText = 'font-size:11px;color:#d32f2f;display:none;margin-top:2px;';
+              errMsg.dataset.fkErr = f.key;
+
               inp.addEventListener('input', sync);
+              inp.addEventListener('input', function() {
+                var v = inp.value.trim();
+                var valid = true;
+                var msg = '';
+                if (f.type === 'email' && v.length > 0) {
+                  valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+                  msg = valid ? '' : 'Ange en giltig e-postadress';
+                }
+                if (f.key === 'orgnr' && v.length > 0) {
+                  valid = /^\d{6}-?\d{4}$/.test(v);
+                  msg = valid ? '' : 'Ange org.nr som 556123-4567';
+                }
+                inp.style.borderColor = v.length === 0 ? '#ccc' : (valid ? '#4caf50' : '#d32f2f');
+                errMsg.style.display = msg ? 'block' : 'none';
+                errMsg.textContent = msg;
+              });
 
               row.appendChild(lbl);
               row.appendChild(inp);
+              row.appendChild(errMsg);
               wrap.appendChild(row);
             });
 
