@@ -856,18 +856,18 @@
 
             // ── Helper: suppress toast during silent cart updates ──
             function silentUpdateCart(payload) {
-              // Hide toast element before update, restore after
-              var toast = document.querySelector('spark-toast');
-              if (toast) toast.style.display = 'none';
+              // Use CSS class on body to hide toast — more reliable than element hiding
+              // because SparkLayer may recreate or re-render the toast element
+              document.body.classList.add('rc-silent-sync');
               _monteringBusy = true;
               return _origSparkUpdateCart(payload).then(function(r) {
                 _monteringBusy = false;
-                // Restore toast after a tick (so SparkLayer's internal show call is missed)
-                setTimeout(function() { if (toast) toast.style.display = ''; }, 300);
+                // Keep class for 2s to catch delayed toast rendering
+                setTimeout(function() { document.body.classList.remove('rc-silent-sync'); }, 2000);
                 return r;
               }).catch(function(err) {
                 _monteringBusy = false;
-                setTimeout(function() { if (toast) toast.style.display = ''; }, 300);
+                setTimeout(function() { document.body.classList.remove('rc-silent-sync'); }, 2000);
               });
             }
 
@@ -966,64 +966,93 @@
             };
 
             // ── Hide montering qty controls & delete button in cart ──
-            // SparkLayer uses open shadow roots on spark-drawer, so we can reach in.
+            // Shadow roots are forced open via attachShadow override above.
+            // Recursively collect all shadow roots in the DOM tree.
+            function collectAllRoots(root, list) {
+              if (!root || !root.querySelectorAll) return;
+              list.push(root);
+              root.querySelectorAll('*').forEach(function(el) {
+                if (el.shadowRoot) collectAllRoots(el.shadowRoot, list);
+              });
+            }
+
             function lockMonteringRows() {
-              var roots = [document];
-              // Collect all accessible shadow roots
-              document.querySelectorAll('spark-drawer, spark-cart, [class*="spark"]').forEach(function(el) {
-                if (el.shadowRoot) roots.push(el.shadowRoot);
-              });
-              // Also scan all elements for shadow roots
-              document.querySelectorAll('*').forEach(function(el) {
-                if (el.shadowRoot) roots.push(el.shadowRoot);
-              });
+              var roots = [];
+              collectAllRoots(document, roots);
 
               roots.forEach(function(root) {
-                if (!root.querySelectorAll) return;
-                // Find any element containing the montering SKU text
-                var allText = root.querySelectorAll('span, p, div, td, li, a, small');
+                // Find any element containing the montering SKU or product name
+                var allText = root.querySelectorAll('span, p, div, td, li, a, small, h1, h2, h3, h4, h5, h6');
                 allText.forEach(function(el) {
-                  if (el.textContent.trim() === MONTERING_SKU || el.textContent.trim() === 'Montering av mattplattor') {
-                    // Walk up to the cart item row (look for common row containers)
-                    var row = el.closest('[class*="item"], [class*="row"], [class*="line"], li, tr, article');
-                    if (!row || row.dataset.rcLocked) return;
-                    row.dataset.rcLocked = '1';
+                  var txt = el.textContent.trim();
+                  if (txt !== MONTERING_SKU && txt !== 'Montering av mattplattor' &&
+                      txt.indexOf('RC-SERVICE-MONTERING') === -1) return;
+                  // Ensure this is a leaf-ish match (not a huge parent container)
+                  if (el.children.length > 3) return;
 
-                    // Hide quantity controls (buttons and input) but show qty as text
-                    row.querySelectorAll('button').forEach(function(btn) {
-                      btn.style.cssText = 'display:none !important;';
-                    });
-                    // Make quantity input readonly and styled as plain text
-                    row.querySelectorAll('input[type="number"], input[type="text"]').forEach(function(inp) {
-                      inp.readOnly = true;
-                      inp.style.cssText = 'border:none !important;background:transparent !important;pointer-events:none;text-align:center;-moz-appearance:textfield;';
-                    });
+                  // Walk up to the cart item row
+                  var row = el.closest('[class*="item"], [class*="row"], [class*="line"], [class*="cart"], li, tr, article');
+                  if (!row || row.dataset.rcLocked) return;
+                  row.dataset.rcLocked = '1';
 
-                    // Add helper text under SKU
-                    if (!row.querySelector('.rc-montering-note')) {
-                      var skuEl = null;
-                      row.querySelectorAll('span, p, small, div').forEach(function(s) {
-                        if (s.textContent.indexOf(MONTERING_SKU) !== -1) skuEl = s;
-                      });
-                      if (skuEl) {
-                        var note = document.createElement('div');
-                        note.className = 'rc-montering-note';
-                        note.textContent = 'Kvantitet synkas automatiskt med mattplattor';
-                        note.style.cssText = 'font-size:10px;color:#999;font-style:italic;margin-top:2px;';
-                        skuEl.parentNode.insertBefore(note, skuEl.nextSibling);
+                  // Hide ALL buttons (qty +/-, delete/remove)
+                  row.querySelectorAll('button').forEach(function(btn) {
+                    btn.style.cssText = 'display:none !important;';
+                  });
+                  // Also hide icon buttons and links that look like delete
+                  row.querySelectorAll('a[href*="remove"], [class*="delete"], [class*="remove"], [class*="trash"]').forEach(function(el) {
+                    el.style.cssText = 'display:none !important;';
+                  });
+                  // Make quantity input readonly and styled as plain text
+                  row.querySelectorAll('input[type="number"], input[type="text"], input:not([type])').forEach(function(inp) {
+                    inp.readOnly = true;
+                    inp.tabIndex = -1;
+                    inp.style.cssText = 'border:none !important;background:transparent !important;pointer-events:none !important;text-align:center;-moz-appearance:textfield;width:3em;';
+                  });
+                  // Hide select dropdowns for quantity
+                  row.querySelectorAll('select').forEach(function(sel) {
+                    sel.style.cssText = 'pointer-events:none !important;appearance:none !important;border:none !important;background:transparent !important;';
+                  });
+
+                  // Add helper text under product name/SKU
+                  if (!row.querySelector('.rc-montering-note')) {
+                    var skuEl = null;
+                    root.querySelectorAll ? row.querySelectorAll('span, p, small, div').forEach(function(s) {
+                      if (s.textContent.indexOf(MONTERING_SKU) !== -1 || s.textContent.indexOf('Montering') !== -1) {
+                        if (!skuEl || s.textContent.length < skuEl.textContent.length) skuEl = s;
                       }
+                    }) : null;
+                    if (skuEl) {
+                      var note = document.createElement('div');
+                      note.className = 'rc-montering-note';
+                      note.textContent = 'Synkas automatiskt med mattplattor';
+                      note.style.cssText = 'font-size:10px;color:#999;font-style:italic;margin-top:2px;';
+                      skuEl.parentNode.insertBefore(note, skuEl.nextSibling);
                     }
                   }
                 });
               });
             }
 
-            // Run tagging periodically (cart drawer may open/close)
-            setInterval(lockMonteringRows, 1000);
+            // Run periodically (cart drawer may open/close, re-render)
+            setInterval(lockMonteringRows, 800);
           }
           // ──────────────────────────────────────────────────────────────────────────
         },
       };
+      </script>
+      <!-- Force SparkLayer shadow roots to open mode so we can style cart items -->
+      <script>
+      (function() {
+        var origAttachShadow = Element.prototype.attachShadow;
+        Element.prototype.attachShadow = function(init) {
+          // Only force open for SparkLayer components (spark-*)
+          if (init && init.mode === 'closed' && this.tagName && this.tagName.toLowerCase().indexOf('spark') === 0) {
+            init = Object.assign({}, init, { mode: 'open' });
+          }
+          return origAttachShadow.call(this, init);
+        };
+      })();
       </script>
       <script async src="https://sparkcdn.io/sparkjs/taylerd/live"></script>
 
@@ -1112,6 +1141,14 @@
     --spark-product-card-pricing-font-size: 15px; /* Pricing font size */
     --spark-product-card-pricing-font-size-small: 14px; /* Pricing font size on mobile */
     --spark-product-card-select-min-height: 0; /* Set a min-height for select menu */
+  }
+
+  /* Suppress toast during silent montering sync */
+  body.rc-silent-sync spark-toast {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
 
   /* Hide default Shopify cart/buy elements for B2B (SparkLayer handles these) */
