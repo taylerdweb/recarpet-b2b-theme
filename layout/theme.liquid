@@ -854,8 +854,23 @@
             var _monteringBusy = false;
             var _monteringUserRemoved = false; // respect manual removal
 
-            // ── Silent cart update (no toast needed — Shopify's cart-notification
-            //    is permanently hidden via CSS for B2B customers) ──
+            // ── Hide SparkLayer's internal toast (inside spark-toast shadow root) ──
+            // Inject CSS into the shadow root — safe, doesn't break Lit rendering.
+            (function hideSparkToast() {
+              function inject() {
+                var toast = document.querySelector('spark-toast');
+                if (!toast || !toast.shadowRoot) return false;
+                var s = document.createElement('style');
+                s.textContent = '[data-theme] { display: none !important; }';
+                toast.shadowRoot.appendChild(s);
+                return true;
+              }
+              if (!inject()) {
+                var poll = setInterval(function() { if (inject()) clearInterval(poll); }, 500);
+              }
+            })();
+
+            // ── Silent cart update ──
             function silentUpdateCart(payload) {
               _monteringBusy = true;
               return _origSparkUpdateCart(payload).then(function(r) {
