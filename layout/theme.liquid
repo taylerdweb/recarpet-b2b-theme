@@ -800,8 +800,6 @@
           setTimeout(function() { clearInterval(fakPoll); }, 120000);
 
           // ── Montering-tillval: auto-add vid köp ────────────────────────────────
-          // Variant-ID hämtas automatiskt via Liquid (all_products lookup)
-          var MONTERING_VARIANT_ID = {{ all_products['montering-av-mattplattor'].selected_or_first_available_variant.id | default: 'null' }};
           var MONTERING_PRICE_PER_M2 = 45;
 
           var addonEl = document.getElementById('montering-addon');
@@ -839,63 +837,50 @@
             checkboxEl.addEventListener('change', updateMonteringSubtotal);
             setInterval(updateMonteringSubtotal, 1000);
 
-            // ── Auto-add montering vid köp via fetch-interceptor ──
-            // Interceptar window.fetch för att fånga SparkLayer:s egna cart/add-anrop.
-            // Fungerar oavsett SparkLayer:s interna DOM-struktur eller knapp-tagg.
-            if (MONTERING_VARIANT_ID) {
-              var _origFetch = window.fetch;
-              var _monteringBusy = false;
+            // ── Auto-add montering via SparkLayer API ──
+            // Wraps spark._updateCart to detect when a product is added from PDP,
+            // then piggybacks a montering item using SparkLayer's own cart format:
+            // { products: [{ sku, adjustQuantity }] }
+            var MONTERING_SKU = 'RC-SERVICE-MONTERING';
+            var _origSparkUpdateCart = window.spark._updateCart.bind(window.spark);
+            var _monteringBusy = false;
 
-              window.fetch = function(resource, init) {
-                var urlStr = (typeof resource === 'string') ? resource
-                           : (resource && resource.url) ? resource.url : '';
+            window.spark._updateCart = function(payload, t, n) {
+              var result = _origSparkUpdateCart(payload, t, n);
 
-                // Detektera SparkLayer:s cart/add-anrop (men inte vårt eget monteringsanrop)
-                var isSparkCartAdd = (urlStr.indexOf('/cart/add') !== -1)
-                                  && !_monteringBusy;
+              // Only trigger when checkbox is checked, not busy, and products exist
+              if (!_monteringBusy && checkboxEl && checkboxEl.checked
+                  && payload && payload.products && payload.products.length > 0) {
 
-                var result = _origFetch.apply(this, arguments);
+                // Ignore if this call is our own montering add
+                var isOwnCall = payload.products.length === 1
+                             && payload.products[0].sku === MONTERING_SKU;
+                if (isOwnCall) return result;
 
-                if (isSparkCartAdd && checkboxEl && checkboxEl.checked) {
-                  result.then(function(response) {
-                    if (!response.ok) return response;
+                // Wait for the main add to complete, then add montering
+                if (result && typeof result.then === 'function') {
+                  result.then(function() {
                     var qty = getSparkQuantity();
-                    if (qty <= 0) return response;
+                    if (qty <= 0) return;
 
                     _monteringBusy = true;
-                    console.log('[reCarpet] SparkLayer cart/add detected — lägger till montering ×' + qty);
+                    console.log('[reCarpet] Lägger till montering ×' + qty + ' m² via SparkLayer API');
 
-                    _origFetch('/cart/add.js', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        items: [{ id: MONTERING_VARIANT_ID, quantity: qty }]
-                      })
-                    })
-                    .then(function(r) { return r.json(); })
-                    .then(function(data) {
-                      console.log('[reCarpet] Montering tillagd:', qty, 'm²', data);
+                    _origSparkUpdateCart({
+                      products: [{ sku: MONTERING_SKU, adjustQuantity: qty }]
+                    }).then(function() {
+                      console.log('[reCarpet] Montering tillagd i SparkLayer-varukorgen');
                       _monteringBusy = false;
-                      // Försök uppdatera SparkLayer:s kundvagn
-                      if (window.Spark && window.Spark.cart) {
-                        if (window.Spark.cart.refresh) window.Spark.cart.refresh();
-                        else if (window.Spark.cart.reload) window.Spark.cart.reload();
-                      }
-                    })
-                    .catch(function(err) {
+                    }).catch(function(err) {
                       console.warn('[reCarpet] Montering kunde inte läggas till:', err);
                       _monteringBusy = false;
                     });
-
-                    return response;
                   });
                 }
+              }
 
-                return result;
-              };
-            } else {
-              console.warn('[reCarpet] Montering-produkt ej hittad — kör setup-services.py');
-            }
+              return result;
+            };
           }
           // ──────────────────────────────────────────────────────────────────────────
         },
