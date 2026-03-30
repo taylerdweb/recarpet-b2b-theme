@@ -854,18 +854,31 @@
             var _monteringBusy = false;
             var _monteringUserRemoved = false; // respect manual removal
 
-            // ── Toggleable toast suppression via data attribute on spark-toast ──
-            // CSS inside shadow root hides toast when host has data-rc-suppress.
-            // Default: suppressed. Briefly allow for PDP adds only.
+            // ── Toggleable toast: add/remove a <style> in spark-toast shadow root ──
+            // Style present = toast hidden. Remove style = toast visible.
+            var _toastHideStyle = null;
+            var _toastShadowRoot = null;
+
+            function suppressToast() {
+              if (_toastShadowRoot && _toastHideStyle && !_toastHideStyle.parentNode) {
+                _toastShadowRoot.appendChild(_toastHideStyle);
+              }
+            }
+            function allowToast() {
+              if (_toastHideStyle && _toastHideStyle.parentNode) {
+                _toastHideStyle.remove();
+              }
+            }
+
             (function initToastToggle() {
               function setup() {
                 var toast = document.querySelector('spark-toast');
                 if (!toast || !toast.shadowRoot) return false;
-                var s = document.createElement('style');
-                s.textContent = ':host([data-rc-suppress]) [data-theme] { display: none !important; }';
-                toast.shadowRoot.appendChild(s);
+                _toastShadowRoot = toast.shadowRoot;
+                _toastHideStyle = document.createElement('style');
+                _toastHideStyle.textContent = '[data-theme] { display: none !important; }';
                 // Suppress by default
-                toast.setAttribute('data-rc-suppress', '');
+                _toastShadowRoot.appendChild(_toastHideStyle);
                 return true;
               }
               if (!setup()) {
@@ -953,15 +966,14 @@
 
                 // For PDP adds: briefly allow toast, then re-suppress before montering
                 if (isPDPAdd) {
-                  var toast = document.querySelector('spark-toast');
-                  if (toast) toast.removeAttribute('data-rc-suppress');
+                  allowToast();
 
                   var result = _origSparkUpdateCart(payload, t, n);
 
                   if (result && typeof result.then === 'function') {
                     result.then(function() {
-                      // Re-suppress toast BEFORE adding montering
-                      if (toast) toast.setAttribute('data-rc-suppress', '');
+                      // Re-suppress BEFORE adding montering
+                      suppressToast();
 
                       // Add montering if checkbox checked
                       if (checkboxEl && checkboxEl.checked) {
