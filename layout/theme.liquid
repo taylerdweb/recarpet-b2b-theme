@@ -926,7 +926,41 @@
 
             // ── Wrap _updateCart to trigger sync after every cart change ──
             window.spark._updateCart = function(payload, t, n) {
+
+              // Classify this call: is it a PDP add or a cart-internal change?
+              var isPDPAdd = false;
+              if (checkboxEl && payload && payload.products) {
+                isPDPAdd = payload.products.some(function(p) {
+                  return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
+                });
+              }
+
+              // Also treat any add WITHOUT the cart drawer open as a PDP add
+              var drawer = document.querySelector('spark-drawer');
+              var drawerOpen = drawer && drawer.shadowRoot &&
+                drawer.shadowRoot.querySelector('.opacity-100');
+              if (!drawerOpen && payload && payload.products) {
+                var hasPositiveAdjust = payload.products.some(function(p) {
+                  return p.adjustQuantity && p.adjustQuantity > 0;
+                });
+                if (hasPositiveAdjust) isPDPAdd = true;
+              }
+
+              // For cart-internal changes (qty edits, removals): suppress toast
+              if (!isPDPAdd && !_monteringBusy) {
+                blockToast();
+              }
+
               var result = _origSparkUpdateCart(payload, t, n);
+
+              // Restore toast after cart-internal changes
+              if (!isPDPAdd && !_monteringBusy) {
+                if (result && typeof result.then === 'function') {
+                  result.then(function() { setTimeout(unblockToast, 2500); });
+                } else {
+                  setTimeout(unblockToast, 2500);
+                }
+              }
 
               // Detect if user is manually removing montering
               if (payload && payload.products) {
@@ -949,34 +983,27 @@
               if (isOwnCall) return result;
 
               // On PDP add with checkbox: add montering immediately
-              if (checkboxEl && checkboxEl.checked && payload && payload.products) {
-                var isNewAdd = payload.products.some(function(p) {
-                  return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
+              if (isPDPAdd && checkboxEl && checkboxEl.checked) {
+                _monteringUserRemoved = false;
+                var addedQty = 0;
+                payload.products.forEach(function(p) {
+                  if (p.adjustQuantity > 0 && p.sku !== MONTERING_SKU) addedQty += p.adjustQuantity;
                 });
 
-                if (isNewAdd) {
-                  _monteringUserRemoved = false; // reset if user adds with checkbox
-                  var addedQty = 0;
-                  payload.products.forEach(function(p) {
-                    if (p.adjustQuantity > 0 && p.sku !== MONTERING_SKU) addedQty += p.adjustQuantity;
-                  });
-
-                  if (addedQty > 0 && result && typeof result.then === 'function') {
-                    result.then(function() {
-                      console.log('[reCarpet] Lägger till montering ×' + addedQty + ' m²');
-                      silentUpdateCart({
-                        products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }]
-                      });
+                if (addedQty > 0 && result && typeof result.then === 'function') {
+                  result.then(function() {
+                    console.log('[reCarpet] Lägger till montering ×' + addedQty + ' m²');
+                    silentUpdateCart({
+                      products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }]
                     });
-                  }
-                  return result;
+                  });
                 }
+                return result;
               }
 
               // For all other cart changes (qty edits, removals): sync after completion
               if (result && typeof result.then === 'function') {
                 result.then(function() {
-                  // Small delay to let SparkLayer's internal state settle
                   setTimeout(syncMonteringWithCart, 800);
                 });
               }
