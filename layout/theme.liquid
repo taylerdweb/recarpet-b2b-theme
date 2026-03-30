@@ -848,26 +848,40 @@
             window.spark._updateCart = function(payload, t, n) {
               var result = _origSparkUpdateCart(payload, t, n);
 
-              // Only trigger when checkbox is checked, not busy, and products exist
+              // Only trigger on PDP add-to-cart, not cart edits/deletions
+              // PDP add uses adjustQuantity > 0; cart removal uses adjustQuantity < 0 or quantity = 0
               if (!_monteringBusy && checkboxEl && checkboxEl.checked
                   && payload && payload.products && payload.products.length > 0) {
 
                 // Ignore if this call is our own montering add
-                var isOwnCall = payload.products.length === 1
-                             && payload.products[0].sku === MONTERING_SKU;
+                var isOwnCall = payload.products.some(function(p) {
+                  return p.sku === MONTERING_SKU;
+                });
                 if (isOwnCall) return result;
 
-                // Wait for the main add to complete, then add montering
+                // Only trigger on genuine PDP adds (adjustQuantity > 0), not cart edits
+                var isNewAdd = payload.products.some(function(p) {
+                  return p.adjustQuantity && p.adjustQuantity > 0;
+                });
+                if (!isNewAdd) return result;
+
+                // Get the quantity being added (from the PDP payload)
+                var addedQty = 0;
+                payload.products.forEach(function(p) {
+                  if (p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU) {
+                    addedQty += p.adjustQuantity;
+                  }
+                });
+                if (addedQty <= 0) return result;
+
+                // Wait for the main add to complete, then add montering with matching qty
                 if (result && typeof result.then === 'function') {
                   result.then(function() {
-                    var qty = getSparkQuantity();
-                    if (qty <= 0) return;
-
                     _monteringBusy = true;
-                    console.log('[reCarpet] Lägger till montering ×' + qty + ' m² via SparkLayer API');
+                    console.log('[reCarpet] Lägger till montering ×' + addedQty + ' m² via SparkLayer API');
 
                     _origSparkUpdateCart({
-                      products: [{ sku: MONTERING_SKU, adjustQuantity: qty }]
+                      products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }]
                     }).then(function() {
                       console.log('[reCarpet] Montering tillagd i SparkLayer-varukorgen');
                       _monteringBusy = false;
