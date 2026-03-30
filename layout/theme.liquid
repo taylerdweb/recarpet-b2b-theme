@@ -837,64 +837,169 @@
             checkboxEl.addEventListener('change', updateMonteringSubtotal);
             setInterval(updateMonteringSubtotal, 1000);
 
-            // ── Auto-add montering via SparkLayer API ──
-            // Wraps spark._updateCart to detect when a product is added from PDP,
-            // then piggybacks a montering item using SparkLayer's own cart format:
-            // { products: [{ sku, adjustQuantity }] }
+            // ── Montering bundling: auto-sync montering quantity with carpet products ──
+            //
+            // Strategy: Montering is a separate line item (SparkLayer requires it) but
+            // we keep it perfectly synced with the total m² of carpet products:
+            //
+            // 1. ON PDP ADD: if checkbox checked, also add matching montering qty
+            // 2. ON ANY CART CHANGE: poll the cart and sync montering qty to total carpet m²
+            //    - If carpet qty changes → montering qty updates to match
+            //    - If all carpets removed → montering auto-removed
+            //    - If user manually deletes montering → it stays deleted (respected)
+            // 3. CSS: hide +/- controls on montering row so user can't manually change qty
+            //
             var MONTERING_SKU = 'RC-SERVICE-MONTERING';
             var _origSparkUpdateCart = window.spark._updateCart.bind(window.spark);
             var _monteringBusy = false;
+            var _monteringUserRemoved = false; // respect manual removal
 
+            // ── Helper: get total carpet m² and montering qty from cart ──
+            function syncMonteringWithCart() {
+              if (_monteringBusy || _monteringUserRemoved) return;
+
+              window.spark.getCart().then(function(cart) {
+                if (!cart || !cart.items) return;
+
+                var carpetQty = 0;
+                var monteringQty = 0;
+
+                cart.items.forEach(function(item) {
+                  if (item.sku === MONTERING_SKU) {
+                    monteringQty = item.quantity;
+                  } else if (item.sku && item.sku.indexOf('RC-SERVICE') === -1) {
+                    // Count all non-service products as carpet m²
+                    carpetQty += item.quantity;
+                  }
+                });
+
+                // If no carpets left, remove montering
+                if (carpetQty === 0 && monteringQty > 0) {
+                  _monteringBusy = true;
+                  console.log('[reCarpet] Inga mattplattor kvar — tar bort montering');
+                  _origSparkUpdateCart({
+                    products: [{ sku: MONTERING_SKU, quantity: 0 }]
+                  }).then(function() { _monteringBusy = false; })
+                    .catch(function() { _monteringBusy = false; });
+                  return;
+                }
+
+                // If carpet qty differs from montering qty, sync
+                if (carpetQty > 0 && monteringQty !== carpetQty) {
+                  _monteringBusy = true;
+                  var diff = carpetQty - monteringQty;
+                  console.log('[reCarpet] Synkar montering: ' + monteringQty + ' → ' + carpetQty + ' m²');
+                  _origSparkUpdateCart({
+                    products: [{ sku: MONTERING_SKU, adjustQuantity: diff }]
+                  }).then(function() { _monteringBusy = false; })
+                    .catch(function() { _monteringBusy = false; });
+                }
+              }).catch(function() {});
+            }
+
+            // ── Wrap _updateCart to trigger sync after every cart change ──
             window.spark._updateCart = function(payload, t, n) {
               var result = _origSparkUpdateCart(payload, t, n);
 
-              // Only trigger on PDP add-to-cart, not cart edits/deletions
-              // PDP add uses adjustQuantity > 0; cart removal uses adjustQuantity < 0 or quantity = 0
-              if (!_monteringBusy && checkboxEl && checkboxEl.checked
-                  && payload && payload.products && payload.products.length > 0) {
-
-                // Ignore if this call is our own montering add
-                var isOwnCall = payload.products.some(function(p) {
-                  return p.sku === MONTERING_SKU;
+              // Detect if user is manually removing montering
+              if (payload && payload.products) {
+                var isMonteringRemoval = payload.products.some(function(p) {
+                  return p.sku === MONTERING_SKU && (p.quantity === 0 || (p.adjustQuantity && p.adjustQuantity < 0));
                 });
-                if (isOwnCall) return result;
-
-                // Only trigger on genuine PDP adds (adjustQuantity > 0), not cart edits
-                var isNewAdd = payload.products.some(function(p) {
-                  return p.adjustQuantity && p.adjustQuantity > 0;
-                });
-                if (!isNewAdd) return result;
-
-                // Get the quantity being added (from the PDP payload)
-                var addedQty = 0;
-                payload.products.forEach(function(p) {
-                  if (p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU) {
-                    addedQty += p.adjustQuantity;
-                  }
-                });
-                if (addedQty <= 0) return result;
-
-                // Wait for the main add to complete, then add montering with matching qty
-                if (result && typeof result.then === 'function') {
-                  result.then(function() {
-                    _monteringBusy = true;
-                    console.log('[reCarpet] Lägger till montering ×' + addedQty + ' m² via SparkLayer API');
-
-                    _origSparkUpdateCart({
-                      products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }]
-                    }).then(function() {
-                      console.log('[reCarpet] Montering tillagd i SparkLayer-varukorgen');
-                      _monteringBusy = false;
-                    }).catch(function(err) {
-                      console.warn('[reCarpet] Montering kunde inte läggas till:', err);
-                      _monteringBusy = false;
-                    });
-                  });
+                if (isMonteringRemoval && !_monteringBusy) {
+                  _monteringUserRemoved = true;
+                  console.log('[reCarpet] Användaren tog bort montering manuellt — respekterar det');
+                  return result;
                 }
+              }
+
+              // Skip sync for our own calls
+              if (_monteringBusy) return result;
+
+              // Ignore if this call only touches montering
+              var isOwnCall = payload && payload.products &&
+                payload.products.length === 1 && payload.products[0].sku === MONTERING_SKU;
+              if (isOwnCall) return result;
+
+              // On PDP add with checkbox: add montering immediately
+              if (checkboxEl && checkboxEl.checked && payload && payload.products) {
+                var isNewAdd = payload.products.some(function(p) {
+                  return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
+                });
+
+                if (isNewAdd) {
+                  _monteringUserRemoved = false; // reset if user adds with checkbox
+                  var addedQty = 0;
+                  payload.products.forEach(function(p) {
+                    if (p.adjustQuantity > 0 && p.sku !== MONTERING_SKU) addedQty += p.adjustQuantity;
+                  });
+
+                  if (addedQty > 0 && result && typeof result.then === 'function') {
+                    result.then(function() {
+                      _monteringBusy = true;
+                      console.log('[reCarpet] Lägger till montering ×' + addedQty + ' m²');
+                      _origSparkUpdateCart({
+                        products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }]
+                      }).then(function() { _monteringBusy = false; })
+                        .catch(function() { _monteringBusy = false; });
+                    });
+                  }
+                  return result;
+                }
+              }
+
+              // For all other cart changes (qty edits, removals): sync after completion
+              if (result && typeof result.then === 'function') {
+                result.then(function() {
+                  // Small delay to let SparkLayer's internal state settle
+                  setTimeout(syncMonteringWithCart, 800);
+                });
               }
 
               return result;
             };
+
+            // ── CSS: lock montering row in cart (hide +/- buttons, grey out qty) ──
+            var monteringStyle = document.createElement('style');
+            monteringStyle.textContent = [
+              // Target the montering row in SparkLayer's cart by SKU text content
+              // SparkLayer renders cart items; we use a MutationObserver to add a class
+            ].join('');
+            document.head.appendChild(monteringStyle);
+
+            // ── MutationObserver: tag montering rows with data attribute for CSS ──
+            function tagMonteringRows() {
+              // Search all shadow roots and regular DOM for montering SKU text
+              var allEls = document.querySelectorAll('*');
+              allEls.forEach(function(el) {
+                var root = el.shadowRoot || el;
+                if (!root.querySelectorAll) return;
+                root.querySelectorAll('[class*="cart-item"], [class*="line-item"], tr, li').forEach(function(row) {
+                  if (row.textContent.indexOf(MONTERING_SKU) !== -1 && !row.dataset.monteringLocked) {
+                    row.dataset.monteringLocked = '1';
+                    // Hide quantity buttons but keep the number visible
+                    row.querySelectorAll('button, [class*="minus"], [class*="plus"], [class*="delete"], [class*="remove"]').forEach(function(btn) {
+                      if (btn.closest('[data-montering-locked]')) {
+                        btn.style.opacity = '0.3';
+                        btn.style.pointerEvents = 'none';
+                      }
+                    });
+                    // Add a note
+                    var note = row.querySelector('[class*="sku"], [class*="name"]');
+                    if (note && !note.querySelector('.montering-note')) {
+                      var span = document.createElement('span');
+                      span.className = 'montering-note';
+                      span.textContent = ' (följer mattkörningen)';
+                      span.style.cssText = 'font-size:11px;color:#888;font-style:italic;';
+                      note.appendChild(span);
+                    }
+                  }
+                });
+              });
+            }
+
+            // Run tagging periodically when cart drawer is open
+            setInterval(tagMonteringRows, 1500);
           }
           // ──────────────────────────────────────────────────────────────────────────
         },
