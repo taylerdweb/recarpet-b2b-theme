@@ -575,8 +575,53 @@
         onReady: async function (spark) {
           var SPARK_ELS = 'spark-pdp, spark-product-price, spark-product-card';
 
+          // ── /m² injection via CSS ::after (no layout shift) ──
+          // Inject a <style> into each spark element's shadow root so that
+          // price <p> tags always show "/m²" via CSS — no DOM manipulation needed.
+          var M2_STYLE_CSS = [
+            // Price paragraphs inside .price-summary
+            '.price-summary p::after { content: "/m\\00B2"; margin-left: 2px; }',
+            // Rename "Qty" table header
+            'th { font-size: 0; }',
+            'th::after { font-size: 14px; }',
+          ].join('\n');
+
+          // Full CSS for shadow roots — targets short price <p> elements
+          // SparkLayer uses Tailwind classes like text-h4, text-h5, font-medium etc for prices
+          var M2_SHADOW_CSS = [
+            // Price summary paragraphs
+            '.price-summary p::after { content: " /m\\00B2"; }',
+            // Single-variant price display (p tags with specific Tailwind price classes)
+            'p.text-h4::after, p.text-h5::after { content: " /m\\00B2"; }',
+            // Price break table header
+            'th.text-left:first-child { font-size: 0; visibility: hidden; position: relative; }',
+            'th.text-left:first-child::after { content: "m\\00B2"; font-size: 14px; visibility: visible; }',
+          ].join('\n');
+
+          function injectM2Style(el) {
+            var root = el.shadowRoot;
+            if (!root || root.querySelector('[data-rc-m2-style]')) return;
+            var style = document.createElement('style');
+            style.setAttribute('data-rc-m2-style', '1');
+            style.textContent = M2_SHADOW_CSS;
+            root.appendChild(style);
+          }
+
+          // Also patch the "Qty" header via DOM for shadow roots that don't use th.text-left
+          function patchQtyHeaders(root) {
+            root.querySelectorAll('th').forEach(function (th) {
+              if (th.textContent.trim() === 'Qty' && !th.dataset.rcPatched) {
+                th.textContent = 'm\u00B2';
+                th.dataset.rcPatched = '1';
+              }
+            });
+          }
+
+          // Fallback: DOM-based /m² append for elements where CSS ::after doesn't work
           function appendM2(p) {
             if (p.dataset.m2) return;
+            // Skip if already has /m² (from CSS or previous patch)
+            if (p.textContent.indexOf('/m\u00B2') !== -1) return;
             var text = p.textContent.trim();
             if (!text) return;
             p.dataset.m2 = '1';
@@ -587,14 +632,8 @@
           }
 
           function patchRoot(root, insideSpark) {
-            // Rename any <th> with text "Qty" (product page price-break table)
-            root.querySelectorAll('th').forEach(function (th) {
-              if (th.textContent.trim() === 'Qty') th.textContent = 'm\u00B2';
-            });
-            // Product page: patch by known class
+            patchQtyHeaders(root);
             root.querySelectorAll('.price-summary p').forEach(appendM2);
-            // Inside a spark element: scan ALL short <p> tags that contain a digit
-            // Single-variant products show plain "271,38 kr" — not "From: X kr"
             if (insideSpark) {
               root.querySelectorAll('p').forEach(function (p) {
                 var t = p.textContent.trim();
@@ -604,17 +643,27 @@
           }
 
           function patchElement(el) {
+            // Prefer CSS injection (instant, no flash)
+            injectM2Style(el);
+            // Fallback DOM patching for edge cases
             patchRoot(el, true);
-            if (el.shadowRoot) patchRoot(el.shadowRoot, true);
+            if (el.shadowRoot) {
+              patchQtyHeaders(el.shadowRoot);
+            }
           }
 
           function watchElement(el) {
             if (el.dataset.m2watched) return;
             el.dataset.m2watched = '1';
             patchElement(el);
-            var obs = new MutationObserver(function () { patchElement(el); });
-            obs.observe(el, { childList: true, subtree: true });
-            setTimeout(function () { obs.disconnect(); }, 10000);
+            if (el.shadowRoot) {
+              var obs = new MutationObserver(function () {
+                injectM2Style(el); // Re-inject if shadow root was replaced
+                patchQtyHeaders(el.shadowRoot);
+              });
+              obs.observe(el.shadowRoot, { childList: true, subtree: true });
+              setTimeout(function () { obs.disconnect(); }, 10000);
+            }
           }
 
           // Set default quantity to 5 on all product cards
@@ -647,7 +696,8 @@
           var pollCount = 0;
           var poll = setInterval(function () {
             document.querySelectorAll(SPARK_ELS).forEach(function (el) {
-              if (el.shadowRoot) patchRoot(el.shadowRoot, true);
+              injectM2Style(el);
+              if (el.shadowRoot) patchQtyHeaders(el.shadowRoot);
             });
             if (++pollCount >= 20) clearInterval(poll); // stop after 10s
           }, 500);
@@ -1092,6 +1142,9 @@
     --spark-border-radius-default: 0; /* Default border radius */
     --spark-drawer-max-width: 700px; /* Width of overlay */
     --spark-drawer-max-width-wide: 1000px; /* Width of overlay in maximised view */
+    --spark-spinner-default-color: var(--b2b-brand-color); /* Loading spinner colour */
+    --spark-loading-background-color: #f5f5f5; /* Loading skeleton colour */
+    --spark-loading-background-overlay-product: 255, 255, 255; /* Loading overlay on PDP (white) */
   
     /* Font sizes */
     --spark-font-default-size: 14px; /* Default font size */
@@ -1141,6 +1194,12 @@
     --spark-product-card-select-min-height: 0; /* Set a min-height for select menu */
   }
 
+
+  /* Reserve space for spark-pdp and prevent layout shift during loading */
+  spark-pdp {
+    display: block;
+    min-height: 120px; /* Reserve space to prevent jump when SparkLayer loads */
+  }
 
   /* Hide default Shopify cart/buy elements for B2B (SparkLayer handles these) */
   .cart-count-bubble,
