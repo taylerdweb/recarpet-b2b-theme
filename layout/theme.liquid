@@ -854,30 +854,14 @@
             var _monteringBusy = false;
             var _monteringUserRemoved = false; // respect manual removal
 
-            // ── Toast suppression: hide spark-toast element while cart drawer is open ──
-            // Uses official SparkLayer method: spark-toast { display: none }
-            // Applied directly on the custom element (regular DOM, no shadow root needed)
-            function hideToast() {
-              var el = document.querySelector('spark-toast');
-              if (el) el.style.setProperty('display', 'none', 'important');
-            }
-            function showToast() {
-              var el = document.querySelector('spark-toast');
-              if (el) el.style.removeProperty('display');
-            }
-
-            // ── Silent cart update (always hides toast) ──
+            // ── Silent cart update ──
             function silentUpdateCart(payload) {
               _monteringBusy = true;
-              hideToast();
               return _origSparkUpdateCart(payload).then(function(r) {
                 _monteringBusy = false;
-                // Keep toast hidden briefly so SparkLayer's animation doesn't flash
-                setTimeout(showToast, 500);
                 return r;
               }).catch(function(err) {
                 _monteringBusy = false;
-                setTimeout(showToast, 500);
               });
             }
 
@@ -938,19 +922,11 @@
                   payload.products.length === 1 && payload.products[0].sku === MONTERING_SKU;
                 if (isOwnCall) return _origSparkUpdateCart(payload, t, n);
 
-                // If cart drawer is open, hide toast for this update
-                var drawer = document.querySelector('spark-drawer');
-                var drawerOpen = drawer && drawer.offsetHeight > 0;
-                if (drawerOpen) hideToast();
-
                 // Call original
                 var result = _origSparkUpdateCart(payload, t, n);
 
                 if (result && typeof result.then === 'function') {
                   result.then(function() {
-                    // Restore toast after cart-internal update completes
-                    if (drawerOpen) setTimeout(showToast, 500);
-
                     // If this was a PDP add (adjustQuantity > 0), add montering if checkbox checked
                     var hasPDPAdd = payload && payload.products && payload.products.some(function(p) {
                       return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
@@ -1175,7 +1151,8 @@
   quick-add-bulk,
   cart-drawer,
   cart-notification,
-  #cart-notification {
+  #cart-notification,
+  spark-toast {
     display: none !important;
   }
 
