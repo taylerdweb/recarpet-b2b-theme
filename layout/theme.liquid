@@ -915,11 +915,11 @@
                   return;
                 }
 
-                // If carpet qty differs from montering qty, sync
+                // If carpet qty differs from montering qty, sync using absolute quantity
+                // (adjustQuantity triggers "product added" toast, quantity just sets it)
                 if (carpetQty > 0 && monteringQty !== carpetQty) {
-                  var diff = carpetQty - monteringQty;
                   console.log('[reCarpet] Synkar montering: ' + monteringQty + ' → ' + carpetQty + ' m²');
-                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: diff }] });
+                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: carpetQty }] });
                 }
               }).catch(function() {});
             }
