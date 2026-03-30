@@ -915,7 +915,9 @@
               });
             }
 
-            // ── Helper: get total carpet m² and montering qty from cart ──
+            // ── Helper: sync montering qty with total carpet m² ──
+            // ONLY updates montering if it already exists in the cart.
+            // Never creates montering — that's only done on PDP add with checkbox.
             function syncMonteringWithCart() {
               if (_monteringBusy || _monteringUserRemoved) return;
 
@@ -933,16 +935,18 @@
                   }
                 });
 
+                // If montering is not in the cart, do nothing — never auto-create it
+                if (monteringQty === 0) return;
+
                 // If no carpets left, remove montering
-                if (carpetQty === 0 && monteringQty > 0) {
+                if (carpetQty === 0) {
                   console.log('[reCarpet] Inga mattplattor kvar — tar bort montering');
                   silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: 0 }] });
                   return;
                 }
 
-                // If carpet qty differs from montering qty, sync using absolute quantity
-                // (adjustQuantity triggers "product added" toast, quantity just sets it)
-                if (carpetQty > 0 && monteringQty !== carpetQty) {
+                // If carpet qty differs from montering qty, sync
+                if (monteringQty !== carpetQty) {
                   console.log('[reCarpet] Synkar montering: ' + monteringQty + ' → ' + carpetQty + ' m²');
                   silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: carpetQty }] });
                 }
