@@ -855,19 +855,38 @@
             var _monteringUserRemoved = false; // respect manual removal
 
             // ── Helper: suppress toast during silent cart updates ──
+            // Inject a blocking <style> directly into spark-toast's shadow root
+            var _toastBlockStyle = null;
+            function blockToast() {
+              var toast = document.querySelector('spark-toast');
+              if (toast && toast.shadowRoot && !_toastBlockStyle) {
+                _toastBlockStyle = document.createElement('style');
+                _toastBlockStyle.textContent = '* { display: none !important; visibility: hidden !important; }';
+                toast.shadowRoot.appendChild(_toastBlockStyle);
+              }
+              // Also hide the host element itself
+              if (toast) toast.style.cssText = 'display:none !important;';
+            }
+            function unblockToast() {
+              if (_toastBlockStyle && _toastBlockStyle.parentNode) {
+                _toastBlockStyle.parentNode.removeChild(_toastBlockStyle);
+              }
+              _toastBlockStyle = null;
+              var toast = document.querySelector('spark-toast');
+              if (toast) toast.style.cssText = '';
+            }
+
             function silentUpdateCart(payload) {
-              // Use CSS class on body to hide toast — more reliable than element hiding
-              // because SparkLayer may recreate or re-render the toast element
-              document.body.classList.add('rc-silent-sync');
+              blockToast();
               _monteringBusy = true;
               return _origSparkUpdateCart(payload).then(function(r) {
                 _monteringBusy = false;
-                // Keep class for 2s to catch delayed toast rendering
-                setTimeout(function() { document.body.classList.remove('rc-silent-sync'); }, 2000);
+                // Keep toast blocked for 2.5s to catch delayed rendering
+                setTimeout(unblockToast, 2500);
                 return r;
               }).catch(function(err) {
                 _monteringBusy = false;
-                setTimeout(function() { document.body.classList.remove('rc-silent-sync'); }, 2000);
+                setTimeout(unblockToast, 2500);
               });
             }
 
@@ -967,75 +986,81 @@
 
             // ── Hide montering qty controls & delete button in cart ──
             // Shadow roots are forced open via attachShadow override above.
-            // Recursively collect all shadow roots in the DOM tree.
-            function collectAllRoots(root, list) {
-              if (!root || !root.querySelectorAll) return;
-              list.push(root);
-              root.querySelectorAll('*').forEach(function(el) {
-                if (el.shadowRoot) collectAllRoots(el.shadowRoot, list);
-              });
-            }
 
             function lockMonteringRows() {
-              var roots = [];
-              collectAllRoots(document, roots);
+              var drawer = document.querySelector('spark-drawer');
+              if (!drawer || !drawer.shadowRoot) return;
+              var sr = drawer.shadowRoot;
 
-              roots.forEach(function(root) {
-                // Find any element containing the montering SKU or product name
-                var allText = root.querySelectorAll('span, p, div, td, li, a, small, h1, h2, h3, h4, h5, h6');
-                allText.forEach(function(el) {
-                  var txt = el.textContent.trim();
-                  if (txt !== MONTERING_SKU && txt !== 'Montering av mattplattor' &&
-                      txt.indexOf('RC-SERVICE-MONTERING') === -1) return;
-                  // Ensure this is a leaf-ish match (not a huge parent container)
-                  if (el.children.length > 3) return;
+              sr.querySelectorAll('p, span, small').forEach(function(el) {
+                if (el.textContent.indexOf('RC-SERVICE-MONTERING') === -1) return;
+                var row = el.closest('.py-4');
+                if (!row || row.dataset.rcLocked) return;
+                row.dataset.rcLocked = '1';
 
-                  // Walk up to the cart item row
-                  var row = el.closest('[class*="item"], [class*="row"], [class*="line"], [class*="cart"], li, tr, article');
-                  if (!row || row.dataset.rcLocked) return;
-                  row.dataset.rcLocked = '1';
-
-                  // Hide ALL buttons (qty +/-, delete/remove)
-                  row.querySelectorAll('button').forEach(function(btn) {
+                // Hide qty/delete buttons (keep product name button which has text)
+                row.querySelectorAll('button').forEach(function(btn) {
+                  if (btn.querySelector('svg') || btn.textContent.trim() === '') {
                     btn.style.cssText = 'display:none !important;';
-                  });
-                  // Also hide icon buttons and links that look like delete
-                  row.querySelectorAll('a[href*="remove"], [class*="delete"], [class*="remove"], [class*="trash"]').forEach(function(el) {
-                    el.style.cssText = 'display:none !important;';
-                  });
-                  // Make quantity input readonly and styled as plain text
-                  row.querySelectorAll('input[type="number"], input[type="text"], input:not([type])').forEach(function(inp) {
-                    inp.readOnly = true;
-                    inp.tabIndex = -1;
-                    inp.style.cssText = 'border:none !important;background:transparent !important;pointer-events:none !important;text-align:center;-moz-appearance:textfield;width:3em;';
-                  });
-                  // Hide select dropdowns for quantity
-                  row.querySelectorAll('select').forEach(function(sel) {
-                    sel.style.cssText = 'pointer-events:none !important;appearance:none !important;border:none !important;background:transparent !important;';
-                  });
-
-                  // Add helper text under product name/SKU
-                  if (!row.querySelector('.rc-montering-note')) {
-                    var skuEl = null;
-                    root.querySelectorAll ? row.querySelectorAll('span, p, small, div').forEach(function(s) {
-                      if (s.textContent.indexOf(MONTERING_SKU) !== -1 || s.textContent.indexOf('Montering') !== -1) {
-                        if (!skuEl || s.textContent.length < skuEl.textContent.length) skuEl = s;
-                      }
-                    }) : null;
-                    if (skuEl) {
-                      var note = document.createElement('div');
-                      note.className = 'rc-montering-note';
-                      note.textContent = 'Synkas automatiskt med mattplattor';
-                      note.style.cssText = 'font-size:10px;color:#999;font-style:italic;margin-top:2px;';
-                      skuEl.parentNode.insertBefore(note, skuEl.nextSibling);
-                    }
                   }
                 });
+
+                // Hide the quantity control wrapper, show qty as plain text
+                var qtyWrapper = row.querySelector('.mt-2');
+                if (qtyWrapper && qtyWrapper.querySelector('input')) {
+                  var inp = qtyWrapper.querySelector('input');
+                  var qty = inp ? inp.value : '';
+                  var qtyText = document.createElement('div');
+                  qtyText.className = 'rc-montering-qty';
+                  qtyText.textContent = qty + ' m\u00B2';
+                  qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
+                  qtyWrapper.parentNode.insertBefore(qtyText, qtyWrapper);
+                  qtyWrapper.style.cssText = 'display:none !important;';
+                }
+
+                // Add helper text under product header
+                if (!row.querySelector('.rc-montering-note')) {
+                  var header = row.querySelector('header');
+                  if (header) {
+                    var note = document.createElement('div');
+                    note.className = 'rc-montering-note';
+                    note.textContent = 'Synkas automatiskt med dina mattplattor';
+                    note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
+                    header.parentNode.insertBefore(note, header.nextSibling);
+                  }
+                }
               });
             }
 
-            // Run periodically (cart drawer may open/close, re-render)
-            setInterval(lockMonteringRows, 800);
+            // Use MutationObserver for instant response (no flickering)
+            // plus a fallback interval for when the drawer first opens.
+            var _drawerObserver = null;
+            function watchDrawer() {
+              var drawer = document.querySelector('spark-drawer');
+              if (!drawer || !drawer.shadowRoot) return;
+              if (_drawerObserver) return; // already watching
+
+              lockMonteringRows(); // initial run
+
+              _drawerObserver = new MutationObserver(function() {
+                lockMonteringRows();
+              });
+              _drawerObserver.observe(drawer.shadowRoot, {
+                childList: true, subtree: true
+              });
+            }
+
+            // Watch for spark-drawer appearing in the DOM
+            var _docObserver = new MutationObserver(function() {
+              var drawer = document.querySelector('spark-drawer');
+              if (drawer && drawer.shadowRoot && !_drawerObserver) {
+                watchDrawer();
+              }
+            });
+            _docObserver.observe(document.body, { childList: true, subtree: true });
+
+            // Also poll as fallback (drawer may already exist or appear later)
+            setInterval(watchDrawer, 1000);
           }
           // ──────────────────────────────────────────────────────────────────────────
         },
