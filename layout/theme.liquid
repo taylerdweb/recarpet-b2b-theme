@@ -854,39 +854,71 @@
             var _monteringBusy = false;
             var _monteringUserRemoved = false; // respect manual removal
 
-            // ── Helper: suppress toast during silent cart updates ──
-            // Inject a blocking <style> directly into spark-toast's shadow root
-            var _toastBlockStyle = null;
-            function blockToast() {
-              var toast = document.querySelector('spark-toast');
-              if (toast && toast.shadowRoot && !_toastBlockStyle) {
-                _toastBlockStyle = document.createElement('style');
-                _toastBlockStyle.textContent = '* { display: none !important; visibility: hidden !important; }';
-                toast.shadowRoot.appendChild(_toastBlockStyle);
+            // ── Toast suppression via MutationObserver ──
+            // Instead of trying to time block/unblock around async calls,
+            // we permanently watch spark-toast's shadow root and instantly
+            // remove any toast content that appears while _suppressToast is true.
+            var _suppressToast = false;
+
+            (function initToastObserver() {
+              function watchToast() {
+                var toast = document.querySelector('spark-toast');
+                if (!toast || !toast.shadowRoot) return false;
+
+                // Find the toast container inside shadow root
+                var container = toast.shadowRoot.querySelector('[class*="fixed"]');
+                if (!container) return false;
+
+                var observer = new MutationObserver(function() {
+                  if (!_suppressToast) return;
+                  // Immediately nuke any toast children that appeared
+                  while (container.firstChild) {
+                    container.removeChild(container.firstChild);
+                  }
+                });
+                observer.observe(container, { childList: true, subtree: true });
+
+                // Also watch for the container's class/style changes (show/hide)
+                var hostObserver = new MutationObserver(function() {
+                  if (_suppressToast) {
+                    toast.style.cssText = 'display:none !important;';
+                  }
+                });
+                hostObserver.observe(toast, { attributes: true });
+
+                console.log('[reCarpet] Toast observer initialized');
+                return true;
               }
-              // Also hide the host element itself
-              if (toast) toast.style.cssText = 'display:none !important;';
-            }
-            function unblockToast() {
-              if (_toastBlockStyle && _toastBlockStyle.parentNode) {
-                _toastBlockStyle.parentNode.removeChild(_toastBlockStyle);
+
+              // Try immediately, then poll until toast element exists
+              if (!watchToast()) {
+                var toastPoll = setInterval(function() {
+                  if (watchToast()) clearInterval(toastPoll);
+                }, 500);
               }
-              _toastBlockStyle = null;
-              var toast = document.querySelector('spark-toast');
-              if (toast) toast.style.cssText = '';
-            }
+            })();
 
             function silentUpdateCart(payload) {
-              blockToast();
+              _suppressToast = true;
               _monteringBusy = true;
+              // Also hide host element immediately
+              var toast = document.querySelector('spark-toast');
+              if (toast) toast.style.cssText = 'display:none !important;';
+
               return _origSparkUpdateCart(payload).then(function(r) {
                 _monteringBusy = false;
-                // Keep toast blocked for 2.5s to catch delayed rendering
-                setTimeout(unblockToast, 2500);
+                // Keep suppression for 3s to catch any delayed toast render
+                setTimeout(function() {
+                  _suppressToast = false;
+                  if (toast) toast.style.cssText = '';
+                }, 3000);
                 return r;
               }).catch(function(err) {
                 _monteringBusy = false;
-                setTimeout(unblockToast, 2500);
+                setTimeout(function() {
+                  _suppressToast = false;
+                  if (toast) toast.style.cssText = '';
+                }, 3000);
               });
             }
 
@@ -927,38 +959,43 @@
             // ── Wrap _updateCart to trigger sync after every cart change ──
             window.spark._updateCart = function(payload, t, n) {
 
-              // Classify this call: is it a PDP add or a cart-internal change?
+              // Classify: is this a PDP add (user clicking add-to-cart on a product page)?
+              // Only PDP adds should show the toast — one time, not twice.
               var isPDPAdd = false;
-              if (checkboxEl && payload && payload.products) {
-                isPDPAdd = payload.products.some(function(p) {
-                  return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
-                });
-              }
-
-              // Also treat any add WITHOUT the cart drawer open as a PDP add
               var drawer = document.querySelector('spark-drawer');
               var drawerOpen = drawer && drawer.shadowRoot &&
                 drawer.shadowRoot.querySelector('.opacity-100');
-              if (!drawerOpen && payload && payload.products) {
+
+              // If the drawer is NOT open and we're adding qty, it's a PDP add
+              if (!drawerOpen && !_monteringBusy && payload && payload.products) {
                 var hasPositiveAdjust = payload.products.some(function(p) {
-                  return p.adjustQuantity && p.adjustQuantity > 0;
+                  return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
                 });
                 if (hasPositiveAdjust) isPDPAdd = true;
               }
 
-              // For cart-internal changes (qty edits, removals): suppress toast
-              if (!isPDPAdd && !_monteringBusy) {
-                blockToast();
+              // Suppress toast for everything except PDP adds
+              if (!isPDPAdd) {
+                _suppressToast = true;
+                var toast = document.querySelector('spark-toast');
+                if (toast) toast.style.cssText = 'display:none !important;';
               }
 
               var result = _origSparkUpdateCart(payload, t, n);
 
-              // Restore toast after cart-internal changes
-              if (!isPDPAdd && !_monteringBusy) {
+              // Restore toast visibility after non-PDP calls
+              if (!isPDPAdd) {
+                var restoreToast = function() {
+                  setTimeout(function() {
+                    _suppressToast = false;
+                    var t = document.querySelector('spark-toast');
+                    if (t) t.style.cssText = '';
+                  }, 3000);
+                };
                 if (result && typeof result.then === 'function') {
-                  result.then(function() { setTimeout(unblockToast, 2500); });
+                  result.then(restoreToast).catch(restoreToast);
                 } else {
-                  setTimeout(unblockToast, 2500);
+                  restoreToast();
                 }
               }
 
@@ -1195,13 +1232,6 @@
     --spark-product-card-select-min-height: 0; /* Set a min-height for select menu */
   }
 
-  /* Suppress toast during silent montering sync */
-  body.rc-silent-sync spark-toast {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
 
   /* Hide default Shopify cart/buy elements for B2B (SparkLayer handles these) */
   .cart-count-bubble,
