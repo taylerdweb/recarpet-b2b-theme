@@ -854,16 +854,36 @@
             var _monteringBusy = false;
             var _monteringUserRemoved = false; // respect manual removal
 
+            // ── Toast suppress: hide SparkLayer toast while cart drawer is open ──
+            var _toastStyle = null;
+            function suppressToast() {
+              var toast = document.querySelector('spark-toast');
+              if (!toast || !toast.shadowRoot) return;
+              if (!_toastStyle) {
+                _toastStyle = document.createElement('style');
+                _toastStyle.textContent = '[data-theme] { display: none !important; }';
+              }
+              if (!_toastStyle.parentNode) {
+                toast.shadowRoot.appendChild(_toastStyle);
+              }
+            }
+            function restoreToast() {
+              if (_toastStyle && _toastStyle.parentNode) {
+                _toastStyle.remove();
+              }
+            }
 
-
-            // ── Silent cart update ──
+            // ── Silent cart update (always suppress toast) ──
             function silentUpdateCart(payload) {
               _monteringBusy = true;
+              suppressToast();
               return _origSparkUpdateCart(payload).then(function(r) {
                 _monteringBusy = false;
+                restoreToast();
                 return r;
               }).catch(function(err) {
                 _monteringBusy = false;
+                restoreToast();
               });
             }
 
@@ -924,11 +944,18 @@
                   payload.products.length === 1 && payload.products[0].sku === MONTERING_SKU;
                 if (isOwnCall) return _origSparkUpdateCart(payload, t, n);
 
+                // Check if cart drawer is open — if so, suppress toast for this update
+                var drawer = document.querySelector('spark-drawer');
+                var drawerOpen = drawer && drawer.offsetHeight > 0;
+                if (drawerOpen) suppressToast();
+
                 // Call original
                 var result = _origSparkUpdateCart(payload, t, n);
 
                 if (result && typeof result.then === 'function') {
                   result.then(function() {
+                    if (drawerOpen) restoreToast();
+
                     // If this was a PDP add (adjustQuantity > 0), add montering if checkbox checked
                     var hasPDPAdd = payload && payload.products && payload.products.some(function(p) {
                       return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
