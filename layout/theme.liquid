@@ -887,22 +887,30 @@
             checkboxEl.addEventListener('change', updateMonteringSubtotal);
             setInterval(updateMonteringSubtotal, 1000);
 
-            // ── Montering bundling: auto-sync montering quantity with carpet products ──
+            // ── Montering bundling via customAttributes ─────────────────────────
             //
-            // Strategy: Montering is a separate line item (SparkLayer requires it) but
-            // we keep it perfectly synced with the total m² of carpet products:
+            // When a customer adds a product WITH the montering checkbox checked,
+            // we pass customAttributes: [{ key: "montering", value: "true" }].
+            // SparkLayer creates a SEPARATE line item from the same SKU added
+            // without the attribute. This means the cart can show:
+            //   - Product A (6 m²)                    ← no montering
+            //   - Product A (4 m²) — Inkl. montering  ← with montering
             //
-            // 1. ON PDP ADD: if checkbox checked, also add matching montering qty
-            // 2. ON ANY CART CHANGE: poll the cart and sync montering qty to total carpet m²
-            //    - If carpet qty changes → montering qty updates to match
-            //    - If all carpets removed → montering auto-removed
-            //    - If user manually deletes montering → it stays deleted (respected)
-            // 3. CSS: hide +/- controls on montering row so user can't manually change qty
+            // The montering service line item syncs to the total quantity of
+            // all cart items that have the montering customAttribute.
             //
             var MONTERING_SKU = 'RC-SERVICE-MONTERING';
+            var MONTERING_ATTR = { key: 'montering', value: 'true' };
             var _origSparkUpdateCart = window.spark._updateCart.bind(window.spark);
             var _monteringBusy = false;
-            var _monteringUserRemoved = false; // respect manual removal
+            var _monteringUserRemoved = false;
+
+            // ── Helper: check if a cart item has the montering attribute ──
+            function hasMonteringAttr(item) {
+              return item.customAttributes && item.customAttributes.some(function(a) {
+                return a.key === 'montering' && a.value === 'true';
+              });
+            }
 
             // ── Silent cart update ──
             function silentUpdateCart(payload) {
@@ -915,40 +923,40 @@
               });
             }
 
-            // ── Helper: sync montering qty with total carpet m² ──
-            // ONLY updates montering if it already exists in the cart.
-            // Never creates montering — that's only done on PDP add with checkbox.
+            // ── Sync montering qty with items that have montering attribute ──
+            // Only counts quantities of cart items with customAttributes montering=true.
+            // Never creates montering — only PDP add with checkbox does that.
             function syncMonteringWithCart() {
               if (_monteringBusy || _monteringUserRemoved) return;
 
               window.spark.getCart().then(function(cart) {
                 if (!cart || !cart.items) return;
 
-                var carpetQty = 0;
                 var monteringQty = 0;
+                var attrQty = 0;
 
                 cart.items.forEach(function(item) {
                   if (item.sku === MONTERING_SKU) {
                     monteringQty = item.quantity;
-                  } else if (item.sku && item.sku.indexOf('RC-SERVICE') === -1) {
-                    carpetQty += item.quantity;
+                  } else if (item.sku && item.sku.indexOf('RC-SERVICE') === -1 && hasMonteringAttr(item)) {
+                    attrQty += item.quantity;
                   }
                 });
 
-                // If montering is not in the cart, do nothing — never auto-create it
+                // If montering not in cart, do nothing
                 if (monteringQty === 0) return;
 
-                // If no carpets left, remove montering
-                if (carpetQty === 0) {
-                  console.log('[reCarpet] Inga mattplattor kvar — tar bort montering');
+                // If no attributed items left, remove montering
+                if (attrQty === 0) {
+                  console.log('[reCarpet] Inga monterings-produkter kvar — tar bort montering');
                   silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: 0 }] });
                   return;
                 }
 
-                // If carpet qty differs from montering qty, sync
-                if (monteringQty !== carpetQty) {
-                  console.log('[reCarpet] Synkar montering: ' + monteringQty + ' → ' + carpetQty + ' m²');
-                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: carpetQty }] });
+                // Sync montering to match attributed total
+                if (monteringQty !== attrQty) {
+                  console.log('[reCarpet] Synkar montering: ' + monteringQty + ' → ' + attrQty + ' m²');
+                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: attrQty }] });
                 }
               }).catch(function() {});
             }
@@ -976,27 +984,33 @@
                   payload.products.length === 1 && payload.products[0].sku === MONTERING_SKU;
                 if (isOwnCall) return _origSparkUpdateCart(payload, t, n);
 
-                // Call original
+                // Detect PDP add (adjustQuantity > 0 for non-service SKUs)
+                var isPDPAdd = payload && payload.products && payload.products.some(function(p) {
+                  return p.adjustQuantity && p.adjustQuantity > 0 && p.sku && p.sku.indexOf('RC-SERVICE') === -1;
+                });
+
+                // If checkbox checked, inject customAttributes onto the carpet products
+                // This creates a SEPARATE line item from the same SKU added without attributes
+                var addedQty = 0;
+                if (isPDPAdd && checkboxEl && checkboxEl.checked) {
+                  payload = JSON.parse(JSON.stringify(payload)); // deep clone
+                  payload.products.forEach(function(p) {
+                    if (p.adjustQuantity && p.adjustQuantity > 0 && p.sku && p.sku.indexOf('RC-SERVICE') === -1) {
+                      p.customAttributes = [MONTERING_ATTR];
+                      addedQty += p.adjustQuantity;
+                    }
+                  });
+                }
+
+                // Call original (with potentially modified payload)
                 var result = _origSparkUpdateCart(payload, t, n);
 
                 if (result && typeof result.then === 'function') {
                   result.then(function() {
-                    // If this was a PDP add (adjustQuantity > 0), add montering if checkbox checked
-                    var hasPDPAdd = payload && payload.products && payload.products.some(function(p) {
-                      return p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU;
-                    });
-
-                    if (hasPDPAdd && checkboxEl && checkboxEl.checked) {
+                    // If PDP add with checkbox, also add montering service
+                    if (isPDPAdd && checkboxEl && checkboxEl.checked && addedQty > 0) {
                       _monteringUserRemoved = false;
-                      var addedQty = 0;
-                      payload.products.forEach(function(p) {
-                        if (p.adjustQuantity && p.adjustQuantity > 0 && p.sku !== MONTERING_SKU) {
-                          addedQty += p.adjustQuantity;
-                        }
-                      });
-                      if (addedQty > 0) {
-                        silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] });
-                      }
+                      silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] });
                     } else {
                       // For all other cart changes, sync montering after a short delay
                       setTimeout(syncMonteringWithCart, 800);
@@ -1014,46 +1028,84 @@
             // ── Hide montering qty controls & delete button in cart ──
             // Shadow roots are forced open via attachShadow override above.
 
+            // Cache which SKU+qty combos have montering attr (from cart API)
+            var _monteringItemKeys = {}; // { sku+qty: true } for items with montering attr
+
+            function refreshMonteringItemKeys(cb) {
+              window.spark.getCart().then(function(cart) {
+                if (!cart || !cart.items) return;
+                _monteringItemKeys = {};
+                cart.items.forEach(function(item) {
+                  if (item.sku && item.sku !== MONTERING_SKU && hasMonteringAttr(item)) {
+                    _monteringItemKeys[item.sku] = true;
+                  }
+                });
+                if (cb) cb();
+              }).catch(function() {});
+            }
+
             function lockMonteringRows() {
               var drawer = document.querySelector('spark-drawer');
               if (!drawer || !drawer.shadowRoot) return;
               var sr = drawer.shadowRoot;
 
-              sr.querySelectorAll('p, span, small').forEach(function(el) {
-                if (el.textContent.indexOf('RC-SERVICE-MONTERING') === -1) return;
-                var row = el.closest('.py-4');
-                if (!row || row.dataset.rcLocked) return;
-                row.dataset.rcLocked = '1';
-
-                // Hide qty/delete buttons (keep product name button which has text)
-                row.querySelectorAll('button').forEach(function(btn) {
-                  if (btn.querySelector('svg') || btn.textContent.trim() === '') {
-                    btn.style.cssText = 'display:none !important;';
-                  }
+              sr.querySelectorAll('.py-4').forEach(function(row) {
+                // Find SKU in this row
+                var skuText = '';
+                row.querySelectorAll('p, span, small').forEach(function(el) {
+                  var t = el.textContent.trim();
+                  if (t.indexOf('RC-SERVICE-MONTERING') !== -1) skuText = 'RC-SERVICE-MONTERING';
+                  else if (t.indexOf('SKU:') !== -1) skuText = t.replace('SKU:', '').trim();
+                  else if (!skuText && t.indexOf('RC-') === 0 && t.length < 40) skuText = t;
                 });
 
-                // Hide the quantity control wrapper, show qty as plain text
-                var qtyWrapper = row.querySelector('.mt-2');
-                if (qtyWrapper && qtyWrapper.querySelector('input')) {
-                  var inp = qtyWrapper.querySelector('input');
-                  var qty = inp ? inp.value : '';
-                  var qtyText = document.createElement('div');
-                  qtyText.className = 'rc-montering-qty';
-                  qtyText.textContent = qty + ' m\u00B2';
-                  qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
-                  qtyWrapper.parentNode.insertBefore(qtyText, qtyWrapper);
-                  qtyWrapper.style.cssText = 'display:none !important;';
+                // ── Montering service row: lock controls ──
+                if (skuText === 'RC-SERVICE-MONTERING') {
+                  if (row.dataset.rcLocked) return;
+                  row.dataset.rcLocked = '1';
+
+                  row.querySelectorAll('button').forEach(function(btn) {
+                    if (btn.querySelector('svg') || btn.textContent.trim() === '') {
+                      btn.style.cssText = 'display:none !important;';
+                    }
+                  });
+
+                  var qtyWrapper = row.querySelector('.mt-2');
+                  if (qtyWrapper && qtyWrapper.querySelector('input')) {
+                    var inp = qtyWrapper.querySelector('input');
+                    var qty = inp ? inp.value : '';
+                    var qtyText = document.createElement('div');
+                    qtyText.className = 'rc-montering-qty';
+                    qtyText.textContent = qty + ' m\u00B2';
+                    qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
+                    qtyWrapper.parentNode.insertBefore(qtyText, qtyWrapper);
+                    qtyWrapper.style.cssText = 'display:none !important;';
+                  }
+
+                  if (!row.querySelector('.rc-montering-note')) {
+                    var header = row.querySelector('header');
+                    if (header) {
+                      var note = document.createElement('div');
+                      note.className = 'rc-montering-note';
+                      note.textContent = 'Synkas automatiskt med monterings-produkter';
+                      note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
+                      header.parentNode.insertBefore(note, header.nextSibling);
+                    }
+                  }
+                  return;
                 }
 
-                // Add helper text under product header
-                if (!row.querySelector('.rc-montering-note')) {
-                  var header = row.querySelector('header');
-                  if (header) {
-                    var note = document.createElement('div');
-                    note.className = 'rc-montering-note';
-                    note.textContent = 'Synkas automatiskt med dina mattplattor';
-                    note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
-                    header.parentNode.insertBefore(note, header.nextSibling);
+                // ── Carpet rows: show "Inkl. montering" if item has the attribute ──
+                if (skuText && _monteringItemKeys[skuText]) {
+                  if (!row.querySelector('.rc-montering-label')) {
+                    var header = row.querySelector('header');
+                    if (header) {
+                      var label = document.createElement('div');
+                      label.className = 'rc-montering-label';
+                      label.textContent = 'Inkl. montering +45 kr/m\u00B2';
+                      label.style.cssText = 'font-size:11px;color:#28AB76;font-weight:500;margin-top:2px;';
+                      header.parentNode.insertBefore(label, header.nextSibling);
+                    }
                   }
                 }
               });
@@ -1067,9 +1119,19 @@
               if (!drawer || !drawer.shadowRoot) return;
               if (_drawerObserver) return; // already watching
 
+              refreshMonteringItemKeys(); // fetch attr data from cart API
               lockMonteringRows(); // initial run
 
+              var _mutDebounce = null;
               _drawerObserver = new MutationObserver(function() {
+                // Debounce to avoid excessive API calls
+                clearTimeout(_mutDebounce);
+                _mutDebounce = setTimeout(function() {
+                  refreshMonteringItemKeys();
+                  // Give the API call a moment to resolve before re-rendering labels
+                  setTimeout(lockMonteringRows, 200);
+                }, 150);
+                // Also run lockMonteringRows immediately for instant visual update
                 lockMonteringRows();
               });
               _drawerObserver.observe(drawer.shadowRoot, {
