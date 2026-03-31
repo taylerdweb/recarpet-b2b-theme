@@ -1601,13 +1601,13 @@
 
       {%- unless showB2BLogin -%}
 
-      {%- if is_b2b_customer -%}
-        {%- if template contains 'customers/' or request.path == '/cart' -%}
+      {%- if customer -%}
+        {%- if template contains 'customers/' -%}
           <script>
-            window.location.href = '/index#spark-account';
+            window.location.href = '/';
           </script>
-        {% endif %}
-      {% endif %}
+        {%- endif -%}
+      {%- endif -%}
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
