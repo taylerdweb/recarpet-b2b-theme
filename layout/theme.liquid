@@ -1054,7 +1054,18 @@
               });
             }
 
+            // Inject CSS into shadow root once for reliable montering row hiding
+            function injectMonteringCSS(sr) {
+              if (sr.querySelector('#rc-montering-css')) return;
+              var style = document.createElement('style');
+              style.id = 'rc-montering-css';
+              style.textContent = '.rc-montering-locked .mt-2 { display:none !important; } .rc-montering-locked button { display:none !important; }';
+              sr.appendChild(style);
+            }
+
             function lockMonteringRowsIn(sr) {
+              injectMonteringCSS(sr);
+
               sr.querySelectorAll('.py-4').forEach(function(row) {
                 // Hide "per styck" and clean up "montering: true" → "Montering"
                 row.querySelectorAll('p, span, small, div').forEach(function(el) {
@@ -1080,27 +1091,56 @@
                   else if (!skuText && t.indexOf('RC-') === 0 && t.length < 40) skuText = t;
                 });
 
+                // Check if THIS specific row has the "Montering" attribute rendered by SparkLayer
+                var rowHasMonteringAttr = false;
+                row.querySelectorAll('span').forEach(function(span) {
+                  var t = span.textContent.trim();
+                  if (t === 'Montering' || t === 'montering: true' || t === 'montering') {
+                    // Make sure it's the attribute indicator, not the product title
+                    var parent = span.parentElement;
+                    if (parent && parent.querySelector('svg')) {
+                      rowHasMonteringAttr = true;
+                    }
+                  }
+                });
+
                 // ── Montering service row: lock controls ──
                 if (skuText === 'RC-SERVICE-MONTERING') {
-                  if (row.dataset.rcLocked) return;
-                  row.dataset.rcLocked = '1';
+                  // Always re-apply — SparkLayer can re-render and remove our changes
+                  row.classList.add('rc-montering-locked');
 
+                  // Also inline-hide buttons as backup
                   row.querySelectorAll('button').forEach(function(btn) {
-                    if (btn.querySelector('svg') || btn.textContent.trim() === '') {
-                      btn.style.cssText = 'display:none !important;';
-                    }
+                    btn.style.cssText = 'display:none !important;';
                   });
 
+                  // Hide qty input wrapper, show static text instead
                   var qtyWrapper = row.querySelector('.mt-2');
-                  if (qtyWrapper && qtyWrapper.querySelector('input')) {
-                    var inp = qtyWrapper.querySelector('input');
-                    var qty = inp ? inp.value : '';
-                    var qtyText = document.createElement('div');
-                    qtyText.className = 'rc-montering-qty';
-                    qtyText.textContent = qty + ' m\u00B2';
-                    qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
-                    qtyWrapper.parentNode.insertBefore(qtyText, qtyWrapper);
+                  if (qtyWrapper) {
                     qtyWrapper.style.cssText = 'display:none !important;';
+                  }
+
+                  // Show qty as static text
+                  if (!row.querySelector('.rc-montering-qty')) {
+                    var inp = row.querySelector('input');
+                    var qty = inp ? inp.value : '';
+                    if (qty) {
+                      var qtyText = document.createElement('div');
+                      qtyText.className = 'rc-montering-qty';
+                      qtyText.textContent = qty + ' m\u00B2';
+                      qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
+                      var header = row.querySelector('header');
+                      if (header && header.parentNode) {
+                        header.parentNode.insertBefore(qtyText, header.nextSibling);
+                      }
+                    }
+                  } else {
+                    // Update existing qty text if value changed
+                    var inp = row.querySelector('input');
+                    var existingQty = row.querySelector('.rc-montering-qty');
+                    if (inp && existingQty) {
+                      existingQty.textContent = inp.value + ' m\u00B2';
+                    }
                   }
 
                   if (!row.querySelector('.rc-montering-note')) {
@@ -1116,8 +1156,8 @@
                   return;
                 }
 
-                // ── Carpet rows: show "Inkl. montering" if item has the attribute ──
-                if (skuText && _monteringItemKeys[skuText]) {
+                // ── Carpet rows: show "Inkl. montering" only if THIS row has the attribute ──
+                if (rowHasMonteringAttr) {
                   if (!row.querySelector('.rc-montering-label')) {
                     var header = row.querySelector('header');
                     if (header) {
