@@ -1174,10 +1174,8 @@
             function updateCartBadge(animate) {
               window.spark.getCart().then(function(cart) {
                 if (!cart || !cart.items) return;
-                var total = 0;
-                cart.items.forEach(function(item) {
-                  total += item.quantity;
-                });
+                // Count number of line items (not total quantity)
+                var total = cart.items.length;
 
                 // Update badge
                 if (total > 0) {
@@ -1191,11 +1189,9 @@
                 if (animate && total > _lastCount && _lastCount >= 0) {
                   cartIcon.classList.remove('rc-cart-icon--animate');
                   cartCount.classList.remove('rc-cart-count--animate');
-                  // Force reflow so animation restarts
-                  void cartIcon.offsetWidth;
+                  void cartIcon.offsetWidth; // force reflow
                   cartIcon.classList.add('rc-cart-icon--animate');
                   cartCount.classList.add('rc-cart-count--animate');
-                  // Clean up animation classes
                   setTimeout(function() {
                     cartIcon.classList.remove('rc-cart-icon--animate');
                     cartCount.classList.remove('rc-cart-count--animate');
@@ -1214,19 +1210,32 @@
 
             // Open SparkLayer drawer on click
             cartIcon.addEventListener('click', function() {
-              // SparkLayer exposes openCart or we can click its hidden trigger
+              // Try multiple approaches to open the SparkLayer cart drawer
+              // 1. Official API
               if (window.spark && typeof window.spark.openCart === 'function') {
-                window.spark.openCart();
-              } else {
-                // Fallback: try clicking SparkLayer's own cart button
-                var sparkBtn = document.querySelector('spark-cart-button');
-                if (sparkBtn && sparkBtn.shadowRoot) {
-                  var btn = sparkBtn.shadowRoot.querySelector('button');
-                  if (btn) btn.click();
-                } else if (sparkBtn) {
-                  sparkBtn.click();
-                }
+                window.spark.openCart(); return;
               }
+              // 2. Set the drawer's "open" attribute directly
+              var drawer = document.querySelector('spark-drawer');
+              if (drawer) {
+                drawer.setAttribute('open', '');
+                drawer.style.display = '';
+                return;
+              }
+              // 3. Try clicking any SparkLayer cart trigger
+              var triggers = document.querySelectorAll(
+                'spark-cart-button, [data-spark-cart], [data-action="open-cart"]'
+              );
+              for (var i = 0; i < triggers.length; i++) {
+                var t = triggers[i];
+                if (t.shadowRoot) {
+                  var btn = t.shadowRoot.querySelector('button, a');
+                  if (btn) { btn.click(); return; }
+                }
+                t.click(); return;
+              }
+              // 4. Last resort: navigate to account page which has full cart
+              window.location.href = '/index#spark-account';
             });
           })();
           // ──────────────────────────────────────────────────────────────────────────
