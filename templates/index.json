@@ -22,6 +22,31 @@
         "btn1_url": "/collections/all"
       }
     },
+    "rc_featured_products": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "all",
+        "products_to_show": 8,
+        "title": "Utvalda produkter",
+        "heading_size": "h1",
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "show_view_all": true,
+        "view_all_style": "solid",
+        "enable_desktop_slider": false,
+        "full_width": false,
+        "quick_add": "none",
+        "swipe_on_mobile": true,
+        "color_scheme": "scheme-1",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
     "rc_cta_banner": {
       "type": "rc-cta-banner",
       "settings": {
@@ -277,6 +302,7 @@
   },
   "order": [
     "rc_hero",
+    "rc_featured_products",
     "rc_cta_banner",
     "rc_logo_bar",
     "rc_customer_cards",
