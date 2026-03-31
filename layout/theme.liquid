@@ -1056,6 +1056,13 @@
 
             function lockMonteringRowsIn(sr) {
               sr.querySelectorAll('.py-4').forEach(function(row) {
+                // Hide "per styck" text in all rows
+                row.querySelectorAll('p, span, small, div').forEach(function(el) {
+                  if (el.children.length === 0 && el.textContent.trim() === 'per styck') {
+                    el.style.cssText = 'display:none !important;';
+                  }
+                });
+
                 // Find SKU in this row
                 var skuText = '';
                 row.querySelectorAll('p, span, small').forEach(function(el) {
@@ -1155,6 +1162,73 @@
               watchSparkCart('spark-cart');
             }, 1000);
           }
+
+          // ── B2B Cart icon: count badge + animation ────────────────────────────
+          (function() {
+            var cartIcon = document.getElementById('rc-cart-icon');
+            var cartCount = document.getElementById('rc-cart-count');
+            if (!cartIcon || !cartCount) return;
+
+            var _lastCount = -1; // track previous count for animation trigger
+
+            function updateCartBadge(animate) {
+              window.spark.getCart().then(function(cart) {
+                if (!cart || !cart.items) return;
+                var total = 0;
+                cart.items.forEach(function(item) {
+                  total += item.quantity;
+                });
+
+                // Update badge
+                if (total > 0) {
+                  cartCount.textContent = total > 99 ? '99+' : total;
+                  cartCount.style.display = '';
+                } else {
+                  cartCount.style.display = 'none';
+                }
+
+                // Animate if count increased
+                if (animate && total > _lastCount && _lastCount >= 0) {
+                  cartIcon.classList.remove('rc-cart-icon--animate');
+                  cartCount.classList.remove('rc-cart-count--animate');
+                  // Force reflow so animation restarts
+                  void cartIcon.offsetWidth;
+                  cartIcon.classList.add('rc-cart-icon--animate');
+                  cartCount.classList.add('rc-cart-count--animate');
+                  // Clean up animation classes
+                  setTimeout(function() {
+                    cartIcon.classList.remove('rc-cart-icon--animate');
+                    cartCount.classList.remove('rc-cart-count--animate');
+                  }, 500);
+                }
+
+                _lastCount = total;
+              }).catch(function() {});
+            }
+
+            // Initial load
+            updateCartBadge(false);
+
+            // Poll for updates (catches all cart changes)
+            setInterval(function() { updateCartBadge(true); }, 1500);
+
+            // Open SparkLayer drawer on click
+            cartIcon.addEventListener('click', function() {
+              // SparkLayer exposes openCart or we can click its hidden trigger
+              if (window.spark && typeof window.spark.openCart === 'function') {
+                window.spark.openCart();
+              } else {
+                // Fallback: try clicking SparkLayer's own cart button
+                var sparkBtn = document.querySelector('spark-cart-button');
+                if (sparkBtn && sparkBtn.shadowRoot) {
+                  var btn = sparkBtn.shadowRoot.querySelector('button');
+                  if (btn) btn.click();
+                } else if (sparkBtn) {
+                  sparkBtn.click();
+                }
+              }
+            });
+          })();
           // ──────────────────────────────────────────────────────────────────────────
         },
       };
