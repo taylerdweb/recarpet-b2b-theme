@@ -1,7 +1,11 @@
 {% comment %}
   reCarpet Product Showcase
-  Same card grid design as customer cards but pulling real products from a collection
+  Uses the standard card-product snippet in a clean white-background grid
 {% endcomment %}
+
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
 
 <style>
   .rc-product-showcase {
@@ -19,84 +23,14 @@
     font-size: clamp(1.75rem, 3.5vw, var(--rc-h3));
     font-weight: 500;
     line-height: 120%;
-    margin: 0 0 5rem;
+    margin: 0 0 3rem;
     color: var(--base-color-brand--rc-off-black);
   }
   .rc-product-showcase__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
+    gap: 1.5rem;
   }
-  .rc-pcard {
-    background: transparent;
-    border-radius: var(--rc-radius);
-    overflow: hidden;
-    text-decoration: none;
-    color: var(--rc-text);
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex;
-    flex-direction: column;
-  }
-  .rc-pcard:hover {
-    color: var(--rc-text);
-  }
-  .rc-pcard__image {
-    aspect-ratio: 4/3;
-    overflow: hidden;
-    background: #f5f5f0;
-  }
-  .rc-pcard__image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s;
-  }
-  .rc-pcard:hover .rc-pcard__image img {
-    transform: scale(1.04);
-  }
-  .rc-pcard__body {
-    padding: 1.25rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-  }
-  .rc-pcard__title {
-    font-family: var(--recarpet-dm-sans);
-    font-size: var(--rc-h5);
-    font-weight: 700;
-    line-height: 140%;
-    color: var(--base-color-brand--rc-off-black);
-    margin: 0 0 0.5rem;
-    text-align: center;
-  }
-  .rc-pcard__vendor {
-    font-family: var(--recarpet-dm-sans);
-    font-size: 0.85rem;
-    color: #888;
-    margin: 0 0 0.5rem;
-    text-align: center;
-  }
-  .rc-pcard__text {
-    font-family: var(--recarpet-dm-sans);
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--base-color-brand--rc-off-black);
-    margin: 0 0 1rem;
-    flex: 1;
-    text-align: center;
-  }
-  .rc-pcard__link {
-    font-size: var(--rc-text-sm);
-    font-weight: 500;
-    color: var(--rc-green);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    justify-content: center;
-  }
-  .rc-pcard__link::after { content: ' →'; }
   .rc-product-showcase__viewall {
     text-align: center;
     margin-top: 3rem;
@@ -116,11 +50,10 @@
   .rc-product-showcase__viewall a:hover {
     opacity: 0.85;
   }
-  @media (max-width: 900px) {
+  @media (max-width: 989px) {
     .rc-product-showcase__grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 600px) {
-    .rc-product-showcase__grid { grid-template-columns: 1fr; }
     .rc-product-showcase__inner { padding: 0 1.25rem; }
   }
 </style>
@@ -137,38 +70,30 @@
     <div class="rc-product-showcase__grid">
       {%- if showcase_collection != blank -%}
         {%- for product in showcase_collection.products limit: products_to_show -%}
-          <a href="{{ product.url }}" class="rc-pcard">
-            <div class="rc-pcard__image">
-              {%- if product.featured_image != blank -%}
-                <img
-                  src="{{ product.featured_image | image_url: width: 600 }}"
-                  alt="{{ product.featured_image.alt | default: product.title }}"
-                  loading="lazy"
-                  width="600"
-                  height="450"
-                >
-              {%- endif -%}
-            </div>
-            <div class="rc-pcard__body">
-              <h3 class="rc-pcard__title">{{ product.title }}</h3>
-              {%- if section.settings.show_vendor and product.vendor != blank -%}
-                <p class="rc-pcard__vendor">{{ product.vendor }}</p>
-              {%- endif -%}
-              <span class="rc-pcard__link">{{ section.settings.link_text | default: 'Se produkt' }}</span>
-            </div>
-          </a>
+          {%- render 'card-product',
+            card_product: product,
+            media_aspect_ratio: 'square',
+            image_shape: 'default',
+            show_secondary_image: false,
+            show_vendor: false,
+            show_rating: false,
+            lazy_load: true,
+            skip_styles: true,
+            section_id: section.id,
+            quick_add: 'none'
+          -%}
         {%- endfor -%}
       {%- else -%}
         {%- for i in (1..products_to_show) -%}
-          <div class="rc-pcard">
-            <div class="rc-pcard__image">
-              {{ 'product-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
-            </div>
-            <div class="rc-pcard__body">
-              <h3 class="rc-pcard__title">Produktnamn</h3>
-              <span class="rc-pcard__link">{{ section.settings.link_text | default: 'Se produkt' }}</span>
-            </div>
-          </div>
+          {%- render 'card-product',
+            media_aspect_ratio: 'square',
+            image_shape: 'default',
+            show_vendor: false,
+            show_rating: false,
+            lazy_load: true,
+            skip_styles: true,
+            section_id: section.id
+          -%}
         {%- endfor -%}
       {%- endif -%}
     </div>
@@ -206,18 +131,6 @@
       "step": 1,
       "default": 4,
       "label": "Antal produkter"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "label": "Visa tillverkare",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "link_text",
-      "label": "Länktext",
-      "default": "Se produkt"
     },
     {
       "type": "checkbox",
