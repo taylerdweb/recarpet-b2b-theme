@@ -1045,10 +1045,16 @@
             }
 
             function lockMonteringRows() {
-              var drawer = document.querySelector('spark-drawer');
-              if (!drawer || !drawer.shadowRoot) return;
-              var sr = drawer.shadowRoot;
+              // Process both drawer (slide-out) and cart (full page) shadow roots
+              var targets = ['spark-drawer', 'spark-cart'];
+              targets.forEach(function(tag) {
+                var el = document.querySelector(tag);
+                if (!el || !el.shadowRoot) return;
+                lockMonteringRowsIn(el.shadowRoot);
+              });
+            }
 
+            function lockMonteringRowsIn(sr) {
               sr.querySelectorAll('.py-4').forEach(function(row) {
                 // Find SKU in this row
                 var skuText = '';
@@ -1112,44 +1118,42 @@
             }
 
             // Use MutationObserver for instant response (no flickering)
-            // plus a fallback interval for when the drawer first opens.
-            var _drawerObserver = null;
-            function watchDrawer() {
-              var drawer = document.querySelector('spark-drawer');
-              if (!drawer || !drawer.shadowRoot) return;
-              if (_drawerObserver) return; // already watching
+            // Watches both spark-drawer (slide-out) and spark-cart (full page).
+            var _sparkObservers = {}; // keyed by tag name
+            function watchSparkCart(tag) {
+              var el = document.querySelector(tag);
+              if (!el || !el.shadowRoot) return;
+              if (_sparkObservers[tag]) return; // already watching
 
               refreshMonteringItemKeys(); // fetch attr data from cart API
               lockMonteringRows(); // initial run
 
               var _mutDebounce = null;
-              _drawerObserver = new MutationObserver(function() {
-                // Debounce to avoid excessive API calls
+              _sparkObservers[tag] = new MutationObserver(function() {
                 clearTimeout(_mutDebounce);
                 _mutDebounce = setTimeout(function() {
                   refreshMonteringItemKeys();
-                  // Give the API call a moment to resolve before re-rendering labels
                   setTimeout(lockMonteringRows, 200);
                 }, 150);
-                // Also run lockMonteringRows immediately for instant visual update
                 lockMonteringRows();
               });
-              _drawerObserver.observe(drawer.shadowRoot, {
+              _sparkObservers[tag].observe(el.shadowRoot, {
                 childList: true, subtree: true
               });
             }
 
-            // Watch for spark-drawer appearing in the DOM
+            // Watch for spark-drawer and spark-cart appearing in the DOM
             var _docObserver = new MutationObserver(function() {
-              var drawer = document.querySelector('spark-drawer');
-              if (drawer && drawer.shadowRoot && !_drawerObserver) {
-                watchDrawer();
-              }
+              watchSparkCart('spark-drawer');
+              watchSparkCart('spark-cart');
             });
             _docObserver.observe(document.body, { childList: true, subtree: true });
 
-            // Also poll as fallback (drawer may already exist or appear later)
-            setInterval(watchDrawer, 1000);
+            // Also poll as fallback
+            setInterval(function() {
+              watchSparkCart('spark-drawer');
+              watchSparkCart('spark-cart');
+            }, 1000);
           }
           // ──────────────────────────────────────────────────────────────────────────
         },
