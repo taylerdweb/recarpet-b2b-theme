@@ -9,6 +9,10 @@
   Usage: {% render 'recarpet-product-specs', product: product %}
 {%- endcomment -%}
 
+{%- comment -%} Skip rendering for service products (ej fysiska produkter) {%- endcomment -%}
+{%- assign _spec_sku = product.selected_or_first_available_variant.sku | default: '' -%}
+{%- unless product.product_type contains 'Tjänst' or _spec_sku contains 'RC-SERVICE' -%}
+
 {%- liquid
   assign mf           = product.metafields.recarpet
   assign dimensions   = mf.dimensions.value
@@ -315,3 +319,5 @@
     color: #111;
   }
 </style>
+
+{%- endunless -%}

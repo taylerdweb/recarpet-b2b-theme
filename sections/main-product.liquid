@@ -128,7 +128,8 @@
                   <spark-pdp parent-id="{{ product.id }}"></spark-pdp>
 
                   {%- comment -%} Montering-tillval — visas bara på mattproduker, ej tjänster {%- endcomment -%}
-                  {%- unless product.product_type contains 'Tjänst' -%}
+                  {%- assign first_sku = product.selected_or_first_available_variant.sku | default: '' -%}
+                  {%- unless product.product_type contains 'Tjänst' or first_sku contains 'RC-SERVICE' -%}
                     <div class="montering-addon" id="montering-addon" style="display:none;">
                       <label class="montering-addon__label">
                         <input type="checkbox" id="montering-checkbox" class="montering-addon__checkbox">
