@@ -236,8 +236,8 @@
         </div>
         {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
         {%- unless customer -%}
-          <div class="card__cta-logged-out">
-            <a href="/pages/b2b-login" class="button button--full-width button--primary">
+          <div class="card__cta-logged-out" style="position:relative;z-index:2;">
+            <a href="/pages/b2b-login" class="button button--full-width button--primary" onclick="event.stopPropagation();">
               Registrera dig &rarr;
             </a>
           </div>
