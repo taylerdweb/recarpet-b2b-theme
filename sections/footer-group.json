@@ -14,7 +14,6 @@
     "rc_footer": {
       "type": "rc-footer",
       "settings": {
-        "tagline": "",
         "phone": "0700733682",
         "email": "jonas@recarpet.se"
       }

@@ -28,8 +28,6 @@
         "heading": "Utvalda produkter",
         "collection": "all",
         "products_to_show": 4,
-        "show_vendor": false,
-        "link_text": "Se produkt",
         "show_view_all": true,
         "view_all_text": "Se alla produkter"
       }
@@ -270,9 +268,7 @@
         "body": "Vi erbjuder ett brett sortiment av både återbrukade och nya textilplattor till konkurrenskraftiga priser. Alla produkter är kvalitetssäkrade och redo att monteras.",
         "image": "shopify://shop_images/rc-omoss-hallbarhet.jpg",
         "btn1_label": "Beställ prover",
-        "btn1_url": "/pages/kontakta-oss",
-        "btn2_label": "Se alla produkter",
-        "btn2_url": "/collections/all"
+        "btn1_url": "/pages/kontakta-oss"
       }
     },
     "rc_contact_cta": {
