@@ -9,6 +9,19 @@
  */
 {
   "sections": {
+    "rc_hero": {
+      "type": "rc-hero",
+      "settings": {
+        "background_image": "shopify://shop_images/recarpet-hero.jpg",
+        "image_position": "center center",
+        "min_height": 750,
+        "eyebrow": "",
+        "heading": "Hållbara mattor till marknadens bästa priser",
+        "subtext": "ReCarpet är specialister på demontering, kvalitetssäkring och leverans av textilplattor. För cirkulära lösningar i både ombyggnad och nyproduktion.",
+        "btn1_label": "Se våra produkter",
+        "btn1_url": "/collections/all"
+      }
+    },
     "rc_cta_banner": {
       "type": "rc-cta-banner",
       "settings": {
@@ -263,6 +276,7 @@
     }
   },
   "order": [
+    "rc_hero",
     "rc_cta_banner",
     "rc_logo_bar",
     "rc_customer_cards",
