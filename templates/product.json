@@ -49,6 +49,7 @@
       "settings": {
         "enable_sticky_info": true,
         "media_size": "large",
+        "media_fit": "cover",
         "constrain_to_viewport": true,
         "gallery_layout": "stacked",
         "mobile_thumbnails": "hide",
