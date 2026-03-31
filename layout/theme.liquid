@@ -1056,10 +1056,13 @@
 
             function lockMonteringRowsIn(sr) {
               sr.querySelectorAll('.py-4').forEach(function(row) {
-                // Hide "per styck" text in all rows
+                // Hide "per styck" and clean up "montering: true" → "Montering"
                 row.querySelectorAll('p, span, small, div').forEach(function(el) {
                   if (el.children.length === 0 && el.textContent.trim() === 'per styck') {
                     el.style.cssText = 'display:none !important;';
+                  }
+                  if (el.children.length === 0 && el.textContent.trim() === 'montering: true') {
+                    el.textContent = 'Montering';
                   }
                 });
 
