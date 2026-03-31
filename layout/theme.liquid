@@ -1061,10 +1061,15 @@
                   if (el.children.length === 0 && el.textContent.trim() === 'per styck') {
                     el.style.cssText = 'display:none !important;';
                   }
-                  if (el.children.length === 0 && el.textContent.trim() === 'montering: true') {
-                    el.textContent = 'Montering';
-                  }
                 });
+                // Fix "montering: true" text — walk all text nodes in the row
+                var walker = document.createTreeWalker(row, NodeFilter.SHOW_TEXT, null, false);
+                var tNode;
+                while (tNode = walker.nextNode()) {
+                  if (tNode.nodeValue && tNode.nodeValue.indexOf('montering: true') !== -1) {
+                    tNode.nodeValue = tNode.nodeValue.replace('montering: true', 'Montering');
+                  }
+                }
 
                 // Find SKU in this row
                 var skuText = '';
