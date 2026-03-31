@@ -1062,18 +1062,14 @@
                     el.style.cssText = 'display:none !important;';
                   }
                 });
-                // Fix "montering" + ": " + "true" → just "Montering"
-                // SparkLayer renders customAttributes as 3 separate text nodes
-                var walker = document.createTreeWalker(row, NodeFilter.SHOW_TEXT, null, false);
-                var tNode;
-                while (tNode = walker.nextNode()) {
-                  var v = tNode.nodeValue.trim();
-                  if (v === 'montering') {
-                    tNode.nodeValue = 'Montering';
-                  } else if (v === ':' || v === ': ' || v === 'true') {
-                    tNode.nodeValue = '';
+                // Fix "montering: true" → "Montering"
+                // SparkLayer renders: <p><svg-cube/><span>"montering"": ""true"</span></p>
+                // Re-run on every mutation to survive SparkLayer re-renders
+                row.querySelectorAll('span').forEach(function(span) {
+                  if (span.textContent.trim() === 'montering: true') {
+                    span.textContent = 'Montering';
                   }
-                }
+                });
 
                 // Find SKU in this row
                 var skuText = '';
