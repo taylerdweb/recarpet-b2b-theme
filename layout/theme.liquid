@@ -1054,74 +1054,65 @@
               });
             }
 
-            // Inject CSS into shadow root once for reliable montering row hiding
-            function injectMonteringCSS(sr) {
-              if (sr.querySelector('#rc-montering-css')) return;
-              var style = document.createElement('style');
-              style.id = 'rc-montering-css';
-              style.textContent = '.rc-montering-locked .mt-2 { display:none !important; } .rc-montering-locked button { display:none !important; }';
-              sr.appendChild(style);
-            }
+            var _lockRunning = false; // prevent re-entry from MutationObserver loop
 
             function lockMonteringRowsIn(sr) {
-              injectMonteringCSS(sr);
+              if (_lockRunning) return;
+              _lockRunning = true;
 
-              sr.querySelectorAll('.py-4').forEach(function(row) {
-                // Hide "per styck" and clean up "montering: true" → "Montering"
-                row.querySelectorAll('p, span, small, div').forEach(function(el) {
-                  if (el.children.length === 0 && el.textContent.trim() === 'per styck') {
-                    el.style.cssText = 'display:none !important;';
-                  }
-                });
-                // Fix "montering: true" → "Montering"
-                // SparkLayer renders: <p><svg-cube/><span>"montering"": ""true"</span></p>
-                // Re-run on every mutation to survive SparkLayer re-renders
-                row.querySelectorAll('span').forEach(function(span) {
-                  if (span.textContent.trim() === 'montering: true') {
-                    span.textContent = 'Montering';
-                  }
-                });
-
-                // Find SKU in this row
-                var skuText = '';
-                row.querySelectorAll('p, span, small').forEach(function(el) {
-                  var t = el.textContent.trim();
-                  if (t.indexOf('RC-SERVICE-MONTERING') !== -1) skuText = 'RC-SERVICE-MONTERING';
-                  else if (t.indexOf('SKU:') !== -1) skuText = t.replace('SKU:', '').trim();
-                  else if (!skuText && t.indexOf('RC-') === 0 && t.length < 40) skuText = t;
-                });
-
-                // Check if THIS specific row has the "Montering" attribute rendered by SparkLayer
-                var rowHasMonteringAttr = false;
-                row.querySelectorAll('span').forEach(function(span) {
-                  var t = span.textContent.trim();
-                  if (t === 'Montering' || t === 'montering: true' || t === 'montering') {
-                    // Make sure it's the attribute indicator, not the product title
-                    var parent = span.parentElement;
-                    if (parent && parent.querySelector('svg')) {
-                      rowHasMonteringAttr = true;
+              try {
+                sr.querySelectorAll('.py-4').forEach(function(row) {
+                  // Hide "per styck" and clean up "montering: true" → "Montering"
+                  row.querySelectorAll('p, span, small, div').forEach(function(el) {
+                    if (el.children.length === 0 && el.textContent.trim() === 'per styck') {
+                      el.style.cssText = 'display:none !important;';
                     }
-                  }
-                });
-
-                // ── Montering service row: lock controls ──
-                if (skuText === 'RC-SERVICE-MONTERING') {
-                  // Always re-apply — SparkLayer can re-render and remove our changes
-                  row.classList.add('rc-montering-locked');
-
-                  // Also inline-hide buttons as backup
-                  row.querySelectorAll('button').forEach(function(btn) {
-                    btn.style.cssText = 'display:none !important;';
+                  });
+                  // Fix "montering: true" → "Montering"
+                  row.querySelectorAll('span').forEach(function(span) {
+                    if (span.textContent.trim() === 'montering: true') {
+                      span.textContent = 'Montering';
+                    }
                   });
 
-                  // Hide qty input wrapper, show static text instead
-                  var qtyWrapper = row.querySelector('.mt-2');
-                  if (qtyWrapper) {
-                    qtyWrapper.style.cssText = 'display:none !important;';
-                  }
+                  // Find SKU in this row
+                  var skuText = '';
+                  row.querySelectorAll('p, span, small').forEach(function(el) {
+                    var t = el.textContent.trim();
+                    if (t.indexOf('RC-SERVICE-MONTERING') !== -1) skuText = 'RC-SERVICE-MONTERING';
+                    else if (t.indexOf('SKU:') !== -1) skuText = t.replace('SKU:', '').trim();
+                    else if (!skuText && t.indexOf('RC-') === 0 && t.length < 40) skuText = t;
+                  });
 
-                  // Show qty as static text
-                  if (!row.querySelector('.rc-montering-qty')) {
+                  // Check if THIS specific row has the "Montering" attribute rendered by SparkLayer
+                  var rowHasMonteringAttr = false;
+                  row.querySelectorAll('span').forEach(function(span) {
+                    var t = span.textContent.trim();
+                    if (t === 'Montering' || t === 'montering: true' || t === 'montering') {
+                      var parent = span.parentElement;
+                      if (parent && parent.querySelector('svg')) {
+                        rowHasMonteringAttr = true;
+                      }
+                    }
+                  });
+
+                  // ── Montering service row: lock controls ──
+                  if (skuText === 'RC-SERVICE-MONTERING') {
+                    if (row.dataset.rcLocked) return; // prevent duplicate elements
+                    row.dataset.rcLocked = '1';
+
+                    // Hide ALL buttons (qty +/-, delete)
+                    row.querySelectorAll('button').forEach(function(btn) {
+                      btn.style.cssText = 'display:none !important;';
+                    });
+
+                    // Hide qty input wrapper
+                    var qtyWrapper = row.querySelector('.mt-2');
+                    if (qtyWrapper) {
+                      qtyWrapper.style.cssText = 'display:none !important;';
+                    }
+
+                    // Show qty as static text
                     var inp = row.querySelector('input');
                     var qty = inp ? inp.value : '';
                     if (qty) {
@@ -1134,42 +1125,37 @@
                         header.parentNode.insertBefore(qtyText, header.nextSibling);
                       }
                     }
-                  } else {
-                    // Update existing qty text if value changed
-                    var inp = row.querySelector('input');
-                    var existingQty = row.querySelector('.rc-montering-qty');
-                    if (inp && existingQty) {
-                      existingQty.textContent = inp.value + ' m\u00B2';
+
+                    if (!row.querySelector('.rc-montering-note')) {
+                      var header2 = row.querySelector('header');
+                      if (header2) {
+                        var note = document.createElement('div');
+                        note.className = 'rc-montering-note';
+                        note.textContent = 'Synkas automatiskt med monterings-produkter';
+                        note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
+                        header2.parentNode.insertBefore(note, header2.nextSibling);
+                      }
                     }
+                    return;
                   }
 
-                  if (!row.querySelector('.rc-montering-note')) {
-                    var header = row.querySelector('header');
-                    if (header) {
-                      var note = document.createElement('div');
-                      note.className = 'rc-montering-note';
-                      note.textContent = 'Synkas automatiskt med monterings-produkter';
-                      note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
-                      header.parentNode.insertBefore(note, header.nextSibling);
+                  // ── Carpet rows: show "Inkl. montering" only if THIS row has the attribute ──
+                  if (rowHasMonteringAttr) {
+                    if (!row.querySelector('.rc-montering-label')) {
+                      var header = row.querySelector('header');
+                      if (header) {
+                        var label = document.createElement('div');
+                        label.className = 'rc-montering-label';
+                        label.textContent = 'Inkl. montering +45 kr/m\u00B2';
+                        label.style.cssText = 'font-size:11px;color:#28AB76;font-weight:500;margin-top:2px;';
+                        header.parentNode.insertBefore(label, header.nextSibling);
+                      }
                     }
                   }
-                  return;
-                }
-
-                // ── Carpet rows: show "Inkl. montering" only if THIS row has the attribute ──
-                if (rowHasMonteringAttr) {
-                  if (!row.querySelector('.rc-montering-label')) {
-                    var header = row.querySelector('header');
-                    if (header) {
-                      var label = document.createElement('div');
-                      label.className = 'rc-montering-label';
-                      label.textContent = 'Inkl. montering +45 kr/m\u00B2';
-                      label.style.cssText = 'font-size:11px;color:#28AB76;font-weight:500;margin-top:2px;';
-                      header.parentNode.insertBefore(label, header.nextSibling);
-                    }
-                  }
-                }
-              });
+                });
+              } finally {
+                _lockRunning = false;
+              }
             }
 
             // Use MutationObserver for instant response (no flickering)
