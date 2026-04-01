@@ -726,6 +726,14 @@
             setTimeout(function() { obs.disconnect(); }, 5000);
           });
 
+          // Set default quantity to 5 on product detail page (spark-pdp)
+          document.querySelectorAll('spark-pdp').forEach(function(pdp) {
+            setDefaultQty(pdp);
+            var obs = new MutationObserver(function() { setDefaultQty(pdp); });
+            obs.observe(pdp.shadowRoot || pdp, { childList: true, subtree: true });
+            setTimeout(function() { obs.disconnect(); }, 5000);
+          });
+
           // Patch light DOM (by class only — safe for whole document)
           patchRoot(document, false);
 
