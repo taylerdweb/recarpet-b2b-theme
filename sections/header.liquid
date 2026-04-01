@@ -120,8 +120,7 @@
     transition: background 0.15s;
   }
   .rc-header-login:hover {
-    background: var(--rc-cream);
-    color: var(--rc-green);
+    cursor: pointer;
   }
 
   /* Kontakta oss CTA button in nav */
@@ -162,8 +161,7 @@
     transition: background 0.15s, color 0.15s;
   }
   .rc-cart-icon:hover {
-    background: var(--rc-cream);
-    color: var(--rc-green);
+    cursor: pointer;
   }
 
   /* Badge counter */
@@ -246,11 +244,14 @@
     background: rgba(255,255,255,0.15);
   }
   .header-wrapper--transparent .header__icon,
-  .header-wrapper--transparent .header__icon svg,
-  .header-wrapper--transparent .rc-cart-icon,
-  .header-wrapper--transparent .rc-cart-icon svg {
+  .header-wrapper--transparent .header__icon svg {
     color: #fff !important;
     fill: #fff !important;
+  }
+  .header-wrapper--transparent .rc-cart-icon svg {
+    color: #fff !important;
+    stroke: #fff !important;
+    fill: none !important;
   }
   /* Scrolled state — solid white */
   .header-wrapper--scrolled {
@@ -618,8 +619,9 @@
           Mitt konto
         </a>
       {%- endunless -%}
-      <!-- reCarpet: B2B SparkLayer cart icon (only for logged-in customers) -->
-      {%- if customer -%}
+      <!-- reCarpet: B2B SparkLayer cart icon (only for approved B2B customers) -->
+      {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
+      {%- if customer and customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' -%}
       <button type="button" id="rc-cart-icon" class="rc-cart-icon" aria-label="Varukorg" title="Varukorg">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
