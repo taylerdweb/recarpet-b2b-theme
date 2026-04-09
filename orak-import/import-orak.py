@@ -57,6 +57,10 @@ SILVER_MULTIPLIER = 1.00
 GULD_MULTIPLIER   = 0.90
 KRETS_MULTIPLIER  = 0.80
 
+# ─── Påslag på inköpspris (Orak/Composil) ────────────────────────────────────
+# ReCarpet lägger 40% påslag på leverantörens kostnad
+COST_MARKUP = 1.40
+
 # ─── Prisavrundning ───────────────────────────────────────────────────────────
 # Alltid avrunda uppåt (bekräftat av Hampus, möte 2026-04-09)
 def ceil_price(value, decimals=2):
@@ -538,7 +542,7 @@ def generate_pricelists(products: list, rates: dict):
             continue
 
         for name, (mult, rate) in LISTS.items():
-            price = ceil_price(eur_price * rate * mult)
+            price = ceil_price(eur_price * COST_MARKUP * rate * mult)
             list_rows[name].append([sku, 1, f"{price:.2f}"])
 
     # Lägg till tjänsteprodukter — samma pris i alla listor (konverteras till respektive valuta)
@@ -641,7 +645,7 @@ def update_pricelist_excel(products: list, rates: dict):
             continue
 
         def px(rate, mult):
-            return ceil_price(eur_price * rate * mult)
+            return ceil_price(eur_price * COST_MARKUP * rate * mult)
 
         product_rows.append({
             "sku":        sku,
@@ -922,8 +926,8 @@ def main():
         except (ValueError, TypeError):
             eur_price, quantity = 0.0, 0
 
-        # Shopify-priset är listpriset i SEK (ingen B2B-rabatt — SparkLayer hanterar det)
-        price = ceil_price(eur_price * rates["EUR_SEK"])
+        # Shopify-priset är listpriset i SEK med 40% påslag (SparkLayer hanterar B2B-rabatter)
+        price = ceil_price(eur_price * COST_MARKUP * rates["EUR_SEK"])
 
         if not sku:
             skipped += 1

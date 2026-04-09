@@ -41,9 +41,9 @@
   {%- comment -%} ── Stock badge + Product label ─────────────────────────── {%- endcomment -%}
   <div class="recarpet-specs__badges">
     {%- if in_stock -%}
-      <span class="recarpet-badge recarpet-badge--stock">IN STOCK</span>
+      <span class="recarpet-badge recarpet-badge--stock">I lager</span>
     {%- else -%}
-      <span class="recarpet-badge recarpet-badge--outofstock">OUT OF STOCK</span>
+      <span class="recarpet-badge recarpet-badge--outofstock">Ej i lager</span>
     {%- endif -%}
     {%- if product_label != blank -%}
       {%- liquid
@@ -212,36 +212,35 @@
         <h3 class="recarpet-sample-modal__title">Beställ produktprov</h3>
         <p class="recarpet-sample-modal__subtitle">Fyll i dina uppgifter så återkommer vi med provleverans.</p>
 
-        <form id="recarpet-sample-form" class="recarpet-sample-modal__form">
-          <input type="hidden" name="product_sku" value="{{ _spec_sku }}">
-          <input type="hidden" name="product_title" value="{{ product.title | escape }}">
+        {%- form 'contact', id: 'recarpet-sample-form', class: 'recarpet-sample-modal__form' -%}
+          <input type="hidden" name="contact[tags]" value="provbeställning">
+          <input type="hidden" name="contact[subject]" value="[PROVBESTÄLLNING] {{ product.title | escape }} (SKU: {{ _spec_sku }})">
 
           <label class="recarpet-sample-modal__label">
             Namn
-            <input type="text" name="name" required class="recarpet-sample-modal__input"
+            <input type="text" name="contact[name]" required class="recarpet-sample-modal__input"
               {%- if customer %} value="{{ customer.name | escape }}"{% endif %}>
           </label>
 
           <label class="recarpet-sample-modal__label">
             E-post
-            <input type="email" name="email" required class="recarpet-sample-modal__input"
+            <input type="email" name="contact[email]" required class="recarpet-sample-modal__input"
               {%- if customer %} value="{{ customer.email | escape }}"{% endif %}>
           </label>
 
           <label class="recarpet-sample-modal__label">
             Telefon
-            <input type="tel" name="phone" class="recarpet-sample-modal__input"
+            <input type="tel" name="contact[phone]" class="recarpet-sample-modal__input"
               {%- if customer.phone %} value="{{ customer.phone | escape }}"{% endif %}>
           </label>
 
           <label class="recarpet-sample-modal__label">
             Meddelande
-            <textarea name="message" rows="3" class="recarpet-sample-modal__textarea">Hej, jag vill gärna beställa ett prov av {{ product.title | escape }} (SKU: {{ _spec_sku }}).
-            </textarea>
+            <textarea name="contact[body]" rows="3" class="recarpet-sample-modal__textarea">Hej, jag vill gärna beställa ett prov av {{ product.title | escape }} (SKU: {{ _spec_sku }}).</textarea>
           </label>
 
           <button type="submit" class="recarpet-sample-modal__submit">Skicka förfrågan</button>
-        </form>
+        {%- endform -%}
 
         <div id="recarpet-sample-success" class="recarpet-sample-modal__success" style="display:none;">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a6b2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -258,30 +257,19 @@
 
       form.addEventListener('submit', function(e) {
         e.preventDefault();
-        var data = new FormData(form);
+        var formData = new FormData(form);
 
-        // Send via Shopify contact form endpoint
-        fetch('/contact#contact_form', {
+        fetch(form.action || '/contact', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({
-            'form_type': 'contact',
-            'utf8': '\u2713',
-            'contact[name]': data.get('name'),
-            'contact[email]': data.get('email'),
-            'contact[phone]': data.get('phone') || '',
-            'contact[body]': '[PROVBESTÄLLNING] Produkt: ' + data.get('product_title') + ' (SKU: ' + data.get('product_sku') + ')\n\n' + data.get('message'),
-          }),
-        }).then(function() {
+          body: formData,
+        }).then(function(res) {
           form.style.display = 'none';
           document.getElementById('recarpet-sample-success').style.display = 'block';
           setTimeout(function() {
             var modal = document.getElementById('recarpet-sample-modal');
             if (modal && modal.close) modal.close();
-            // Reset for next use
             form.style.display = '';
             document.getElementById('recarpet-sample-success').style.display = 'none';
-            form.reset();
           }, 3000);
         }).catch(function() {
           alert('Något gick fel. Försök igen eller kontakta oss direkt på info@recarpet.se.');
