@@ -353,7 +353,7 @@
             "cart.options-dropdown.clear-cart": "T\u00F6m varukorg",
             "cart.options-dropdown.save-cart": "Spara ink\u00F6pslista",
             "cart.import.ai": "AI",
-            "global.per-unit": "per styck",
+            "global.per-unit": "/m\u00B2",
             "pdp.messaging.in-stock": "I lager",
             "pdp.messaging.out-of-stock": "Slut i lager",
             "global.totals.sub": "Delsumma",
@@ -498,7 +498,7 @@
             "cart.options-dropdown.clear-cart": "T\u00F6m varukorg",
             "cart.options-dropdown.save-cart": "Spara ink\u00F6pslista",
             "cart.import.ai": "AI",
-            "global.per-unit": "per styck",
+            "global.per-unit": "/m\u00B2",
             "pdp.messaging.in-stock": "I lager",
             "pdp.messaging.out-of-stock": "Slut i lager",
             "global.totals.sub": "Delsumma",
@@ -1110,12 +1110,7 @@
 
               try {
                 sr.querySelectorAll('.py-4').forEach(function(row) {
-                  // Hide "per styck" and clean up "montering: true" → "Montering"
-                  row.querySelectorAll('p, span, small, div').forEach(function(el) {
-                    if (el.children.length === 0 && el.textContent.trim() === 'per styck') {
-                      el.style.cssText = 'display:none !important;';
-                    }
-                  });
+                  // "per styck" is now "/m²" via translations — no need to hide
                   // Fix "montering: true" → "Montering"
                   row.querySelectorAll('span').forEach(function(span) {
                     if (span.textContent.trim() === 'montering: true') {
