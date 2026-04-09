@@ -215,6 +215,7 @@
               {%- when 'recarpet_specs' -%}
                 <div class="product__recarpet-specs quick-add-hidden" {{ block.shopify_attributes }}>
                   {%- render 'recarpet-product-specs', product: product -%}
+                  {%- render 'recarpet-service-content', product: product -%}
                 </div>
               {%- when 'description' -%}
                 {%- if product.description != blank -%}

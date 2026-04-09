@@ -1,0 +1,210 @@
+{%- comment -%}
+  reCarpet — Service Product Content
+  Renders descriptive content for service products (RC-SERVICE-* SKUs).
+  Each service gets its own content block based on SKU.
+
+  Usage: {% render 'recarpet-service-content', product: product %}
+{%- endcomment -%}
+
+{%- assign _svc_sku = product.selected_or_first_available_variant.sku | default: '' -%}
+{%- unless _svc_sku contains 'RC-SERVICE' or product.product_type contains 'Tjänst' -%}
+  {%- break -%}
+{%- endunless -%}
+
+<div class="recarpet-service">
+
+  {%- if _svc_sku contains 'RENGORING' -%}
+    {%- comment -%} ── Service & underhåll ─────────────────────────────── {%- endcomment -%}
+    <div class="recarpet-service__intro">
+      <h3 class="recarpet-service__heading">Vi underhåller era befintliga golv</h3>
+      <p>Behåll era golv i toppskick med våra service- och underhållstjänster. Vi hjälper er att förlänga livslängden på era textilplattor genom regelbunden rengöring och reparation vid behov.</p>
+    </div>
+
+    <ul class="recarpet-service__usps">
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Djupgående rengöring för att ta bort svåra fläckar</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Reparation av skadade plattor eller byte vid behov</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Rådgivning om daglig skötsel för att maximera hållbarheten</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Åtgärder för att motverka slitage i utsatta områden</span>
+      </li>
+    </ul>
+
+    <p class="recarpet-service__outro">Med rätt underhåll kan golven se ut som nya i många år framöver.</p>
+
+  {%- elsif _svc_sku contains 'MONTERING' -%}
+    {%- comment -%} ── Montering ──────────────────────────────────────── {%- endcomment -%}
+    <div class="recarpet-service__intro">
+      <h3 class="recarpet-service__heading">Behöver du hjälp med montering?</h3>
+      <p>Vi monterar både återbrukade och nya textilplattor med samma precision och noggrannhet. Våra samarbetspartners består av erfarna golventreprenörer som finns från norr till söder.</p>
+    </div>
+
+    <ul class="recarpet-service__usps">
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Noggrann förberedelse av ytan inför montering</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Professionell installation med rätt teknik och verktyg</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Anpassning till er verksamhet för att minimera störningar</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Rådgivning om skötsel och underhåll av det nya golvet</span>
+      </li>
+    </ul>
+
+    <p class="recarpet-service__outro">Vi ser till att ert nya golv är snyggt, hållbart och redo för många års användning. Våra samarbetspartners finns i hela landet.</p>
+
+  {%- elsif _svc_sku contains 'DEMONTERING' -%}
+    {%- comment -%} ── Demontering ────────────────────────────────────── {%- endcomment -%}
+    <div class="recarpet-service__intro">
+      <h3 class="recarpet-service__heading">Demonterar och rengör era befintliga mattor</h3>
+      <p>En effektiv och säker demontering är avgörande för att återbruket ska bli framgångsrikt. Vi demonterar med noggrannhet och tar hand om textilplattorna så att de kan få ett nytt liv.</p>
+    </div>
+
+    <ul class="recarpet-service__usps">
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Professionell demontering utan att skada plattorna</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Logistisk planering för att minimera störningar på plats</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Säker transport och lagerhållning av demonterat material</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Rådgivning om nästa steg för att återanvända plattorna</span>
+      </li>
+    </ul>
+
+    <p class="recarpet-service__outro">Vi utför demonteringen snabbt och effektivt, alltid med fokus på att maximera återanvändningen och minimera avfall.</p>
+
+  {%- elsif _svc_sku contains 'INTERNT' or _svc_sku contains 'ATERBRUK' -%}
+    {%- comment -%} ── Internt återbruk ───────────────────────────────── {%- endcomment -%}
+    <div class="recarpet-service__intro">
+      <h3 class="recarpet-service__heading">Återbruk av ert befintliga golv</h3>
+      <p>Vill ni behålla golvet inom fastigheten? Vi hjälper er att återanvända befintliga textilplattor för nästa hyresgäst, vilket sparar både pengar och resurser.</p>
+    </div>
+
+    <ul class="recarpet-service__usps">
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Inspektion och rengöring av befintligt golv</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Sortering och eventuella reparationer av skadade plattor</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Komplettering med nya eller återbrukade plattor vid behov</span>
+      </li>
+      <li>
+        <svg class="recarpet-service__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <span>Montering och anpassning efter hyresgästens önskemål</span>
+      </li>
+    </ul>
+
+    <p class="recarpet-service__outro">Internt återbruk är ett smart sätt att spara både pengar och miljö. Vi gör det enkelt att ge era golv ett nytt liv.</p>
+
+  {%- else -%}
+    {%- comment -%} ── Generisk tjänst (fallback) ────────────────────── {%- endcomment -%}
+    <div class="recarpet-service__intro">
+      <p>Kontakta oss för mer information om denna tjänst.</p>
+    </div>
+
+  {%- endif -%}
+
+  <div class="recarpet-service__contact">
+    <p>Har du frågor? Kontakta oss på <a href="tel:+46700733682">0700-73 36 82</a> eller <a href="mailto:jonas@recarpet.se">jonas@recarpet.se</a></p>
+  </div>
+
+</div>
+
+<style>
+  .recarpet-service {
+    margin: 24px 0 0;
+    font-family: inherit;
+  }
+
+  .recarpet-service__intro {
+    margin-bottom: 20px;
+  }
+
+  .recarpet-service__heading {
+    font-size: 1.15em;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--color-foreground, #1a1a1a);
+  }
+
+  .recarpet-service__intro p {
+    margin: 0;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .recarpet-service__usps {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .recarpet-service__usps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+    color: #333;
+  }
+
+  .recarpet-service__icon {
+    flex-shrink: 0;
+    color: #1a6b2f;
+    margin-top: 2px;
+  }
+
+  .recarpet-service__outro {
+    color: #555;
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+
+  .recarpet-service__contact {
+    border-top: 1px solid #e5e5e5;
+    padding-top: 16px;
+    margin-top: 8px;
+  }
+
+  .recarpet-service__contact p {
+    margin: 0;
+    color: #555;
+    font-size: 0.9em;
+  }
+
+  .recarpet-service__contact a {
+    color: #1a6b2f;
+    text-decoration: underline;
+  }
+</style>
