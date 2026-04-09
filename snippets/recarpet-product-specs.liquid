@@ -182,6 +182,14 @@
     </div>
   {%- endif -%}
 
+  {%- comment -%} ── Stock disclaimer for Orak / Composil (non-realtime inventory) ── {%- endcomment -%}
+  {%- if _spec_sku contains 'RC-ORAK' or _spec_sku contains 'RC-COMP' -%}
+    <div class="recarpet-specs__disclaimer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Lagerstatus uppdateras periodvis och kan avvika från faktiskt lager. Kontakta oss för att säkerställa tillgänglighet.</span>
+    </div>
+  {%- endif -%}
+
 </div>
 
 <style>
@@ -317,6 +325,26 @@
     font-size: 16px;
     font-weight: 500;
     color: #111;
+  }
+
+  /* Stock disclaimer for non-realtime inventory */
+  .recarpet-specs__disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: #fdf6e3;
+    border: 1px solid #e8d5a3;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #7a5c2e;
+  }
+  .recarpet-specs__disclaimer svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #b8860b;
   }
 </style>
 
