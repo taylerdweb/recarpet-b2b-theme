@@ -35,7 +35,7 @@
         "open_account_text": "<p>Fyll i formuläret nedan så granskar vi din ansökan och återkommer inom 1–2 arbetsdagar.</p>",
         "open_account_button": "Ansök om konto",
         "apply_submit": "Skicka ansökan",
-        "form_message_success": "Tack för din ansökan! Vi återkommer inom 1–2 arbetsdagar.",
+        "form_message_success": "Tack för din ansökan! Du kan nu logga in med din e-postadress nedan.",
         "form_message_error": "Det uppstod ett fel vid skickandet. Vänligen försök igen.",
         "form_message_create_account_text": "Sista steget — skapa ditt inloggningskonto med samma e-postadress som du angav ovan. Vi aktiverar ditt B2B-konto när vi granskat din ansökan.",
         "form_message_create_account_button": "Skapa inloggningskonto →",

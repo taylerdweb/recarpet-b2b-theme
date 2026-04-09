@@ -1302,55 +1302,35 @@
         },
       };
       </script>
-      <!-- Force SparkLayer shadow roots to open mode so we can style cart items -->
-      <script>
-      (function() {
-        var origAttachShadow = Element.prototype.attachShadow;
-        Element.prototype.attachShadow = function(init) {
-          // Only force open for SparkLayer components (spark-*)
-          if (init && init.mode === 'closed' && this.tagName && this.tagName.toLowerCase().indexOf('spark') === 0) {
-            init = Object.assign({}, init, { mode: 'open' });
-          }
-          return origAttachShadow.call(this, init);
-        };
-      })();
-      </script>
-      <script async src="https://sparkcdn.io/sparkjs/taylerd/live"></script>
 
+    <!-- SparkLayer CSS MUST load before the JS to prevent FOUC / skeleton flicker -->
     <!-- required for linking to order or quotes: https://docs.sparklayer.io/my-account-interface#yT5mS -->
     <script async src="https://cdn.sparklayer.io/spark-redirect.js"></script>
-  {%- endif -%}
 
-
-
-
-<!-- Add this to layout/theme.liquid before closing head tag or in a CSS file-->
-
-{%- if is_b2b_customer -%}
   <!-- SparkLayer Sample CSS Code -->
-  
+
   <style type="text/css">
-  
+
   :root {
     /* Set the brand styling */
     --b2b-brand-color: #1e4433; /* Main brand colour — reCarpet dark green */
     --b2b-brand-color-hover: #264f3f; /* Main brand colour hover */
     --b2b-brand-font: 'DM Sans', Roboto, sans-serif; /* Main brand font */
     --b2b-brand-font-heading: 'DM Sans', sans-serif; /* Main brand heading font */
-  
+
     /* Update colours */
     --spark-default-body-color: #555555; /* Main body colour */
     --spark-primary-color: #000000; /* Main title colour */
     --spark-secondary-color: var(--b2b-brand-color); /* Main highlight colour */
     --spark-link-color: var(--b2b-brand-color); /* Link colour */
-  
+
     /* Typefaces */
     --spark-font-default: var(--b2b-brand-font); /* Body typeface */
     --spark-font-highlight: var(--b2b-brand-font-heading); /* Highlight typeface */
     --spark-font-weight-default: 400; /* Default font weight */
     --spark-font-weight-medium: 500; /* Medium font weight */
     --spark-font-weight-heavy: 600; /* Bold font weight */
-  
+
     /* General */
     --spark-border-radius-default: 0; /* Default border radius */
     --spark-drawer-max-width: 700px; /* Width of overlay */
@@ -1358,7 +1338,7 @@
     --spark-spinner-default-color: var(--b2b-brand-color); /* Loading spinner colour */
     --spark-loading-background-color: #f5f5f5; /* Loading skeleton colour */
     --spark-loading-background-overlay-product: 255, 255, 255; /* Loading overlay on PDP (white) */
-  
+
     /* Font sizes */
     --spark-font-default-size: 14px; /* Default font size */
     --spark-font-default-size-small: 14px; /* Default font size - small screens */
@@ -1370,16 +1350,16 @@
     --spark-h4-fontsize: 16px; /* Header 4 font size */
     --spark-h5-fontsize: 15px; /* Header 5 font size */
     --spark-h6-fontsize: 14px; /* Header 6 font size */
-  
+
     --spark-pricing-fontsize: 16px; /* Font size of pricing */
     --spark-pricing-font-weight: 500; /* Font weight of pricing */
     --spark-pricing-fontsize-small: 14px; /* Font size of pricing on mobile */
-  
+
     --spark-product-code-fontsize: 16px; /* Font size of product code */
     --spark-product-code-font-weight: 500; /* Font weight of product code */
     --spark-product-code-fontsize-small: 14px; /* Font size of product code on mobile */
     --spark-product-stockstatus-align: flex-start; /* Alignment of stock status for single variants */
-  
+
     /* Buttons */
     --spark-button-font-family: var(--b2b-brand-font-heading); /* Button typeface */
     --spark-button-color: var(--b2b-brand-color); /* Default sutton colour */
@@ -1392,13 +1372,13 @@
     --spark-button-text-letter-spacing: 0; /* Button letter spacing */
     --spark-button-padding: 1em 2.75em; /* Button padding */
     --spark-button-small-font-size: 16px; /* Small button font size */
-  
+
     /* Tables */
     --spark-table-border-color: #CCCCCC; /* Table border colour */
     --spark-table-header-background-color: #F1F1F1; /* Table header background */
     --spark-table-header-text-color: #222222; /* Table header font colour */
     --spark-table-header-font-weight: 500; /* Table header font weight */
-  
+
     /* Product Card */
     --spark-product-card-button-radius: 0; /* Button radius */
     --spark-product-card-button-padding: 0.75em 1em; /* Button padding */
@@ -1532,7 +1512,59 @@
 
   </style>
 
-  <!-- End SparkLayer Sample CSS Code -->
+  <!-- End SparkLayer Sample CSS Code — now BEFORE the JS load -->
+
+      <!-- Force SparkLayer shadow roots to open mode so we can style cart items -->
+      <script>
+      (function() {
+        var origAttachShadow = Element.prototype.attachShadow;
+        Element.prototype.attachShadow = function(init) {
+          // Only force open for SparkLayer components (spark-*)
+          if (init && init.mode === 'closed' && this.tagName && this.tagName.toLowerCase().indexOf('spark') === 0) {
+            init = Object.assign({}, init, { mode: 'open' });
+          }
+          return origAttachShadow.call(this, init);
+        };
+      })();
+      </script>
+      <script async src="https://sparkcdn.io/sparkjs/taylerd/live"></script>
+
+      <!-- SparkLayer load timeout fallback — show friendly message instead of infinite skeleton -->
+      <script>
+      (function() {
+        var SPARK_TIMEOUT_MS = 10000; // 10 seconds
+        var timeoutId = setTimeout(function() {
+          // Check if SparkLayer actually loaded by looking for initialized widgets
+          var sparkEls = document.querySelectorAll('spark-pdp, spark-product-card, spark-drawer');
+          var anyLoaded = false;
+          sparkEls.forEach(function(el) {
+            // SparkLayer sets a data attribute or shadow DOM content when ready
+            if (el.shadowRoot && el.shadowRoot.childElementCount > 1) {
+              anyLoaded = true;
+            }
+          });
+          if (!anyLoaded && sparkEls.length > 0) {
+            // SparkLayer didn't load — inject a notice banner
+            var banner = document.createElement('div');
+            banner.id = 'spark-timeout-banner';
+            banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#fdf6e3;border-top:2px solid #e8d5a3;padding:14px 20px;text-align:center;font-family:DM Sans,sans-serif;font-size:14px;color:#666;';
+            banner.innerHTML = 'B2B-funktionerna laddas inte korrekt. <a href="javascript:location.reload()" style="color:#1e4433;font-weight:600;text-decoration:underline;">Ladda om sidan</a> eller <a href="/account/logout" style="color:#1e4433;font-weight:600;text-decoration:underline;">logga ut och in igen</a>.';
+            document.body.appendChild(banner);
+            // Auto-dismiss after 15s
+            setTimeout(function() {
+              var b = document.getElementById('spark-timeout-banner');
+              if (b) b.style.display = 'none';
+            }, 15000);
+          }
+        }, SPARK_TIMEOUT_MS);
+
+        // Clear timeout if SparkLayer fires its ready event
+        window.addEventListener('spark:ready', function() {
+          clearTimeout(timeoutId);
+        });
+      })();
+      </script>
+
   {%- endif -%}
 
   <!-- reCarpet theme-level helpers (tokens now live in snippets/rc-global-styles.liquid) -->
