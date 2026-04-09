@@ -190,6 +190,107 @@
     </div>
   {%- endif -%}
 
+  {%- comment -%} ── Sample request CTA — Milliken products only ────────── {%- endcomment -%}
+  {%- if _spec_sku contains 'Milliken' -%}
+    <div class="recarpet-sample-cta">
+      <div class="recarpet-sample-cta__inner">
+        <div class="recarpet-sample-cta__text">
+          <strong>Beställ prov</strong>
+          <span>Vill du se och känna på materialet innan du beställer?</span>
+        </div>
+        <button type="button" class="recarpet-sample-cta__btn" onclick="document.getElementById('recarpet-sample-modal').showModal()">
+          Kontakta oss
+        </button>
+      </div>
+    </div>
+
+    <dialog id="recarpet-sample-modal" class="recarpet-sample-modal">
+      <form method="dialog" class="recarpet-sample-modal__close-wrapper">
+        <button type="submit" class="recarpet-sample-modal__close" aria-label="Stäng">&times;</button>
+      </form>
+      <div class="recarpet-sample-modal__content">
+        <h3 class="recarpet-sample-modal__title">Beställ produktprov</h3>
+        <p class="recarpet-sample-modal__subtitle">Fyll i dina uppgifter så återkommer vi med provleverans.</p>
+
+        <form id="recarpet-sample-form" class="recarpet-sample-modal__form">
+          <input type="hidden" name="product_sku" value="{{ _spec_sku }}">
+          <input type="hidden" name="product_title" value="{{ product.title | escape }}">
+
+          <label class="recarpet-sample-modal__label">
+            Namn
+            <input type="text" name="name" required class="recarpet-sample-modal__input"
+              {%- if customer %} value="{{ customer.name | escape }}"{% endif %}>
+          </label>
+
+          <label class="recarpet-sample-modal__label">
+            E-post
+            <input type="email" name="email" required class="recarpet-sample-modal__input"
+              {%- if customer %} value="{{ customer.email | escape }}"{% endif %}>
+          </label>
+
+          <label class="recarpet-sample-modal__label">
+            Telefon
+            <input type="tel" name="phone" class="recarpet-sample-modal__input"
+              {%- if customer.phone %} value="{{ customer.phone | escape }}"{% endif %}>
+          </label>
+
+          <label class="recarpet-sample-modal__label">
+            Meddelande
+            <textarea name="message" rows="3" class="recarpet-sample-modal__textarea">Hej, jag vill gärna beställa ett prov av {{ product.title | escape }} (SKU: {{ _spec_sku }}).
+            </textarea>
+          </label>
+
+          <button type="submit" class="recarpet-sample-modal__submit">Skicka förfrågan</button>
+        </form>
+
+        <div id="recarpet-sample-success" class="recarpet-sample-modal__success" style="display:none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a6b2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <p><strong>Tack för din förfrågan!</strong></p>
+          <p>Vi återkommer till dig inom kort angående provleverans.</p>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+    (function() {
+      var form = document.getElementById('recarpet-sample-form');
+      if (!form) return;
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var data = new FormData(form);
+
+        // Send via Shopify contact form endpoint
+        fetch('/contact#contact_form', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            'form_type': 'contact',
+            'utf8': '\u2713',
+            'contact[name]': data.get('name'),
+            'contact[email]': data.get('email'),
+            'contact[phone]': data.get('phone') || '',
+            'contact[body]': '[PROVBESTÄLLNING] Produkt: ' + data.get('product_title') + ' (SKU: ' + data.get('product_sku') + ')\n\n' + data.get('message'),
+          }),
+        }).then(function() {
+          form.style.display = 'none';
+          document.getElementById('recarpet-sample-success').style.display = 'block';
+          setTimeout(function() {
+            var modal = document.getElementById('recarpet-sample-modal');
+            if (modal && modal.close) modal.close();
+            // Reset for next use
+            form.style.display = '';
+            document.getElementById('recarpet-sample-success').style.display = 'none';
+            form.reset();
+          }, 3000);
+        }).catch(function() {
+          alert('Något gick fel. Försök igen eller kontakta oss direkt på info@recarpet.se.');
+        });
+      });
+    })();
+    </script>
+  {%- endif -%}
+
 </div>
 
 <style>
@@ -345,6 +446,160 @@
     flex-shrink: 0;
     margin-top: 2px;
     color: #b8860b;
+  }
+
+  /* ── Sample request CTA (Milliken only) ──────────────── */
+  .recarpet-sample-cta {
+    margin-top: 18px;
+  }
+  .recarpet-sample-cta__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    background: #f5f5f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .recarpet-sample-cta__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .recarpet-sample-cta__text strong {
+    font-size: 15px;
+    color: #111;
+  }
+  .recarpet-sample-cta__text span {
+    font-size: 13px;
+    color: #666;
+  }
+  .recarpet-sample-cta__btn {
+    flex-shrink: 0;
+    padding: 10px 24px;
+    background: #1e4433;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .recarpet-sample-cta__btn:hover {
+    background: #264f3f;
+  }
+  @media (max-width: 480px) {
+    .recarpet-sample-cta__inner {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+    }
+  }
+
+  /* ── Sample request modal ────────────────────────────── */
+  .recarpet-sample-modal {
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    max-width: 460px;
+    width: 90vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .recarpet-sample-modal::backdrop {
+    background: rgba(0,0,0,0.45);
+  }
+  .recarpet-sample-modal__close-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 16px 0;
+  }
+  .recarpet-sample-modal__close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .recarpet-sample-modal__close:hover {
+    color: #333;
+  }
+  .recarpet-sample-modal__content {
+    padding: 0 28px 28px;
+  }
+  .recarpet-sample-modal__title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #111;
+    margin: 0 0 4px;
+  }
+  .recarpet-sample-modal__subtitle {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 20px;
+  }
+  .recarpet-sample-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .recarpet-sample-modal__label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+  }
+  .recarpet-sample-modal__input,
+  .recarpet-sample-modal__textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #111;
+    background: #fff;
+    transition: border-color 0.2s;
+  }
+  .recarpet-sample-modal__input:focus,
+  .recarpet-sample-modal__textarea:focus {
+    outline: none;
+    border-color: #1e4433;
+  }
+  .recarpet-sample-modal__textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+  .recarpet-sample-modal__submit {
+    padding: 12px 24px;
+    background: #1e4433;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+  }
+  .recarpet-sample-modal__submit:hover {
+    background: #264f3f;
+  }
+  .recarpet-sample-modal__success {
+    text-align: center;
+    padding: 20px 0;
+  }
+  .recarpet-sample-modal__success p {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: #333;
   }
 </style>
 

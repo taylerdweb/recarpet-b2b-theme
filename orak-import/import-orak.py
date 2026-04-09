@@ -27,6 +27,7 @@ import sys
 import csv
 import json
 import time
+import math
 import argparse
 import pandas as pd
 import requests
@@ -55,6 +56,13 @@ SPARKLAYER_DIR = BASE_DIR.parent / "sparklayer-pricelists"
 SILVER_MULTIPLIER = 1.00
 GULD_MULTIPLIER   = 0.90
 KRETS_MULTIPLIER  = 0.80
+
+# ─── Prisavrundning ───────────────────────────────────────────────────────────
+# Alltid avrunda uppåt (bekräftat av Hampus, möte 2026-04-09)
+def ceil_price(value, decimals=2):
+    """Round a price UP to the given number of decimal places."""
+    factor = 10 ** decimals
+    return math.ceil(value * factor) / factor
 
 # Fallback-valutakurser (används om live-hämtning misslyckas)
 FALLBACK_RATES = {
@@ -530,7 +538,7 @@ def generate_pricelists(products: list, rates: dict):
             continue
 
         for name, (mult, rate) in LISTS.items():
-            price = round(eur_price * rate * mult, 2)
+            price = ceil_price(eur_price * rate * mult)
             list_rows[name].append([sku, 1, f"{price:.2f}"])
 
     # Lägg till tjänsteprodukter — samma pris i alla listor (konverteras till respektive valuta)
@@ -540,13 +548,13 @@ def generate_pricelists(products: list, rates: dict):
             # Tjänster har fast SEK-pris — konvertera till andra valutor via SEK-kurs
             if rate == 1.0:
                 # EUR-lista: konvertera SEK → EUR
-                svc_price = round(sek_price / eur_sek, 2)
+                svc_price = ceil_price(sek_price / eur_sek)
             elif rate == eur_nok:
                 # NOK-lista: konvertera SEK → NOK
-                svc_price = round(sek_price * (eur_nok / eur_sek), 2)
+                svc_price = ceil_price(sek_price * (eur_nok / eur_sek))
             elif rate == eur_dkk:
                 # DKK-lista: konvertera SEK → DKK
-                svc_price = round(sek_price * (eur_dkk / eur_sek), 2)
+                svc_price = ceil_price(sek_price * (eur_dkk / eur_sek))
             else:
                 # SEK-lista: pris rakt av
                 svc_price = sek_price
@@ -633,7 +641,7 @@ def update_pricelist_excel(products: list, rates: dict):
             continue
 
         def px(rate, mult):
-            return round(eur_price * rate * mult, 2)
+            return ceil_price(eur_price * rate * mult)
 
         product_rows.append({
             "sku":        sku,
@@ -651,9 +659,9 @@ def update_pricelist_excel(products: list, rates: dict):
     # Lägg till tjänsteprodukter i product_rows (samma pris alla nivåer)
     for sp in SERVICE_PRODUCTS:
         sek = sp["sek_price"]
-        nok = round(sek * (eur_nok / eur_sek), 2)
-        dkk = round(sek * (eur_dkk / eur_sek), 2)
-        eur = round(sek / eur_sek, 2)
+        nok = ceil_price(sek * (eur_nok / eur_sek))
+        dkk = ceil_price(sek * (eur_dkk / eur_sek))
+        eur = ceil_price(sek / eur_sek)
         product_rows.append({
             "sku":        sp["sku"],
             "sek_member": sek,  "sek_entre": sek,  "sek_krets": sek,
@@ -915,7 +923,7 @@ def main():
             eur_price, quantity = 0.0, 0
 
         # Shopify-priset är listpriset i SEK (ingen B2B-rabatt — SparkLayer hanterar det)
-        price = round(eur_price * rates["EUR_SEK"], 2)
+        price = ceil_price(eur_price * rates["EUR_SEK"])
 
         if not sku:
             skipped += 1
