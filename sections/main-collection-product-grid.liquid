@@ -36,7 +36,7 @@
   }
 {%- endstyle -%}
 
-{%- render 'rc-customer-tier' -%}
+{%- include 'rc-customer-tier' -%}
 {%- comment -%} Tjänster-collection (services) — bara synlig för Premium/Krets {%- endcomment -%}
 {%- assign _coll_handle = collection.handle | downcase -%}
 {%- assign _coll_is_services = false -%}

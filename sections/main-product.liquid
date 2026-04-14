@@ -111,7 +111,7 @@
                   </a>
                 </div>
                 {%- comment -%} Pricing & buy logic driven by rc-customer-tier snippet {%- endcomment -%}
-                {%- render 'rc-customer-tier' -%}
+                {%- include 'rc-customer-tier' -%}
                 {%- assign _pdp_tags = product.tags | join: ',' | downcase -%}
                 {%- assign _pdp_type = product.product_type | downcase -%}
                 {%- assign _pdp_is_storbatch = false -%}
@@ -164,7 +164,7 @@
                 {%- endif -%}
 
               {%- when 'price' -%}
-                {%- render 'rc-customer-tier' -%}
+                {%- include 'rc-customer-tier' -%}
                 {%- if rc_is_member -%}
                   {%- comment -%} Godkänd B2B-kund — SparkLayer visar rätt tier-pris {%- endcomment -%}
                   <spark-product-price product-id="{{ product.id }}"></spark-product-price>
@@ -277,7 +277,7 @@
                   </details>
                 </div>
               {%- when 'quantity_selector' -%}
-              {%- render 'rc-customer-tier' -%}
+              {%- include 'rc-customer-tier' -%}
               {%- if hidePricesLoggedOut == false or rc_is_member -%}
                 <div
                   data-spark="b2c-only"
@@ -533,7 +533,7 @@
                       {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
                     </div>
                   {%- when 'buy_buttons' -%}
-                    {%- render 'rc-customer-tier' -%}
+                    {%- include 'rc-customer-tier' -%}
                     {%- assign _bb_tags = product.tags | join: ',' | downcase -%}
                     {%- assign _bb_type = product.product_type | downcase -%}
                     {%- assign _bb_is_milliken = false -%}

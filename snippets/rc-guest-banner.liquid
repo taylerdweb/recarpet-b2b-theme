@@ -9,7 +9,7 @@
   just inside <body>.
 {%- endcomment -%}
 
-{%- render 'rc-customer-tier' -%}
+{%- include 'rc-customer-tier' -%}
 
 {%- if rc_is_logged_in_guest -%}
   <div class="rc-guest-banner" role="status">

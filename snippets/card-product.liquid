@@ -204,7 +204,7 @@
               </p>
             {%- endif -%}
 
-            {%- render 'rc-customer-tier' -%}
+            {%- include 'rc-customer-tier' -%}
             {%- assign product_tags_lower = card_product.tags | join: ',' | downcase -%}
             {%- assign is_storbatch = false -%}
             {%- if product_tags_lower contains 'storbatch' -%}

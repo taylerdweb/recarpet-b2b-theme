@@ -21,7 +21,7 @@
     services       — non-Premium viewing services
 {%- endcomment -%}
 
-{%- render 'rc-customer-tier' -%}
+{%- include 'rc-customer-tier' -%}
 
 {%- assign _ctx    = context | default: 'generic' -%}
 {%- assign _reason = reason  | default: 'login'   -%}
