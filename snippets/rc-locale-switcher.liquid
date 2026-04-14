@@ -58,12 +58,14 @@
           {%- when 'GB' -%}{%- assign _c_flag = '🇬🇧' -%}{%- assign _c_name = 'United Kingdom' -%}
           {%- else -%}{%- assign _c_flag = '🌐' -%}{%- assign _c_name = country.name -%}
         {%- endcase -%}
+        {%- assign _is_active = false -%}
+        {%- if country.iso_code == _current_country -%}{%- assign _is_active = true -%}{%- endif -%}
         <li>
           <button
             type="button"
-            class="rc-locale__option{% if country.iso_code == _current_country %} rc-locale__option--active{% endif %}"
+            class="rc-locale__option{% if _is_active %} rc-locale__option--active{% endif %}"
             role="option"
-            aria-selected="{{ country.iso_code == _current_country }}"
+            aria-selected="{% if _is_active %}true{% else %}false{% endif %}"
             data-country-code="{{ country.iso_code }}"
           >
             <span class="rc-locale__flag">{{ _c_flag }}</span>
