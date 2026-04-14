@@ -1499,6 +1499,26 @@ a.product__text {
   color: #888;
   margin-top: 0.5rem;
 }
+.rc-inline-cta {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--rc-green, #2d5a3d);
+  background: rgba(45, 90, 61, 0.08);
+  border: 1px solid rgba(45, 90, 61, 0.2);
+  border-radius: 2rem;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.rc-inline-cta:hover {
+  background: rgba(45, 90, 61, 0.15);
+  border-color: rgba(45, 90, 61, 0.35);
+  color: var(--rc-green, #2d5a3d);
+  text-decoration: none;
+}
 
 .b2b-logged-out-cta {
   display: flex;
