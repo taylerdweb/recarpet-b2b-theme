@@ -246,7 +246,7 @@
             {% assign customerTags = customer.tags | join: ', ' %}
 
             {% if productTags contains 'b2b-only' %}
-              {% if customerTags contains 'b2b' %}
+              {% if customerTags contains 'member' %}
                 <li class="quick-buy-item">
                   {% render 'card-product-quick-buy',
                     card_product: product,

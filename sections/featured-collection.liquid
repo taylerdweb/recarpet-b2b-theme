@@ -112,7 +112,7 @@
               {% endif %}
 
               {% if productTags contains 'b2b-only' %}
-                {% if customerTags contains 'b2b' %}
+                {% if customerTags contains 'member' %}
                   <li 
                     id="Slide-{{ section.id }}-{{ forloop.index }}"
                     class="grid__item{% if show_mobile_slider or show_desktop_slider %} slider__slide{% endif %}"

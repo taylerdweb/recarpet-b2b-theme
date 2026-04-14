@@ -157,7 +157,7 @@
               </div>
             {%- endfor -%}
             {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
-            {%- unless customer_tags_lower contains 'b2b' -%}
+            {%- unless customer_tags_lower contains 'member' -%}
               <div
                 class="footer-block grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
                 {% if settings.animations_reveal_on_scroll %}

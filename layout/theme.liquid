@@ -1,8 +1,8 @@
 <!doctype html>
 {%- assign customer_tags_str = customer.tags | join: ',' | downcase -%}
-{%- comment -%} is_b2b_customer = true för kunder med 'b2b' ELLER 'krets'-tagg {%- endcomment -%}
+{%- comment -%} is_b2b_customer = true för kunder med 'member'-tagg (alla godkända B2B-kunder) {%- endcomment -%}
 {%- assign is_b2b_customer = false -%}
-{%- if customer_tags_str contains 'b2b' or customer_tags_str contains 'krets' -%}
+{%- if customer_tags_str contains 'member' -%}
   {%- assign is_b2b_customer = true -%}
 {%- endif -%}
 <html class="js" lang="{{ request.locale.iso_code }}">
@@ -1646,6 +1646,8 @@
     <a class="skip-to-content-link button visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
+
+    {%- render 'rc-guest-banner' -%}
 
     {%- if settings.cart_type == 'drawer' -%}
       {%- render 'cart-drawer' -%}

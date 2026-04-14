@@ -1,0 +1,51 @@
+{%- comment -%}
+  rc-guest-banner.liquid
+  ------------------------------------------------------------------
+  Banner shown to logged-in customers whose account is still under review
+  (has `guest` tag or is missing the `member` tag). Invisible for fully
+  logged-out visitors and for approved members.
+
+  Rendered near the top of every page — include from layout/theme.liquid
+  just inside <body>.
+{%- endcomment -%}
+
+{%- render 'rc-customer-tier' -%}
+
+{%- if rc_is_logged_in_guest -%}
+  <div class="rc-guest-banner" role="status">
+    <div class="rc-guest-banner__inner">
+      <span class="rc-guest-banner__text">
+        Ditt konto granskas — reCarpet ser över din ansökan och
+        aktiverar köpmöjligheten inom kort. Under tiden kan du bläddra
+        i hela vårt sortiment.
+      </span>
+      <a class="rc-guest-banner__link" href="/pages/kontakta-oss">Kontakta oss</a>
+    </div>
+  </div>
+
+  <style>
+    .rc-guest-banner {
+      background: #fff4d6;
+      color: #3b2f00;
+      border-bottom: 1px solid #e8d37a;
+      font-size: 0.92rem;
+      padding: 0.65rem 1rem;
+      text-align: center;
+    }
+    .rc-guest-banner__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .rc-guest-banner__link {
+      color: inherit;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+    .rc-guest-banner__link:hover { opacity: 0.8; }
+  </style>
+{%- endif -%}

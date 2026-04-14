@@ -4,7 +4,8 @@ reCarpet — Orak Import Script (New CSV Format)
 Läser ORAKs standard CSV-export och:
   1. Skapar/uppdaterar produkter i Shopify via Admin API
   2. Sätter meta fields (dimensioner, teknisk spec, etc.)
-  3. Genererar SparkLayer-prislistor för Silver (0%) och Guld (-10%)
+  3. Genererar SparkLayer-prislistor för Utloggad/Member/Plus/Premium
+     (4 tier × 4 valutor = 16 CSV-filer)
   4. Publicerar produkter till SparkLayer B2B-kanal automatiskt
   5. Lägger till produkter i rätt produktserie (collection)
 
@@ -48,14 +49,17 @@ SYNC_LOG   = OUTPUT_DIR / "sync-log.json"
 
 SPARKLAYER_DIR = BASE_DIR.parent / "sparklayer-pricelists"
 
-# SparkLayer pricelist multipliers
-# Brons (public): no pricelist — sees standard Shopify price
-# Silver (member): netto x 1.00 (0% discount)
-# Guld (entrepreneur): netto x 0.90 (10% discount)
-# Krets: netto x 0.80 (20% discount off entrepreneur price)
-SILVER_MULTIPLIER = 1.00
-GULD_MULTIPLIER   = 0.90
-KRETS_MULTIPLIER  = 0.80
+# SparkLayer pricelist multipliers — ny tier-modell (2026-04-13)
+# utloggad : brutto-pris (= Member), inga rabatter
+# member   : brutto-pris, tagg `member`
+# plus     : 10 % rabatt,  taggar `member` + `plus`
+# premium  : 10 % rabatt,  taggar `member` + `premium` (Krets använder denna via `krets`-tagg)
+TIER_MULTIPLIERS = {
+    "utloggad": 1.00,
+    "member":   1.00,
+    "plus":     0.90,
+    "premium":  0.90,
+}
 
 # ─── Påslag på inköpspris (Orak/Composil) ────────────────────────────────────
 # ReCarpet lägger 40% påslag på leverantörens kostnad
@@ -503,9 +507,12 @@ def fetch_exchange_rates() -> dict:
 
 def generate_pricelists(products: list, rates: dict):
     """
-    Genererar alla 8 SparkLayer-prislistor (2 kundnivåer × 4 valutor).
+    Genererar alla 16 SparkLayer-prislistor (4 tier × 4 valutor).
     ORAKs priser är i EUR — konverteras till SEK/NOK/DKK via rates.
     Format: sku, quantity, price  (quantity=1 = gäller alla kvantiteter)
+
+    Tiers: utloggad, member, plus, premium
+    Valutor: sek, nok, dkk, eur
     """
     SPARKLAYER_DIR.mkdir(exist_ok=True)
 
@@ -513,20 +520,21 @@ def generate_pricelists(products: list, rates: dict):
     eur_nok = rates["EUR_NOK"]
     eur_dkk = rates["EUR_DKK"]
 
-    # Prislistor: {filnamn: (multiplier, kurs)}
-    LISTS = {
-        "sparklayer-member-sek.csv":       (SILVER_MULTIPLIER, eur_sek),
-        "sparklayer-member-nok.csv":       (SILVER_MULTIPLIER, eur_nok),
-        "sparklayer-member-dkk.csv":       (SILVER_MULTIPLIER, eur_dkk),
-        "sparklayer-member-eur.csv":       (SILVER_MULTIPLIER, 1.0),
-        "sparklayer-entrepreneur-sek.csv": (GULD_MULTIPLIER,   eur_sek),
-        "sparklayer-entrepreneur-nok.csv": (GULD_MULTIPLIER,   eur_nok),
-        "sparklayer-entrepreneur-dkk.csv": (GULD_MULTIPLIER,   eur_dkk),
-        "sparklayer-entrepreneur-eur.csv": (GULD_MULTIPLIER,   1.0),
-        "sparklayer-krets-sek.csv":        (KRETS_MULTIPLIER,  eur_sek),
+    # Valuta → EUR-konverteringskurs
+    CURRENCY_RATES = {
+        "sek": eur_sek,
+        "nok": eur_nok,
+        "dkk": eur_dkk,
+        "eur": 1.0,
     }
 
-    # Bygg rader per lista
+    # Bygg {filnamn: (tier_mult, fx_rate)} för alla 4 tier × 4 valutor = 16 listor
+    LISTS = {
+        f"sparklayer-{tier}-{cur}.csv": (mult, CURRENCY_RATES[cur])
+        for tier, mult in TIER_MULTIPLIERS.items()
+        for cur in CURRENCY_RATES
+    }
+
     list_rows = {name: [] for name in LISTS}
 
     for p in products:
@@ -545,23 +553,19 @@ def generate_pricelists(products: list, rates: dict):
             price = ceil_price(eur_price * COST_MARKUP * rate * mult)
             list_rows[name].append([sku, 1, f"{price:.2f}"])
 
-    # Lägg till tjänsteprodukter — samma pris i alla listor (konverteras till respektive valuta)
+    # Lägg till tjänsteprodukter — fast SEK-pris, konvertera till övriga valutor
     for sp in SERVICE_PRODUCTS:
         sek_price = sp["sek_price"]
         for name, (mult, rate) in LISTS.items():
-            # Tjänster har fast SEK-pris — konvertera till andra valutor via SEK-kurs
             if rate == 1.0:
-                # EUR-lista: konvertera SEK → EUR
                 svc_price = ceil_price(sek_price / eur_sek)
             elif rate == eur_nok:
-                # NOK-lista: konvertera SEK → NOK
                 svc_price = ceil_price(sek_price * (eur_nok / eur_sek))
             elif rate == eur_dkk:
-                # DKK-lista: konvertera SEK → DKK
                 svc_price = ceil_price(sek_price * (eur_dkk / eur_sek))
             else:
-                # SEK-lista: pris rakt av
                 svc_price = sek_price
+            # Tjänster har samma pris på alla tier-nivåer (även member) — mult ignoreras
             list_rows[name].append([sp["sku"], 1, f"{svc_price:.2f}"])
 
     def write_csv(filename, rows):
@@ -572,24 +576,26 @@ def generate_pricelists(products: list, rates: dict):
             writer.writerows(rows)
         print(f"  OK  {filename}  ({len(rows)} SKUs)")
 
-    print("\n  Genererar SparkLayer-prislistor (9 st)...")
+    print(f"\n  Genererar SparkLayer-prislistor ({len(LISTS)} st)...")
     for name, rows in list_rows.items():
         write_csv(name, rows)
 
     rate_src = rates.get("source", "?")
     rate_date = rates.get("date", "")
+    tier_lines = "\n".join(
+        f"  {tier:8s}: netto × {mult:.0%}  ({round((1-mult)*100):>2d} % rabatt)"
+        for tier, mult in TIER_MULTIPLIERS.items()
+    )
     print(f"""
   Kurs ({rate_src}{' ' + rate_date if rate_date else ''}):
     1 EUR = {eur_sek:.4f} SEK | {eur_nok:.4f} NOK | {eur_dkk:.4f} DKK
 
-  Member:       netto × {SILVER_MULTIPLIER:.0%}  (0 % rabatt)
-  Entrepreneur: netto × {GULD_MULTIPLIER:.0%}   (-{int((1-GULD_MULTIPLIER)*100)} % rabatt)
-  Krets:        netto × {KRETS_MULTIPLIER:.0%}   (-{int((1-KRETS_MULTIPLIER)*100)} % rabatt, SEK)
+{tier_lines}
 
   Ladda upp CSVs i SparkLayer → Price Lists
 """)
 
-    # Uppdatera Excel-masterfile
+    # Uppdatera Excel-masterfile (brutto-priser i Members-fliken)
     update_pricelist_excel(products, rates)
 
 
@@ -597,8 +603,11 @@ def update_pricelist_excel(products: list, rates: dict):
     """
     Uppdaterar reCarpet-pricelists-master.xlsx med:
     - Live valutakurser i Exchange Rates-sheeten
-    - Alla ORAK-produkter i Entrepreneur- och Members-sheetsen
-    - Uppdaterade Export-sheets med rätt antal rader
+    - Brutto-priser i Members-sheeten (källa till alla tier-priser)
+    - Bulk Upload-sheet med alla 4 tier × 4 valutor
+
+    NOTE: Entrepreneur-fliken och Export-flikarna är borttagna i nya modellen —
+    CSV-filerna i sparklayer-pricelists/ är den riktiga uploaden.
     """
     if not PRICELIST_EXCEL.exists():
         print(f"  Warning: Excel-masterfile ej hittad: {PRICELIST_EXCEL}")
@@ -623,15 +632,14 @@ def update_pricelist_excel(products: list, rates: dict):
     ws_rates["C4"] = round(eur_nok / eur_sek, 6)  # NOK per SEK
     ws_rates["C5"] = round(eur_dkk / eur_sek, 6)  # DKK per SEK
     ws_rates["C6"] = round(1 / eur_sek, 6)         # EUR per SEK
-    # Uppdatera not med källa och datum
     rate_note = (
         f"Live-kurs uppdaterad {rates.get('date','')}: "
         f"1 EUR = {eur_sek} SEK | {eur_nok} NOK | {eur_dkk} DKK"
     )
     ws_rates["A2"] = rate_note
 
-    # ── 2. Bygg produktlista (EUR-priser → SEK/NOK/DKK) ──────────────────────
-    product_rows = []   # (sku, sek_member, sek_entre, nok_member, nok_entre, dkk_member, dkk_entre, eur_member, eur_entre)
+    # ── 2. Bygg brutto-priser (tier=member = ingen rabatt) ───────────────────
+    product_rows = []
     for p in products:
         raw_sku = safe(p.get("sku"))
         if not raw_sku or should_skip(raw_sku):
@@ -644,88 +652,51 @@ def update_pricelist_excel(products: list, rates: dict):
         if eur_price <= 0:
             continue
 
-        def px(rate, mult):
-            return ceil_price(eur_price * COST_MARKUP * rate * mult)
+        # Brutto SEK-pris (utan tier-rabatt) — NOK/DKK/EUR beräknas via Excel-formler
+        sek_brutto = ceil_price(eur_price * COST_MARKUP * eur_sek)
+        product_rows.append({"sku": sku, "sek": sek_brutto})
 
-        product_rows.append({
-            "sku":        sku,
-            "sek_member": px(eur_sek, SILVER_MULTIPLIER),
-            "sek_entre":  px(eur_sek, GULD_MULTIPLIER),
-            "sek_krets":  px(eur_sek, KRETS_MULTIPLIER),
-            "nok_member": px(eur_nok, SILVER_MULTIPLIER),
-            "nok_entre":  px(eur_nok, GULD_MULTIPLIER),
-            "dkk_member": px(eur_dkk, SILVER_MULTIPLIER),
-            "dkk_entre":  px(eur_dkk, GULD_MULTIPLIER),
-            "eur_member": px(1.0,     SILVER_MULTIPLIER),
-            "eur_entre":  px(1.0,     GULD_MULTIPLIER),
-        })
-
-    # Lägg till tjänsteprodukter i product_rows (samma pris alla nivåer)
+    # Tjänster — fast SEK-pris
     for sp in SERVICE_PRODUCTS:
-        sek = sp["sek_price"]
-        nok = ceil_price(sek * (eur_nok / eur_sek))
-        dkk = ceil_price(sek * (eur_dkk / eur_sek))
-        eur = ceil_price(sek / eur_sek)
-        product_rows.append({
-            "sku":        sp["sku"],
-            "sek_member": sek,  "sek_entre": sek,  "sek_krets": sek,
-            "nok_member": nok,  "nok_entre": nok,
-            "dkk_member": dkk,  "dkk_entre": dkk,
-            "eur_member": eur,  "eur_entre": eur,
-        })
+        product_rows.append({"sku": sp["sku"], "sek": sp["sek_price"]})
 
-    # ── 3. Entrepreneur-sheet ─────────────────────────────────────────────────
-    _rebuild_price_sheet(wb["Entrepreneur"], product_rows, "sek_entre", "nok_entre", "dkk_entre", "eur_entre")
+    # ── 3. Members-sheet (brutto = sanningskälla) ────────────────────────────
+    _rebuild_price_sheet(wb["Members"], product_rows, "sek")
 
-    # ── 4. Members-sheet ──────────────────────────────────────────────────────
-    _rebuild_price_sheet(wb["Members"], product_rows, "sek_member", "nok_member", "dkk_member", "eur_member")
-
-    # ── 5. Export-sheets ──────────────────────────────────────────────────────
-    export_map = {
-        "Export entrepreneur-sek": ("sek_entre",  "Entrepreneur", "C"),
-        "Export entrepreneur-nok": ("nok_entre",  "Entrepreneur", "D"),
-        "Export entrepreneur-dkk": ("dkk_entre",  "Entrepreneur", "E"),
-        "Export entrepreneur-eur": ("eur_entre",  "Entrepreneur", "F"),
-        "Export member-sek":       ("sek_member", "Members",      "C"),
-        "Export member-nok":       ("nok_member", "Members",      "D"),
-        "Export member-dkk":       ("dkk_member", "Members",      "E"),
-        "Export member-eur":       ("eur_member", "Members",      "F"),
-    }
-    for sheet_name, (price_key, src_sheet, _) in export_map.items():
-        _rebuild_export_sheet(wb[sheet_name], product_rows, price_key)
-
-    # ── Bulk Upload-sheet (SKU, PRICE, PRICE_LIST_SLUG) ───────────────────────
-    # SparkLayer slugs matchar handles i Price Lists-vyn
+    # ── 4. Bulk Upload-sheet (SKU, PRICE, PRICE_LIST_SLUG) ───────────────────
+    CURRENCY_FX = {"sek": eur_sek, "nok": eur_nok, "dkk": eur_dkk, "eur": 1.0}
     SLUG_MAP = [
-        ("sek_entre",  "entrepreneur"),
-        ("nok_entre",  "entrepreneur-nok"),
-        ("dkk_entre",  "entrepreneur-dkk"),
-        ("eur_entre",  "entrepreneur-eur"),
-        ("sek_member", "member"),
-        ("nok_member", "member-nok"),
-        ("dkk_member", "member-dkk"),
-        ("eur_member", "member-eur"),
-        ("sek_krets",  "krets"),
+        (tier, cur, f"{tier}-{cur}")
+        for tier in TIER_MULTIPLIERS
+        for cur in ("sek", "nok", "dkk", "eur")
     ]
 
     if "Bulk Upload" not in wb.sheetnames:
         wb.create_sheet("Bulk Upload")
     ws_bulk = wb["Bulk Upload"]
-    # Rensa och sätt header
     ws_bulk.delete_rows(1, ws_bulk.max_row)
     ws_bulk.append(["SKU", "PRICE", "PRICE_LIST_SLUG"])
     for p in product_rows:
-        for price_key, slug in SLUG_MAP:
-            ws_bulk.append([p["sku"], p[price_key], slug])
+        # sek-brutto → konvertera till EUR och applicera tier × valuta
+        eur_brutto = p["sek"] / eur_sek
+        for tier, cur, slug in SLUG_MAP:
+            mult = TIER_MULTIPLIERS[tier]
+            fx = CURRENCY_FX[cur]
+            price = ceil_price(eur_brutto * fx * mult)
+            ws_bulk.append([p["sku"], price, slug])
 
-    # Spara bulk-CSV direkt till sparklayer-pricelists/
+    # Bulk-CSV (redundant med de 16 CSV:erna men behålls för snabb överblick)
     bulk_csv_path = SPARKLAYER_DIR / "sparklayer-bulk-upload.csv"
     with open(bulk_csv_path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["SKU", "PRICE", "PRICE_LIST_SLUG"])
         for p in product_rows:
-            for price_key, slug in SLUG_MAP:
-                writer.writerow([p["sku"], p[price_key], slug])
+            eur_brutto = p["sek"] / eur_sek
+            for tier, cur, slug in SLUG_MAP:
+                mult = TIER_MULTIPLIERS[tier]
+                fx = CURRENCY_FX[cur]
+                price = ceil_price(eur_brutto * fx * mult)
+                writer.writerow([p["sku"], price, slug])
     print(f"  OK  sparklayer-bulk-upload.csv  ({len(product_rows) * len(SLUG_MAP)} rader, {len(product_rows)} SKUs × {len(SLUG_MAP)} listor)")
 
     wb.save(PRICELIST_EXCEL)
@@ -750,9 +721,13 @@ def update_pricelist_excel(products: list, rates: dict):
     print(f"  OK  {PRICELIST_EXCEL.name}  ({len(product_rows)} produkter, kurs: {rates.get('source','?')})")
 
 
-def _rebuild_price_sheet(ws, product_rows: list, sek_key, nok_key, dkk_key, eur_key):
-    """Rensar datarader (rad 5+) och skriver om med aktuella produkter."""
-    # Ta bort befintliga datarader
+def _rebuild_price_sheet(ws, product_rows: list, sek_key: str = "sek"):
+    """Rensar datarader (rad 5+) och skriver om med aktuella brutto-priser i SEK.
+
+    NOK/DKK/EUR-kolumnerna är Excel-formler som refererar 'Exchange Rates'!$C$4-6.
+    Tier-rabatter appliceras i CSV-export + Bulk Upload, inte här —
+    Members-fliken är sanningskälla för brutto SEK.
+    """
     max_row = ws.max_row
     if max_row >= 5:
         ws.delete_rows(5, max_row - 4)
@@ -768,18 +743,6 @@ def _rebuild_price_sheet(ws, product_rows: list, sek_key, nok_key, dkk_key, eur_
         ws.cell(i, 8, f'=A{i}&","&B{i}&","&TEXT(D{i},"0.00")')
         ws.cell(i, 9, f'=A{i}&","&B{i}&","&TEXT(E{i},"0.00")')
         ws.cell(i, 10, f'=A{i}&","&B{i}&","&TEXT(F{i},"0.00")')
-
-
-def _rebuild_export_sheet(ws, product_rows: list, price_key: str):
-    """Rensar datarader (rad 4+) och skriver om med sku, qty, pris."""
-    max_row = ws.max_row
-    if max_row >= 4:
-        ws.delete_rows(4, max_row - 3)
-
-    for i, p in enumerate(product_rows, start=4):
-        ws.cell(i, 1, p["sku"])
-        ws.cell(i, 2, 1)
-        ws.cell(i, 3, p[price_key])
 
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
@@ -946,13 +909,15 @@ def main():
         product_type = PRODUCT_TYPE_MAP.get(normalise_label(label), "Carpet Tile")
 
         # Taggar: alla ORAK-produkter får "atervunna-mattor"; "Produit à venir" får dessutom "kommande"
-        # Produkter med qty > 300 → "storbatch" (låsta för silver, synliga för guld+krets)
+        # Produkter med qty > 300 → "storbatch" (låsta för member utan plus/premium — hanteras i tema)
+        # Obs: "b2b" / "b2b-only" är utfasade — kundgrupp styrs via customer-taggar
+        # (member / plus / premium / krets) och återbruk låses i tema via rc_can_buy_reused.
         label_key = normalise_label(label) if label else ""
         extra_tags = ["kommande"] if label_key in KOMMANDE_LABELS else []
         if quantity > 300:
             extra_tags.append("storbatch")
         tags = ",".join(filter(None, [
-            "b2b", "b2b-only", "orak", "atervunna-mattor",
+            "orak", "atervunna-mattor",
             brand.lower(),
             label_key.replace(" ", "-") if label_key else "",
         ] + extra_tags))

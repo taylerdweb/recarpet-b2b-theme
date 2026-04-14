@@ -621,7 +621,7 @@
       {%- endunless -%}
       <!-- reCarpet: B2B SparkLayer cart icon (only for approved B2B customers) -->
       {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
-      {%- if customer and customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' -%}
+      {%- if customer and customer_tags_lower contains 'member' -%}
       <button type="button" id="rc-cart-icon" class="rc-cart-icon" aria-label="Varukorg" title="Varukorg">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>

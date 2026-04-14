@@ -41,7 +41,7 @@
         {% assign customerTags = customer.tags | join: ', ' %}
 
         {% if productTags contains 'b2b-only' %}
-          {% if customerTags contains 'b2b' %}
+          {% if customerTags contains 'member' %}
           
           <li class="grid__item">
             {% render 'card-product',

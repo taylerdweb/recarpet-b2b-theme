@@ -204,46 +204,50 @@
               </p>
             {%- endif -%}
 
-            {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
+            {%- render 'rc-customer-tier' -%}
             {%- assign product_tags_lower = card_product.tags | join: ',' | downcase -%}
             {%- assign is_storbatch = false -%}
             {%- if product_tags_lower contains 'storbatch' -%}
               {%- assign is_storbatch = true -%}
             {%- endif -%}
-            {%- assign is_guld_or_krets = false -%}
-            {%- if customer_tags_lower contains 'krets' or customer_tags_lower contains 'entrepreneur' -%}
-              {%- assign is_guld_or_krets = true -%}
-            {%- endif -%}
 
-            {%- if customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' -%}
-              {%- if is_storbatch and is_guld_or_krets == false -%}
-                {%- comment -%} Silver-kund + storbatch → låst produkt {%- endcomment -%}
-                {% render 'price', product: card_product, price_class: 'price--listing' %}
-                <p class="storbatch-lock-note">Endast för Guld-medlemmar</p>
+            {%- if rc_is_member -%}
+              {%- if is_storbatch and rc_can_buy_batches == false -%}
+                {%- comment -%} Member utan Plus/Premium + storbatch → låst {%- endcomment -%}
+                <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
+                <p class="storbatch-lock-note">Endast för Plus-medlemmar</p>
               {%- else -%}
                 <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
                 <div data-spark="b2c-only">
                   {% render 'price', product: card_product, price_class: 'price--listing' %}
                 </div>
               {%- endif -%}
-            {%- elsif customer -%}
+            {%- elsif rc_is_logged_in_guest -%}
+              {%- comment -%} Inloggad men ej godkänd — visa Shopify-pris + pending {%- endcomment -%}
               {% render 'price', product: card_product, price_class: 'price--listing' %}
-              <p class="b2b-card-awaiting-note">Inväntar B2B-godkännande</p>
+              <p class="b2b-card-awaiting-note">Bruttopris — konto granskas</p>
             {%- else -%}
+              {%- comment -%} Utloggad — Shopifys native pris {%- endcomment -%}
               {% render 'price', product: card_product, price_class: 'price--listing' %}
             {%- endif -%}
           </div>
         </div>
         {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
-        {%- unless customer -%}
+        {%- if rc_is_guest and rc_is_logged_in_guest == false -%}
           <div class="card__cta-logged-out" style="position:relative;z-index:2;">
-            <a href="/pages/b2b-login" class="button button--full-width button--primary" onclick="event.stopPropagation();">
-              Registrera dig &rarr;
+            <a href="/pages/bli-medlem" class="button button--full-width button--primary" onclick="event.stopPropagation();">
+              Bli medlem &rarr;
             </a>
           </div>
-        {%- endunless -%}
+        {%- elsif rc_is_logged_in_guest -%}
+          <div class="card__cta-logged-out" style="position:relative;z-index:2;">
+            <span class="button button--full-width button--secondary" style="pointer-events:none;opacity:0.7;">
+              Konto granskas
+            </span>
+          </div>
+        {%- endif -%}
         {% if quick_add == 'standard' %}
-          <div data-spark="b2c-only" class="quick-add no-js-hidden {% unless customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' %}hidden{% endunless %}">
+          <div data-spark="b2c-only" class="quick-add no-js-hidden {% unless rc_is_member %}hidden{% endunless %}">
             {%- liquid
               assign qty_rules = false
               if card_product.selected_or_first_available_variant.quantity_rule.min > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1

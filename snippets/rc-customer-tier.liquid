@@ -1,0 +1,80 @@
+{%- comment -%}
+  rc-customer-tier.liquid
+  ------------------------------------------------------------------
+  Central helper that resolves the current customer's B2B tier.
+  Exposes these variables to the calling template:
+
+    rc_tier                — 'guest' | 'member' | 'plus' | 'premium'
+    rc_is_guest            — true if no customer logged in OR logged-in but unapproved
+    rc_is_logged_in_guest  — true if customer logged in but no approved tier tag
+    rc_is_member           — member or above (approved B2B customer)
+    rc_is_plus             — plus or premium (10% discount tier)
+    rc_is_premium          — premium or krets (services + montering access)
+    rc_is_krets            — krets sub-group of premium
+    rc_can_buy_batches     — plus / premium / krets (storbatch access)
+    rc_can_buy_reused      — member or above (återbruk requires approved membership)
+    rc_sees_services       — premium / krets only
+    rc_can_add_montering   — premium / krets only
+
+  Tag model (SparkLayer — max 2 b2b-prefixed tags per customer):
+    b2b                        → Base group (catch-all, no buy access)
+    b2b + b2b-member-{cur}     → Member (bruttopris, can buy all products)
+    b2b + b2b-plus-{cur}       → Plus (10% rabatt, all products)
+    b2b + b2b-premium-{cur}    → Premium (10% + tjänster + montering)
+    b2b + b2b-premium-{cur} + krets → Krets (same as premium, display tag)
+
+  Where {cur} = sek | nok | dkk | eur (matches SparkLayer customer group)
+
+  Guest / pending logic:
+    - Not logged in → rc_is_guest = true
+    - Logged in with 'guest' tag or just 'b2b' (no tier) → rc_is_logged_in_guest = true
+      Shows "ansökan granskas" banner, cannot buy anything.
+    - Approved (has b2b-member-*, b2b-plus-*, or b2b-premium-*) → full access per tier
+{%- endcomment -%}
+
+{%- assign _rc_tags = customer.tags | join: ',' | downcase -%}
+
+{%- assign rc_is_guest           = false -%}
+{%- assign rc_is_logged_in_guest = false -%}
+{%- assign rc_is_member          = false -%}
+{%- assign rc_is_plus            = false -%}
+{%- assign rc_is_premium         = false -%}
+{%- assign rc_is_krets           = false -%}
+
+{%- unless customer -%}
+  {%- assign rc_is_guest = true -%}
+  {%- assign rc_tier = 'guest' -%}
+{%- else -%}
+  {%- if _rc_tags contains 'b2b-premium-' -%}
+    {%- assign rc_is_premium = true -%}
+    {%- assign rc_is_plus    = true -%}
+    {%- assign rc_is_member  = true -%}
+    {%- assign rc_tier = 'premium' -%}
+    {%- if _rc_tags contains 'krets' -%}
+      {%- assign rc_is_krets = true -%}
+    {%- endif -%}
+  {%- elsif _rc_tags contains 'b2b-plus-' -%}
+    {%- assign rc_is_plus   = true -%}
+    {%- assign rc_is_member = true -%}
+    {%- assign rc_tier = 'plus' -%}
+  {%- elsif _rc_tags contains 'b2b-member-' -%}
+    {%- assign rc_is_member = true -%}
+    {%- assign rc_tier = 'member' -%}
+  {%- else -%}
+    {%- comment -%}
+      Logged in but no approved tier tag. Could be:
+      - New signup with 'guest' tag (pending approval via Shopify Flow)
+      - Customer with just 'b2b' tag (Base group, no buy access)
+      - Any other state without a tier assignment
+      All treated as logged-in guest — shows pending banner, cannot purchase.
+    {%- endcomment -%}
+    {%- assign rc_is_guest           = true -%}
+    {%- assign rc_is_logged_in_guest = true -%}
+    {%- assign rc_tier = 'guest' -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{%- assign rc_can_buy_batches   = rc_is_plus -%}
+{%- assign rc_can_buy_reused    = rc_is_member -%}
+{%- assign rc_sees_services     = rc_is_premium -%}
+{%- assign rc_can_add_montering = rc_is_premium -%}

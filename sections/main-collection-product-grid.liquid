@@ -36,6 +36,29 @@
   }
 {%- endstyle -%}
 
+{%- render 'rc-customer-tier' -%}
+{%- comment -%} Tjänster-collection (services) — bara synlig för Premium/Krets {%- endcomment -%}
+{%- assign _coll_handle = collection.handle | downcase -%}
+{%- assign _coll_is_services = false -%}
+{%- if _coll_handle contains 'tjanster' or _coll_handle contains 'tjänster' or _coll_handle contains 'services' -%}
+  {%- assign _coll_is_services = true -%}
+{%- endif -%}
+
+{%- if _coll_is_services and rc_sees_services == false -%}
+  <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
+    <div class="page-width" style="text-align:center;padding:3rem 1rem;">
+      {%- if rc_is_member -%}
+        <h2>Tjänster kräver Premium-medlemskap</h2>
+        <p>Demontering, rengöring och montering finns tillgängligt för våra Premium-kunder.</p>
+        <a href="/pages/kontakta-oss" class="button button--secondary">Kontakta oss för uppgradering</a>
+      {%- else -%}
+        <h2>Bli medlem</h2>
+        <p>Ansök om B2B-konto för att se vårt fullständiga utbud.</p>
+        <a href="/pages/bli-medlem" class="button button--primary">Ansök om konto</a>
+      {%- endif -%}
+    </div>
+  </div>
+{%- else -%}
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
   {%- paginate collection.products by section.settings.products_per_page -%}
     {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
@@ -205,6 +228,8 @@
     {{ 'mask-arch.svg' | inline_asset_content }}
   {%- endif -%}
 </div>
+{%- endif -%}
+{%- comment -%} Closes the services-gate else block from top of section {%- endcomment -%}
 
 {% schema %}
 {

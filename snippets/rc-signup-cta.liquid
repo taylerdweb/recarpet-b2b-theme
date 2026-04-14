@@ -1,0 +1,66 @@
+{%- comment -%}
+  rc-signup-cta.liquid
+  ------------------------------------------------------------------
+  Renders a "Bli medlem" / upgrade call-to-action based on the
+  visitor's current state. Uses rc-customer-tier to classify.
+
+  Usage:
+    {% render 'rc-signup-cta', context: 'pdp' %}
+    {% render 'rc-signup-cta', context: 'plp', reason: 'batch' %}
+
+  Contexts:
+    pdp        — product detail page (full card)
+    plp        — collection/grid card (compact)
+    generic    — anywhere else
+
+  Optional `reason`:
+    login          — guest needs to log in / register (default)
+    guest_upgrade  — logged-in guest whose account is being reviewed
+    batch          — member needs to upgrade to Plus for batch purchases
+    reused         — guest needs an approved account to buy återbrukade plattor
+    services       — non-Premium viewing services
+{%- endcomment -%}
+
+{%- render 'rc-customer-tier' -%}
+
+{%- assign _ctx    = context | default: 'generic' -%}
+{%- assign _reason = reason  | default: 'login'   -%}
+
+{%- if rc_is_logged_in_guest -%}
+  {%- assign _title = 'Ditt konto granskas' -%}
+  {%- assign _body  = 'Vi ser över din ansökan. Du kan bläddra hela sortimentet och köp aktiveras så snart vi godkänt ditt konto.' -%}
+  {%- assign _cta_label = 'Kontakta oss' -%}
+  {%- assign _cta_url   = '/pages/kontakta-oss' -%}
+{%- elsif rc_is_guest -%}
+  {%- if _reason == 'reused' -%}
+    {%- assign _title = 'Skapa konto för att köpa' -%}
+    {%- assign _body  = 'Återbrukade textilplattor kräver ett godkänt B2B-konto.' -%}
+  {%- else -%}
+    {%- assign _title = 'Bli medlem' -%}
+    {%- assign _body  = 'Ansök om konto för att handla och se nettopriser.' -%}
+  {%- endif -%}
+  {%- assign _cta_label = 'Ansök om konto' -%}
+  {%- assign _cta_url   = '/pages/bli-medlem' -%}
+{%- elsif rc_is_member and _reason == 'batch' -%}
+  {%- assign _title = 'Stora batcher kräver Plus-medlemskap' -%}
+  {%- assign _body  = 'Som Plus-medlem får du 10 % rabatt och kan köpa hela batcher.' -%}
+  {%- assign _cta_label = 'Ansök om Plus' -%}
+  {%- assign _cta_url   = '/pages/kontakta-oss' -%}
+{%- elsif _reason == 'services' and rc_sees_services == false -%}
+  {%- assign _title = 'Tjänster kräver Premium-medlemskap' -%}
+  {%- assign _body  = 'Demontering, rengöring och montering finns tillgängligt för Premium-kunder.' -%}
+  {%- assign _cta_label = 'Kontakta oss' -%}
+  {%- assign _cta_url   = '/pages/kontakta-oss' -%}
+{%- endif -%}
+
+{%- if _title -%}
+  <div class="rc-signup-cta rc-signup-cta--{{ _ctx }}">
+    <p class="rc-signup-cta__title">{{ _title }}</p>
+    {%- if _ctx != 'plp' -%}
+      <p class="rc-signup-cta__body">{{ _body }}</p>
+    {%- endif -%}
+    <a class="button button--secondary rc-signup-cta__btn" href="{{ _cta_url }}">
+      {{ _cta_label }}
+    </a>
+  </div>
+{%- endif -%}

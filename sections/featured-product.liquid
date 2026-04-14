@@ -114,19 +114,19 @@
                     {%- endunless -%}
                   </h2>
                 {%- when 'price' -%}
-                  {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
-                  {%- if customer_tags_lower contains 'b2b' -%}
+                  {%- render 'rc-customer-tier' -%}
+                  {%- if rc_is_member -%}
                     <spark-product-price product-id="{{ product.id }}"></spark-product-price>
-                  {%- elsif customer -%}
+                  {%- elsif rc_is_logged_in_guest -%}
                     <div {{ block.shopify_attributes }}>
                       {% render 'price', product: product, use_variant: true, show_badges: true %}
-                      <p class="b2b-price-note b2b-awaiting-note">Ditt konto inväntar B2B-godkännande. Vi hör av oss inom kort.</p>
                     </div>
+                    <p class="b2b-price-note b2b-awaiting-note">Bruttopris exkl. moms. Ditt konto granskas.</p>
                   {%- else -%}
                     <div {{ block.shopify_attributes }}>
                       {% render 'price', product: product, use_variant: true, show_badges: true %}
-                      <p class="b2b-price-note">Priser visas exkl. moms för godkända B2B-kunder.</p>
                     </div>
+                    <p class="b2b-price-note">Bruttopris exkl. moms. <a href="/pages/bli-medlem">Bli medlem</a> för rabatt.</p>
                   {%- endif -%}
                 {%- when 'sku' -%}
                   <p

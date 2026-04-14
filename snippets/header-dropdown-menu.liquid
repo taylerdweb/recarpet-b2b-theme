@@ -116,7 +116,7 @@
       </li>
     {%- endfor -%}
     {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
-    {%- unless customer_tags_lower contains 'b2b' -%}
+    {%- unless customer_tags_lower contains 'member' -%}
       <li>
         <a
           id="HeaderMenu-b2b-login"

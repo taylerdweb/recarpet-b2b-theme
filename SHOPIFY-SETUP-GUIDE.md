@@ -4,6 +4,41 @@ Everything that needs to be done manually in Shopify Admin after the theme code 
 
 ---
 
+## 0. B2B Customer Tags & Price Lists
+
+The theme and `export-pricelists.py` share a single tag model:
+
+| Tier | Shopify tags | Discount | Access |
+|---|---|---|---|
+| Guest (utloggad) | *(no tags)* | 0 % (brutto) | Milliken only, can view återbruk but not buy |
+| Pending | customer exists, no `member` tag | — | Awaiting approval |
+| Member | `member` | 0 % | Full catalog, no batches |
+| Member Plus | `member`, `plus` | 10 % | Everything except services |
+| Member Premium | `member`, `premium` | 10 % | Everything + services |
+| Krets | `member`, `premium`, `krets` | 10 % | Same as Premium (reserved sub-group) |
+
+### SparkLayer price lists
+
+Run `python export-pricelists.py` to regenerate 16 CSVs in `sparklayer-pricelists/`:
+
+| SparkLayer price list slug | Shopify tag trigger | CSV files |
+|---|---|---|
+| `utloggad-{sek,nok,dkk,eur}` | guest / not logged in | 4 |
+| `member-{sek,nok,dkk,eur}` | `member` | 4 |
+| `plus-{sek,nok,dkk,eur}` | `member` + `plus` | 4 |
+| `premium-{sek,nok,dkk,eur}` | `member` + `premium` (and `krets`) | 4 |
+
+Upload each CSV to the matching SparkLayer price list under **SparkLayer → Price lists → Import**.
+
+### Approval flow
+
+1. New customer submits signup form at `/pages/bli-medlem`
+2. Shopify creates a customer record without tags → falls into **Pending** tier
+3. reCarpet reviews and manually adds `member` + optional `plus`/`premium`/`krets` tag(s)
+4. Klaviyo-flow triggers the tagged welcome email for that tier
+
+---
+
 ## 1. Create Pages (Online Store → Pages)
 
 Create each page with the exact handle shown. After creating, assign the template from the "Theme template" dropdown.

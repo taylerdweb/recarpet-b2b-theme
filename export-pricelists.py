@@ -1,36 +1,55 @@
 """
 reCarpet B2B — SparkLayer Price List Exporter
 ----------------------------------------------
-Run this script after updating prices in reCarpet-pricelists-master.xlsx.
-It generates 8 CSV files ready to upload to SparkLayer.
+Run this script after updating base (brutto) prices in reCarpet-pricelists-master.xlsx
+('Members' sheet). It generates 16 CSV files — 4 customer tiers × 4 currencies.
+
+Tier structure:
+    utloggad  — guest pricing (brutto, no discount)
+    member    — Member (brutto, no discount)  [Shopify tag: member]
+    plus      — Member Plus (10 % discount)   [Shopify tags: member, plus]
+    premium   — Member Premium (10 % discount, + services access)
+                                               [Shopify tags: member, premium]
+                Krets customers also use this price list
+                                               [Shopify tags: member, premium, krets]
 
 Usage:
     python export-pricelists.py
 
-Output: sparklayer-pricelists/ folder (8 CSV files)
+Output: sparklayer-pricelists/ folder (16 CSV files)
 """
 
 import os
 import csv
+import math
 from openpyxl import load_workbook
 
 EXCEL_FILE = "reCarpet-pricelists-master.xlsx"
 OUTPUT_DIR = "sparklayer-pricelists"
+SOURCE_SHEET = "Members"  # brutto / source of truth
+DATA_START_ROW = 5
 
-# Map: (csv_filename, source_sheet, currency_key)
-# currency_key: "sek" | "nok" | "dkk" | "eur"
-EXPORTS = [
-    ("sparklayer-entrepreneur-sek.csv", "Entrepreneur", "sek"),
-    ("sparklayer-entrepreneur-nok.csv", "Entrepreneur", "nok"),
-    ("sparklayer-entrepreneur-dkk.csv", "Entrepreneur", "dkk"),
-    ("sparklayer-entrepreneur-eur.csv", "Entrepreneur", "eur"),
-    ("sparklayer-member-sek.csv",       "Members",      "sek"),
-    ("sparklayer-member-nok.csv",       "Members",      "nok"),
-    ("sparklayer-member-dkk.csv",       "Members",      "dkk"),
-    ("sparklayer-member-eur.csv",       "Members",      "eur"),
-]
+# Tier name → discount multiplier applied to brutto SEK price
+TIERS = {
+    "utloggad": 1.00,
+    "member":   1.00,
+    "plus":     0.90,
+    "premium":  0.90,
+}
 
-DATA_START_ROW = 5  # Row where SKU data begins in Entrepreneur/Members sheets
+# Currency → row in Exchange Rates sheet (column C holds the rate)
+CURRENCIES = {
+    "sek": None,   # base — rate resolved at runtime (= 1.0)
+    "nok": 4,
+    "dkk": 5,
+    "eur": 6,
+}
+
+
+def round_up(value, decimals=2):
+    """Round ALWAYS upward to N decimals (confirmed by Hampus)."""
+    factor = 10 ** decimals
+    return math.ceil(value * factor) / factor
 
 
 def main():
@@ -42,44 +61,55 @@ def main():
     print(f"Reading: {EXCEL_FILE}")
     wb = load_workbook(excel_path, data_only=True)
 
-    # Read exchange rates directly from the Exchange Rates sheet
     ws_rates = wb["Exchange Rates"]
-    rates = {
-        "sek": 1.0,
-        "nok": ws_rates.cell(row=4, column=3).value,  # NOK rate
-        "dkk": ws_rates.cell(row=5, column=3).value,  # DKK rate
-        "eur": ws_rates.cell(row=6, column=3).value,  # EUR rate
-    }
-    print(f"  Rates — NOK: {rates['nok']}, DKK: {rates['dkk']}, EUR: {rates['eur']}")
+    rates = {"sek": 1.0}
+    for cur, row in CURRENCIES.items():
+        if row is None:
+            continue
+        rates[cur] = ws_rates.cell(row=row, column=3).value
+    print(f"  FX — NOK: {rates['nok']}, DKK: {rates['dkk']}, EUR: {rates['eur']}")
 
-    for csv_filename, sheet_name, currency in EXPORTS:
-        ws = wb[sheet_name]
-        rows_written = 0
-        csv_path = os.path.join(output_dir, csv_filename)
-        rate = rates[currency]
+    ws = wb[SOURCE_SHEET]
+    base_rows = []
+    row = DATA_START_ROW
+    while True:
+        sku = ws.cell(row=row, column=1).value
+        if sku is None:
+            break
+        qty = ws.cell(row=row, column=2).value
+        sek = ws.cell(row=row, column=3).value
+        if sek is None:
+            print(f"  ! skipping {sku}: no SEK price")
+            row += 1
+            continue
+        base_rows.append((sku, qty or 1, float(sek)))
+        row += 1
+    print(f"  Base SKUs loaded: {len(base_rows)}")
 
-        with open(csv_path, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(["sku", "quantity", "price"])
+    total_files = 0
+    for tier_name, tier_mult in TIERS.items():
+        for currency, rate in rates.items():
+            csv_name = f"sparklayer-{tier_name}-{currency}.csv"
+            csv_path = os.path.join(output_dir, csv_name)
 
-            row = DATA_START_ROW
-            while True:
-                sku   = ws.cell(row=row, column=1).value
-                qty   = ws.cell(row=row, column=2).value
-                sek   = ws.cell(row=row, column=3).value  # SEK is always a hardcoded value
+            with open(csv_path, "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerow(["sku", "quantity", "price"])
+                for sku, qty, sek in base_rows:
+                    price = round_up(sek * tier_mult * rate, 2)
+                    writer.writerow([sku, qty, f"{price:.2f}"])
 
-                if sku is None:
-                    break
+            print(f"  ✓ {csv_name}  ({len(base_rows)} rows)  "
+                  f"[tier={tier_name} discount={(1-tier_mult)*100:.0f}% fx={rate}]")
+            total_files += 1
 
-                price = round(float(sek) * rate, 2)
-                writer.writerow([sku, qty, f"{price:.2f}"])
-                rows_written += 1
-                row += 1
-
-        print(f"  ✓  {csv_filename}  ({rows_written} rows)")
-
-    print(f"\nDone — {len(EXPORTS)} files saved to '{OUTPUT_DIR}/'")
-    print("Upload each file to the matching SparkLayer price list.")
+    print(f"\nDone — {total_files} files saved to '{OUTPUT_DIR}/'")
+    print("Upload each file to the matching SparkLayer price list:")
+    print("  utloggad-*  → SparkLayer 'Guest' price list (non-logged-in pricing)")
+    print("  member-*    → SparkLayer 'Member' price list   (tag: member)")
+    print("  plus-*      → SparkLayer 'Plus' price list     (tag: member, plus)")
+    print("  premium-*   → SparkLayer 'Premium' price list  (tag: member, premium)")
+    print("                (Krets customers use this list via tag: member, premium, krets)")
 
 
 if __name__ == "__main__":

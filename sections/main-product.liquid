@@ -110,55 +110,76 @@
                     </h2>
                   </a>
                 </div>
-                {%- comment -%} Pricing is now visible for all users — B2B customers see SparkLayer prices, others see bruttopris {%- endcomment -%}
+                {%- comment -%} Pricing & buy logic driven by rc-customer-tier snippet {%- endcomment -%}
+                {%- render 'rc-customer-tier' -%}
                 {%- assign _pdp_tags = product.tags | join: ',' | downcase -%}
-                {%- assign _pdp_ctags = customer.tags | join: ',' | downcase -%}
+                {%- assign _pdp_type = product.product_type | downcase -%}
                 {%- assign _pdp_is_storbatch = false -%}
                 {%- if _pdp_tags contains 'storbatch' -%}{%- assign _pdp_is_storbatch = true -%}{%- endif -%}
-                {%- assign _pdp_is_guld_or_krets = false -%}
-                {%- if _pdp_ctags contains 'entrepreneur' or _pdp_ctags contains 'krets' -%}{%- assign _pdp_is_guld_or_krets = true -%}{%- endif -%}
+                {%- assign _pdp_is_reused = false -%}
+                {%- if _pdp_tags contains 'återbruk' or _pdp_tags contains 'aterbruk' or _pdp_tags contains 'reused' -%}
+                  {%- assign _pdp_is_reused = true -%}
+                {%- endif -%}
+                {%- assign _pdp_is_service = false -%}
+                {%- if _pdp_type contains 'tjänst' or _pdp_type contains 'service' or _pdp_tags contains 'service' -%}
+                  {%- assign _pdp_is_service = true -%}
+                {%- endif -%}
 
-                {%- if _pdp_is_storbatch and _pdp_is_guld_or_krets == false and _pdp_ctags contains 'b2b' -%}
-                  {%- comment -%} Silver B2B-kund + storbatch → låst produkt, ingen SparkLayer PDP {%- endcomment -%}
+                {%- if _pdp_is_storbatch and rc_can_buy_batches == false and rc_is_member -%}
+                  {%- comment -%} Member (no plus/premium) + storbatch → låst {%- endcomment -%}
                   <div class="storbatch-lock-pdp">
-                    <p class="storbatch-lock-pdp__title">Storbatch — endast för Guld-medlemmar</p>
-                    <p class="storbatch-lock-pdp__text">Denna produkt finns i stora kvantiteter och är reserverad för Guld-medlemmar. Kontakta oss för att uppgradera ditt konto.</p>
+                    {% render 'rc-signup-cta', context: 'pdp', reason: 'batch' %}
+                  </div>
+                {%- elsif _pdp_is_reused and rc_can_buy_reused == false -%}
+                  {%- comment -%} Återbrukade plattor kräver inloggat konto {%- endcomment -%}
+                  <div class="storbatch-lock-pdp">
+                    {% render 'rc-signup-cta', context: 'pdp', reason: 'reused' %}
+                  </div>
+                {%- elsif _pdp_is_service and rc_sees_services == false -%}
+                  {%- comment -%} Tjänster endast för Premium/Krets {%- endcomment -%}
+                  <div class="storbatch-lock-pdp">
+                    {% render 'rc-signup-cta', context: 'pdp', reason: 'services' %}
                   </div>
                 {%- else -%}
                   <spark-pdp parent-id="{{ product.id }}"></spark-pdp>
 
-                  {%- comment -%} Montering-tillval — visas bara på mattproduker, ej tjänster {%- endcomment -%}
-                  {%- assign first_sku = product.selected_or_first_available_variant.sku | default: '' -%}
-                  {%- unless product.product_type contains 'Tjänst' or first_sku contains 'RC-SERVICE' -%}
-                    <div class="montering-addon" id="montering-addon" style="display:none;">
-                      <label class="montering-addon__label">
-                        <input type="checkbox" id="montering-checkbox" class="montering-addon__checkbox">
-                        <span class="montering-addon__text">
-                          Lägg till montering
-                          <span class="montering-addon__price">+45 kr/m²</span>
-                        </span>
-                      </label>
-                      <p class="montering-addon__note" id="montering-subtotal" style="display:none;">
-                        <!-- Fylls i av JS med beräknad totalkostnad -->
-                      </p>
-                    </div>
-                  {%- endunless -%}
+                  {%- comment -%} Montering-tillval — bara Premium/Krets, ej på tjänsteprodukter {%- endcomment -%}
+                  {%- if rc_can_add_montering -%}
+                    {%- assign first_sku = product.selected_or_first_available_variant.sku | default: '' -%}
+                    {%- unless product.product_type contains 'Tjänst' or first_sku contains 'RC-SERVICE' -%}
+                      <div class="montering-addon" id="montering-addon" style="display:none;">
+                        <label class="montering-addon__label">
+                          <input type="checkbox" id="montering-checkbox" class="montering-addon__checkbox">
+                          <span class="montering-addon__text">
+                            Lägg till montering
+                            <span class="montering-addon__price">+45 kr/m²</span>
+                          </span>
+                        </label>
+                        <p class="montering-addon__note" id="montering-subtotal" style="display:none;">
+                          <!-- Fylls i av JS med beräknad totalkostnad -->
+                        </p>
+                      </div>
+                    {%- endunless -%}
+                  {%- endif -%}
                 {%- endif -%}
 
               {%- when 'price' -%}
-                {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
-                {%- if customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' -%}
+                {%- render 'rc-customer-tier' -%}
+                {%- if rc_is_member -%}
+                  {%- comment -%} Godkänd B2B-kund — SparkLayer visar rätt tier-pris {%- endcomment -%}
                   <spark-product-price product-id="{{ product.id }}"></spark-product-price>
-                {%- elsif customer -%}
+                {%- elsif rc_is_logged_in_guest -%}
+                  {%- comment -%} Inloggad men ej godkänd — ingen b2b-tagg, SparkLayer ej aktivt. Visa Shopify-pris + pending-meddelande {%- endcomment -%}
                   <div {{ block.shopify_attributes }}>
                     {% render 'price', product: product, use_variant: true, show_badges: true %}
-                    <p class="b2b-price-note b2b-awaiting-note">Ditt konto inväntar B2B-godkännande. Vi hör av oss inom kort.</p>
                   </div>
+                  <p class="b2b-price-note b2b-awaiting-note">Bruttopris exkl. moms. Ditt konto granskas — rabatter aktiveras när vi godkänt din ansökan.</p>
                 {%- else -%}
+                  {%- comment -%} Utloggad — Shopifys native pris {%- endcomment -%}
                   <div {{ block.shopify_attributes }}>
-                    {% render 'price', product: product, use_variant: true, show_badges: true, show_compare_at_price: true %}
-                    <p class="b2b-price-note">Bruttopris. <a href="/pages/b2b-login" style="text-decoration: underline;">Registrera dig</a> för B2B-priser exkl. moms.</p>
+                    {% render 'price', product: product, use_variant: true, show_badges: true %}
                   </div>
+                  <p class="b2b-price-note">Bruttopris exkl. moms. <a href="/pages/bli-medlem" style="text-decoration: underline;">Bli medlem</a> för rabatt.</p>
                 {%- endif -%}
               {%- when 'inventory' -%}
                 <p
@@ -255,8 +276,8 @@
                   </details>
                 </div>
               {%- when 'quantity_selector' -%}
-              {%- assign _qty_tags_str = customer.tags | join: ',' | downcase -%}
-              {%- if hidePricesLoggedOut == false or _qty_tags_str contains 'b2b' -%}
+              {%- render 'rc-customer-tier' -%}
+              {%- if hidePricesLoggedOut == false or rc_is_member -%}
                 <div
                   data-spark="b2c-only"
                   id="Quantity-Form-{{ section.id }}"
@@ -511,21 +532,28 @@
                       {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
                     </div>
                   {%- when 'buy_buttons' -%}
-                    {%- if customer_tags_lower contains 'b2b' or customer_tags_lower contains 'krets' -%}
+                    {%- render 'rc-customer-tier' -%}
+                    {%- assign _bb_tags = product.tags | join: ',' | downcase -%}
+                    {%- assign _bb_type = product.product_type | downcase -%}
+                    {%- assign _bb_is_milliken = false -%}
+                    {%- if _bb_tags contains 'milliken' or product.vendor contains 'Milliken' -%}
+                      {%- assign _bb_is_milliken = true -%}
+                    {%- endif -%}
+                    {%- assign _bb_is_reused = false -%}
+                    {%- if _bb_tags contains 'återbruk' or _bb_tags contains 'aterbruk' or _bb_tags contains 'reused' -%}
+                      {%- assign _bb_is_reused = true -%}
+                    {%- endif -%}
+
+                    {%- if rc_is_member -%}
+                      {%- comment -%} Godkänd B2B-kund — SparkLayer-köp (tier-specifik behörighet hanteras av låsen ovan) {%- endcomment -%}
                       <div data-spark="b2c-only">
                         {%- render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true -%}
                       </div>
-                    {%- elsif customer -%}
-                      {{- nothing -}}
                     {%- else -%}
-                      <div class="b2b-logged-out-cta">
-                        <a href="/pages/b2b-login" class="button button--full-width button--primary">
-                          Registrera dig för att handla &rarr;
-                        </a>
-                        <a href="/pages/contact" class="button button--full-width button--secondary">
-                          Be om offert
-                        </a>
-                      </div>
+                      {%- comment -%} Guest (utloggad eller pending) — kan ej köpa, visa CTA {%- endcomment -%}
+                      {%- assign _cta_reason = 'login' -%}
+                      {%- if _bb_is_reused -%}{%- assign _cta_reason = 'reused' -%}{%- endif -%}
+                      {% render 'rc-signup-cta', context: 'pdp', reason: _cta_reason %}
                     {%- endif -%}
                   {%- when 'rating' -%}
                     {%- if product.metafields.reviews.rating.value != blank -%}
