@@ -1566,18 +1566,62 @@ a.product__text {
   }
 }
 
-/* Cap image height so large/square images don't dominate the viewport */
+/* Remove gray background box from product media so it hugs the image */
 @media screen and (min-width: 750px) {
-  .product__media-list .product__media-item img,
-  .product__media-list .product__media-item .media {
-    max-height: 560px;
-    width: auto;
-    margin-inline: auto;
-    object-fit: contain;
+  .product__media-wrapper .media {
+    background-color: transparent;
   }
 
   /* Give gallery some top padding so it doesn't press against the header */
   .product__media-wrapper {
     padding-top: 1rem;
   }
+}
+
+/* ---- Composil-style contained image modal (not fullscreen) ---- */
+.product-media-modal {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.product-media-modal__dialog {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.product-media-modal__content {
+  max-width: 800px;
+  max-height: 85vh;
+  margin: 0 auto;
+  background: rgb(var(--color-background));
+  border-radius: 0.5rem;
+  overflow: auto;
+  padding: 1.5rem;
+}
+
+@media screen and (min-width: 750px) {
+  .product-media-modal__content {
+    padding: 2rem;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .product-media-modal__content {
+    padding: 2rem;
+  }
+}
+
+.product-media-modal__content img {
+  max-height: 75vh;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  margin: 0 auto;
+  display: block;
+}
+
+.product-media-modal__toggle {
+  z-index: 102;
 }
