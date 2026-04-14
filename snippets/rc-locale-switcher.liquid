@@ -1,0 +1,237 @@
+{%- comment -%}
+  rc-locale-switcher.liquid
+  ------------------------------------------------------------------
+  Combined market/language switcher using flag emoji.
+  Replaces the separate country-localization and language-localization
+  dropdowns in the header with a single compact dropdown.
+
+  Each option sets BOTH country (currency) and language simultaneously
+  by submitting the Shopify localization form.
+
+  Usage:
+    {% render 'rc-locale-switcher', position: 'header' %}
+{%- endcomment -%}
+
+{%- comment -%}
+  Map each Shopify Market to a flag + label.
+  Extend this list when adding new markets.
+{%- endcomment -%}
+{%- assign _current_country = localization.country.iso_code -%}
+{%- assign _current_lang    = localization.language.iso_code -%}
+
+{%- comment -%} Build label for current selection {%- endcomment -%}
+{%- case _current_country -%}
+  {%- when 'SE' -%}{%- assign _flag = '🇸🇪' -%}{%- assign _label = 'SE' -%}
+  {%- when 'NO' -%}{%- assign _flag = '🇳🇴' -%}{%- assign _label = 'NO' -%}
+  {%- when 'DK' -%}{%- assign _flag = '🇩🇰' -%}{%- assign _label = 'DK' -%}
+  {%- when 'FI' -%}{%- assign _flag = '🇫🇮' -%}{%- assign _label = 'FI' -%}
+  {%- when 'DE' -%}{%- assign _flag = '🇩🇪' -%}{%- assign _label = 'DE' -%}
+  {%- when 'NL' -%}{%- assign _flag = '🇳🇱' -%}{%- assign _label = 'NL' -%}
+  {%- when 'GB' -%}{%- assign _flag = '🇬🇧' -%}{%- assign _label = 'GB' -%}
+  {%- else -%}{%- assign _flag = '🌐' -%}{%- assign _label = _current_country -%}
+{%- endcase -%}
+
+<div class="rc-locale" data-rc-locale>
+  <button
+    type="button"
+    class="rc-locale__trigger"
+    aria-expanded="false"
+    aria-haspopup="listbox"
+  >
+    <span class="rc-locale__flag">{{ _flag }}</span>
+    <span class="rc-locale__code">{{ _label }}</span>
+    <svg class="rc-locale__caret" width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 1.5L4 4.5L7 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <div class="rc-locale__dropdown" hidden>
+    <ul class="rc-locale__list" role="listbox">
+      {%- for country in localization.available_countries -%}
+        {%- case country.iso_code -%}
+          {%- when 'SE' -%}{%- assign _c_flag = '🇸🇪' -%}{%- assign _c_name = 'Sverige' -%}
+          {%- when 'NO' -%}{%- assign _c_flag = '🇳🇴' -%}{%- assign _c_name = 'Norge' -%}
+          {%- when 'DK' -%}{%- assign _c_flag = '🇩🇰' -%}{%- assign _c_name = 'Danmark' -%}
+          {%- when 'FI' -%}{%- assign _c_flag = '🇫🇮' -%}{%- assign _c_name = 'Finland' -%}
+          {%- when 'DE' -%}{%- assign _c_flag = '🇩🇪' -%}{%- assign _c_name = 'Deutschland' -%}
+          {%- when 'NL' -%}{%- assign _c_flag = '🇳🇱' -%}{%- assign _c_name = 'Nederland' -%}
+          {%- when 'GB' -%}{%- assign _c_flag = '🇬🇧' -%}{%- assign _c_name = 'United Kingdom' -%}
+          {%- else -%}{%- assign _c_flag = '🌐' -%}{%- assign _c_name = country.name -%}
+        {%- endcase -%}
+        <li>
+          <button
+            type="button"
+            class="rc-locale__option{% if country.iso_code == _current_country %} rc-locale__option--active{% endif %}"
+            role="option"
+            aria-selected="{{ country.iso_code == _current_country }}"
+            data-country-code="{{ country.iso_code }}"
+          >
+            <span class="rc-locale__flag">{{ _c_flag }}</span>
+            <span class="rc-locale__option-name">{{ _c_name }}</span>
+            <span class="rc-locale__option-currency">{{ country.currency.iso_code }}</span>
+          </button>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+<style>
+  /* ---- Combined locale switcher ---- */
+  .rc-locale {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+  .rc-locale__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.375rem 0.5rem;
+    border-radius: var(--rc-radius-sm, 4px);
+    font-family: var(--rc-font, inherit);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--rc-off-black, #1a1a1a);
+    line-height: 120%;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .rc-locale__trigger:hover {
+    opacity: 0.7;
+  }
+  .rc-locale__flag {
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+  .rc-locale__code {
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+  }
+  .rc-locale__caret {
+    width: 8px;
+    height: 6px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .rc-locale[data-open] .rc-locale__caret {
+    transform: rotate(180deg);
+  }
+
+  /* Dropdown */
+  .rc-locale__dropdown {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    right: 0;
+    z-index: 100;
+    background: var(--rc-white, #fff);
+    border: 1px solid var(--rc-beige, #e0ddd7);
+    border-radius: var(--rc-radius-sm, 6px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    min-width: 200px;
+    padding: 0.35rem 0;
+    animation: rcLocaleIn 0.15s ease;
+  }
+  @keyframes rcLocaleIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .rc-locale__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .rc-locale__option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.55rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--rc-font, inherit);
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--rc-off-black, #1a1a1a);
+    transition: background 0.1s;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .rc-locale__option:hover {
+    background: var(--rc-cream, #F0EFEB);
+  }
+  .rc-locale__option--active {
+    font-weight: 600;
+  }
+  .rc-locale__option-currency {
+    margin-left: auto;
+    color: rgba(0,0,0,0.45);
+    font-size: 0.8rem;
+  }
+
+  /* ---- Transparent header (over hero) — white text ---- */
+  .header-wrapper--transparent .rc-locale__trigger {
+    color: #fff;
+  }
+  .header-wrapper--transparent .rc-locale__caret {
+    color: #fff;
+  }
+  .header-wrapper--transparent .rc-locale__trigger:hover {
+    opacity: 0.7;
+  }
+</style>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-rc-locale]').forEach(function(root) {
+      var trigger  = root.querySelector('.rc-locale__trigger');
+      var dropdown = root.querySelector('.rc-locale__dropdown');
+
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var open = root.hasAttribute('data-open');
+        if (open) {
+          close();
+        } else {
+          dropdown.hidden = false;
+          root.setAttribute('data-open', '');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      function close() {
+        dropdown.hidden = true;
+        root.removeAttribute('data-open');
+        trigger.setAttribute('aria-expanded', 'false');
+      }
+
+      document.addEventListener('click', function() { close(); });
+      dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+
+      /* On option click → submit Shopify country form */
+      root.querySelectorAll('.rc-locale__option').forEach(function(opt) {
+        opt.addEventListener('click', function() {
+          var code = opt.getAttribute('data-country-code');
+          /* Find the Shopify country form in the header and submit it */
+          var form = document.getElementById('HeaderCountryForm') ||
+                     document.querySelector('form[action*="/localization"]');
+          if (form) {
+            var input = form.querySelector('input[name="country_code"]');
+            if (!input) {
+              input = document.createElement('input');
+              input.type = 'hidden';
+              input.name = 'country_code';
+              form.appendChild(input);
+            }
+            input.value = code;
+            form.submit();
+          }
+        });
+      });
+    });
+  })();
+</script>
