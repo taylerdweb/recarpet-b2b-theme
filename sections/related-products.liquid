@@ -36,13 +36,19 @@
         role="list"
       >
         {% assign skip_card_product_styles = false %}
-        {% for recommendation in recommendations.products %}
-           {% assign productTags = product.tags | join: ', ' %}
-        {% assign customerTags = customer.tags | join: ', ' %}
+        {%- assign _rc_cust_tags = customer.tags | join: ', ' -%}
+        {%- assign _rc_is_b2b = false -%}
+        {%- if _rc_cust_tags contains 'b2b-member-' or _rc_cust_tags contains 'b2b-plus-' or _rc_cust_tags contains 'b2b-premium-' -%}
+          {%- assign _rc_is_b2b = true -%}
+        {%- endif -%}
 
-        {% if productTags contains 'b2b-only' %}
-          {% if customerTags contains 'member' %}
-          
+        {% for recommendation in recommendations.products %}
+          {%- assign _rec_tags = recommendation.tags | join: ', ' -%}
+
+          {%- if _rec_tags contains 'b2b-only' and _rc_is_b2b == false -%}
+            {% continue %}
+          {%- endif -%}
+
           <li class="grid__item">
             {% render 'card-product',
               card_product: recommendation,
@@ -55,23 +61,6 @@
             %}
             {%- assign skip_card_product_styles = true -%}
           </li>
-          
-           {% else %}
-            <!-- Don't show anything for logged out customers-->
-          {% endif %}
-        {% else %}
-         <li class="grid__item">
-            {% render 'card-product',
-              card_product: recommendation,
-              media_aspect_ratio: section.settings.image_ratio,
-              show_secondary_image: section.settings.show_secondary_image,
-              show_vendor: section.settings.show_vendor,
-              show_rating: section.settings.show_rating
-              skip_styles: skip_card_product_styles
-            %}
-            {%- assign skip_card_product_styles = true -%}
-          </li>
-         {% endif %}
       {%- endfor -%}
       </ul>
     {% endif %}
