@@ -1507,7 +1507,7 @@ a.product__text {
   font-weight: 500;
   color: var(--rc-green, #2d5a3d);
   background: rgba(45, 90, 61, 0.08);
-  border: 1px solid rgba(45, 90, 61, 0.2);
+  border: 0.1rem solid rgba(45, 90, 61, 0.2);
   border-radius: 2rem;
   text-decoration: none;
   transition: background 0.15s, border-color 0.15s;
@@ -1540,14 +1540,58 @@ a.product__text {
 .b2b-awaiting-note,
 p.b2b-awaiting-note {
   font-size: 1.3rem;
-  line-height: 1.5;
+  line-height: 1.4;
   color: #d97706;
   background: #fffbeb;
-  border: 1px solid #fde68a;
-  padding: 0.6rem 1rem;
-  border-radius: 4px;
-  margin-top: 0.6rem;
+  border: 0.1rem solid #fde68a;
+  padding: 0.8rem 1rem;
+  border-radius: 0.4rem;
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+/* rc-signup-cta — pending / upgrade CTA on PDP & PLP */
+.rc-signup-cta {
+  padding: 1.2rem 1.4rem;
+  border: 0.1rem solid rgba(var(--color-foreground), 0.15);
+  border-radius: 0.6rem;
+  background: rgba(var(--color-foreground), 0.03);
+  margin: 1rem 0;
+}
+
+.rc-signup-cta__title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 0.4rem;
+}
+
+.rc-signup-cta__body {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: rgba(var(--color-foreground), 0.75);
+  margin: 0 0 1rem;
+}
+
+.rc-signup-cta__btn {
+  font-size: 1.3rem;
+  min-height: auto;
+  padding: 0.8rem 1.6rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.rc-signup-cta--plp {
+  padding: 0.8rem 1rem;
+  margin: 0.6rem 0 0;
+}
+.rc-signup-cta--plp .rc-signup-cta__title {
+  font-size: 1.3rem;
   margin-bottom: 0.6rem;
+}
+.rc-signup-cta--plp .rc-signup-cta__btn {
+  font-size: 1.2rem;
+  padding: 0.6rem 1.2rem;
 }
 
 /* ---- reCarpet: Contained product images (Composil / Orak style) ---- */
@@ -1595,11 +1639,11 @@ p.b2b-awaiting-note {
 }
 
 .product-media-modal__content {
-  max-width: 800px;
+  max-width: 80rem;
   max-height: 85vh;
   margin: 0 auto;
   background: rgb(var(--color-background));
-  border-radius: 0.5rem;
+  border-radius: 0.6rem;
   overflow: auto;
   padding: 1.5rem;
 }

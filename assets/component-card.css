@@ -673,7 +673,7 @@
   line-height: 1.4 !important;
   text-decoration: none !important;
   border-radius: var(--rc-radius, 0.5rem) !important;
-  border: 1px solid var(--rc-off-black, #121212) !important;
+  border: 0.1rem solid var(--rc-off-black, #121212) !important;
   background: var(--rc-off-black, #121212) !important;
   color: #fff !important;
   box-shadow: none !important;
