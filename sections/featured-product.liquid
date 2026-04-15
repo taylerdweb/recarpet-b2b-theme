@@ -114,7 +114,44 @@
                     {%- endunless -%}
                   </h2>
                 {%- when 'price' -%}
-                  {%- include 'rc-customer-tier' -%}
+                  {%- liquid
+  assign _rc_tags = customer.tags | join: ',' | downcase
+  assign rc_is_guest = false
+  assign rc_is_logged_in_guest = false
+  assign rc_is_member = false
+  assign rc_is_plus = false
+  assign rc_is_premium = false
+  assign rc_is_krets = false
+  unless customer
+    assign rc_is_guest = true
+    assign rc_tier = 'guest'
+  else
+    if _rc_tags contains 'b2b-premium-'
+      assign rc_is_premium = true
+      assign rc_is_plus = true
+      assign rc_is_member = true
+      assign rc_tier = 'premium'
+      if _rc_tags contains 'krets'
+        assign rc_is_krets = true
+      endif
+    elsif _rc_tags contains 'b2b-plus-'
+      assign rc_is_plus = true
+      assign rc_is_member = true
+      assign rc_tier = 'plus'
+    elsif _rc_tags contains 'b2b-member-'
+      assign rc_is_member = true
+      assign rc_tier = 'member'
+    else
+      assign rc_is_guest = true
+      assign rc_is_logged_in_guest = true
+      assign rc_tier = 'guest'
+    endif
+  endunless
+  assign rc_can_buy_batches = rc_is_plus
+  assign rc_can_buy_reused = rc_is_member
+  assign rc_sees_services = rc_is_premium
+  assign rc_can_add_montering = rc_is_premium
+-%}
                   {%- if rc_is_member -%}
                     <spark-product-price product-id="{{ product.id }}"></spark-product-price>
                   {%- elsif rc_is_logged_in_guest -%}
