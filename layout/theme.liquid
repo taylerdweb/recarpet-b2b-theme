@@ -1,8 +1,8 @@
 <!doctype html>
 {%- assign customer_tags_str = customer.tags | join: ',' | downcase -%}
-{%- comment -%} is_b2b_customer = true för kunder med 'member'-tagg (alla godkända B2B-kunder) {%- endcomment -%}
+{%- comment -%} is_b2b_customer = true för alla godkända B2B-kunder (member, plus, premium) {%- endcomment -%}
 {%- assign is_b2b_customer = false -%}
-{%- if customer_tags_str contains 'member' -%}
+{%- if customer_tags_str contains 'b2b-member-' or customer_tags_str contains 'b2b-plus-' or customer_tags_str contains 'b2b-premium-' -%}
   {%- assign is_b2b_customer = true -%}
 {%- endif -%}
 <html class="js" lang="{{ request.locale.iso_code }}">
