@@ -67,8 +67,8 @@ COST_MARKUP = 1.40
 
 # ─── Prisavrundning ───────────────────────────────────────────────────────────
 # Alltid avrunda uppåt (bekräftat av Hampus, möte 2026-04-09)
-def ceil_price(value, decimals=2):
-    """Round a price UP to the given number of decimal places."""
+def ceil_price(value, decimals=0):
+    """Round a price UP to the given number of decimal places (default: whole numbers)."""
     factor = 10 ** decimals
     return math.ceil(value * factor) / factor
 
