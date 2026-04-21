@@ -815,7 +815,8 @@
 
             var wrap = document.createElement('div');
             wrap.setAttribute('data-fak-wrap', '1');
-            wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;margin-bottom:8px;';
+            wrap.style.cssText = 'display:flex;flex-direction:column;gap:10px;margin-bottom:8px;opacity:0;transition:opacity 0.3s ease;';
+            requestAnimationFrame(function() { requestAnimationFrame(function() { wrap.style.opacity = '1'; }); });
 
             function sync() {
               var vals = FIELDS.map(function(f) {
