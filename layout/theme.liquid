@@ -789,6 +789,8 @@
               input = null;
             }
             if (!input || input.dataset.fakSplitted) return;
+            // Check if a fak-wrap already exists nearby (from a previous injection that SparkLayer didn't destroy)
+            if (input.parentNode && input.parentNode.querySelector('[data-fak-wrap]')) return;
             input.dataset.fakSplitted = '1';
             input.style.display = 'none';
 
@@ -881,24 +883,46 @@
             console.log('[reCarpet] Fakturauppgifter: injected 3 fields, replaced', input.tagName, input.id || input.placeholder);
           }
 
+          // Recursively walk shadow roots (handles nested components)
+          function walkShadowRoots(el) {
+            if (el.shadowRoot) {
+              injectFakturaFields(el.shadowRoot);
+              el.shadowRoot.querySelectorAll('*').forEach(walkShadowRoots);
+            }
+          }
+
           // Scan regular DOM + all shadow roots (drawer, checkout, cart, etc.)
           function runFakturaInjection() {
-            // 1. Regular DOM (in case SparkLayer renders outside shadow root)
+            // 1. Regular DOM
             injectFakturaFields(document);
 
-            // 2. Known SparkLayer components
+            // 2. Known SparkLayer components + nested shadow roots
             var sparkEls = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout, spark-pdp, [class*="spark"]');
-            sparkEls.forEach(function(el) {
-              if (el.shadowRoot) injectFakturaFields(el.shadowRoot);
-            });
+            sparkEls.forEach(walkShadowRoots);
 
             // 3. Broader fallback: any element with a shadow root
-            document.querySelectorAll('*').forEach(function(el) {
-              if (el.shadowRoot) injectFakturaFields(el.shadowRoot);
+            document.querySelectorAll('*').forEach(walkShadowRoots);
+          }
+
+          // Also watch for SparkLayer re-rendering checkout steps (which destroys & recreates DOM)
+          function watchForCheckoutChanges() {
+            var sparkEls = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
+            sparkEls.forEach(function(el) {
+              var root = el.shadowRoot;
+              if (!root || root.dataset.fakObserved) return;
+              root.dataset.fakObserved = '1';
+              var obs = new MutationObserver(function() {
+                // Re-run injection when SparkLayer re-renders (e.g. step change)
+                setTimeout(runFakturaInjection, 100);
+              });
+              obs.observe(root, { childList: true, subtree: true });
             });
           }
 
-          var fakPoll = setInterval(runFakturaInjection, 500);
+          var fakPoll = setInterval(function() {
+            runFakturaInjection();
+            watchForCheckoutChanges();
+          }, 500);
           setTimeout(function() { clearInterval(fakPoll); }, 120000);
 
           // ── Montering-tillval: auto-add vid köp ────────────────────────────────
