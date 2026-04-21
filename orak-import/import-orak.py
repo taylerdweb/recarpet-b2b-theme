@@ -109,6 +109,118 @@ SERVICE_PRODUCTS = [
     {"sku": "RC-SERVICE-RENGORING",  "sek_price": 30.00},
 ]
 
+# ─── Testprodukter (--test) ──────────────────────────────────────────────────
+# 5 Orak + 5 Milliken + 5 Composil = 15 testprodukter
+# Composil-data är fiktiv (ingen riktig CSV tillgänglig)
+
+# collection-fält: "milliken", "aterbrukade-mattor", eller "overproduktion"
+# Milliken → Milliken-serien
+# Orak/Composil → slumpmässigt Återbrukade mattor eller Överproduktion
+
+# Orak (Interface/Balsan) — riktiga produkter från Orak CSV med bilder
+TEST_ORAK_PRODUCTS = [
+    {
+        "sku": "RCT-O-GIZ2202010", "title": "Composure Diffuse", "brand": "Interface",
+        "price_eur": 25.20, "qty": 90, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/interface-composure-diffuse-logo-mH5z.jpeg",
+        "tags": "orak,atervunna-mattor,interface,reemploi", "collection": "aterbrukade-mattor",
+    },
+    {
+        "sku": "RCT-O-GIZ2111008", "title": "Heuga 727 Dark Orchid", "brand": "Interface",
+        "price_eur": 16.80, "qty": 89, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/interface-heuga-727-dark-orchid-optimal-karpet-GVKg.jpg",
+        "tags": "orak,atervunna-mattor,interface,reemploi", "collection": "overproduktion",
+    },
+    {
+        "sku": "RCT-O-GIZ2112001", "title": "On Line Cloud", "brand": "Interface",
+        "price_eur": 28.00, "qty": 49, "dims": "25x100 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/interface-ON-LINE-CLOUD-qv3l.jpeg",
+        "tags": "orak,atervunna-mattor,interface,reemploi", "collection": "aterbrukade-mattor",
+    },
+    {
+        "sku": "RCT-O-GIZ2111002", "title": "Stoneage 160", "brand": "Balsan",
+        "price_eur": 25.20, "qty": 68, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/balsan-stoneage-160-optimal-karpet-GilQ.jpg",
+        "tags": "orak,atervunna-mattor,balsan,reemploi", "collection": "overproduktion",
+    },
+    {
+        "sku": "RCT-O-GIZ2202003", "title": "Karma Sonic Confort 910", "brand": "Balsan",
+        "price_eur": 10.50, "qty": 44, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/balsan-KARMA-SONIC-CONFORT-AVEC-LOGO-KpHk.jpeg",
+        "tags": "orak,atervunna-mattor,balsan,reemploi", "collection": "aterbrukade-mattor",
+    },
+]
+
+# Milliken — riktiga produkter från Orak CSV (brand=Milliken) med bilder → alla till "Milliken"-serien
+TEST_MILLIKEN_PRODUCTS = [
+    {
+        "sku": "MILLIKEN-GIZ2204002", "title": "Straight Talk Creme Brulee", "brand": "Milliken",
+        "price_eur": 23.80, "qty": 191, "dims": "45.7x45.7 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/milliken-straight-talk-creme-brullee-optimal-karpet-aAzP.jpeg",
+        "tags": "milliken,nya-golv,reemploi", "collection": "milliken",
+    },
+    {
+        "sku": "MILLIKEN-GIZ2209010", "title": "Consequence 2.0 UPS144 152L", "brand": "Milliken",
+        "price_eur": 25.20, "qty": 111, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/MIL-CONSEQUENCE-2-3XEx.jpeg",
+        "tags": "milliken,nya-golv,reemploi", "collection": "milliken",
+    },
+    {
+        "sku": "MILLIKEN-GIZ2202005", "title": "Formwork FWK169 Sash", "brand": "Milliken",
+        "price_eur": 23.10, "qty": 31, "dims": "45.7x45.7 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/milliken-formwork-sash-optimal-karpet-fqWL.jpeg",
+        "tags": "milliken,nya-golv,reemploi", "collection": "milliken",
+    },
+    {
+        "sku": "MILLIKEN-GIZ2210012", "title": "Artistic Liberties Saten", "brand": "Milliken",
+        "price_eur": 22.40, "qty": 44, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/GIZ2210012-MIL-ARTISTIC-LIBERTIES-SATEEN--LOGO-Tvqk.jpeg",
+        "tags": "milliken,nya-golv,reemploi", "collection": "milliken",
+    },
+    {
+        "sku": "MILLIKEN-GIZ2306003", "title": "Out Of Shadows Umbra", "brand": "Milliken",
+        "price_eur": 23.80, "qty": 135, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/SRG133-83-94-Umbra-h4pl.png",
+        "tags": "milliken,nya-golv,reemploi", "collection": "milliken",
+    },
+]
+
+# Composil — fiktiva produkter, använder Orak-bilder för realistiskt utseende
+TEST_COMPOSIL_PRODUCTS = [
+    {
+        "sku": "RCT-C-TEST001", "title": "EcoTile Classic Grey 500", "brand": "Composil",
+        "price_eur": 18.50, "qty": 200, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/interface-heuga-727-silver-optimal-karpet-hdnR.jpg",
+        "tags": "composil,atervunna-mattor,reemploi", "collection": "aterbrukade-mattor",
+    },
+    {
+        "sku": "RCT-C-TEST002", "title": "EcoTile Urban Charcoal", "brand": "Composil",
+        "price_eur": 19.00, "qty": 150, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/interface-ON-LINE-GRANITE-detail-t0GG.jpeg",
+        "tags": "composil,atervunna-mattor,reemploi", "collection": "overproduktion",
+    },
+    {
+        "sku": "RCT-C-TEST003", "title": "EcoTile Nature Beige 320", "brand": "Composil",
+        "price_eur": 17.50, "qty": 180, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/BLASAN-STONE-AGE-GRIS-915-LOGO-f1Ok.jpg",
+        "tags": "composil,atervunna-mattor,reemploi", "collection": "aterbrukade-mattor",
+    },
+    {
+        "sku": "RCT-C-TEST004", "title": "EcoTile Ocean Blue 410", "brand": "Composil",
+        "price_eur": 20.00, "qty": 120, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/BALSAN-STONE-AGE-MARRON-730-LOGO-BNLn.jpg",
+        "tags": "composil,atervunna-mattor,reemploi", "collection": "overproduktion",
+    },
+    {
+        "sku": "RCT-C-TEST005", "title": "EcoTile Forest Green 550", "brand": "Composil",
+        "price_eur": 21.00, "qty": 95, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/PILOTE-GRISNOIR-GIZ2208007-avec-logo-RTvs.jpeg",
+        "tags": "composil,atervunna-mattor,reemploi", "collection": "aterbrukade-mattor",
+    },
+]
+
+ALL_TEST_PRODUCTS = TEST_ORAK_PRODUCTS + TEST_MILLIKEN_PRODUCTS + TEST_COMPOSIL_PRODUCTS
+
 # ORAK CSV column → internal key mapping
 COLUMN_MAP = {
     "title":             "title",
@@ -304,65 +416,246 @@ def get_existing_skus() -> dict:
 PROTECTED_SKUS = {sp["sku"] for sp in SERVICE_PRODUCTS}
 
 
+def count_products() -> int:
+    """Antal produkter i butiken."""
+    return shopify_get("products/count.json").get("count", 0)
+
+
 def delete_all_products(dry_run: bool = False):
     """
     Tar bort ALLA produkter från Shopify, utom tjänsteprodukter (PROTECTED_SKUS).
     Rensar även sync-loggen.
+
+    Använder loop-baserad radering: hämta 250 → radera → upprepa tills tomt.
+    (since_id-paginering är opålitlig vid samtidig radering.)
     """
-    print("\n  Hämtar alla produkter för borttagning...")
-    all_products = []
-    params = {"limit": 250, "fields": "id,title,variants"}
-    while True:
-        data = shopify_get("products.json", params)
-        products = data.get("products", [])
-        if not products:
-            break
-        all_products.extend(products)
-        if len(products) < 250:
-            break
-        params["since_id"] = products[-1]["id"]
-
-    to_delete = []
-    protected = []
-    for p in all_products:
-        skus = [v.get("sku", "") for v in p.get("variants", [])]
-        if any(s in PROTECTED_SKUS for s in skus):
-            protected.append(p)
-        else:
-            to_delete.append(p)
-
-    print(f"  Totalt: {len(all_products)} produkter")
-    print(f"  Ska tas bort: {len(to_delete)}")
-    print(f"  Skyddade (tjänster): {len(protected)} — {[v.get('sku','?') for p in protected for v in p.get('variants',[])]}")
-
     if dry_run:
-        print("  [DRY-RUN] Inga produkter togs bort.")
-        return len(to_delete)
+        print(f"\n  [DRY-RUN] Skulle ta bort alla produkter (skyddar {len(PROTECTED_SKUS)} tjänster).")
+        return 0
+
+    total = count_products()
+    print(f"\n  Totalt i butiken: {total} produkter")
 
     deleted = errors = 0
-    for i, p in enumerate(to_delete, 1):
-        try:
-            url = f"https://{SHOPIFY_SHOP}/admin/api/{API_VERSION}/products/{p['id']}.json"
-            r = requests.delete(url, headers=api_headers())
-            _rate_limit(r)
-            if r.status_code in (200, 204):
-                deleted += 1
-            else:
-                print(f"    Warning: {p['id']} → HTTP {r.status_code}")
+    round_num = 0
+
+    while True:
+        round_num += 1
+        data = shopify_get("products.json", {"limit": 250, "fields": "id,title,variants"})
+        batch = data.get("products", [])
+        if not batch:
+            break
+
+        to_delete = []
+        for p in batch:
+            skus = [v.get("sku", "") for v in p.get("variants", [])]
+            if any(s in PROTECTED_SKUS for s in skus):
+                continue
+            to_delete.append(p)
+
+        if not to_delete:
+            break  # Only protected products left
+
+        print(f"  Omgang {round_num}: raderar {len(to_delete)} produkter...")
+        for p in to_delete:
+            try:
+                url = f"https://{SHOPIFY_SHOP}/admin/api/{API_VERSION}/products/{p['id']}.json"
+                r = requests.delete(url, headers=api_headers())
+                _rate_limit(r)
+                if r.status_code in (200, 204):
+                    deleted += 1
+                else:
+                    print(f"    WARN: {p['title']} -> HTTP {r.status_code}")
+                    errors += 1
+            except Exception as e:
+                print(f"    ERROR: {p['title']} -> {e}")
                 errors += 1
-            if i % 50 == 0:
-                print(f"    ...{i}/{len(to_delete)} borttagna")
-        except Exception as e:
-            print(f"    ERROR {p['id']}: {e}")
-            errors += 1
+
+        time.sleep(1)  # Låt Shopify andas mellan omgångar
 
     # Rensa sync-log
     if SYNC_LOG.exists():
         SYNC_LOG.unlink()
         print("  Sync-log rensad.")
 
-    print(f"\n  Reset klart: {deleted} borttagna, {errors} fel, {len(protected)} skyddade.")
+    remaining = count_products()
+    print(f"\n  Reset klart: {deleted} borttagna, {errors} fel.")
+    print(f"  Kvar i butiken: {remaining} (ska vara {len(PROTECTED_SKUS)} tjänster)")
+    if remaining > len(PROTECTED_SKUS) + 1:
+        print("  OBS: Fler produkter kvar an vantat — kor scriptet igen.")
     return deleted
+
+
+def create_test_products(dry_run: bool = False):
+    """
+    Skapar 15 testprodukter (5 Orak + 5 Milliken + 5 Composil) i Shopify.
+    Sätter inventory, metafields, publicerar till SparkLayer och lägger i rätt produktserie.
+    """
+    rates = fetch_exchange_rates()
+    eur_sek = rates["EUR_SEK"]
+
+    print(f"\n  Skapar {len(ALL_TEST_PRODUCTS)} testprodukter...")
+
+    location_id = None
+    sparklayer_gid = None
+    collection_map = {}
+    if not dry_run:
+        location_id = shopify_get("locations.json")["locations"][0]["id"]
+        sparklayer_gid = get_sparklayer_publication_gid()
+        collection_map = get_collection_id_map()
+        if collection_map:
+            print(f"  Collections: {list(collection_map.keys())}")
+
+    created = errors = 0
+    for p in ALL_TEST_PRODUCTS:
+        sek_price = ceil_price(p["price_eur"] * COST_MARKUP * eur_sek)
+        col_handle = p.get("collection", "")
+
+        if dry_run:
+            print(f"  [DRY-RUN] CREATE  {p['sku']}  {p['title']}  SEK {sek_price:.2f}  qty:{p['qty']}  -> {col_handle}")
+            continue
+
+        try:
+            payload = {
+                "product": {
+                    "title": p["title"],
+                    "vendor": p["brand"],
+                    "product_type": "Carpet Tile",
+                    "tags": p["tags"],
+                    "published": True,
+                    "variants": [{
+                        "sku": p["sku"],
+                        "price": f"{sek_price:.2f}",
+                        "inventory_management": "shopify",
+                        "requires_shipping": False,
+                        "taxable": True,
+                    }],
+                }
+            }
+            if p.get("image"):
+                payload["product"]["images"] = [{"src": p["image"], "alt": p["title"]}]
+            result = shopify_post("products.json", payload)["product"]
+            product_id = result["id"]
+            variant = result["variants"][0]
+
+            # Inventory
+            shopify_post("inventory_levels/set.json", {
+                "location_id": location_id,
+                "inventory_item_id": variant["inventory_item_id"],
+                "available": p["qty"],
+            })
+
+            # Metafields
+            set_metafields(product_id, [
+                {"namespace": "recarpet", "key": "dimensions", "value": p["dims"], "type": "single_line_text_field"},
+            ])
+
+            # SparkLayer
+            if sparklayer_gid:
+                publish_to_sparklayer(product_id, sparklayer_gid)
+
+            # Produktserie (collection)
+            col_id = collection_map.get(col_handle) or collection_map.get(col_handle.replace("-", " "))
+            col_label = col_handle
+            if col_id:
+                add_product_to_collection(product_id, col_id)
+                col_label = f"{col_handle} (id:{col_id})"
+            elif col_handle:
+                col_label = f"{col_handle} (EJ HITTAD)"
+
+            print(f"  CREATED  {p['sku']}  {p['title']}  SEK {sek_price:.2f}  qty:{p['qty']}  -> {col_label}")
+            created += 1
+
+        except Exception as e:
+            print(f"  ERROR  {p['sku']}: {e}")
+            errors += 1
+
+    print(f"\n  Testprodukter skapade: {created}, Fel: {errors}")
+    return rates
+
+
+def generate_test_pricelists(rates: dict):
+    """
+    Genererar SparkLayer-prislistor (16 st + bulk CSV) med ENBART testprodukter + tjänster.
+    Samma format som den vanliga generate_pricelists men med testdata.
+    """
+    SPARKLAYER_DIR.mkdir(exist_ok=True)
+
+    eur_sek = rates["EUR_SEK"]
+    eur_nok = rates["EUR_NOK"]
+    eur_dkk = rates["EUR_DKK"]
+
+    CURRENCY_RATES = {"sek": eur_sek, "nok": eur_nok, "dkk": eur_dkk, "eur": 1.0}
+    LISTS = {
+        f"sparklayer-{tier}-{cur}.csv": (mult, CURRENCY_RATES[cur])
+        for tier, mult in TIER_MULTIPLIERS.items()
+        for cur in CURRENCY_RATES
+    }
+
+    list_rows = {name: [] for name in LISTS}
+
+    # Testprodukter
+    for p in ALL_TEST_PRODUCTS:
+        for name, (mult, rate) in LISTS.items():
+            price = ceil_price(p["price_eur"] * COST_MARKUP * rate * mult)
+            list_rows[name].append([p["sku"], 1, f"{price:.2f}"])
+
+    # Tjänsteprodukter
+    for sp in SERVICE_PRODUCTS:
+        sek_price = sp["sek_price"]
+        for name, (mult, rate) in LISTS.items():
+            if rate == 1.0:
+                svc_price = ceil_price(sek_price / eur_sek)
+            elif rate == eur_nok:
+                svc_price = ceil_price(sek_price * (eur_nok / eur_sek))
+            elif rate == eur_dkk:
+                svc_price = ceil_price(sek_price * (eur_dkk / eur_sek))
+            else:
+                svc_price = sek_price
+            list_rows[name].append([sp["sku"], 1, f"{svc_price:.2f}"])
+
+    print(f"\n  Genererar {len(LISTS)} SparkLayer-prislistor (testdata)...")
+    for name, rows in list_rows.items():
+        path = SPARKLAYER_DIR / name
+        with open(path, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(["sku", "quantity", "price"])
+            writer.writerows(rows)
+        print(f"  OK  {name}  ({len(rows)} SKUs)")
+
+    # Bulk upload CSV
+    SLUG_MAP = [
+        (tier, cur, f"{tier}-{cur}")
+        for tier in TIER_MULTIPLIERS
+        for cur in ("sek", "nok", "dkk", "eur")
+    ]
+    bulk_path = SPARKLAYER_DIR / "sparklayer-bulk-upload.csv"
+    with open(bulk_path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["SKU", "PRICE", "PRICE_LIST_SLUG"])
+        for p in ALL_TEST_PRODUCTS:
+            for tier, cur, slug in SLUG_MAP:
+                mult = TIER_MULTIPLIERS[tier]
+                rate = CURRENCY_RATES[cur]
+                price = ceil_price(p["price_eur"] * COST_MARKUP * rate * mult)
+                writer.writerow([p["sku"], price, slug])
+        for sp in SERVICE_PRODUCTS:
+            sek_price = sp["sek_price"]
+            for tier, cur, slug in SLUG_MAP:
+                rate = CURRENCY_RATES[cur]
+                if rate == 1.0:
+                    svc_price = ceil_price(sek_price / eur_sek)
+                elif rate == eur_nok:
+                    svc_price = ceil_price(sek_price * (eur_nok / eur_sek))
+                elif rate == eur_dkk:
+                    svc_price = ceil_price(sek_price * (eur_dkk / eur_sek))
+                else:
+                    svc_price = sek_price
+                writer.writerow([sp["sku"], svc_price, slug])
+
+    total_skus = len(ALL_TEST_PRODUCTS) + len(SERVICE_PRODUCTS)
+    total_rows = total_skus * len(SLUG_MAP)
+    print(f"  OK  sparklayer-bulk-upload.csv  ({total_rows} rader, {total_skus} SKUs x {len(SLUG_MAP)} listor)")
 
 
 def get_first_location_id() -> int:
@@ -782,14 +1075,14 @@ _SUFFIX_KEYWORDS = _re.compile(
 def make_recarpet_sku(raw: str) -> str:
     """
     Omvandlar ORAKs råa identifierare till ett reCarpet-standardiserat SKU.
-    Format: RC-ORAK-<rensat-id>
+    Format: RCT-O-<rensat-id>
     Exempel:
-      GIZ2202010                    → RC-ORAK-GIZ2202010
-      2312005-01_attente nettoyage  → RC-ORAK-2312005-01
-      240803-01-surplus             → RC-ORAK-240803-01
-      251003-01_welltek_12/25       → RC-ORAK-251003-01
-      SAPE_2                        → RC-ORAK-SAPE-2
-      4700 elegance_atelier_d       → RC-ORAK-4700-elegance
+      GIZ2202010                    → RCT-O-GIZ2202010
+      2312005-01_attente nettoyage  → RCT-O-2312005-01
+      240803-01-surplus             → RCT-O-240803-01
+      251003-01_welltek_12/25       → RCT-O-251003-01
+      SAPE_2                        → RCT-O-SAPE-2
+      4700 elegance_atelier_d       → RCT-O-4700-elegance
     """
     base = raw.strip()
     # Hitta första förekomst av ett känt suffix-nyckelord och trunkera där
@@ -799,17 +1092,71 @@ def make_recarpet_sku(raw: str) -> str:
     # Ersätt mellanslag och understreck med bindestreck, rensa avslutande skräp
     base = _re.sub(r'[\s_]+', '-', base)
     base = base.strip('-')
-    return "RC-ORAK-" + base
+    return "RCT-O-" + base
 
 
 def main():
     parser = argparse.ArgumentParser(description="reCarpet - ORAK Product Import")
-    parser.add_argument("--csv",             required=True,      help="Path to ORAK CSV file")
+    parser.add_argument("--csv",             required=False, default=None, help="Path to ORAK CSV file")
     parser.add_argument("--dry-run",         action="store_true", help="Simulate without writing to Shopify")
     parser.add_argument("--pricelists-only", action="store_true", help="Only generate SparkLayer CSVs")
     parser.add_argument("--fix-sparklayer",  action="store_true", help="Publicera alla befintliga Shopify-produkter till SparkLayer")
     parser.add_argument("--reset",           action="store_true", help="Ta bort ALLA produkter (utom tjänster) och importera om från CSV")
+    parser.add_argument("--test",            action="store_true", help="Testmiljo: radera allt → skapa 15 testprodukter → generera test-prislistor")
     args = parser.parse_args()
+
+    # ── --test: Testmiljö-läge ───────────────────────────────────────────────
+    if args.test:
+        if not SHOPIFY_SHOP or not SHOPIFY_TOKEN:
+            print("Error: set SHOPIFY_SHOP and SHOPIFY_TOKEN in .env")
+            sys.exit(1)
+
+        mode = "TEST DRY-RUN" if args.dry_run else "TEST LIVE"
+        print(f"""
+{'='*55}
+reCarpet — Test Environment [{mode}]
+  Shop: {SHOPIFY_SHOP}
+  Produkter: 5 Orak + 5 Milliken + 5 Composil = 15
+  SKU-prefix: RCT-O- / MILLIKEN- / RCT-C-
+{'='*55}
+""")
+        # Steg 1: Radera alla produkter
+        print("STEG 1: Ta bort alla befintliga produkter")
+        if not args.dry_run:
+            print("  (Vantar 5s — Ctrl+C for att avbryta)")
+            time.sleep(5)
+        delete_all_products(dry_run=args.dry_run)
+
+        # Steg 2: Skapa testprodukter
+        print("\nSTEG 2: Skapa testprodukter")
+        rates = create_test_products(dry_run=args.dry_run)
+        if not rates:
+            rates = fetch_exchange_rates()
+
+        # Steg 3: Generera prislistor
+        print("\nSTEG 3: Generera SparkLayer test-prislistor")
+        generate_test_pricelists(rates)
+
+        print(f"""
+{'='*55}
+Klart!
+
+Nasta steg:
+  1. Ladda upp prislistor i SparkLayer -> Price Lists
+     (sparklayer-pricelists/*.csv)
+  2. Testa en Orak-order (RCT-O-*)
+     -> ska trigga b2b_supplier_order_orak i Shopify Flow
+  3. Testa en Composil-order (RCT-C-*)
+     -> ska trigga b2b_supplier_order_composil
+{'='*55}
+""")
+        return
+
+    # ── Vanligt import-läge — kräver --csv ───────────────────────────────────
+    if not args.csv:
+        print("Error: --csv krävs (eller använd --test för testmiljö)")
+        parser.print_help()
+        sys.exit(1)
 
     csv_path = Path(args.csv)
     if not csv_path.exists():

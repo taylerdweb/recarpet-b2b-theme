@@ -235,6 +235,10 @@
                         {%- assign description = 'Vårt kompletterande sortiment av nya textilplattor från Milliken Floors' -%}
                       {%- when 'tjanster' or 'tjänster' -%}
                         {%- assign description = 'Inventering, demontering, montering och service av textilplattor' -%}
+                      {%- when 'milliken' -%}
+                        {%- assign description = 'Nyproducerade textilplattor från Milliken' -%}
+                      {%- when 'overproduktion' or 'överproduktion' -%}
+                        {%- assign description = 'Överskottslager av kvalitetsmattor till reducerat pris' -%}
                     {%- endcase -%}
                     <li class="mega-menu-grid-item">
                       <a href="{{ child_link.url }}" class="mega-menu-grid-link">
