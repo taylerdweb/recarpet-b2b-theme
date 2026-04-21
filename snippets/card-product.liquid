@@ -267,6 +267,16 @@
               {%- comment -%} Utloggad — Shopifys native pris {%- endcomment -%}
               {% render 'price', product: card_product, price_class: 'price--listing' %}
             {%- endif -%}
+
+            {%- comment -%} ── Lagerstatus-badge ──────────────────── {%- endcomment -%}
+            {%- assign _card_qty = card_product.selected_or_first_available_variant.inventory_quantity -%}
+            {%- if card_product.available == false or _card_qty <= 0 -%}
+              <span class="rc-stock-badge rc-stock-badge--out-of-stock">Slut i lager</span>
+            {%- elsif _card_qty <= 20 -%}
+              <span class="rc-stock-badge rc-stock-badge--low-stock">{{ _card_qty }} m² kvar</span>
+            {%- else -%}
+              <span class="rc-stock-badge rc-stock-badge--in-stock">I lager — {{ _card_qty }} m²</span>
+            {%- endif -%}
           </div>
         </div>
         {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}

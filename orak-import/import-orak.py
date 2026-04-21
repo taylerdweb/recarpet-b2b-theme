@@ -144,10 +144,10 @@ TEST_ORAK_PRODUCTS = [
         "tags": "orak,atervunna-mattor,balsan,reemploi", "collection": "overproduktion",
     },
     {
-        "sku": "RCT-O-GIZ2202003", "title": "Karma Sonic Confort 910", "brand": "Balsan",
-        "price_eur": 10.50, "qty": 44, "dims": "50x50 cm",
-        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/balsan-KARMA-SONIC-CONFORT-AVEC-LOGO-KpHk.jpeg",
-        "tags": "orak,atervunna-mattor,balsan,reemploi", "collection": "aterbrukade-mattor",
+        "sku": "RCT-O-241105-02", "title": "Ember 5T226 26755-Straw", "brand": "Shaw contract",
+        "price_eur": 19.60, "qty": 642, "dims": "50x50 cm",
+        "image": "https://cf.appdrag.com/optimal-karpet-21fc7a/uploads/26755-Straw-orak-1-k9cz.png",
+        "tags": "orak,atervunna-mattor,shaw-contract,reemploi,storbatch", "collection": "aterbrukade-mattor",
     },
 ]
 
@@ -537,13 +537,41 @@ def create_test_products(dry_run: bool = False):
             result = shopify_post("products.json", payload)["product"]
             product_id = result["id"]
             variant = result["variants"][0]
+            inv_item_id = variant["inventory_item_id"]
 
-            # Inventory
-            shopify_post("inventory_levels/set.json", {
-                "location_id": location_id,
-                "inventory_item_id": variant["inventory_item_id"],
-                "available": p["qty"],
-            })
+            # Vänta så att Shopify hinner registrera inventory_item
+            time.sleep(1)
+
+            # Inventory — sätt lagersaldo med retry
+            inv_ok = False
+            for attempt in range(3):
+                try:
+                    shopify_post("inventory_levels/set.json", {
+                        "location_id": location_id,
+                        "inventory_item_id": inv_item_id,
+                        "available": p["qty"],
+                    })
+                    inv_ok = True
+                    break
+                except Exception as inv_err:
+                    print(f"      Inventory attempt {attempt+1}/3 failed: {inv_err}")
+                    time.sleep(2)
+
+            # Verifiera att lagersaldot faktiskt sattes
+            if inv_ok:
+                try:
+                    inv_data = shopify_get("inventory_levels.json", {
+                        "inventory_item_ids": inv_item_id,
+                        "location_ids": location_id,
+                    })
+                    levels = inv_data.get("inventory_levels", [])
+                    actual_qty = levels[0]["available"] if levels else "?"
+                    if actual_qty != p["qty"]:
+                        print(f"      WARN: inventory={actual_qty}, expected={p['qty']}")
+                except Exception:
+                    pass
+            else:
+                print(f"      ERROR: Kunde inte sätta inventory for {p['sku']}")
 
             # Metafields
             set_metafields(product_id, [
@@ -563,7 +591,8 @@ def create_test_products(dry_run: bool = False):
             elif col_handle:
                 col_label = f"{col_handle} (EJ HITTAD)"
 
-            print(f"  CREATED  {p['sku']}  {p['title']}  SEK {sek_price:.2f}  qty:{p['qty']}  -> {col_label}")
+            inv_label = f"qty:{actual_qty}" if inv_ok else "qty:FAILED"
+            print(f"  CREATED  {p['sku']}  {p['title']}  SEK {sek_price:.2f}  {inv_label}  -> {col_label}")
             created += 1
 
         except Exception as e:
@@ -709,11 +738,21 @@ def update_variant_price(variant_id, price):
 
 
 def set_inventory(inventory_item_id, location_id, quantity):
-    shopify_post("inventory_levels/set.json", {
-        "location_id": location_id,
-        "inventory_item_id": inventory_item_id,
-        "available": int(quantity),
-    })
+    """Sätter lagersaldo med retry (Shopify kan vara seg efter produktskapande)."""
+    for attempt in range(3):
+        try:
+            shopify_post("inventory_levels/set.json", {
+                "location_id": location_id,
+                "inventory_item_id": inventory_item_id,
+                "available": int(quantity),
+            })
+            return True
+        except Exception as e:
+            if attempt < 2:
+                time.sleep(1.5)
+            else:
+                print(f"      WARNING: inventory set failed after 3 attempts: {e}")
+                return False
 
 
 def set_metafields(product_id, metafields: list):
