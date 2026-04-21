@@ -1579,16 +1579,29 @@
 
   <!-- End SparkLayer Sample CSS Code — now BEFORE the JS load -->
 
-      <!-- Force SparkLayer shadow roots to open mode so we can style cart items -->
+      <!-- Force SparkLayer shadow roots to open mode + pre-inject CSS to prevent layout shift -->
       <script>
       (function() {
+        // CSS injected into EVERY spark shadow root at creation time (before any content renders)
+        var PRE_INJECT_CSS = '#customer-reference, input#customer-reference, textarea#customer-reference,'
+          + 'input[id*="customer-reference"], textarea[id*="customer-reference"]'
+          + '{ display: none !important; }';
+
         var origAttachShadow = Element.prototype.attachShadow;
         Element.prototype.attachShadow = function(init) {
           // Only force open for SparkLayer components (spark-*)
           if (init && init.mode === 'closed' && this.tagName && this.tagName.toLowerCase().indexOf('spark') === 0) {
             init = Object.assign({}, init, { mode: 'open' });
           }
-          return origAttachShadow.call(this, init);
+          var root = origAttachShadow.call(this, init);
+          // Pre-inject CSS into spark shadow roots to hide customer-reference before it renders
+          if (this.tagName && this.tagName.toLowerCase().indexOf('spark') === 0) {
+            var s = document.createElement('style');
+            s.setAttribute('data-rc-pre', '1');
+            s.textContent = PRE_INJECT_CSS;
+            root.appendChild(s);
+          }
+          return root;
         };
       })();
       </script>
