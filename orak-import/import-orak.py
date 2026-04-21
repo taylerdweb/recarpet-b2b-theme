@@ -539,12 +539,12 @@ def create_test_products(dry_run: bool = False):
             variant = result["variants"][0]
             inv_item_id = variant["inventory_item_id"]
 
-            # Vänta så att Shopify hinner registrera inventory_item
-            time.sleep(1)
+            # Vänta så att Shopify hinner registrera inventory_item (3s behövs ofta)
+            time.sleep(3)
 
-            # Inventory — sätt lagersaldo med retry
+            # Inventory — sätt lagersaldo med retry (5 försök, ökande delay)
             inv_ok = False
-            for attempt in range(3):
+            for attempt in range(5):
                 try:
                     shopify_post("inventory_levels/set.json", {
                         "location_id": location_id,
@@ -554,22 +554,34 @@ def create_test_products(dry_run: bool = False):
                     inv_ok = True
                     break
                 except Exception as inv_err:
-                    print(f"      Inventory attempt {attempt+1}/3 failed: {inv_err}")
-                    time.sleep(2)
+                    wait = 2 + attempt * 2  # 2s, 4s, 6s, 8s, 10s
+                    print(f"      Inventory attempt {attempt+1}/5 failed: {inv_err} — retrying in {wait}s")
+                    time.sleep(wait)
 
-            # Verifiera att lagersaldot faktiskt sattes
+            # Verifiera att lagersaldot faktiskt sattes — retry om det inte stämmer
             if inv_ok:
-                try:
-                    inv_data = shopify_get("inventory_levels.json", {
-                        "inventory_item_ids": inv_item_id,
-                        "location_ids": location_id,
-                    })
-                    levels = inv_data.get("inventory_levels", [])
-                    actual_qty = levels[0]["available"] if levels else "?"
-                    if actual_qty != p["qty"]:
-                        print(f"      WARN: inventory={actual_qty}, expected={p['qty']}")
-                except Exception:
-                    pass
+                for verify_attempt in range(3):
+                    try:
+                        inv_data = shopify_get("inventory_levels.json", {
+                            "inventory_item_ids": inv_item_id,
+                            "location_ids": location_id,
+                        })
+                        levels = inv_data.get("inventory_levels", [])
+                        actual_qty = levels[0]["available"] if levels else 0
+                        if actual_qty == p["qty"]:
+                            print(f"      Inventory verified: {actual_qty} m²")
+                            break
+                        else:
+                            print(f"      WARN: inventory={actual_qty}, expected={p['qty']} — re-setting...")
+                            time.sleep(2)
+                            shopify_post("inventory_levels/set.json", {
+                                "location_id": location_id,
+                                "inventory_item_id": inv_item_id,
+                                "available": p["qty"],
+                            })
+                            time.sleep(2)
+                    except Exception:
+                        time.sleep(2)
             else:
                 print(f"      ERROR: Kunde inte sätta inventory for {p['sku']}")
 
@@ -739,7 +751,7 @@ def update_variant_price(variant_id, price):
 
 def set_inventory(inventory_item_id, location_id, quantity):
     """Sätter lagersaldo med retry (Shopify kan vara seg efter produktskapande)."""
-    for attempt in range(3):
+    for attempt in range(5):
         try:
             shopify_post("inventory_levels/set.json", {
                 "location_id": location_id,
@@ -748,10 +760,12 @@ def set_inventory(inventory_item_id, location_id, quantity):
             })
             return True
         except Exception as e:
-            if attempt < 2:
-                time.sleep(1.5)
+            if attempt < 4:
+                wait = 2 + attempt * 2
+                print(f"      Inventory attempt {attempt+1}/5 failed: {e} — retrying in {wait}s")
+                time.sleep(wait)
             else:
-                print(f"      WARNING: inventory set failed after 3 attempts: {e}")
+                print(f"      WARNING: inventory set failed after 5 attempts: {e}")
                 return False
 
 
