@@ -633,6 +633,10 @@
             '.price-summary p::after { content: " /m\\00B2"; }',
             // Single-variant price display (p tags with specific Tailwind price classes)
             'p.text-h4::after, p.text-h5::after { content: " /m\\00B2"; }',
+            // Product card price — catch-all for spark-product-card shadow DOM prices
+            ':host(spark-product-card) p[class]::after { content: " /m\\00B2"; }',
+            'p.font-medium::after, p.font-semibold::after, p.font-bold::after { content: " /m\\00B2"; }',
+            'p.text-sm::after, p.text-base::after, p.text-lg::after, p.text-xl::after { content: " /m\\00B2"; }',
             // Price break table header
             'th.text-left:first-child { font-size: 0; visibility: hidden; position: relative; }',
             'th.text-left:first-child::after { content: "m\\00B2"; font-size: 14px; visibility: visible; }',
