@@ -734,7 +734,7 @@
             setDefaultQty(card);
             var obs = new MutationObserver(function() { setDefaultQty(card); });
             obs.observe(card.shadowRoot || card, { childList: true, subtree: true });
-            setTimeout(function() { obs.disconnect(); }, 5000);
+            // No disconnect — keep watching so qty resets to 5 after each "add to cart"
           });
 
           // Set default quantity to 5 on product detail page (spark-pdp)
@@ -742,7 +742,7 @@
             setDefaultQty(pdp);
             var obs = new MutationObserver(function() { setDefaultQty(pdp); });
             obs.observe(pdp.shadowRoot || pdp, { childList: true, subtree: true });
-            setTimeout(function() { obs.disconnect(); }, 5000);
+            // No disconnect — keep watching so qty resets to 5 after each "add to cart"
           });
 
           // Patch light DOM (by class only — safe for whole document)

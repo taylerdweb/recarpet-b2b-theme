@@ -105,8 +105,9 @@ SKIP_PATTERNS = ["bloqué", "bloque", "sur chantier"]
 # Tjänsteprodukter — fasta priser i SEK (samma pris alla kundnivåer)
 # Inkluderas i alla SparkLayer-prislistor vid generering
 SERVICE_PRODUCTS = [
-    {"sku": "RC-SERVICE-MONTERING",  "sek_price": 45.00},
-    {"sku": "RC-SERVICE-RENGORING",  "sek_price": 30.00},
+    {"sku": "RC-SERVICE-MONTERING",    "sek_price": 45.00},
+    {"sku": "RC-SERVICE-DEMONTERING",  "sek_price": 30.00},
+    {"sku": "RC-SERVICE-RENGORING",    "sek_price": 30.00},
 ]
 
 # ─── Testprodukter (--test) ──────────────────────────────────────────────────
@@ -412,8 +413,9 @@ def get_existing_skus() -> dict:
     return sku_map
 
 
-# SKUs som ALDRIG ska tas bort vid --reset
+# SKUs och titlar som ALDRIG ska tas bort vid --reset/--test
 PROTECTED_SKUS = {sp["sku"] for sp in SERVICE_PRODUCTS}
+PROTECTED_TITLES = {"montering", "demontering", "rengöring", "rengoring"}
 
 
 def count_products() -> int:
@@ -449,7 +451,10 @@ def delete_all_products(dry_run: bool = False):
         to_delete = []
         for p in batch:
             skus = [v.get("sku", "") for v in p.get("variants", [])]
+            title_lower = p.get("title", "").lower().strip()
             if any(s in PROTECTED_SKUS for s in skus):
+                continue
+            if title_lower in PROTECTED_TITLES:
                 continue
             to_delete.append(p)
 
