@@ -642,12 +642,19 @@
             'th.text-left:first-child::after { content: "m\\00B2"; font-size: 14px; visibility: visible; }',
           ].join('\n');
 
+          // CSS to hide the original customer-reference field immediately (prevents layout shift)
+          // Our injected fields use data-fk attribute, so :not([data-fk]) avoids hiding those
+          var FAK_HIDE_CSS = [
+            '#customer-reference, input#customer-reference, textarea#customer-reference { display: none !important; }',
+            'input[id*="customer-reference"], textarea[id*="customer-reference"] { display: none !important; }',
+          ].join('\n');
+
           function injectM2Style(el) {
             var root = el.shadowRoot;
             if (!root || root.querySelector('[data-rc-m2-style]')) return;
             var style = document.createElement('style');
             style.setAttribute('data-rc-m2-style', '1');
-            style.textContent = M2_SHADOW_CSS;
+            style.textContent = M2_SHADOW_CSS + '\n' + FAK_HIDE_CSS;
             root.appendChild(style);
           }
 
