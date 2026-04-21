@@ -1505,9 +1505,11 @@
     text-align: center;
   }
 
-  /* ── Produktkort: jämn höjd på rubriker (2 rader max) ─────────── */
+  /* ── Produktkort: innehåll bottom-aligned (mellanrum mellan bild & text, ej rubrik & pris) */
+  .card__content {
+    grid-template-rows: minmax(0, 1fr) max-content max-content !important;
+  }
   .card__content .card__heading {
-    min-height: 2.8em;
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
