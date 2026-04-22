@@ -981,7 +981,7 @@
 
             // ── Cooldown: don't run destructive sync right after adding montering ──
             var _lastMonteringAddTime = 0;
-            var SYNC_COOLDOWN_MS = 2000;
+            var SYNC_COOLDOWN_MS = 3000; // 3 seconds — generous to handle slow API
 
             // ── WeakSet to track observed shadow roots ──
             var _monteringObservedRoots = new WeakSet();
@@ -1075,33 +1075,33 @@
                 newPayload.products = newProducts;
 
                 log('Modified payload:', JSON.stringify(newPayload));
+                _lastMonteringAddTime = Date.now();
 
-                // Step 4: Add product with attribute
+                // Add product with montering attribute — return result immediately
+                // to not block SparkLayer's internal .then() chain.
+                // Sync montering separately after a delay.
                 return _origSparkUpdateCart.call(spark, newPayload, t, n).then(function(result) {
-                  log('Product added with montering attr. Waiting 500ms before sync...');
-                  _lastMonteringAddTime = Date.now();
+                  log('Product added with montering attr. Scheduling sync in 800ms...');
 
-                  // Wait for SparkLayer to fully settle before syncing
-                  return new Promise(function(resolve) {
-                    setTimeout(function() {
-                      syncMonteringWithCart().then(function() {
-                        lockMonteringRows();
-                        resolve(result);
-                      }).catch(function() {
-                        resolve(result);
-                      });
-                    }, 500);
-                  });
+                  // Fire-and-forget sync — do NOT block the return
+                  setTimeout(function() {
+                    syncMonteringWithCart().then(function() {
+                      lockMonteringRows();
+                    });
+                  }, 800);
+
+                  return result;
                 });
               }
 
-              // Normal passthrough — sync montering afterwards
+              // Normal passthrough — sync montering afterwards (non-blocking)
+              // BUT: skip sync if we just did a montering-add (cooldown protects)
               return _origSparkUpdateCart.call(spark, payload, t, n).then(function(result) {
                 setTimeout(function() {
                   syncMonteringWithCart().then(function() {
                     lockMonteringRows();
                   });
-                }, 300);
+                }, 400);
                 return result;
               });
             };
@@ -1203,6 +1203,19 @@
               return t === MONTERING_SKU || t.indexOf(MONTERING_SKU) !== -1;
             }
 
+            // Find cart row elements — SparkLayer uses <div> children inside <ul class="divide-y">,
+            // NOT <li> elements. We query for all direct children of ul.divide-y.
+            function getCartRows(shadowRoot) {
+              // Primary: direct children of ul.divide-y (the actual cart structure)
+              var rows = shadowRoot.querySelectorAll('ul.divide-y > *');
+              if (rows.length > 0) return rows;
+              // Fallback: try li elements (in case SparkLayer changes markup)
+              rows = shadowRoot.querySelectorAll('li.py-4, li');
+              if (rows.length > 0) return rows;
+              // Last resort: divs with py-4 class that contain qty controls
+              return shadowRoot.querySelectorAll('div.py-4');
+            }
+
             function lockMonteringRows() {
               if (_isLocking) return;
               _isLocking = true;
@@ -1215,11 +1228,11 @@
                   // Also ensure observer is set up (in case it wasn't yet)
                   observeCartShadowRoot(el);
 
-                  var rows = el.shadowRoot.querySelectorAll('li');
+                  var rows = getCartRows(el.shadowRoot);
                   log('lockMonteringRows:', tagName, '— found', rows.length, 'rows');
 
-                  rows.forEach(function(li, idx) {
-                    var allPs = li.querySelectorAll('p');
+                  rows.forEach(function(row, idx) {
+                    var allPs = row.querySelectorAll('p');
                     var isMontering = false;
                     var matchedText = '';
 
@@ -1230,11 +1243,12 @@
                       }
                     });
 
-                    // Also check anchors, spans, divs for SKU (SparkLayer may vary)
+                    // Also check anchors, spans for SKU (SparkLayer may vary rendering)
                     if (!isMontering) {
-                      var allEls = li.querySelectorAll('span, a, div');
+                      var allEls = row.querySelectorAll('span, a');
                       allEls.forEach(function(e) {
-                        if (isMonteringSku(e.textContent) && !e.querySelector('p')) {
+                        // Only check leaf-ish elements to avoid matching parent containers
+                        if (isMonteringSku(e.textContent) && e.children.length < 3) {
                           isMontering = true;
                           matchedText = e.textContent.trim();
                         }
@@ -1243,10 +1257,10 @@
 
                     if (isMontering) {
                       log('lockMonteringRows: Row', idx, 'is montering (text: "' + matchedText + '")');
-                      li.setAttribute('data-rc-locked', '1');
+                      row.setAttribute('data-rc-locked', '1');
 
-                      var qtyInput = li.querySelector('input[type="number"]');
-                      var lockedSpan = li.querySelector('.rc-locked-qty');
+                      var qtyInput = row.querySelector('input[type="number"]');
+                      var lockedSpan = row.querySelector('.rc-locked-qty');
 
                       if (qtyInput) {
                         var currentQty = qtyInput.value || '0';
@@ -1260,8 +1274,8 @@
                         }
                       }
                     } else {
-                      li.removeAttribute('data-rc-locked');
-                      var orphanSpan = li.querySelector('.rc-locked-qty');
+                      row.removeAttribute('data-rc-locked');
+                      var orphanSpan = row.querySelector('.rc-locked-qty');
                       if (orphanSpan) orphanSpan.remove();
                     }
                   });
@@ -1660,9 +1674,10 @@
           + 'input[id*="customer-reference"], textarea[id*="customer-reference"]'
           + '{ display: none !important; }'
           // ── Montering row lock — hides qty controls on locked rows BEFORE first render ──
-          + ' li[data-rc-locked] button { display: none !important; }'
-          + ' li[data-rc-locked] input[type="number"] { display: none !important; }'
-          + ' li[data-rc-locked] .rc-locked-qty { display: inline-block; font-weight: 600;'
+          // Use [data-rc-locked] without element prefix — works on both <li> and <div> rows
+          + ' [data-rc-locked] button { display: none !important; }'
+          + ' [data-rc-locked] input[type="number"] { display: none !important; }'
+          + ' [data-rc-locked] .rc-locked-qty { display: inline-block; font-weight: 600;'
           + '   font-size: 14px; min-width: 2em; text-align: center; padding: 4px 0; }';
 
         var origAttachShadow = Element.prototype.attachShadow;
