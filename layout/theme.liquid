@@ -1160,132 +1160,131 @@
 
             var _lockRunning = false; // prevent re-entry from MutationObserver loop
 
+            // ── Helper: find the cart-item boundary by walking up from a text node ──
+            function findItemRow(el, sr) {
+              // Walk up from the element to find the narrowest ancestor that
+              // represents a single cart line item. Heuristic: has an <img> and
+              // at least one <button>, but only ONE <img>.
+              var p = el;
+              var candidate = null;
+              while (p && p !== sr) {
+                if (p.querySelector) {
+                  var imgs = p.querySelectorAll('img');
+                  var btns = p.querySelectorAll('button');
+                  if (imgs.length === 1 && btns.length >= 1) {
+                    candidate = p;
+                    break; // first (narrowest) match is best
+                  }
+                }
+                p = p.parentElement;
+              }
+              return candidate;
+            }
+
             function lockMonteringRowsIn(sr) {
               if (_lockRunning) return;
               _lockRunning = true;
 
               try {
-                // Find all cart line-item rows — try multiple selectors for robustness
-                var rows = sr.querySelectorAll('.py-4, [class*="line-item"], [class*="cart-item"], li, article');
-                if (!rows.length) {
-                  // Fallback: walk all elements looking for ones containing SKU text
-                  rows = sr.querySelectorAll('div, section');
-                }
+                // ── Step 1: Fix "montering: true" → "Montering" everywhere ──
+                sr.querySelectorAll('span').forEach(function(span) {
+                  if (span.textContent.trim() === 'montering: true') {
+                    span.textContent = 'Montering';
+                  }
+                });
 
-                rows.forEach(function(row) {
-                  // Fix "montering: true" → "Montering"
-                  row.querySelectorAll('span').forEach(function(span) {
-                    if (span.textContent.trim() === 'montering: true') {
-                      span.textContent = 'Montering';
-                    }
+                // ── Step 2: Find ALL elements containing SKU text ──
+                var allTextEls = sr.querySelectorAll('p, span, small');
+                var monteringSkuEls = [];
+                var monteringAttrEls = [];
+
+                allTextEls.forEach(function(el) {
+                  var t = el.textContent.trim();
+                  // Collect montering service SKU references
+                  if (t.indexOf('RC-SERVICE-MONTERING') !== -1) {
+                    monteringSkuEls.push(el);
+                  }
+                  // Collect montering attribute indicators (on carpet rows)
+                  if ((t === 'Montering' || t === 'montering') && el.parentElement && el.parentElement.querySelector('svg')) {
+                    monteringAttrEls.push(el);
+                  }
+                });
+
+                // ── Step 3: Lock the montering service row(s) ──
+                monteringSkuEls.forEach(function(skuEl) {
+                  var itemRow = findItemRow(skuEl, sr);
+                  if (!itemRow) return;
+
+                  // Always re-lock (don't skip via rcLocked — DOM may have re-rendered)
+                  // Hide ALL buttons in this item (qty -, +, delete)
+                  itemRow.querySelectorAll('button').forEach(function(btn) {
+                    btn.style.cssText = 'display:none !important;';
                   });
 
-                  // Find SKU in this row
-                  var skuText = '';
-                  row.querySelectorAll('p, span, small, div').forEach(function(el) {
-                    var t = el.textContent.trim();
-                    if (t.indexOf('RC-SERVICE-MONTERING') !== -1) skuText = 'RC-SERVICE-MONTERING';
-                    else if (t.indexOf('SKU:') !== -1 && !skuText) skuText = t.replace('SKU:', '').trim();
+                  // Hide qty input and its wrapper
+                  itemRow.querySelectorAll('input').forEach(function(inp) {
+                    // Walk up to find the nearest wrapper div and hide it
+                    var wrapper = inp.parentElement;
+                    while (wrapper && wrapper !== itemRow) {
+                      // If this wrapper also contains buttons or is a flex/grid row, hide it
+                      if (wrapper.querySelector('button') || wrapper.children.length <= 4) {
+                        wrapper.style.cssText = 'display:none !important;';
+                        break;
+                      }
+                      wrapper = wrapper.parentElement;
+                    }
+                    inp.style.cssText = 'display:none !important;';
                   });
 
-                  if (!skuText) return; // Not a product row
-
-                  // Check if THIS specific row has the "Montering" attribute rendered by SparkLayer
-                  var rowHasMonteringAttr = false;
-                  row.querySelectorAll('span').forEach(function(span) {
-                    var t = span.textContent.trim();
-                    if (t === 'Montering' || t === 'montering: true' || t === 'montering') {
-                      var parent = span.parentElement;
-                      if (parent && parent.querySelector('svg')) {
-                        rowHasMonteringAttr = true;
+                  // Show qty as static text
+                  if (!itemRow.querySelector('.rc-montering-qty')) {
+                    var inp = itemRow.querySelector('input');
+                    var qty = inp ? inp.value : '';
+                    if (qty) {
+                      var qtyText = document.createElement('div');
+                      qtyText.className = 'rc-montering-qty';
+                      qtyText.textContent = qty + ' m\u00B2';
+                      qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
+                      // Insert after the first header/link/paragraph
+                      var anchor = itemRow.querySelector('header') || itemRow.querySelector('a');
+                      if (anchor && anchor.parentNode) {
+                        anchor.parentNode.insertBefore(qtyText, anchor.nextSibling);
                       }
                     }
-                  });
-
-                  // ── Montering service row: lock controls ──
-                  if (skuText === 'RC-SERVICE-MONTERING') {
-                    // Find the narrowest container that holds this item
-                    // Walk up from the SKU text to find the row boundary
-                    var itemRow = row;
-                    if (row.querySelectorAll('input').length > 1) {
-                      // Too broad — find a tighter container
-                      var skuEl = null;
-                      row.querySelectorAll('p, span, small, div').forEach(function(el) {
-                        if (el.textContent.indexOf('RC-SERVICE-MONTERING') !== -1 && !skuEl) skuEl = el;
-                      });
-                      if (skuEl) {
-                        // Walk up to find item boundary (look for a meaningful container)
-                        var p = skuEl;
-                        while (p && p !== sr) {
-                          if (p.querySelector && p.querySelector('img') && p.querySelector('button')) {
-                            itemRow = p;
-                            break;
-                          }
-                          p = p.parentElement;
-                        }
-                      }
+                  } else {
+                    // Update existing qty text in case quantity changed
+                    var existingQty = itemRow.querySelector('.rc-montering-qty');
+                    var inp2 = itemRow.querySelector('input');
+                    if (existingQty && inp2) {
+                      existingQty.textContent = inp2.value + ' m\u00B2';
                     }
-
-                    if (itemRow.dataset && itemRow.dataset.rcLocked) return;
-                    if (itemRow.dataset) itemRow.dataset.rcLocked = '1';
-
-                    // Hide ALL buttons in this item (qty +/-, delete)
-                    itemRow.querySelectorAll('button').forEach(function(btn) {
-                      btn.style.cssText = 'display:none !important;';
-                    });
-
-                    // Hide qty input and its wrapper
-                    itemRow.querySelectorAll('input[type="number"], input[inputmode="numeric"]').forEach(function(inp) {
-                      var wrapper = inp.closest('div');
-                      if (wrapper) wrapper.style.cssText = 'display:none !important;';
-                    });
-                    // Also try class-based wrappers
-                    var qtyWrapper = itemRow.querySelector('.mt-2, [class*="quantity"], [class*="qty"]');
-                    if (qtyWrapper) {
-                      qtyWrapper.style.cssText = 'display:none !important;';
-                    }
-
-                    // Show qty as static text (if not already added)
-                    if (!itemRow.querySelector('.rc-montering-qty')) {
-                      var inp = itemRow.querySelector('input');
-                      var qty = inp ? inp.value : '';
-                      if (qty) {
-                        var qtyText = document.createElement('div');
-                        qtyText.className = 'rc-montering-qty';
-                        qtyText.textContent = qty + ' m\u00B2';
-                        qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
-                        var header = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
-                        if (header && header.parentNode) {
-                          header.parentNode.insertBefore(qtyText, header.nextSibling);
-                        }
-                      }
-                    }
-
-                    if (!itemRow.querySelector('.rc-montering-note')) {
-                      var header2 = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
-                      if (header2) {
-                        var note = document.createElement('div');
-                        note.className = 'rc-montering-note';
-                        note.textContent = 'Synkas automatiskt med monterings-produkter';
-                        note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
-                        header2.parentNode.insertBefore(note, header2.nextSibling);
-                      }
-                    }
-                    return;
                   }
 
-                  // ── Carpet rows: show "Inkl. montering" only if THIS row has the attribute ──
-                  if (rowHasMonteringAttr) {
-                    if (!row.querySelector('.rc-montering-label')) {
-                      var header = row.querySelector('header') || row.querySelector('a') || row.querySelector('p');
-                      if (header) {
-                        var label = document.createElement('div');
-                        label.className = 'rc-montering-label';
-                        label.textContent = 'Inkl. montering +45 kr/m\u00B2';
-                        label.style.cssText = 'font-size:11px;color:#28AB76;font-weight:500;margin-top:2px;';
-                        header.parentNode.insertBefore(label, header.nextSibling);
-                      }
+                  if (!itemRow.querySelector('.rc-montering-note')) {
+                    var anchor2 = itemRow.querySelector('.rc-montering-qty') || itemRow.querySelector('header') || itemRow.querySelector('a');
+                    if (anchor2) {
+                      var note = document.createElement('div');
+                      note.className = 'rc-montering-note';
+                      note.textContent = 'Synkas automatiskt med monterings-produkter';
+                      note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
+                      anchor2.parentNode.insertBefore(note, anchor2.nextSibling);
                     }
+                  }
+                });
+
+                // ── Step 4: Add "Inkl. montering" label to carpet rows with attribute ──
+                monteringAttrEls.forEach(function(attrEl) {
+                  var itemRow = findItemRow(attrEl, sr);
+                  if (!itemRow) return;
+                  if (itemRow.querySelector('.rc-montering-label')) return; // already added
+
+                  var header = itemRow.querySelector('header') || itemRow.querySelector('a');
+                  if (header) {
+                    var label = document.createElement('div');
+                    label.className = 'rc-montering-label';
+                    label.textContent = 'Inkl. montering +45 kr/m\u00B2';
+                    label.style.cssText = 'font-size:11px;color:#28AB76;font-weight:500;margin-top:2px;';
+                    header.parentNode.insertBefore(label, header.nextSibling);
                   }
                 });
               } finally {
