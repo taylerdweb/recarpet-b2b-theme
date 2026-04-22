@@ -717,33 +717,53 @@
             }
           }
 
-          // Set default quantity to 5 on all product cards
-          function setDefaultQty(el) {
-            var inputs = (el.shadowRoot || el).querySelectorAll('input[type="number"]');
-            inputs.forEach(function(input) {
-              if (input.value === '1' || input.value === '') {
-                var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-                nativeInputValueSetter.call(input, '5');
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-              }
-            });
+          // Set default quantity to 5 on all SparkLayer components
+          var DEFAULT_QTY = '5';
+          var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+
+          function forceQty(input) {
+            if (input.value === '1' || input.value === '' || input.value === '0') {
+              nativeInputValueSetter.call(input, DEFAULT_QTY);
+              input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+              input.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+            }
           }
 
-          document.querySelectorAll('spark-product-card').forEach(function(card) {
-            setDefaultQty(card);
-            var obs = new MutationObserver(function() { setDefaultQty(card); });
-            obs.observe(card.shadowRoot || card, { childList: true, subtree: true });
-            // No disconnect — keep watching so qty resets to 5 after each "add to cart"
-          });
+          function setDefaultQty(el) {
+            var root = el.shadowRoot || el;
+            root.querySelectorAll('input[type="number"]').forEach(forceQty);
+          }
 
-          // Set default quantity to 5 on product detail page (spark-pdp)
-          document.querySelectorAll('spark-pdp').forEach(function(pdp) {
-            setDefaultQty(pdp);
-            var obs = new MutationObserver(function() { setDefaultQty(pdp); });
-            obs.observe(pdp.shadowRoot || pdp, { childList: true, subtree: true });
-            // No disconnect — keep watching so qty resets to 5 after each "add to cart"
-          });
+          // Watch for buy-button clicks and re-set qty after SparkLayer resets it
+          function watchBuyButtons(el) {
+            var root = el.shadowRoot || el;
+            root.addEventListener('click', function(e) {
+              var btn = e.target.closest('button');
+              if (!btn) return;
+              var text = btn.textContent.toLowerCase();
+              // Detect buy/add buttons (Köp, Add, etc.)
+              if (text.indexOf('köp') !== -1 || text.indexOf('add') !== -1 || text.indexOf('buy') !== -1) {
+                // Re-set qty after SparkLayer resets it (poll a few times)
+                var attempts = 0;
+                var poller = setInterval(function() {
+                  setDefaultQty(el);
+                  if (++attempts >= 10) clearInterval(poller);
+                }, 300);
+              }
+            }, true);
+          }
+
+          function initSparkQty(el) {
+            setDefaultQty(el);
+            watchBuyButtons(el);
+            // MutationObserver for DOM changes (new inputs rendered)
+            var root = el.shadowRoot || el;
+            var obs = new MutationObserver(function() { setDefaultQty(el); });
+            obs.observe(root, { childList: true, subtree: true });
+          }
+
+          document.querySelectorAll('spark-product-card').forEach(initSparkQty);
+          document.querySelectorAll('spark-pdp').forEach(initSparkQty);
 
           // Patch light DOM (by class only — safe for whole document)
           patchRoot(document, false);
@@ -1282,13 +1302,27 @@
             var cartCount = document.getElementById('rc-cart-count');
             if (!cartIcon || !cartCount) return;
 
-            var _lastCount = -1; // track previous count for animation trigger
+            var _lastCount = -1; // track previous line item count
+            var _lastTotalQty = -1; // track total quantity for same-product adds
+
+            function animateCartBadge() {
+              cartIcon.classList.remove('rc-cart-icon--animate');
+              cartCount.classList.remove('rc-cart-count--animate');
+              void cartIcon.offsetWidth; // force reflow
+              cartIcon.classList.add('rc-cart-icon--animate');
+              cartCount.classList.add('rc-cart-count--animate');
+              setTimeout(function() {
+                cartIcon.classList.remove('rc-cart-icon--animate');
+                cartCount.classList.remove('rc-cart-count--animate');
+              }, 500);
+            }
 
             function updateCartBadge(animate) {
               window.spark.getCart().then(function(cart) {
                 if (!cart || !cart.items) return;
-                // Count number of line items (not total quantity)
                 var total = cart.items.length;
+                var totalQty = 0;
+                cart.items.forEach(function(item) { totalQty += (item.quantity || 0); });
 
                 // Update badge
                 if (total > 0) {
@@ -1298,20 +1332,13 @@
                   cartCount.style.display = 'none';
                 }
 
-                // Animate if count increased
-                if (animate && total > _lastCount && _lastCount >= 0) {
-                  cartIcon.classList.remove('rc-cart-icon--animate');
-                  cartCount.classList.remove('rc-cart-count--animate');
-                  void cartIcon.offsetWidth; // force reflow
-                  cartIcon.classList.add('rc-cart-icon--animate');
-                  cartCount.classList.add('rc-cart-count--animate');
-                  setTimeout(function() {
-                    cartIcon.classList.remove('rc-cart-icon--animate');
-                    cartCount.classList.remove('rc-cart-count--animate');
-                  }, 500);
+                // Animate if line items increased OR total quantity changed (same product added again)
+                if (animate && _lastCount >= 0 && (total > _lastCount || totalQty !== _lastTotalQty)) {
+                  animateCartBadge();
                 }
 
                 _lastCount = total;
+                _lastTotalQty = totalQty;
               }).catch(function() {});
             }
 
@@ -1574,6 +1601,13 @@
   .rc-stock-badge--out-of-stock {
     color: #c62828;
     background: #fce4ec;
+  }
+  .rc-stock-disclaimer {
+    font-size: 0.75rem;
+    color: #888;
+    font-style: italic;
+    margin: 6px 0 0;
+    line-height: 1.4;
   }
 
   </style>
