@@ -1009,6 +1009,7 @@
             var _origSparkUpdateCart = window.spark._updateCart.bind(window.spark);
             var _monteringBusy = false;
             var _monteringUserRemoved = false;
+            var _lastCartChangeTime = 0; // track when last user cart change happened
 
             // ── Helper: check if a cart item has the montering attribute ──
             function hasMonteringAttr(item) {
@@ -1038,6 +1039,13 @@
             // Never creates montering — only PDP add with checkbox does that.
             function syncMonteringWithCart() {
               if (_monteringBusy || _monteringUserRemoved) return;
+              // Don't sync if a cart change happened very recently (prevents race condition
+              // where SparkLayer hasn't finished processing the add yet)
+              if (Date.now() - _lastCartChangeTime < 500) {
+                console.log('[reCarpet] syncMontering — skipping, cart changed <500ms ago, retrying in 600ms');
+                setTimeout(syncMonteringWithCart, 600);
+                return;
+              }
 
               window.spark.getCart().then(function(cart) {
                 if (!cart || !cart.items) return;
@@ -1045,13 +1053,19 @@
                 var monteringQty = 0;
                 var attrQty = 0;
 
+                console.log('[reCarpet] syncMontering — cart items:');
                 cart.items.forEach(function(item) {
+                  var hasAttr = hasMonteringAttr(item);
+                  console.log('  SKU:', item.sku, 'qty:', item.quantity, 'monteringAttr:', hasAttr,
+                    'attrs:', JSON.stringify(item.customAttributes || []));
                   if (item.sku === MONTERING_SKU) {
                     monteringQty = item.quantity;
-                  } else if (item.sku && item.sku.indexOf('RC-SERVICE') === -1 && hasMonteringAttr(item)) {
+                  } else if (item.sku && item.sku.indexOf('RC-SERVICE') === -1 && hasAttr) {
                     attrQty += item.quantity;
                   }
                 });
+
+                console.log('[reCarpet] syncMontering — monteringQty:', monteringQty, 'attrQty:', attrQty);
 
                 // If montering not in cart, do nothing
                 if (monteringQty === 0) return;
@@ -1113,12 +1127,21 @@
                 }
 
                 // Call original (with potentially modified payload)
+                _lastCartChangeTime = Date.now();
+                console.log('[reCarpet] updateCart — isPDPAdd:', isPDPAdd,
+                  'checked:', checkboxEl && checkboxEl.checked,
+                  'addedQty:', addedQty,
+                  'products:', JSON.stringify(payload.products.map(function(p) {
+                    return { sku: p.sku, qty: p.quantity, adj: p.adjustQuantity, attrs: p.customAttributes };
+                  })));
+
                 var result = _origSparkUpdateCart(payload, t, n);
 
                 if (result && typeof result.then === 'function') {
                   result.then(function() {
                     // If PDP add with checkbox, also add montering service
                     if (isPDPAdd && checkboxEl && checkboxEl.checked && addedQty > 0) {
+                      console.log('[reCarpet] PDP add with montering — adding service, qty:', addedQty);
                       _monteringUserRemoved = false;
                       // Chain lock to AFTER montering is actually added to cart
                       silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] })
@@ -1132,6 +1155,7 @@
                           setTimeout(lockMonteringRows, 1200);
                         });
                     } else {
+                      console.log('[reCarpet] Non-montering cart change — will sync at 800ms');
                       // For all other cart changes, sync montering after a short delay
                       setTimeout(syncMonteringWithCart, 800);
                       // Lock after sync completes
@@ -1168,11 +1192,15 @@
             // Core: find montering rows and stamp data-rc-locked
             function lockMonteringRowsIn(sr) {
               var textEls = sr.querySelectorAll('p, span, small');
+              var found = false;
               textEls.forEach(function(el) {
                 if (el.textContent.indexOf('RC-SERVICE-MONTERING') === -1) return;
+                found = true;
                 var row = findItemRow(el, sr);
-                if (!row || row.hasAttribute('data-rc-locked')) return;
+                if (!row) { console.log('[reCarpet] lock: found SKU text but no .py-4 row'); return; }
+                if (row.hasAttribute('data-rc-locked')) return; // already locked
 
+                console.log('[reCarpet] lock: locking montering row');
                 // Stamp attribute — pre-injected CSS hides button + input[type=number]
                 row.setAttribute('data-rc-locked', '');
 
@@ -1189,17 +1217,14 @@
               });
             }
 
-            // ── Observer: rAF on every mutation (no debounce) ──
+            // ── Observer: synchronous lock on every mutation ──
             var _sparkObservers = {};
-            var _rafPending = false;
+            var _isLocking = false; // guard against recursion from our own DOM changes
 
             function onCartMutation() {
-              if (_rafPending) return;
-              _rafPending = true;
-              requestAnimationFrame(function() {
-                _rafPending = false;
-                lockMonteringRows();
-              });
+              if (_isLocking) return; // skip mutations caused by our own setAttribute/style changes
+              _isLocking = true;
+              try { lockMonteringRows(); } finally { _isLocking = false; }
             }
 
             function watchSparkCart(tag) {
