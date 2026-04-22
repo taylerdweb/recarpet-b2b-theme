@@ -933,12 +933,13 @@
           }
 
           // Also watch for SparkLayer re-rendering checkout steps (which destroys & recreates DOM)
+          var _fakObservedRoots = new WeakSet();
           function watchForCheckoutChanges() {
             var sparkEls = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
             sparkEls.forEach(function(el) {
               var root = el.shadowRoot;
-              if (!root || root.dataset.fakObserved) return;
-              root.dataset.fakObserved = '1';
+              if (!root || _fakObservedRoots.has(root)) return;
+              _fakObservedRoots.add(root);
               var obs = new MutationObserver(function() {
                 // Re-run injection when SparkLayer re-renders (e.g. step change)
                 setTimeout(runFakturaInjection, 100);
@@ -1119,6 +1120,10 @@
                       // For all other cart changes, sync montering after a short delay
                       setTimeout(syncMonteringWithCart, 800);
                     }
+                    // Re-run montering lock after cart update renders
+                    setTimeout(lockMonteringRows, 300);
+                    setTimeout(lockMonteringRows, 800);
+                    setTimeout(lockMonteringRows, 1500);
                   });
                 }
 
@@ -1184,27 +1189,53 @@
 
             function watchSparkCart(tag) {
               var el = document.querySelector(tag);
-              if (!el || !el.shadowRoot || _sparkObservers[tag]) return;
+              if (!el || !el.shadowRoot) return;
 
-              lockMonteringRows(); // immediate first run
+              if (!_sparkObservers[tag]) {
+                lockMonteringRows(); // immediate first run
 
-              _sparkObservers[tag] = new MutationObserver(onCartMutation);
-              _sparkObservers[tag].observe(el.shadowRoot, {
-                childList: true, subtree: true
-              });
+                _sparkObservers[tag] = new MutationObserver(onCartMutation);
+                _sparkObservers[tag].observe(el.shadowRoot, {
+                  childList: true, subtree: true,
+                  characterData: true // catch SolidJS text node updates
+                });
+              }
+
+              // Also observe the host element for attribute changes (open/close)
+              if (!_sparkObservers[tag + '_attr']) {
+                _sparkObservers[tag + '_attr'] = new MutationObserver(function() {
+                  // Cart drawer toggled — re-run lock after short delay for render
+                  setTimeout(lockMonteringRows, 50);
+                  setTimeout(lockMonteringRows, 200);
+                  setTimeout(lockMonteringRows, 500);
+                });
+                _sparkObservers[tag + '_attr'].observe(el, {
+                  attributes: true
+                });
+              }
             }
 
-            // Watch for spark components appearing
+            // Watch for spark components appearing in the DOM
             new MutationObserver(function() {
               watchSparkCart('spark-drawer');
               watchSparkCart('spark-cart');
             }).observe(document.body, { childList: true, subtree: true });
 
-            // Fallback poll
-            setInterval(function() {
+            // Listen for SparkLayer custom events (cart changes)
+            ['spark:cart:updated', 'spark:cart:loaded', 'spark:ready'].forEach(function(evt) {
+              document.addEventListener(evt, function() {
+                setTimeout(lockMonteringRows, 50);
+                setTimeout(lockMonteringRows, 300);
+              });
+            });
+
+            // Faster fallback poll (500ms instead of 2000ms), clears after 2 min
+            var _lockPoll = setInterval(function() {
               watchSparkCart('spark-drawer');
               watchSparkCart('spark-cart');
-            }, 2000);
+              lockMonteringRows(); // always re-run, not just setup
+            }, 500);
+            setTimeout(function() { clearInterval(_lockPoll); }, 120000);
           }
 
           // ── B2B Cart icon: count badge + animation ────────────────────────────
