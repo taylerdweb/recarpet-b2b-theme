@@ -1165,8 +1165,14 @@
               _lockRunning = true;
 
               try {
-                sr.querySelectorAll('.py-4').forEach(function(row) {
-                  // "per styck" is now "/m²" via translations — no need to hide
+                // Find all cart line-item rows — try multiple selectors for robustness
+                var rows = sr.querySelectorAll('.py-4, [class*="line-item"], [class*="cart-item"], li, article');
+                if (!rows.length) {
+                  // Fallback: walk all elements looking for ones containing SKU text
+                  rows = sr.querySelectorAll('div, section');
+                }
+
+                rows.forEach(function(row) {
                   // Fix "montering: true" → "Montering"
                   row.querySelectorAll('span').forEach(function(span) {
                     if (span.textContent.trim() === 'montering: true') {
@@ -1176,12 +1182,13 @@
 
                   // Find SKU in this row
                   var skuText = '';
-                  row.querySelectorAll('p, span, small').forEach(function(el) {
+                  row.querySelectorAll('p, span, small, div').forEach(function(el) {
                     var t = el.textContent.trim();
                     if (t.indexOf('RC-SERVICE-MONTERING') !== -1) skuText = 'RC-SERVICE-MONTERING';
-                    else if (t.indexOf('SKU:') !== -1) skuText = t.replace('SKU:', '').trim();
-                    else if (!skuText && t.indexOf('RC-') === 0 && t.length < 40) skuText = t;
+                    else if (t.indexOf('SKU:') !== -1 && !skuText) skuText = t.replace('SKU:', '').trim();
                   });
+
+                  if (!skuText) return; // Not a product row
 
                   // Check if THIS specific row has the "Montering" attribute rendered by SparkLayer
                   var rowHasMonteringAttr = false;
@@ -1197,36 +1204,65 @@
 
                   // ── Montering service row: lock controls ──
                   if (skuText === 'RC-SERVICE-MONTERING') {
-                    if (row.dataset.rcLocked) return; // prevent duplicate elements
-                    row.dataset.rcLocked = '1';
+                    // Find the narrowest container that holds this item
+                    // Walk up from the SKU text to find the row boundary
+                    var itemRow = row;
+                    if (row.querySelectorAll('input').length > 1) {
+                      // Too broad — find a tighter container
+                      var skuEl = null;
+                      row.querySelectorAll('p, span, small, div').forEach(function(el) {
+                        if (el.textContent.indexOf('RC-SERVICE-MONTERING') !== -1 && !skuEl) skuEl = el;
+                      });
+                      if (skuEl) {
+                        // Walk up to find item boundary (look for a meaningful container)
+                        var p = skuEl;
+                        while (p && p !== sr) {
+                          if (p.querySelector && p.querySelector('img') && p.querySelector('button')) {
+                            itemRow = p;
+                            break;
+                          }
+                          p = p.parentElement;
+                        }
+                      }
+                    }
 
-                    // Hide ALL buttons (qty +/-, delete)
-                    row.querySelectorAll('button').forEach(function(btn) {
+                    if (itemRow.dataset && itemRow.dataset.rcLocked) return;
+                    if (itemRow.dataset) itemRow.dataset.rcLocked = '1';
+
+                    // Hide ALL buttons in this item (qty +/-, delete)
+                    itemRow.querySelectorAll('button').forEach(function(btn) {
                       btn.style.cssText = 'display:none !important;';
                     });
 
-                    // Hide qty input wrapper
-                    var qtyWrapper = row.querySelector('.mt-2');
+                    // Hide qty input and its wrapper
+                    itemRow.querySelectorAll('input[type="number"], input[inputmode="numeric"]').forEach(function(inp) {
+                      var wrapper = inp.closest('div');
+                      if (wrapper) wrapper.style.cssText = 'display:none !important;';
+                    });
+                    // Also try class-based wrappers
+                    var qtyWrapper = itemRow.querySelector('.mt-2, [class*="quantity"], [class*="qty"]');
                     if (qtyWrapper) {
                       qtyWrapper.style.cssText = 'display:none !important;';
                     }
 
-                    // Show qty as static text
-                    var inp = row.querySelector('input');
-                    var qty = inp ? inp.value : '';
-                    if (qty) {
-                      var qtyText = document.createElement('div');
-                      qtyText.className = 'rc-montering-qty';
-                      qtyText.textContent = qty + ' m\u00B2';
-                      qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
-                      var header = row.querySelector('header');
-                      if (header && header.parentNode) {
-                        header.parentNode.insertBefore(qtyText, header.nextSibling);
+                    // Show qty as static text (if not already added)
+                    if (!itemRow.querySelector('.rc-montering-qty')) {
+                      var inp = itemRow.querySelector('input');
+                      var qty = inp ? inp.value : '';
+                      if (qty) {
+                        var qtyText = document.createElement('div');
+                        qtyText.className = 'rc-montering-qty';
+                        qtyText.textContent = qty + ' m\u00B2';
+                        qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
+                        var header = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
+                        if (header && header.parentNode) {
+                          header.parentNode.insertBefore(qtyText, header.nextSibling);
+                        }
                       }
                     }
 
-                    if (!row.querySelector('.rc-montering-note')) {
-                      var header2 = row.querySelector('header');
+                    if (!itemRow.querySelector('.rc-montering-note')) {
+                      var header2 = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
                       if (header2) {
                         var note = document.createElement('div');
                         note.className = 'rc-montering-note';
@@ -1241,7 +1277,7 @@
                   // ── Carpet rows: show "Inkl. montering" only if THIS row has the attribute ──
                   if (rowHasMonteringAttr) {
                     if (!row.querySelector('.rc-montering-label')) {
-                      var header = row.querySelector('header');
+                      var header = row.querySelector('header') || row.querySelector('a') || row.querySelector('p');
                       if (header) {
                         var label = document.createElement('div');
                         label.className = 'rc-montering-label';
