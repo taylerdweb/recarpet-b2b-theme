@@ -933,13 +933,12 @@
           }
 
           // Also watch for SparkLayer re-rendering checkout steps (which destroys & recreates DOM)
-          var _fakObservedRoots = new WeakSet();
           function watchForCheckoutChanges() {
             var sparkEls = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
             sparkEls.forEach(function(el) {
               var root = el.shadowRoot;
-              if (!root || _fakObservedRoots.has(root)) return;
-              _fakObservedRoots.add(root);
+              if (!root || root.dataset.fakObserved) return;
+              root.dataset.fakObserved = '1';
               var obs = new MutationObserver(function() {
                 // Re-run injection when SparkLayer re-renders (e.g. step change)
                 setTimeout(runFakturaInjection, 100);
@@ -954,391 +953,384 @@
           }, 500);
           setTimeout(function() { clearInterval(fakPoll); }, 120000);
 
-          // ── Montering-tillval ─────────────────────────────────────────────
-          // Rebuilt from MONTERING-SPEC.md — checkbox, auto-add, sync, row lock
-          // ──────────────────────────────────────────────────────────────────────
-          (function() {
+          // ── Montering-tillval: auto-add vid köp ────────────────────────────────
+          var MONTERING_PRICE_PER_M2 = 45;
+
+          var addonEl = document.getElementById('montering-addon');
+          var checkboxEl = document.getElementById('montering-checkbox');
+          var subtotalEl = document.getElementById('montering-subtotal');
+
+          if (addonEl && checkboxEl) {
+            // Visa checkbox (döljs i HTML tills JS laddats)
+            addonEl.style.display = '';
+
+            // Hämta kvantitet från spark-pdp:s input (shadow DOM)
+            function getSparkQuantity() {
+              var pdp = document.querySelector('spark-pdp');
+              if (!pdp) return 1;
+              var root = pdp.shadowRoot || pdp;
+              var input = root.querySelector('input[type="number"]');
+              if (input) return parseInt(input.value, 10) || 1;
+              var inputs = root.querySelectorAll('input');
+              for (var i = 0; i < inputs.length; i++) {
+                var v = parseInt(inputs[i].value, 10);
+                if (v > 0) return v;
+              }
+              return 1;
+            }
+
+            // Uppdatera delsumma
+            function updateMonteringSubtotal() {
+              if (!checkboxEl.checked) { subtotalEl.style.display = 'none'; return; }
+              var qty = getSparkQuantity();
+              if (qty > 0) {
+                subtotalEl.textContent = 'Montering: ' + qty + ' m\u00B2 \u00D7 ' + MONTERING_PRICE_PER_M2 + ' kr = ' + (qty * MONTERING_PRICE_PER_M2) + ' kr';
+                subtotalEl.style.display = '';
+              }
+            }
+            checkboxEl.addEventListener('change', updateMonteringSubtotal);
+            setInterval(updateMonteringSubtotal, 1000);
+
+            // ── Montering bundling via customAttributes ─────────────────────────
+            //
+            // When a customer adds a product WITH the montering checkbox checked,
+            // we pass customAttributes: [{ key: "montering", value: "true" }].
+            // SparkLayer creates a SEPARATE line item from the same SKU added
+            // without the attribute. This means the cart can show:
+            //   - Product A (6 m²)                    ← no montering
+            //   - Product A (4 m²) — Inkl. montering  ← with montering
+            //
+            // The montering service line item syncs to the total quantity of
+            // all cart items that have the montering customAttribute.
+            //
             var MONTERING_SKU = 'RC-SERVICE-MONTERING';
-            var MONTERING_PRICE = 45; // kr per m²
-            var MONTERING_ATTR_KEY = 'montering';
-            var MONTERING_ATTR_VALUE = 'true';
-            var DEBUG = true; // ← Set to false when stable
+            var MONTERING_ATTR = { key: 'montering', value: 'true' };
+            var _origSparkUpdateCart = window.spark._updateCart.bind(window.spark);
+            var _monteringBusy = false;
+            var _monteringUserRemoved = false;
 
-            function log() {
-              if (!DEBUG) return;
-              var args = ['[RC Montering]'].concat(Array.prototype.slice.call(arguments));
-              console.log.apply(console, args);
+            // ── Helper: check if a cart item has the montering attribute ──
+            function hasMonteringAttr(item) {
+              return item.customAttributes && item.customAttributes.some(function(a) {
+                return a.key === 'montering' && a.value === 'true';
+              });
             }
 
-            // ── Flag-based guard for updateCart wrapper ──
-            var __rcMonteringNext = false;
-
-            // ── Guard against recursive cart updates from our own sync calls ──
-            var _isSyncing = false;
-
-            // ── Guard against recursive DOM locking ──
-            var _isLocking = false;
-
-            // ── Cooldown: don't run destructive sync right after adding montering ──
-            var _lastMonteringAddTime = 0;
-            var SYNC_COOLDOWN_MS = 3000; // 3 seconds — generous to handle slow API
-
-            // ── WeakSet to track observed shadow roots ──
-            var _monteringObservedRoots = new WeakSet();
-
-            // ── 1. Checkbox UI ──────────────────────────────────────────────
-            var addonEl = document.getElementById('montering-addon');
-            var checkboxEl = document.getElementById('montering-checkbox');
-            var subtotalEl = document.getElementById('montering-subtotal');
-
-            function getSparkPdpQty() {
-              var pdp = document.querySelector('spark-pdp');
-              if (!pdp || !pdp.shadowRoot) return 1;
-              var input = pdp.shadowRoot.querySelector('input[type="number"]');
-              return input ? (parseInt(input.value, 10) || 1) : 1;
-            }
-
-            function updateSubtotal() {
-              if (!checkboxEl || !subtotalEl) return;
-              if (!checkboxEl.checked) {
-                subtotalEl.style.display = 'none';
-                return;
-              }
-              var qty = getSparkPdpQty();
-              var total = qty * MONTERING_PRICE;
-              subtotalEl.textContent = 'Montering: ' + qty + ' m\u00B2 \u00D7 ' + MONTERING_PRICE + ' kr = ' + total + ' kr';
-              subtotalEl.style.display = '';
-            }
-
-            // Show the checkbox (only rendered for premium customers, non-service products)
-            if (addonEl) {
-              addonEl.style.display = '';
-            }
-            if (checkboxEl) {
-              checkboxEl.checked = false;
-              checkboxEl.addEventListener('change', updateSubtotal);
-            }
-
-            var _subtotalPoll = setInterval(updateSubtotal, 400);
-            setTimeout(function() { clearInterval(_subtotalPoll); }, 300000);
-
-            // ── 2. Original _updateCart reference ───────────────────────────
-            var _origSparkUpdateCart = spark._updateCart.bind(spark);
-
-            // ── 3. silentUpdateCart — bypass our wrapper ────────────────────
+            // ── Silent cart update ──
             function silentUpdateCart(payload) {
-              log('silentUpdateCart called with:', JSON.stringify(payload));
-              _isSyncing = true;
-              return _origSparkUpdateCart(payload).then(function(result) {
-                _isSyncing = false;
-                log('silentUpdateCart resolved');
-                return result;
+              _monteringBusy = true;
+              return _origSparkUpdateCart(payload).then(function(r) {
+                _monteringBusy = false;
+                return r;
               }).catch(function(err) {
-                _isSyncing = false;
-                log('silentUpdateCart ERROR:', err);
-                throw err;
+                _monteringBusy = false;
               });
             }
 
-            // ── 4. updateCart wrapper — intercept add-to-cart ───────────────
-            spark._updateCart = function(payload, t, n) {
-              if (_isSyncing) {
-                return _origSparkUpdateCart.call(spark, payload, t, n);
-              }
-
-              var shouldAddMontering = __rcMonteringNext;
-              __rcMonteringNext = false;
-
-              log('_updateCart intercepted. shouldAddMontering:', shouldAddMontering,
-                  'payload:', JSON.stringify(payload));
-
-              if (shouldAddMontering && payload && payload.products && payload.products.length > 0) {
-                // Clone payload — shallow clone products, inject customAttributes
-                var newProducts = payload.products.map(function(p) {
-                  var cloned = {};
-                  for (var k in p) {
-                    if (p.hasOwnProperty(k)) cloned[k] = p[k];
-                  }
-                  var attrs = cloned.customAttributes ? cloned.customAttributes.slice() : [];
-                  var hasMontering = attrs.some(function(a) { return a.key === MONTERING_ATTR_KEY; });
-                  if (!hasMontering) {
-                    attrs.push({ key: MONTERING_ATTR_KEY, value: MONTERING_ATTR_VALUE });
-                  }
-                  cloned.customAttributes = attrs;
-                  return cloned;
-                });
-
-                var newPayload = {};
-                for (var pk in payload) {
-                  if (payload.hasOwnProperty(pk)) newPayload[pk] = payload[pk];
-                }
-                newPayload.products = newProducts;
-
-                log('Modified payload:', JSON.stringify(newPayload));
-                _lastMonteringAddTime = Date.now();
-
-                // Add product with montering attribute — return result immediately
-                // to not block SparkLayer's internal .then() chain.
-                // Sync montering separately after a delay.
-                return _origSparkUpdateCart.call(spark, newPayload, t, n).then(function(result) {
-                  log('Product added with montering attr. Scheduling sync in 800ms...');
-
-                  // Fire-and-forget sync — do NOT block the return
-                  setTimeout(function() {
-                    syncMonteringWithCart().then(function() {
-                      lockMonteringRows();
-                    });
-                  }, 800);
-
-                  return result;
-                });
-              }
-
-              // Normal passthrough — sync montering afterwards (non-blocking)
-              // BUT: skip sync if we just did a montering-add (cooldown protects)
-              return _origSparkUpdateCart.call(spark, payload, t, n).then(function(result) {
-                setTimeout(function() {
-                  syncMonteringWithCart().then(function() {
-                    lockMonteringRows();
-                  });
-                }, 400);
-                return result;
-              });
-            };
-
-            // ── 5. Set montering flag before SparkLayer's add-to-cart ──────
-            function attachPdpClickListener() {
-              var pdp = document.querySelector('spark-pdp');
-              if (!pdp || !pdp.shadowRoot) return;
-
-              pdp.shadowRoot.addEventListener('click', function(e) {
-                var btn = e.target.closest('button');
-                if (!btn) return;
-
-                if (checkboxEl && checkboxEl.checked) {
-                  var isQtyBtn = btn.closest('.flex.items-center')
-                    && btn.closest('.flex.items-center').querySelector('input[type="number"]');
-                  if (!isQtyBtn) {
-                    __rcMonteringNext = true;
-                    log('Flag set: __rcMonteringNext = true (add-to-cart click detected)');
-                  }
-                }
-              }, true);
-            }
-            attachPdpClickListener();
-
-            var pdpEl = document.querySelector('spark-pdp');
-            if (pdpEl && pdpEl.shadowRoot) {
-              var pdpObs = new MutationObserver(function() {
-                attachPdpClickListener();
-              });
-              pdpObs.observe(pdpEl.shadowRoot, { childList: true, subtree: true });
-            }
-
-            // ── 6. syncMonteringWithCart ────────────────────────────────────
+            // ── Sync montering qty with items that have montering attribute ──
+            // Only counts quantities of cart items with customAttributes montering=true.
+            // Never creates montering — only PDP add with checkbox does that.
             function syncMonteringWithCart() {
-              if (_isSyncing) {
-                log('syncMontering skipped — _isSyncing guard active');
-                return Promise.resolve();
-              }
-              return spark.getCart().then(function(cart) {
-                if (!cart || !cart.items) {
-                  log('syncMontering: empty cart or no items');
-                  return;
-                }
+              if (_monteringBusy || _monteringUserRemoved) return;
 
-                log('syncMontering: cart items =', JSON.stringify(cart.items.map(function(i) {
-                  return { sku: i.sku, qty: i.quantity, attrs: i.customAttributes };
-                })));
+              window.spark.getCart().then(function(cart) {
+                if (!cart || !cart.items) return;
 
+                var monteringQty = 0;
                 var attrQty = 0;
-                var monteringItem = null;
 
                 cart.items.forEach(function(item) {
                   if (item.sku === MONTERING_SKU) {
-                    monteringItem = item;
-                    return;
-                  }
-                  if (item.customAttributes && Array.isArray(item.customAttributes)) {
-                    var hasMontering = item.customAttributes.some(function(a) {
-                      return a.key === MONTERING_ATTR_KEY && a.value === MONTERING_ATTR_VALUE;
-                    });
-                    if (hasMontering) {
-                      attrQty += (item.quantity || 0);
-                    }
+                    monteringQty = item.quantity;
+                  } else if (item.sku && item.sku.indexOf('RC-SERVICE') === -1 && hasMonteringAttr(item)) {
+                    attrQty += item.quantity;
                   }
                 });
 
-                var monteringQty = monteringItem ? (monteringItem.quantity || 0) : 0;
-                log('syncMontering: attrQty =', attrQty, 'monteringQty =', monteringQty);
+                // If montering not in cart, do nothing
+                if (monteringQty === 0) return;
 
-                // SAFETY: Don't remove montering if we JUST added a product with montering.
-                // SparkLayer may not have updated its cart state yet, giving stale attrQty=0.
-                if (attrQty === 0 && monteringQty > 0) {
-                  var timeSinceAdd = Date.now() - _lastMonteringAddTime;
-                  if (timeSinceAdd < SYNC_COOLDOWN_MS) {
-                    log('syncMontering: attrQty=0 but within cooldown (' + timeSinceAdd + 'ms) — SKIPPING removal');
-                    return Promise.resolve();
+                // If no attributed items left, remove montering
+                if (attrQty === 0) {
+                  console.log('[reCarpet] Inga monterings-produkter kvar — tar bort montering');
+                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: 0 }] });
+                  return;
+                }
+
+                // Sync montering to match attributed total
+                if (monteringQty !== attrQty) {
+                  console.log('[reCarpet] Synkar montering: ' + monteringQty + ' → ' + attrQty + ' m²');
+                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: attrQty }] });
+                }
+              }).catch(function() {});
+            }
+
+            // ── Wrap _updateCart to trigger sync after every cart change ──
+            // IMPORTANT: always return result unmodified so SparkLayer works normally.
+            window.spark._updateCart = function(payload, t, n) {
+              try {
+                // Detect manual montering removal first
+                if (payload && payload.products && !_monteringBusy) {
+                  var isMonteringRemoval = payload.products.some(function(p) {
+                    return p.sku === MONTERING_SKU && (p.quantity === 0 || (p.adjustQuantity && p.adjustQuantity < 0));
+                  });
+                  if (isMonteringRemoval) {
+                    _monteringUserRemoved = true;
+                    return _origSparkUpdateCart(payload, t, n);
                   }
-                  log('syncMontering: Removing montering — no attributed products left');
-                  return silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: 0 }] });
                 }
 
-                if (attrQty > 0 && monteringQty !== attrQty) {
-                  log('syncMontering: Updating montering qty:', monteringQty, '→', attrQty);
-                  return silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: attrQty }] });
+                // Skip everything for our own silent calls
+                if (_monteringBusy) return _origSparkUpdateCart(payload, t, n);
+
+                // Ignore calls that only touch montering
+                var isOwnCall = payload && payload.products &&
+                  payload.products.length === 1 && payload.products[0].sku === MONTERING_SKU;
+                if (isOwnCall) return _origSparkUpdateCart(payload, t, n);
+
+                // Detect PDP add (adjustQuantity > 0 for non-service SKUs)
+                var isPDPAdd = payload && payload.products && payload.products.some(function(p) {
+                  return p.adjustQuantity && p.adjustQuantity > 0 && p.sku && p.sku.indexOf('RC-SERVICE') === -1;
+                });
+
+                // If checkbox checked, inject customAttributes onto the carpet products
+                // This creates a SEPARATE line item from the same SKU added without attributes
+                var addedQty = 0;
+                if (isPDPAdd && checkboxEl && checkboxEl.checked) {
+                  payload = JSON.parse(JSON.stringify(payload)); // deep clone
+                  payload.products.forEach(function(p) {
+                    if (p.adjustQuantity && p.adjustQuantity > 0 && p.sku && p.sku.indexOf('RC-SERVICE') === -1) {
+                      p.customAttributes = [MONTERING_ATTR];
+                      addedQty += p.adjustQuantity;
+                    }
+                  });
                 }
 
-                log('syncMontering: Already in sync');
-                return Promise.resolve();
-              }).catch(function(err) {
-                log('syncMontering ERROR:', err);
-              });
-            }
+                // Call original (with potentially modified payload)
+                var result = _origSparkUpdateCart(payload, t, n);
 
-            // ── 7. Row lock — fully synchronous ────────────────────────────
-            function isMonteringSku(text) {
-              if (!text) return false;
-              var t = text.trim().toUpperCase();
-              return t === MONTERING_SKU || t.indexOf(MONTERING_SKU) !== -1;
-            }
+                if (result && typeof result.then === 'function') {
+                  result.then(function() {
+                    // If PDP add with checkbox, also add montering service
+                    if (isPDPAdd && checkboxEl && checkboxEl.checked && addedQty > 0) {
+                      _monteringUserRemoved = false;
+                      silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] });
+                    } else {
+                      // For all other cart changes, sync montering after a short delay
+                      setTimeout(syncMonteringWithCart, 800);
+                    }
+                  });
+                }
 
-            // Find cart row elements — SparkLayer uses <div> children inside <ul class="divide-y">,
-            // NOT <li> elements. We query for all direct children of ul.divide-y.
-            function getCartRows(shadowRoot) {
-              // Primary: direct children of ul.divide-y (the actual cart structure)
-              var rows = shadowRoot.querySelectorAll('ul.divide-y > *');
-              if (rows.length > 0) return rows;
-              // Fallback: try li elements (in case SparkLayer changes markup)
-              rows = shadowRoot.querySelectorAll('li.py-4, li');
-              if (rows.length > 0) return rows;
-              // Last resort: divs with py-4 class that contain qty controls
-              return shadowRoot.querySelectorAll('div.py-4');
+                return result;
+              } catch (e) {
+                console.warn('[reCarpet] updateCart wrapper error:', e);
+                return _origSparkUpdateCart(payload, t, n);
+              }
+            };
+
+            // ── Hide montering qty controls & delete button in cart ──
+            // Shadow roots are forced open via attachShadow override above.
+
+            // Cache which SKU+qty combos have montering attr (from cart API)
+            var _monteringItemKeys = {}; // { sku+qty: true } for items with montering attr
+
+            function refreshMonteringItemKeys(cb) {
+              window.spark.getCart().then(function(cart) {
+                if (!cart || !cart.items) return;
+                _monteringItemKeys = {};
+                cart.items.forEach(function(item) {
+                  if (item.sku && item.sku !== MONTERING_SKU && hasMonteringAttr(item)) {
+                    _monteringItemKeys[item.sku] = true;
+                  }
+                });
+                if (cb) cb();
+              }).catch(function() {});
             }
 
             function lockMonteringRows() {
-              if (_isLocking) return;
-              _isLocking = true;
+              // Process both drawer (slide-out) and cart (full page) shadow roots
+              var targets = ['spark-drawer', 'spark-cart'];
+              targets.forEach(function(tag) {
+                var el = document.querySelector(tag);
+                if (!el || !el.shadowRoot) return;
+                lockMonteringRowsIn(el.shadowRoot);
+              });
+            }
+
+            var _lockRunning = false; // prevent re-entry from MutationObserver loop
+
+            function lockMonteringRowsIn(sr) {
+              if (_lockRunning) return;
+              _lockRunning = true;
 
               try {
-                ['spark-drawer', 'spark-cart'].forEach(function(tagName) {
-                  var el = document.querySelector(tagName);
-                  if (!el || !el.shadowRoot) return;
+                // Find all cart line-item rows — try multiple selectors for robustness
+                var rows = sr.querySelectorAll('.py-4, [class*="line-item"], [class*="cart-item"], li, article');
+                if (!rows.length) {
+                  // Fallback: walk all elements looking for ones containing SKU text
+                  rows = sr.querySelectorAll('div, section');
+                }
 
-                  // Also ensure observer is set up (in case it wasn't yet)
-                  observeCartShadowRoot(el);
-
-                  var rows = getCartRows(el.shadowRoot);
-                  log('lockMonteringRows:', tagName, '— found', rows.length, 'rows');
-
-                  rows.forEach(function(row, idx) {
-                    var allPs = row.querySelectorAll('p');
-                    var isMontering = false;
-                    var matchedText = '';
-
-                    allPs.forEach(function(p) {
-                      if (isMonteringSku(p.textContent)) {
-                        isMontering = true;
-                        matchedText = p.textContent.trim();
-                      }
-                    });
-
-                    // Also check anchors, spans for SKU (SparkLayer may vary rendering)
-                    if (!isMontering) {
-                      var allEls = row.querySelectorAll('span, a');
-                      allEls.forEach(function(e) {
-                        // Only check leaf-ish elements to avoid matching parent containers
-                        if (isMonteringSku(e.textContent) && e.children.length < 3) {
-                          isMontering = true;
-                          matchedText = e.textContent.trim();
-                        }
-                      });
-                    }
-
-                    if (isMontering) {
-                      log('lockMonteringRows: Row', idx, 'is montering (text: "' + matchedText + '")');
-                      row.setAttribute('data-rc-locked', '1');
-
-                      var qtyInput = row.querySelector('input[type="number"]');
-                      var lockedSpan = row.querySelector('.rc-locked-qty');
-
-                      if (qtyInput) {
-                        var currentQty = qtyInput.value || '0';
-                        if (!lockedSpan) {
-                          lockedSpan = document.createElement('span');
-                          lockedSpan.className = 'rc-locked-qty';
-                          lockedSpan.textContent = currentQty;
-                          qtyInput.parentNode.insertBefore(lockedSpan, qtyInput.nextSibling);
-                        } else {
-                          lockedSpan.textContent = currentQty;
-                        }
-                      }
-                    } else {
-                      row.removeAttribute('data-rc-locked');
-                      var orphanSpan = row.querySelector('.rc-locked-qty');
-                      if (orphanSpan) orphanSpan.remove();
+                rows.forEach(function(row) {
+                  // Fix "montering: true" → "Montering"
+                  row.querySelectorAll('span').forEach(function(span) {
+                    if (span.textContent.trim() === 'montering: true') {
+                      span.textContent = 'Montering';
                     }
                   });
+
+                  // Find SKU in this row
+                  var skuText = '';
+                  row.querySelectorAll('p, span, small, div').forEach(function(el) {
+                    var t = el.textContent.trim();
+                    if (t.indexOf('RC-SERVICE-MONTERING') !== -1) skuText = 'RC-SERVICE-MONTERING';
+                    else if (t.indexOf('SKU:') !== -1 && !skuText) skuText = t.replace('SKU:', '').trim();
+                  });
+
+                  if (!skuText) return; // Not a product row
+
+                  // Check if THIS specific row has the "Montering" attribute rendered by SparkLayer
+                  var rowHasMonteringAttr = false;
+                  row.querySelectorAll('span').forEach(function(span) {
+                    var t = span.textContent.trim();
+                    if (t === 'Montering' || t === 'montering: true' || t === 'montering') {
+                      var parent = span.parentElement;
+                      if (parent && parent.querySelector('svg')) {
+                        rowHasMonteringAttr = true;
+                      }
+                    }
+                  });
+
+                  // ── Montering service row: lock controls ──
+                  if (skuText === 'RC-SERVICE-MONTERING') {
+                    // Find the narrowest container that holds this item
+                    // Walk up from the SKU text to find the row boundary
+                    var itemRow = row;
+                    if (row.querySelectorAll('input').length > 1) {
+                      // Too broad — find a tighter container
+                      var skuEl = null;
+                      row.querySelectorAll('p, span, small, div').forEach(function(el) {
+                        if (el.textContent.indexOf('RC-SERVICE-MONTERING') !== -1 && !skuEl) skuEl = el;
+                      });
+                      if (skuEl) {
+                        // Walk up to find item boundary (look for a meaningful container)
+                        var p = skuEl;
+                        while (p && p !== sr) {
+                          if (p.querySelector && p.querySelector('img') && p.querySelector('button')) {
+                            itemRow = p;
+                            break;
+                          }
+                          p = p.parentElement;
+                        }
+                      }
+                    }
+
+                    if (itemRow.dataset && itemRow.dataset.rcLocked) return;
+                    if (itemRow.dataset) itemRow.dataset.rcLocked = '1';
+
+                    // Hide ALL buttons in this item (qty +/-, delete)
+                    itemRow.querySelectorAll('button').forEach(function(btn) {
+                      btn.style.cssText = 'display:none !important;';
+                    });
+
+                    // Hide qty input and its wrapper
+                    itemRow.querySelectorAll('input[type="number"], input[inputmode="numeric"]').forEach(function(inp) {
+                      var wrapper = inp.closest('div');
+                      if (wrapper) wrapper.style.cssText = 'display:none !important;';
+                    });
+                    // Also try class-based wrappers
+                    var qtyWrapper = itemRow.querySelector('.mt-2, [class*="quantity"], [class*="qty"]');
+                    if (qtyWrapper) {
+                      qtyWrapper.style.cssText = 'display:none !important;';
+                    }
+
+                    // Show qty as static text (if not already added)
+                    if (!itemRow.querySelector('.rc-montering-qty')) {
+                      var inp = itemRow.querySelector('input');
+                      var qty = inp ? inp.value : '';
+                      if (qty) {
+                        var qtyText = document.createElement('div');
+                        qtyText.className = 'rc-montering-qty';
+                        qtyText.textContent = qty + ' m\u00B2';
+                        qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
+                        var header = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
+                        if (header && header.parentNode) {
+                          header.parentNode.insertBefore(qtyText, header.nextSibling);
+                        }
+                      }
+                    }
+
+                    if (!itemRow.querySelector('.rc-montering-note')) {
+                      var header2 = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
+                      if (header2) {
+                        var note = document.createElement('div');
+                        note.className = 'rc-montering-note';
+                        note.textContent = 'Synkas automatiskt med monterings-produkter';
+                        note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
+                        header2.parentNode.insertBefore(note, header2.nextSibling);
+                      }
+                    }
+                    return;
+                  }
+
+                  // ── Carpet rows: show "Inkl. montering" only if THIS row has the attribute ──
+                  if (rowHasMonteringAttr) {
+                    if (!row.querySelector('.rc-montering-label')) {
+                      var header = row.querySelector('header') || row.querySelector('a') || row.querySelector('p');
+                      if (header) {
+                        var label = document.createElement('div');
+                        label.className = 'rc-montering-label';
+                        label.textContent = 'Inkl. montering +45 kr/m\u00B2';
+                        label.style.cssText = 'font-size:11px;color:#28AB76;font-weight:500;margin-top:2px;';
+                        header.parentNode.insertBefore(label, header.nextSibling);
+                      }
+                    }
+                  }
                 });
               } finally {
-                _isLocking = false;
+                _lockRunning = false;
               }
             }
 
-            // ── 8. MutationObserver on spark-drawer / spark-cart shadow roots ──
-            function observeCartShadowRoot(el) {
+            // Use MutationObserver for instant response (no flickering)
+            // Watches both spark-drawer (slide-out) and spark-cart (full page).
+            var _sparkObservers = {}; // keyed by tag name
+            function watchSparkCart(tag) {
+              var el = document.querySelector(tag);
               if (!el || !el.shadowRoot) return;
-              if (_monteringObservedRoots.has(el.shadowRoot)) return;
-              _monteringObservedRoots.add(el.shadowRoot);
+              if (_sparkObservers[tag]) return; // already watching
 
-              var obs = new MutationObserver(function() {
+              refreshMonteringItemKeys(); // fetch attr data from cart API
+              lockMonteringRows(); // initial run
+
+              var _mutDebounce = null;
+              _sparkObservers[tag] = new MutationObserver(function() {
+                clearTimeout(_mutDebounce);
+                _mutDebounce = setTimeout(function() {
+                  refreshMonteringItemKeys();
+                  setTimeout(lockMonteringRows, 200);
+                }, 150);
                 lockMonteringRows();
               });
-              obs.observe(el.shadowRoot, { childList: true, subtree: true });
-              log('Observing', el.tagName, 'shadow root');
-            }
-
-            function setupCartObservers() {
-              ['spark-drawer', 'spark-cart'].forEach(function(tagName) {
-                var el = document.querySelector(tagName);
-                if (el && el.shadowRoot) {
-                  observeCartShadowRoot(el);
-                }
+              _sparkObservers[tag].observe(el.shadowRoot, {
+                childList: true, subtree: true
               });
             }
 
-            // Watch for spark-drawer being added to the DOM (lazy creation)
-            var bodyObs = new MutationObserver(function(mutations) {
-              mutations.forEach(function(m) {
-                m.addedNodes.forEach(function(node) {
-                  if (node.nodeType === 1 && (node.tagName === 'SPARK-DRAWER' || node.tagName === 'SPARK-CART')) {
-                    log('Detected new', node.tagName, 'element in DOM');
-                    var checkRoot = setInterval(function() {
-                      if (node.shadowRoot) {
-                        clearInterval(checkRoot);
-                        observeCartShadowRoot(node);
-                        lockMonteringRows();
-                      }
-                    }, 50);
-                    setTimeout(function() { clearInterval(checkRoot); }, 5000);
-                  }
-                });
-              });
+            // Watch for spark-drawer and spark-cart appearing in the DOM
+            var _docObserver = new MutationObserver(function() {
+              watchSparkCart('spark-drawer');
+              watchSparkCart('spark-cart');
             });
-            bodyObs.observe(document.body, { childList: true, subtree: true });
+            _docObserver.observe(document.body, { childList: true, subtree: true });
 
-            // Initial setup + fallback poll
-            setupCartObservers();
-            lockMonteringRows();
-
-            var _lockPoll = setInterval(function() {
-              setupCartObservers();
-              lockMonteringRows();
-            }, 500);
-            setTimeout(function() { clearInterval(_lockPoll); }, 120000);
-
-            log('Initialized');
-          })();
+            // Also poll as fallback
+            setInterval(function() {
+              watchSparkCart('spark-drawer');
+              watchSparkCart('spark-cart');
+            }, 1000);
+          }
 
           // ── B2B Cart icon: count badge + animation ────────────────────────────
           (function() {
@@ -1545,45 +1537,37 @@
     z-index: 2;
   }
 
-  /* ── Montering-tillval checkbox (PDP) ── */
+  /* Montering-tillval checkbox på PDP */
   .montering-addon {
-    margin: 12px 0 4px;
-    padding: 10px 14px;
-    border: 1.5px solid #d1d5db;
-    border-radius: 8px;
-    background: #f9fafb;
-    transition: border-color 0.15s;
-  }
-  .montering-addon:has(.montering-addon__checkbox:checked) {
-    border-color: #2563eb;
-    background: #eff6ff;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fafafa;
   }
   .montering-addon__label {
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    line-height: 1.4;
   }
   .montering-addon__checkbox {
     width: 18px;
     height: 18px;
-    accent-color: #2563eb;
-    flex-shrink: 0;
+    accent-color: var(--b2b-brand-color, #5b36f5);
     cursor: pointer;
   }
   .montering-addon__price {
-    font-weight: 600;
-    color: #2563eb;
-    white-space: nowrap;
+    color: #666;
+    font-weight: 400;
+    margin-left: 4px;
   }
   .montering-addon__note {
     font-size: 13px;
     color: #555;
     margin: 6px 0 0 26px;
-    line-height: 1.4;
   }
 
   /* Storbatch lock — visas för silver-kunder på produkter med qty > 300 */
@@ -1672,13 +1656,7 @@
         // CSS injected into EVERY spark shadow root at creation time (before any content renders)
         var PRE_INJECT_CSS = '#customer-reference, input#customer-reference, textarea#customer-reference,'
           + 'input[id*="customer-reference"], textarea[id*="customer-reference"]'
-          + '{ display: none !important; }'
-          // ── Montering row lock — hides qty controls on locked rows BEFORE first render ──
-          // Use [data-rc-locked] without element prefix — works on both <li> and <div> rows
-          + ' [data-rc-locked] button { display: none !important; }'
-          + ' [data-rc-locked] input[type="number"] { display: none !important; }'
-          + ' [data-rc-locked] .rc-locked-qty { display: inline-block; font-weight: 600;'
-          + '   font-size: 14px; min-width: 2em; text-align: center; padding: 4px 0; }';
+          + '{ display: none !important; }';
 
         var origAttachShadow = Element.prototype.attachShadow;
         Element.prototype.attachShadow = function(init) {
