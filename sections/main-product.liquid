@@ -178,7 +178,12 @@
                     {% render 'rc-signup-cta', context: 'pdp', reason: 'services' %}
                   </div>
                 {%- else -%}
-                  <spark-pdp parent-id="{{ product.id }}"></spark-pdp>
+                  {%- assign _pdp_tags = product.tags | join: ',' | downcase -%}
+                  {%- assign _pdp_needs_disclaimer = false -%}
+                  {%- if _pdp_tags contains 'atervunna-mattor' or _pdp_tags contains 'återbruk' or _pdp_tags contains 'aterbruk' or _pdp_tags contains 'reused' or _pdp_tags contains 'overproduktion' or _pdp_tags contains 'överproduktion' -%}
+                    {%- assign _pdp_needs_disclaimer = true -%}
+                  {%- endif -%}
+                  <spark-pdp parent-id="{{ product.id }}"{% if _pdp_needs_disclaimer %} data-stock-disclaimer="true"{% endif %}></spark-pdp>
 
                   {%- comment -%} Montering-tillval — bara Premium/Krets, ej på tjänsteprodukter {%- endcomment -%}
                   {%- if rc_can_add_montering -%}
@@ -197,12 +202,6 @@
                         </p>
                       </div>
                     {%- endunless -%}
-                  {%- endif -%}
-
-                  {%- comment -%} ── Lager-disclaimer för återbruk & överproduktion (efter SparkLayer) ── {%- endcomment -%}
-                  {%- assign _pdp_tags = product.tags | join: ',' | downcase -%}
-                  {%- if _pdp_tags contains 'atervunna-mattor' or _pdp_tags contains 'återbruk' or _pdp_tags contains 'aterbruk' or _pdp_tags contains 'reused' or _pdp_tags contains 'overproduktion' or _pdp_tags contains 'överproduktion' -%}
-                    <p class="rc-stock-disclaimer">Reservation för lagersaldo — uppdateras veckovis och faktisk tillgång kan skilja sig.</p>
                   {%- endif -%}
 
                 {%- endif -%}

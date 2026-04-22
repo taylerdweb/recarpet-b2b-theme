@@ -953,6 +953,39 @@
           }, 500);
           setTimeout(function() { clearInterval(fakPoll); }, 120000);
 
+          // ── Lager-disclaimer under SparkLayer stock-box ─────────────────────
+          (function() {
+            var pdp = document.querySelector('spark-pdp[data-stock-disclaimer]');
+            if (!pdp) return;
+            var DISCLAIMER_TEXT = 'Reservation för lagersaldo — uppdateras veckovis och faktisk tillgång kan skilja sig.';
+            var injected = false;
+            function tryInjectDisclaimer() {
+              if (injected) return;
+              var root = pdp.shadowRoot;
+              if (!root) return;
+              // Find the stock/inventory container – SparkLayer typically uses a bordered box
+              var stockBox = root.querySelector('[class*="border"]') || root.querySelector('[class*="stock"]') || root.querySelector('[class*="inventory"]');
+              if (!stockBox) return;
+              // Walk up to find the outermost container in shadow DOM
+              var target = stockBox;
+              while (target.parentElement && target.parentElement !== root) {
+                target = target.parentElement;
+              }
+              injected = true;
+              var p = document.createElement('p');
+              p.className = 'rc-stock-disclaimer';
+              p.textContent = DISCLAIMER_TEXT;
+              // Insert after spark-pdp in the light DOM (after the stock box visually)
+              pdp.parentNode.insertBefore(p, null);
+            }
+            // Poll until SparkLayer renders
+            var attempts = 0;
+            var poll = setInterval(function() {
+              tryInjectDisclaimer();
+              if (injected || ++attempts > 40) clearInterval(poll);
+            }, 500);
+          })();
+
           // ── Montering-tillval: auto-add vid köp ────────────────────────────────
           var MONTERING_PRICE_PER_M2 = 45;
 
