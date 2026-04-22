@@ -1132,153 +1132,138 @@
             // ── Hide montering qty controls & delete button in cart ──
             // Shadow roots are forced open via attachShadow override above.
 
-            // Cache which SKU+qty combos have montering attr (from cart API)
-            var _monteringItemKeys = {}; // { sku+qty: true } for items with montering attr
+            // ══════════════════════════════════════════════════════════════
+            // ── Montering row lock — CSS-first approach ──────────────────
+            // CSS rules for [data-rc-locked] are pre-injected via attachShadow
+            // override into every spark shadow root. JS only needs to:
+            //   1. Find the montering row in the shadow DOM
+            //   2. Stamp data-rc-locked on it
+            //   3. Insert qty text + note (once)
+            // This survives SparkLayer re-renders because the CSS persists
+            // and JS re-stamps the attribute on every mutation.
+            // ══════════════════════════════════════════════════════════════
 
-            function refreshMonteringItemKeys(cb) {
+            var _monteringQtyFromAPI = 0; // track qty from cart API
+
+            // ── Get montering qty from SparkLayer cart API (reliable source) ──
+            function refreshMonteringData(cb) {
+              if (!window.spark || !window.spark.getCart) { if (cb) cb(); return; }
               window.spark.getCart().then(function(cart) {
-                if (!cart || !cart.items) return;
-                _monteringItemKeys = {};
+                if (!cart || !cart.items) { if (cb) cb(); return; }
+                _monteringQtyFromAPI = 0;
                 cart.items.forEach(function(item) {
-                  if (item.sku && item.sku !== MONTERING_SKU && hasMonteringAttr(item)) {
-                    _monteringItemKeys[item.sku] = true;
+                  if (item.sku === MONTERING_SKU) {
+                    _monteringQtyFromAPI = item.quantity || 0;
                   }
                 });
                 if (cb) cb();
-              }).catch(function() {});
+              }).catch(function() { if (cb) cb(); });
             }
 
-            function lockMonteringRows() {
-              // Process both drawer (slide-out) and cart (full page) shadow roots
-              var targets = ['spark-drawer', 'spark-cart'];
-              targets.forEach(function(tag) {
-                var el = document.querySelector(tag);
-                if (!el || !el.shadowRoot) return;
-                lockMonteringRowsIn(el.shadowRoot);
-              });
-            }
-
-            var _lockRunning = false; // prevent re-entry from MutationObserver loop
-
-            // ── Helper: find the cart-item boundary by walking up from a text node ──
+            // ── Find item row: walk up from a text element to its cart-item container ──
             function findItemRow(el, sr) {
-              // Walk up from the element to find the narrowest ancestor that
-              // represents a single cart line item. Heuristic: has an <img> and
-              // at least one <button>, but only ONE <img>.
               var p = el;
-              var candidate = null;
               while (p && p !== sr) {
-                if (p.querySelector) {
-                  var imgs = p.querySelectorAll('img');
-                  var btns = p.querySelectorAll('button');
-                  if (imgs.length === 1 && btns.length >= 1) {
-                    candidate = p;
-                    break; // first (narrowest) match is best
+                // Strategy 1: element whose parent has multiple similar siblings (list items)
+                if (p.parentElement && p.parentElement !== sr) {
+                  var siblings = p.parentElement.children;
+                  if (siblings.length >= 2) {
+                    // Check if at least 2 siblings each contain an img (= item list)
+                    var siblingsWithImg = 0;
+                    for (var i = 0; i < siblings.length; i++) {
+                      if (siblings[i].querySelector && siblings[i].querySelector('img')) siblingsWithImg++;
+                    }
+                    if (siblingsWithImg >= 2) return p; // p is an individual item row
                   }
+                }
+                // Strategy 2: element has an img + button but its parent doesn't have its own img
+                if (p.querySelector && p.querySelector('img') && p.querySelector('button')) {
+                  var parentImgs = p.parentElement ? p.parentElement.querySelectorAll(':scope > img') : [];
+                  if (parentImgs.length === 0) return p;
                 }
                 p = p.parentElement;
               }
-              return candidate;
+              return null;
             }
 
-            function lockMonteringRowsIn(sr) {
-              if (_lockRunning) return;
-              _lockRunning = true;
+            // ── Core lock function: stamp attribute + insert info elements ──
+            function lockMonteringRowsIn(sr, observer) {
+              // Temporarily disconnect observer to avoid mutation feedback loop
+              if (observer) observer.disconnect();
 
               try {
-                // ── Step 1: Fix "montering: true" → "Montering" everywhere ──
-                sr.querySelectorAll('span').forEach(function(span) {
-                  if (span.textContent.trim() === 'montering: true') {
-                    span.textContent = 'Montering';
+                // Fix "montering: true" text everywhere
+                sr.querySelectorAll('*').forEach(function(el) {
+                  if (el.children && el.children.length === 0 && el.textContent.trim() === 'montering: true') {
+                    el.textContent = 'Montering';
                   }
                 });
 
-                // ── Step 2: Find ALL elements containing SKU text ──
-                var allTextEls = sr.querySelectorAll('p, span, small');
+                // Find ALL leaf elements containing SKU text
+                var allEls = sr.querySelectorAll('*');
                 var monteringSkuEls = [];
                 var monteringAttrEls = [];
 
-                allTextEls.forEach(function(el) {
+                allEls.forEach(function(el) {
+                  if (el.children && el.children.length > 0) return; // only leaf nodes
                   var t = el.textContent.trim();
-                  // Collect montering service SKU references
                   if (t.indexOf('RC-SERVICE-MONTERING') !== -1) {
                     monteringSkuEls.push(el);
                   }
-                  // Collect montering attribute indicators (on carpet rows)
                   if ((t === 'Montering' || t === 'montering') && el.parentElement && el.parentElement.querySelector('svg')) {
                     monteringAttrEls.push(el);
                   }
                 });
 
-                // ── Step 3: Lock the montering service row(s) ──
+                // ── Lock montering service row(s) ──
                 monteringSkuEls.forEach(function(skuEl) {
                   var itemRow = findItemRow(skuEl, sr);
                   if (!itemRow) return;
 
-                  // Always re-lock (don't skip via rcLocked — DOM may have re-rendered)
-                  // Hide ALL buttons in this item (qty -, +, delete)
-                  itemRow.querySelectorAll('button').forEach(function(btn) {
-                    btn.style.cssText = 'display:none !important;';
-                  });
+                  // Stamp the lock attribute — CSS handles hiding buttons/inputs
+                  itemRow.setAttribute('data-rc-locked', '');
 
-                  // Hide qty input and its wrapper
-                  itemRow.querySelectorAll('input').forEach(function(inp) {
-                    // Walk up to find the nearest wrapper div and hide it
-                    var wrapper = inp.parentElement;
-                    while (wrapper && wrapper !== itemRow) {
-                      // If this wrapper also contains buttons or is a flex/grid row, hide it
-                      if (wrapper.querySelector('button') || wrapper.children.length <= 4) {
-                        wrapper.style.cssText = 'display:none !important;';
-                        break;
-                      }
-                      wrapper = wrapper.parentElement;
-                    }
-                    inp.style.cssText = 'display:none !important;';
-                  });
-
-                  // Show qty as static text
-                  if (!itemRow.querySelector('.rc-montering-qty')) {
+                  // Read qty from input BEFORE CSS hides it (or use API data)
+                  var qty = _monteringQtyFromAPI;
+                  if (!qty) {
                     var inp = itemRow.querySelector('input');
-                    var qty = inp ? inp.value : '';
-                    if (qty) {
-                      var qtyText = document.createElement('div');
-                      qtyText.className = 'rc-montering-qty';
-                      qtyText.textContent = qty + ' m\u00B2';
-                      qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
-                      // Insert after the first header/link/paragraph
-                      var anchor = itemRow.querySelector('header') || itemRow.querySelector('a');
-                      if (anchor && anchor.parentNode) {
-                        anchor.parentNode.insertBefore(qtyText, anchor.nextSibling);
-                      }
-                    }
-                  } else {
-                    // Update existing qty text in case quantity changed
-                    var existingQty = itemRow.querySelector('.rc-montering-qty');
-                    var inp2 = itemRow.querySelector('input');
-                    if (existingQty && inp2) {
-                      existingQty.textContent = inp2.value + ' m\u00B2';
-                    }
+                    if (inp) qty = parseInt(inp.value, 10) || 0;
                   }
 
+                  // Insert static qty display
+                  if (!itemRow.querySelector('.rc-montering-qty') && qty) {
+                    var qtyText = document.createElement('div');
+                    qtyText.className = 'rc-montering-qty';
+                    qtyText.textContent = qty + ' m\u00B2';
+                    qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
+                    var anchor = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
+                    if (anchor && anchor.parentNode) {
+                      anchor.parentNode.insertBefore(qtyText, anchor.nextSibling);
+                    }
+                  } else if (itemRow.querySelector('.rc-montering-qty') && qty) {
+                    itemRow.querySelector('.rc-montering-qty').textContent = qty + ' m\u00B2';
+                  }
+
+                  // Insert note
                   if (!itemRow.querySelector('.rc-montering-note')) {
-                    var anchor2 = itemRow.querySelector('.rc-montering-qty') || itemRow.querySelector('header') || itemRow.querySelector('a');
-                    if (anchor2) {
+                    var noteAnchor = itemRow.querySelector('.rc-montering-qty') || itemRow.querySelector('header') || itemRow.querySelector('a');
+                    if (noteAnchor) {
                       var note = document.createElement('div');
                       note.className = 'rc-montering-note';
                       note.textContent = 'Synkas automatiskt med monterings-produkter';
                       note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
-                      anchor2.parentNode.insertBefore(note, anchor2.nextSibling);
+                      noteAnchor.parentNode.insertBefore(note, noteAnchor.nextSibling);
                     }
                   }
                 });
 
-                // ── Step 4: Add "Inkl. montering" label to carpet rows with attribute ──
+                // ── Add "Inkl. montering" label to carpet rows with the attribute ──
                 monteringAttrEls.forEach(function(attrEl) {
                   var itemRow = findItemRow(attrEl, sr);
-                  if (!itemRow) return;
-                  if (itemRow.querySelector('.rc-montering-label')) return; // already added
+                  if (!itemRow || itemRow.hasAttribute('data-rc-locked')) return; // skip montering row itself
+                  if (itemRow.querySelector('.rc-montering-label')) return;
 
-                  var header = itemRow.querySelector('header') || itemRow.querySelector('a');
+                  var header = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
                   if (header) {
                     var label = document.createElement('div');
                     label.className = 'rc-montering-label';
@@ -1287,34 +1272,46 @@
                     header.parentNode.insertBefore(label, header.nextSibling);
                   }
                 });
-              } finally {
-                _lockRunning = false;
+              } catch(e) {
+                // Silently continue — don't break the cart
+              }
+
+              // Reconnect observer
+              if (observer) {
+                observer.observe(sr, { childList: true, subtree: true });
               }
             }
 
-            // Use MutationObserver for instant response (no flickering)
-            // Watches both spark-drawer (slide-out) and spark-cart (full page).
-            var _sparkObservers = {}; // keyed by tag name
+            // ── Run lock on both cart components ──
+            function lockMonteringRows() {
+              ['spark-drawer', 'spark-cart'].forEach(function(tag) {
+                var el = document.querySelector(tag);
+                if (!el || !el.shadowRoot) return;
+                lockMonteringRowsIn(el.shadowRoot, _sparkObservers[tag] || null);
+              });
+            }
+
+            // ── MutationObserver setup ──
+            var _sparkObservers = {};
             function watchSparkCart(tag) {
               var el = document.querySelector(tag);
               if (!el || !el.shadowRoot) return;
               if (_sparkObservers[tag]) return; // already watching
 
-              refreshMonteringItemKeys(); // fetch attr data from cart API
-              lockMonteringRows(); // initial run
+              refreshMonteringData(function() { lockMonteringRows(); });
 
               var _mutDebounce = null;
-              _sparkObservers[tag] = new MutationObserver(function() {
+              var obs = new MutationObserver(function() {
                 clearTimeout(_mutDebounce);
-                _mutDebounce = setTimeout(function() {
-                  refreshMonteringItemKeys();
-                  setTimeout(lockMonteringRows, 200);
-                }, 150);
+                // Immediate lock attempt (attribute stamp is fast)
                 lockMonteringRows();
+                // Debounced follow-up with fresh API data
+                _mutDebounce = setTimeout(function() {
+                  refreshMonteringData(function() { lockMonteringRows(); });
+                }, 300);
               });
-              _sparkObservers[tag].observe(el.shadowRoot, {
-                childList: true, subtree: true
-              });
+              _sparkObservers[tag] = obs;
+              obs.observe(el.shadowRoot, { childList: true, subtree: true });
             }
 
             // Watch for spark-drawer and spark-cart appearing in the DOM
@@ -1324,7 +1321,7 @@
             });
             _docObserver.observe(document.body, { childList: true, subtree: true });
 
-            // Also poll as fallback
+            // Fallback polling
             setInterval(function() {
               watchSparkCart('spark-drawer');
               watchSparkCart('spark-cart');
@@ -1655,7 +1652,13 @@
         // CSS injected into EVERY spark shadow root at creation time (before any content renders)
         var PRE_INJECT_CSS = '#customer-reference, input#customer-reference, textarea#customer-reference,'
           + 'input[id*="customer-reference"], textarea[id*="customer-reference"]'
-          + '{ display: none !important; }';
+          + '{ display: none !important; }'
+          // ── Montering row lock: hides controls when JS stamps data-rc-locked ──
+          + '[data-rc-locked] button { display: none !important; }'
+          + '[data-rc-locked] input { display: none !important; }'
+          + '[data-rc-locked] [class*="mt-"] { display: none !important; }'
+          + '[data-rc-locked] .rc-montering-qty,'
+          + '[data-rc-locked] .rc-montering-note { display: block !important; }';
 
         var origAttachShadow = Element.prototype.attachShadow;
         Element.prototype.attachShadow = function(init) {
