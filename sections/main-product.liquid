@@ -198,6 +198,13 @@
                       </div>
                     {%- endunless -%}
                   {%- endif -%}
+
+                  {%- comment -%} ── Lager-disclaimer för återbruk & överproduktion (efter SparkLayer) ── {%- endcomment -%}
+                  {%- assign _pdp_tags = product.tags | join: ',' | downcase -%}
+                  {%- if _pdp_tags contains 'atervunna-mattor' or _pdp_tags contains 'återbruk' or _pdp_tags contains 'aterbruk' or _pdp_tags contains 'reused' or _pdp_tags contains 'overproduktion' or _pdp_tags contains 'överproduktion' -%}
+                    <p class="rc-stock-disclaimer">Reservation för lagersaldo — uppdateras veckovis och faktisk tillgång kan skilja sig.</p>
+                  {%- endif -%}
+
                 {%- endif -%}
 
               {%- when 'price' -%}
@@ -308,11 +315,6 @@
                     {%- endif -%}
                   {%- endif -%}
                 </p>
-                {%- comment -%} ── Lager-disclaimer för återbruk & överproduktion ── {%- endcomment -%}
-                {%- assign _inv_tags = product.tags | join: ',' | downcase -%}
-                {%- if _inv_tags contains 'atervunna-mattor' or _inv_tags contains 'återbruk' or _inv_tags contains 'aterbruk' or _inv_tags contains 'reused' or _inv_tags contains 'overproduktion' or _inv_tags contains 'överproduktion' -%}
-                  <p class="rc-stock-disclaimer">Reservation för lagersaldo — uppdateras veckovis och faktisk tillgång kan skilja sig.</p>
-                {%- endif -%}
               {%- when 'recarpet_specs' -%}
                 <div class="product__recarpet-specs quick-add-hidden" {{ block.shopify_attributes }}>
                   {%- render 'recarpet-product-specs', product: product -%}
