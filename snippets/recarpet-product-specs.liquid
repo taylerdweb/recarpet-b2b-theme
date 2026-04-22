@@ -183,8 +183,22 @@
   {%- endif -%}
 
   {%- comment -%} ── Stock disclaimer for återbruk & överproduktion ── {%- endcomment -%}
-  {%- assign _spec_tags = product.tags | join: ',' | downcase -%}
-  {%- if _spec_tags contains 'atervunna-mattor' or _spec_tags contains 'återbruk' or _spec_tags contains 'aterbruk' or _spec_tags contains 'reused' or _spec_tags contains 'overproduktion' or _spec_tags contains 'överproduktion' -%}
+  {%- assign _show_stock_disclaimer = false -%}
+  {%- comment -%} Check collection membership (most reliable) {%- endcomment -%}
+  {%- for col in product.collections -%}
+    {%- assign _col_handle = col.handle | downcase -%}
+    {%- if _col_handle contains 'atervunna' or _col_handle contains 'aterbrukade' or _col_handle contains 'overproduktion' -%}
+      {%- assign _show_stock_disclaimer = true -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- comment -%} Fallback: check tags {%- endcomment -%}
+  {%- unless _show_stock_disclaimer -%}
+    {%- assign _spec_tags = product.tags | join: ',' | downcase -%}
+    {%- if _spec_tags contains 'atervunna-mattor' or _spec_tags contains 'återbruk' or _spec_tags contains 'aterbruk' or _spec_tags contains 'reused' or _spec_tags contains 'overproduktion' or _spec_tags contains 'överproduktion' -%}
+      {%- assign _show_stock_disclaimer = true -%}
+    {%- endif -%}
+  {%- endunless -%}
+  {%- if _show_stock_disclaimer -%}
     <div class="recarpet-specs__disclaimer">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span>Reservation för lagersaldo — uppdateras veckovis och faktisk tillgång kan skilja sig.</span>
@@ -192,7 +206,8 @@
   {%- endif -%}
 
   {%- comment -%} ── Sample request CTA — Milliken products only ────────── {%- endcomment -%}
-  {%- if _spec_sku contains 'Milliken' -%}
+  {%- assign _spec_sku_lower = _spec_sku | downcase -%}
+  {%- if _spec_sku_lower contains 'milliken' -%}
     <div class="recarpet-sample-cta">
       <div class="recarpet-sample-cta__inner">
         <div class="recarpet-sample-cta__text">
