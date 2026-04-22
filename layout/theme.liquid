@@ -1022,6 +1022,11 @@
               _monteringBusy = true;
               return _origSparkUpdateCart(payload).then(function(r) {
                 _monteringBusy = false;
+                // After every silent cart update, re-run lock
+                // (SolidJS will re-render cart items, potentially removing data-rc-locked)
+                setTimeout(lockMonteringRows, 100);
+                setTimeout(lockMonteringRows, 400);
+                setTimeout(lockMonteringRows, 800);
                 return r;
               }).catch(function(err) {
                 _monteringBusy = false;
@@ -1115,15 +1120,25 @@
                     // If PDP add with checkbox, also add montering service
                     if (isPDPAdd && checkboxEl && checkboxEl.checked && addedQty > 0) {
                       _monteringUserRemoved = false;
-                      silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] });
+                      // Chain lock to AFTER montering is actually added to cart
+                      silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] })
+                        .then(function() {
+                          // Montering now in SparkLayer cart — SolidJS will re-render
+                          // Stagger lock attempts to catch the re-render
+                          lockMonteringRows();
+                          setTimeout(lockMonteringRows, 100);
+                          setTimeout(lockMonteringRows, 300);
+                          setTimeout(lockMonteringRows, 600);
+                          setTimeout(lockMonteringRows, 1200);
+                        });
                     } else {
                       // For all other cart changes, sync montering after a short delay
                       setTimeout(syncMonteringWithCart, 800);
+                      // Lock after sync completes
+                      setTimeout(lockMonteringRows, 300);
+                      setTimeout(lockMonteringRows, 1000);
+                      setTimeout(lockMonteringRows, 2000);
                     }
-                    // Re-run montering lock after cart update renders
-                    setTimeout(lockMonteringRows, 300);
-                    setTimeout(lockMonteringRows, 800);
-                    setTimeout(lockMonteringRows, 1500);
                   });
                 }
 
