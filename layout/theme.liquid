@@ -1166,14 +1166,20 @@
             var _lockRunning = false;
 
             // ── Find the cart-item row by walking up from a text element ──
-            // RESTORED heuristic: narrowest ancestor with exactly 1 img + buttons
+            // SparkLayer uses <a> with background-image (NOT <img>) for thumbnails.
+            // Each cart item row is a div with class py-4 inside a <ul>.
             function findItemRow(el, sr) {
               var p = el;
               while (p && p !== sr) {
+                // Primary: SparkLayer cart rows have py-4 class
+                if (p.classList && p.classList.contains('py-4')) {
+                  return p;
+                }
+                // Fallback: a row with product link (<a>) + buttons
                 if (p.querySelector) {
-                  var imgs = p.querySelectorAll('img');
+                  var links = p.querySelectorAll('a[href]');
                   var btns = p.querySelectorAll('button');
-                  if (imgs.length === 1 && btns.length >= 1) {
+                  if (links.length >= 1 && btns.length >= 1 && p.parentElement && p.parentElement.children.length >= 2) {
                     return p;
                   }
                 }
