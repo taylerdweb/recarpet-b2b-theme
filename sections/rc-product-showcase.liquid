@@ -29,7 +29,7 @@
   .rc-product-showcase__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
+    gap: 2.5rem;
   }
   .rc-product-showcase__viewall {
     text-align: center;
@@ -75,7 +75,7 @@
             media_aspect_ratio: 'square',
             image_shape: 'default',
             show_secondary_image: false,
-            show_vendor: false,
+            show_vendor: true,
             show_rating: false,
             lazy_load: true,
             skip_styles: true,
@@ -88,7 +88,7 @@
           {%- render 'card-product',
             media_aspect_ratio: 'square',
             image_shape: 'default',
-            show_vendor: false,
+            show_vendor: true,
             show_rating: false,
             lazy_load: true,
             skip_styles: true,
