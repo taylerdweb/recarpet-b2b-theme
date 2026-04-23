@@ -18,8 +18,10 @@
         "eyebrow": "",
         "heading": "Professionell hantering av återbrukade och nya textilplattor",
         "subtext": "ReCarpet är specialister på demontering, kvalitetssäkring och leverans av textilplattor. För cirkulära lösningar i både ombyggnad och nyproduktion",
-        "btn1_label": "Se våra produkter",
-        "btn1_url": "/collections/all"
+        "btn1_label": "Köp Milliken",
+        "btn1_url": "/collections/nya-textilplattor",
+        "btn2_label": "Se våra produkter",
+        "btn2_url": "/collections/all"
       }
     },
     "rc_featured_products": {

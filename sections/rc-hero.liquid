@@ -131,6 +131,11 @@
           {{ section.settings.btn1_label }}
         </a>
       {%- endif -%}
+      {%- if section.settings.btn2_label != blank -%}
+        <a href="{{ section.settings.btn2_url }}" class="rc-btn rc-btn--outline-white button is-hero-outline">
+          {{ section.settings.btn2_label }}
+        </a>
+      {%- endif -%}
     </div>
   </div>
 </section>
@@ -196,6 +201,16 @@
       "type": "url",
       "id": "btn1_url",
       "label": "Knapp 1 – länk"
+    },
+    {
+      "type": "text",
+      "id": "btn2_label",
+      "label": "Knapp 2 – text"
+    },
+    {
+      "type": "url",
+      "id": "btn2_url",
+      "label": "Knapp 2 – länk"
     }
   ],
   "presets": [
