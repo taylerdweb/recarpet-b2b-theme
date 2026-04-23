@@ -89,15 +89,8 @@
   }
 
   /* Hero button uses .button class from global styles, override for white outline */
-  .rc-hero .rc-btn--outline-white {
-    background: transparent;
-    color: var(--base-color-neutral--white);
-    border: 1.5px solid rgba(255,255,255,0.85);
-  }
-  .rc-hero .rc-btn--outline-white:hover {
-    background: rgba(255,255,255,0.15);
-    color: var(--base-color-neutral--white);
-  }
+  /* outline-white inherits from rc-global-styles — same 1px border as primary,
+     so both buttons render at identical size */
 
   @media (max-width: 991px) {
     .rc-hero__subtext { font-size: 1.625rem; }
