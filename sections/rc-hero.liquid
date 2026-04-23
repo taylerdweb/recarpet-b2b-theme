@@ -89,14 +89,12 @@
   }
 
   /* Hero button uses .button class from global styles, override for white outline */
-  .rc-hero .rc-btn--outline-white,
-  .rc-hero .button.is-hero-outline {
+  .rc-hero .rc-btn--outline-white {
     background: transparent;
     color: var(--base-color-neutral--white);
-    border-color: rgba(255,255,255,0.85);
+    border: 1.5px solid rgba(255,255,255,0.85);
   }
-  .rc-hero .rc-btn--outline-white:hover,
-  .rc-hero .button.is-hero-outline:hover {
+  .rc-hero .rc-btn--outline-white:hover {
     background: rgba(255,255,255,0.15);
     color: var(--base-color-neutral--white);
   }
@@ -132,7 +130,7 @@
         </a>
       {%- endif -%}
       {%- if section.settings.btn2_label != blank -%}
-        <a href="{{ section.settings.btn2_url }}" class="rc-btn rc-btn--outline-white button is-hero-outline">
+        <a href="{{ section.settings.btn2_url }}" class="rc-btn rc-btn--outline-white">
           {{ section.settings.btn2_label }}
         </a>
       {%- endif -%}
