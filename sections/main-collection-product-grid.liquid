@@ -34,6 +34,18 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* reCarpet: increase product grid spacing to match design */
+  .collection .grid.product-grid {
+    column-gap: 2.5rem;
+    row-gap: 3rem;
+  }
+  @media screen and (max-width: 749px) {
+    .collection .grid.product-grid {
+      column-gap: 1.25rem;
+      row-gap: 2rem;
+    }
+  }
 {%- endstyle -%}
 
 {%- liquid
