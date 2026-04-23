@@ -97,7 +97,7 @@
 
   {%- comment -%} ── Technical specs table ─────────────────────────────── {%- endcomment -%}
   {%- assign has_specs = false -%}
-  {%- if backing != blank or dimensions != blank or thickness != blank or fire_rating != blank or acoustic != blank or impact != blank or lrv != blank or tech_url != blank -%}
+  {%- if backing != blank or dimensions != blank or thickness != blank or fire_rating != blank or acoustic != blank or impact != blank or lrv != blank or tech_url != blank or qty > 0 or min_order != blank or delivery_days != blank -%}
     {%- assign has_specs = true -%}
   {%- endif -%}
 
@@ -155,31 +155,25 @@
           </td>
         </tr>
       {%- endif -%}
-    </table>
-  {%- endif -%}
-
-  {%- comment -%} ── Order info bar ────────────────────────────────────── {%- endcomment -%}
-  {%- if qty > 0 or min_order != blank or delivery_days != blank -%}
-    <div class="recarpet-specs__order-bar">
       {%- if qty > 0 -%}
-        <div class="recarpet-specs__order-cell">
-          <span class="recarpet-specs__order-label">In stock</span>
-          <span class="recarpet-specs__order-value">{{ qty }} m²</span>
-        </div>
+        <tr>
+          <td class="recarpet-specs__label">I lager</td>
+          <td class="recarpet-specs__value">{{ qty }} m²</td>
+        </tr>
       {%- endif -%}
       {%- if min_order != blank -%}
-        <div class="recarpet-specs__order-cell">
-          <span class="recarpet-specs__order-label">Min. order</span>
-          <span class="recarpet-specs__order-value">{{ min_order }}</span>
-        </div>
+        <tr>
+          <td class="recarpet-specs__label">Min. beställning</td>
+          <td class="recarpet-specs__value">{{ min_order }}</td>
+        </tr>
       {%- endif -%}
       {%- if delivery_days != blank -%}
-        <div class="recarpet-specs__order-cell">
-          <span class="recarpet-specs__order-label">Lead time</span>
-          <span class="recarpet-specs__order-value">{{ delivery_days }} days</span>
-        </div>
+        <tr>
+          <td class="recarpet-specs__label">Leveranstid</td>
+          <td class="recarpet-specs__value">{{ delivery_days }} dagar</td>
+        </tr>
       {%- endif -%}
-    </div>
+    </table>
   {%- endif -%}
 
   {%- comment -%} ── Stock disclaimer for återbruk & överproduktion ── {%- endcomment -%}
