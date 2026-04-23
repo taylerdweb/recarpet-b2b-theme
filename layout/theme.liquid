@@ -753,12 +753,49 @@
             }, true);
           }
 
+          // Style the qty picker wrapper as a pill (button + input + button)
+          function styleQtyPill(el) {
+            var root = el.shadowRoot || el;
+            var inputs = root.querySelectorAll('input[type="number"]');
+            inputs.forEach(function(input) {
+              var wrap = input.parentElement;
+              if (!wrap || wrap.dataset.rcPill) return;
+              wrap.dataset.rcPill = '1';
+              var s = wrap.style;
+              s.display = 'inline-flex';
+              s.alignItems = 'center';
+              s.background = '#f3f3f3';
+              s.borderRadius = '999px';
+              s.border = 'none';
+              s.height = '2.5rem';
+              s.width = 'auto';
+              s.overflow = 'visible';
+              // Style the sibling buttons
+              wrap.querySelectorAll('button').forEach(function(btn) {
+                var b = btn.style;
+                b.background = 'transparent';
+                b.border = 'none';
+                b.color = '#333';
+                b.fontSize = '1.125rem';
+                b.fontWeight = '500';
+                b.width = '2.25rem';
+                b.height = '2.5rem';
+                b.display = 'flex';
+                b.alignItems = 'center';
+                b.justifyContent = 'center';
+                b.cursor = 'pointer';
+                b.padding = '0';
+              });
+            });
+          }
+
           function initSparkQty(el) {
             setDefaultQty(el);
             watchBuyButtons(el);
+            styleQtyPill(el);
             // MutationObserver for DOM changes (new inputs rendered)
             var root = el.shadowRoot || el;
-            var obs = new MutationObserver(function() { setDefaultQty(el); });
+            var obs = new MutationObserver(function() { setDefaultQty(el); styleQtyPill(el); });
             obs.observe(root, { childList: true, subtree: true });
           }
 
@@ -1659,53 +1696,22 @@
           + '{ display: none !important; }'
 
           /* ── Pill-style quantity picker ── */
-          + ' .quantity-counter, .product-card-quantity, [class*="quantity"] {'
-          + '   display: inline-flex !important;'
-          + '   align-items: center !important;'
-          + '   background: #f3f3f3 !important;'
-          + '   border-radius: 999px !important;'
-          + '   border: none !important;'
-          + '   overflow: hidden !important;'
-          + '   height: 2.5rem !important;'
-          + '   width: auto !important;'
-          + '   max-width: fit-content !important;'
-          + ' }'
-          + ' .quantity-counter button, .product-card-quantity button, [class*="quantity"] button {'
-          + '   background: transparent !important;'
-          + '   border: none !important;'
-          + '   color: #333 !important;'
-          + '   font-size: 1.125rem !important;'
-          + '   font-weight: 500 !important;'
-          + '   width: 2.5rem !important;'
-          + '   height: 2.5rem !important;'
-          + '   display: flex !important;'
-          + '   align-items: center !important;'
-          + '   justify-content: center !important;'
-          + '   cursor: pointer !important;'
-          + '   padding: 0 !important;'
-          + '   line-height: 1 !important;'
-          + ' }'
-          + ' .quantity-counter button:hover, .product-card-quantity button:hover, [class*="quantity"] button:hover {'
-          + '   background: #e5e5e5 !important;'
-          + ' }'
-          + ' .quantity-counter input[type="number"], .product-card-quantity input[type="number"], [class*="quantity"] input[type="number"] {'
+          /* Target the wrapper that contains button + input + button */
+          + ' input[type="number"] {'
           + '   background: transparent !important;'
           + '   border: none !important;'
           + '   text-align: center !important;'
           + '   font-size: 0.95rem !important;'
           + '   font-weight: 600 !important;'
           + '   color: #333 !important;'
-          + '   width: 2.5rem !important;'
+          + '   width: 2rem !important;'
+          + '   min-width: 2rem !important;'
           + '   padding: 0 !important;'
           + '   -moz-appearance: textfield !important;'
           + '   appearance: textfield !important;'
           + ' }'
-          + ' .quantity-counter input[type="number"]::-webkit-inner-spin-button,'
-          + ' .quantity-counter input[type="number"]::-webkit-outer-spin-button,'
-          + ' .product-card-quantity input[type="number"]::-webkit-inner-spin-button,'
-          + ' .product-card-quantity input[type="number"]::-webkit-outer-spin-button,'
-          + ' [class*="quantity"] input[type="number"]::-webkit-inner-spin-button,'
-          + ' [class*="quantity"] input[type="number"]::-webkit-outer-spin-button {'
+          + ' input[type="number"]::-webkit-inner-spin-button,'
+          + ' input[type="number"]::-webkit-outer-spin-button {'
           + '   -webkit-appearance: none !important;'
           + '   margin: 0 !important;'
           + ' }';
