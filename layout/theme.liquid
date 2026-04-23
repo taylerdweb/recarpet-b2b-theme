@@ -707,6 +707,11 @@
             if (el.dataset.m2watched) return;
             el.dataset.m2watched = '1';
             patchElement(el);
+            // Also init qty (default 5 + pill styling) for product cards
+            var tag = (el.tagName || '').toLowerCase();
+            if (tag === 'spark-product-card' || tag === 'spark-pdp') {
+              initSparkQty(el);
+            }
             if (el.shadowRoot) {
               var obs = new MutationObserver(function () {
                 injectM2Style(el); // Re-inject if shadow root was replaced

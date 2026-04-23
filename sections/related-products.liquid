@@ -18,6 +18,22 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* reCarpet: match product grid spacing */
+  .related-products .grid.product-grid {
+    column-gap: 2.5rem;
+    row-gap: 3rem;
+  }
+  .related-products .grid--4-col-desktop.product-grid .grid__item {
+    width: calc(25% - 2.5rem * 3 / 4);
+    max-width: calc(25% - 2.5rem * 3 / 4);
+  }
+  @media screen and (max-width: 749px) {
+    .related-products .grid.product-grid {
+      column-gap: 1.25rem;
+      row-gap: 2rem;
+    }
+  }
 {%- endstyle -%}
 
 <div class="color-{{ section.settings.color_scheme }} gradient">
