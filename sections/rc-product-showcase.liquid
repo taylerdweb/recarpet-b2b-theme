@@ -23,7 +23,7 @@
     font-size: clamp(1.75rem, 3.5vw, var(--rc-h3));
     font-weight: 500;
     line-height: 120%;
-    margin: 0 0 3rem;
+    margin: 0 0 5rem;
     color: var(--base-color-brand--rc-off-black);
   }
   .rc-product-showcase__grid {
@@ -31,6 +31,10 @@
     grid-template-columns: repeat(4, 1fr);
     column-gap: 2.5rem;
     row-gap: 3rem;
+  }
+  /* Equal-height card content alignment */
+  .rc-product-showcase__grid .card__heading {
+    min-height: 2.8em;
   }
   .rc-product-showcase__viewall {
     text-align: center;

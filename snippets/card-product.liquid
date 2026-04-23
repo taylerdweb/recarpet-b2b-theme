@@ -287,7 +287,7 @@
         {% assign product_form_id = 'quick-add-' | append: section_id | append: card_product.id %}
         {%- if rc_is_guest and rc_is_logged_in_guest == false -%}
           <div class="card__cta-logged-out" style="position:relative;z-index:2;">
-            <a href="/pages/bli-medlem" style="display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--rc-font,inherit);font-size:0.875rem;font-weight:500;color:var(--rc-off-black,#1a1a1a);text-decoration:none;padding:0.5rem 0;" onclick="event.stopPropagation();">
+            <a href="/pages/bli-medlem" style="display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--rc-font,inherit);font-size:0.875rem;font-weight:500;color:var(--rc-off-black,#1a1a1a);text-decoration:none;padding:0.2rem 0;margin:0.15rem 0;" onclick="event.stopPropagation();">
               Bli medlem <span style="font-size:1.1em;">&rarr;</span>
             </a>
           </div>
