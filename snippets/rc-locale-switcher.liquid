@@ -67,6 +67,15 @@
             role="option"
             aria-selected="{% if _is_active %}true{% else %}false{% endif %}"
             data-country-code="{{ country.iso_code }}"
+            {%- comment -%} Auto-map country → language for combined switcher {%- endcomment -%}
+            {%- case country.iso_code -%}
+              {%- when 'DK' -%}{%- assign _mapped_lang = 'da' -%}
+              {%- when 'DE' -%}{%- assign _mapped_lang = 'de' -%}
+              {%- when 'NL' -%}{%- assign _mapped_lang = 'nl' -%}
+              {%- when 'GB' -%}{%- assign _mapped_lang = 'en' -%}
+              {%- else -%}{%- assign _mapped_lang = 'sv' -%}
+            {%- endcase -%}
+            data-locale-code="{{ _mapped_lang }}"
           >
             <span class="rc-locale__flag">{{ _c_flag }}</span>
             <span class="rc-locale__option-name">{{ _c_name }}</span>
@@ -214,22 +223,37 @@
       document.addEventListener('click', function() { close(); });
       dropdown.addEventListener('click', function(e) { e.stopPropagation(); });
 
-      /* On option click → submit Shopify country form */
+      /* On option click → submit Shopify country + language form */
       root.querySelectorAll('.rc-locale__option').forEach(function(opt) {
         opt.addEventListener('click', function() {
-          var code = opt.getAttribute('data-country-code');
-          /* Find the Shopify country form in the header and submit it */
+          var countryCode = opt.getAttribute('data-country-code');
+          var localeCode  = opt.getAttribute('data-locale-code');
+          /* Find the Shopify localization form in the header and submit it */
           var form = document.getElementById('HeaderCountryForm') ||
                      document.querySelector('form[action*="/localization"]');
           if (form) {
-            var input = form.querySelector('input[name="country_code"]');
-            if (!input) {
-              input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = 'country_code';
-              form.appendChild(input);
+            /* Set country_code */
+            var countryInput = form.querySelector('input[name="country_code"]');
+            if (!countryInput) {
+              countryInput = document.createElement('input');
+              countryInput.type = 'hidden';
+              countryInput.name = 'country_code';
+              form.appendChild(countryInput);
             }
-            input.value = code;
+            countryInput.value = countryCode;
+
+            /* Set locale_code (language) */
+            if (localeCode) {
+              var langInput = form.querySelector('input[name="locale_code"]');
+              if (!langInput) {
+                langInput = document.createElement('input');
+                langInput.type = 'hidden';
+                langInput.name = 'locale_code';
+                form.appendChild(langInput);
+              }
+              langInput.value = localeCode;
+            }
+
             form.submit();
           }
         });
