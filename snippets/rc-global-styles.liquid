@@ -138,7 +138,7 @@
     /* ===== Section padding ===== */
     --rc-section-lg: 7rem;       /* 112px */
     --rc-section-md: 7rem;       /* 112px */
-    --rc-section-sm: 3rem;       /* 48px */
+    --rc-section-sm: 5rem;       /* 80px */
     --rc-section-pad: var(--rc-section-md);
 
     /* ===== Border radius ===== */
@@ -154,6 +154,20 @@
 
   [class^="rc-"], [class*=" rc-"] {
     font-family: var(--rc-font);
+  }
+
+  /* ===== Body text reset for rc-* sections ===== */
+  [class^="rc-"] p,
+  [class^="rc-"] span,
+  [class^="rc-"] li,
+  [class*=" rc-"] p,
+  [class*=" rc-"] span,
+  [class*=" rc-"] li {
+    font-family: var(--rc-font);
+    font-size: var(--rc-text-base);
+    font-weight: var(--rc-body-weight);
+    line-height: var(--rc-body-lh);
+    color: var(--rc-text);
   }
 
   /* ===== Heading resets for rc-* sections ===== */
