@@ -37,8 +37,8 @@
     "rc_cta_banner": {
       "type": "rc-cta-banner",
       "settings": {
-        "heading": "Ska du demontera eller föreskriva textilplattor?",
-        "body": "ReCarpet hanterar hela processen – från demontering till vidareförmedling – med högsta kvalitet. Boka demontering eller förskriv våra textilplattor. Tillsammans gör vi stor skillnad!",
+        "heading": "Önskar du boka en demontering eller vill du föreskriva textilplattor?",
+        "body": "ReCarpet hanterar hela processen – från demontering till vidareförmedling – med högsta kvalitet. Boka demontering eller föreskriv våra textilplattor. Tillsammans gör vi stor skillnad!",
         "btn_label": "Kontakta oss",
         "btn_url": "shopify://pages/kontakta-oss"
       }
