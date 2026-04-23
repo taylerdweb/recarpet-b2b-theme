@@ -6,7 +6,7 @@
 <style>
   .rc-hero {
     position: relative;
-    min-height: {{ section.settings.min_height }}px;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -97,7 +97,7 @@
   }
   @media (max-width: 767px) {
     .rc-hero__content { padding: var(--rc-section-sm) 1.25rem; }
-    .rc-hero { min-height: 31.25rem; }
+    .rc-hero { min-height: 100vh; }
     .rc-hero__subtext { font-size: 1.375rem; }
   }
 </style>
