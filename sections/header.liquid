@@ -495,7 +495,15 @@
                 }}
               </div>
             {%- else -%}
-              <span class="h2">{{ shop.name }}</span>
+              {%- comment -%} Inline SVG fallback — ReCarpet wordmark when no logo image is set {%- endcomment -%}
+              <div class="header__heading-logo-wrapper">
+                <svg class="rc-logo rc-logo--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 80" height="30" role="img" aria-label="{{ shop.name }}">
+                  <text x="0" y="60" font-family="'DM Sans', sans-serif" font-size="64" font-weight="500" fill="#1e4433" letter-spacing="-1">ReCarpet</text>
+                </svg>
+                <svg class="rc-logo rc-logo--white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 80" height="30" role="img" aria-label="{{ shop.name }}">
+                  <text x="0" y="60" font-family="'DM Sans', sans-serif" font-size="64" font-weight="500" fill="#ffffff" letter-spacing="-1">ReCarpet</text>
+                </svg>
+              </div>
             {%- endif -%}
           </a>
       {%- if request.page_type == 'index' -%}
@@ -537,7 +545,15 @@
                 }}
               </div>
             {%- else -%}
-              <span class="h2">{{ shop.name }}</span>
+              {%- comment -%} Inline SVG fallback — ReCarpet wordmark when no logo image is set {%- endcomment -%}
+              <div class="header__heading-logo-wrapper">
+                <svg class="rc-logo rc-logo--green" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 80" height="30" role="img" aria-label="{{ shop.name }}">
+                  <text x="0" y="60" font-family="'DM Sans', sans-serif" font-size="64" font-weight="500" fill="#1e4433" letter-spacing="-1">ReCarpet</text>
+                </svg>
+                <svg class="rc-logo rc-logo--white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 80" height="30" role="img" aria-label="{{ shop.name }}">
+                  <text x="0" y="60" font-family="'DM Sans', sans-serif" font-size="64" font-weight="500" fill="#ffffff" letter-spacing="-1">ReCarpet</text>
+                </svg>
+              </div>
             {%- endif -%}
           </a>
       {%- if request.page_type == 'index' -%}
