@@ -27,6 +27,10 @@
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
   {{ 'quick-order-list.css' | asset_url | stylesheet_tag }}
   {{ 'quantity-popover.css' | asset_url | stylesheet_tag }}
+  <style>
+    .card__cta-logged-out { margin-top: -0.5rem; margin-bottom: -0.25rem; }
+    .card__content:has(.card__cta-logged-out) .card__information { padding-bottom: 0.25rem; }
+  </style>
 {%- endunless -%}
 {%- if card_product and card_product != empty -%}
   {%- liquid
