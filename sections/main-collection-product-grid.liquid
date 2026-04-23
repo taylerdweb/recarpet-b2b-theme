@@ -40,6 +40,13 @@
     column-gap: 2.5rem;
     row-gap: 3rem;
   }
+  .collection .grid--4-col-desktop.product-grid .grid__item {
+    width: calc(25% - 2.5rem * 3 / 4);
+    max-width: calc(25% - 2.5rem * 3 / 4);
+  }
+  .collection .grid--2-col-tablet.product-grid .grid__item {
+    width: calc(50% - 2.5rem / 2);
+  }
   @media screen and (max-width: 749px) {
     .collection .grid.product-grid {
       column-gap: 1.25rem;
