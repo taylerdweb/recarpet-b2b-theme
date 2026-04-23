@@ -246,26 +246,36 @@
     "rc_products_cta": {
       "type": "rc-products-cta",
       "blocks": {
+        "category_Xt6TMg": {
+          "type": "category",
+          "settings": {
+            "image": "shopify://shop_images/rc-co2.jpg",
+            "title": "Milliken",
+            "tag": "",
+            "url": "shopify://collections/milliken"
+          }
+        },
         "cat1": {
           "type": "category",
           "settings": {
             "image": "shopify://shop_images/rc-service-internt-aterbruk.jpg",
             "title": "Återbrukade textilplattor",
-            "tag": "ÅTERBRUK",
-            "url": "/collections/aterbrukade-textilplattor"
+            "tag": "",
+            "url": "shopify://collections/aterbrukade-mattor"
           }
         },
         "cat2": {
           "type": "category",
           "settings": {
             "image": "shopify://shop_images/rc-card-arkitekt.jpg",
-            "title": "Nya textilplattor",
-            "tag": "NY",
-            "url": "/collections/nya-textilplattor"
+            "title": "Överproduktion",
+            "tag": "",
+            "url": "shopify://collections/overproduktion"
           }
         }
       },
       "block_order": [
+        "category_Xt6TMg",
         "cat1",
         "cat2"
       ],
