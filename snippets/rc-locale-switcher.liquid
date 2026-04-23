@@ -79,7 +79,9 @@
           >
             <span class="rc-locale__flag">{{ _c_flag }}</span>
             <span class="rc-locale__option-name">{{ _c_name }}</span>
-            <span class="rc-locale__option-currency">{{ country.currency.iso_code }}</span>
+            {%- unless customer -%}
+              <span class="rc-locale__option-currency">{{ country.currency.iso_code }}</span>
+            {%- endunless -%}
           </button>
         </li>
       {%- endfor -%}
