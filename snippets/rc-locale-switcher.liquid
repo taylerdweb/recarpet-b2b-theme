@@ -1,10 +1,7 @@
 {%- comment -%}
   rc-locale-switcher.liquid
   ------------------------------------------------------------------
-  Combined market/language switcher using flag emoji.
-  Replaces the separate country-localization and language-localization
-  dropdowns in the header with a single compact dropdown.
-
+  Combined market/language switcher with inline SVG flags.
   Each option sets BOTH country (currency) and language simultaneously
   by submitting the Shopify localization form.
 
@@ -12,23 +9,32 @@
     {% render 'rc-locale-switcher', position: 'header' %}
 {%- endcomment -%}
 
-{%- comment -%}
-  Map each Shopify Market to a flag + label.
-  Extend this list when adding new markets.
-{%- endcomment -%}
 {%- assign _current_country = localization.country.iso_code -%}
 {%- assign _current_lang    = localization.language.iso_code -%}
 
-{%- comment -%} Build label for current selection {%- endcomment -%}
+{%- comment -%}
+  SVG flag snippets — flat 4:3 rectangles, 20×15 with 2px radius.
+  Kept minimal for inline use.
+{%- endcomment -%}
+{%- capture flag_SE -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#006AA7"/><rect x="6" width="3" height="15" fill="#FECC02"/><rect y="6" width="20" height="3" fill="#FECC02"/></svg>{%- endcapture -%}
+{%- capture flag_NO -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#EF2B2D"/><rect x="6" width="3" height="15" fill="#002868"/><rect y="6" width="20" height="3" fill="#002868"/><rect x="6.5" width="2" height="15" fill="#fff"/><rect y="6.5" width="20" height="2" fill="#fff"/></svg>{%- endcapture -%}
+{%- capture flag_DK -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#C8102E"/><rect x="6" width="2.5" height="15" fill="#fff"/><rect y="6.25" width="20" height="2.5" fill="#fff"/></svg>{%- endcapture -%}
+{%- capture flag_FI -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#fff"/><rect x="6" width="3" height="15" fill="#003580"/><rect y="6" width="20" height="3" fill="#003580"/></svg>{%- endcapture -%}
+{%- capture flag_DE -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#FFCC00"/><rect width="20" height="5" rx="2" fill="#000"/><rect y="5" width="20" height="5" fill="#DD0000"/></svg>{%- endcapture -%}
+{%- capture flag_NL -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#21468B"/><rect width="20" height="5" rx="2" fill="#AE1C28"/><rect y="5" width="20" height="5" fill="#fff"/></svg>{%- endcapture -%}
+{%- capture flag_GB -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#012169"/><path d="M0,0 L20,15 M20,0 L0,15" stroke="#fff" stroke-width="2.5"/><path d="M0,0 L20,15 M20,0 L0,15" stroke="#C8102E" stroke-width="1.5"/><rect x="8" width="4" height="15" fill="#fff"/><rect y="5.5" width="20" height="4" fill="#fff"/><rect x="8.75" width="2.5" height="15" fill="#C8102E"/><rect y="6" width="20" height="3" fill="#C8102E"/></svg>{%- endcapture -%}
+{%- capture flag_GLOBE -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#e5e5e5"/><circle cx="10" cy="7.5" r="5" fill="none" stroke="#999" stroke-width="1"/><ellipse cx="10" cy="7.5" rx="2.5" ry="5" fill="none" stroke="#999" stroke-width="0.8"/><line x1="5" y1="7.5" x2="15" y2="7.5" stroke="#999" stroke-width="0.8"/></svg>{%- endcapture -%}
+
+{%- comment -%} Map current country to flag + label {%- endcomment -%}
 {%- case _current_country -%}
-  {%- when 'SE' -%}{%- assign _flag = '🇸🇪' -%}{%- assign _label = 'SE' -%}
-  {%- when 'NO' -%}{%- assign _flag = '🇳🇴' -%}{%- assign _label = 'NO' -%}
-  {%- when 'DK' -%}{%- assign _flag = '🇩🇰' -%}{%- assign _label = 'DK' -%}
-  {%- when 'FI' -%}{%- assign _flag = '🇫🇮' -%}{%- assign _label = 'FI' -%}
-  {%- when 'DE' -%}{%- assign _flag = '🇩🇪' -%}{%- assign _label = 'DE' -%}
-  {%- when 'NL' -%}{%- assign _flag = '🇳🇱' -%}{%- assign _label = 'NL' -%}
-  {%- when 'GB' -%}{%- assign _flag = '🇬🇧' -%}{%- assign _label = 'GB' -%}
-  {%- else -%}{%- assign _flag = '🌐' -%}{%- assign _label = _current_country -%}
+  {%- when 'SE' -%}{%- assign _flag = flag_SE -%}{%- assign _label = 'SE' -%}
+  {%- when 'NO' -%}{%- assign _flag = flag_NO -%}{%- assign _label = 'NO' -%}
+  {%- when 'DK' -%}{%- assign _flag = flag_DK -%}{%- assign _label = 'DK' -%}
+  {%- when 'FI' -%}{%- assign _flag = flag_FI -%}{%- assign _label = 'FI' -%}
+  {%- when 'DE' -%}{%- assign _flag = flag_DE -%}{%- assign _label = 'DE' -%}
+  {%- when 'NL' -%}{%- assign _flag = flag_NL -%}{%- assign _label = 'NL' -%}
+  {%- when 'GB' -%}{%- assign _flag = flag_GB -%}{%- assign _label = 'GB' -%}
+  {%- else -%}{%- assign _flag = flag_GLOBE -%}{%- assign _label = _current_country -%}
 {%- endcase -%}
 
 <div class="rc-locale" data-rc-locale>
@@ -49,14 +55,14 @@
     <ul class="rc-locale__list" role="listbox">
       {%- for country in localization.available_countries -%}
         {%- case country.iso_code -%}
-          {%- when 'SE' -%}{%- assign _c_flag = '🇸🇪' -%}{%- assign _c_name = 'Sverige' -%}
-          {%- when 'NO' -%}{%- assign _c_flag = '🇳🇴' -%}{%- assign _c_name = 'Norge' -%}
-          {%- when 'DK' -%}{%- assign _c_flag = '🇩🇰' -%}{%- assign _c_name = 'Danmark' -%}
-          {%- when 'FI' -%}{%- assign _c_flag = '🇫🇮' -%}{%- assign _c_name = 'Finland' -%}
-          {%- when 'DE' -%}{%- assign _c_flag = '🇩🇪' -%}{%- assign _c_name = 'Deutschland' -%}
-          {%- when 'NL' -%}{%- assign _c_flag = '🇳🇱' -%}{%- assign _c_name = 'Nederland' -%}
-          {%- when 'GB' -%}{%- assign _c_flag = '🇬🇧' -%}{%- assign _c_name = 'United Kingdom' -%}
-          {%- else -%}{%- assign _c_flag = '🌐' -%}{%- assign _c_name = country.name -%}
+          {%- when 'SE' -%}{%- assign _c_flag = flag_SE -%}{%- assign _c_name = 'Sverige' -%}
+          {%- when 'NO' -%}{%- assign _c_flag = flag_NO -%}{%- assign _c_name = 'Norge' -%}
+          {%- when 'DK' -%}{%- assign _c_flag = flag_DK -%}{%- assign _c_name = 'Danmark' -%}
+          {%- when 'FI' -%}{%- assign _c_flag = flag_FI -%}{%- assign _c_name = 'Finland' -%}
+          {%- when 'DE' -%}{%- assign _c_flag = flag_DE -%}{%- assign _c_name = 'Deutschland' -%}
+          {%- when 'NL' -%}{%- assign _c_flag = flag_NL -%}{%- assign _c_name = 'Nederland' -%}
+          {%- when 'GB' -%}{%- assign _c_flag = flag_GB -%}{%- assign _c_name = 'United Kingdom' -%}
+          {%- else -%}{%- assign _c_flag = flag_GLOBE -%}{%- assign _c_name = country.name -%}
         {%- endcase -%}
         {%- assign _is_active = false -%}
         {%- if country.iso_code == _current_country -%}{%- assign _is_active = true -%}{%- endif -%}
@@ -116,10 +122,20 @@
   .rc-locale__trigger:hover {
     opacity: 0.7;
   }
+
+  /* SVG flag sizing */
+  .rc-flag {
+    width: 20px;
+    height: 15px;
+    display: block;
+    flex-shrink: 0;
+  }
   .rc-locale__flag {
-    font-size: 1.15rem;
+    display: inline-flex;
+    align-items: center;
     line-height: 1;
   }
+
   .rc-locale__code {
     font-size: 0.875rem;
     letter-spacing: 0.02em;
