@@ -30,7 +30,7 @@
     display: block;
   }
   .rc-footer__logo img,
-  .rc-footer__logo svg { height: 3rem; width: auto; }
+  .rc-footer__logo svg { height: 2.5rem; width: auto; }
 
   .rc-footer__contact p {
     font-size: var(--rc-text-sm);
@@ -55,12 +55,13 @@
   }
 
   /* Nav columns */
-  .rc-footer__col-title {
+  .rc-footer h2.rc-footer__col-title {
     font-size: var(--rc-text-base);
     font-weight: 600;
     letter-spacing: 0;
     text-transform: none;
     color: #fff;
+    line-height: 1.5;
     margin: 0 0 1.25rem;
   }
   .rc-footer__nav {
@@ -83,8 +84,8 @@
   .rc-footer__bottom {
     max-width: var(--rc-max-width);
     margin: var(--rc-section-md) auto 0;
-    padding: 2rem var(--rc-page-padding) 2.5rem;
-    border-top: 1px solid #fff;
+    padding: 2rem var(--rc-page-padding) 4rem;
+    border-top: 1px solid var(--base-color-brand--rc-white, #f6f6f6);
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -153,7 +154,7 @@
 
     <!-- Våra kunder -->
     <div class="rc-footer__col">
-      <p class="rc-footer__col-title">Våra kunder</p>
+      <h2 class="rc-footer__col-title">Våra kunder</h2>
       <ul class="rc-footer__nav">
         <li><a href="/pages/fastighetsagare">Fastighetsägare</a></li>
         <li><a href="/pages/arkitekter">Arkitekt</a></li>
@@ -164,7 +165,7 @@
 
     <!-- Vad vi gör -->
     <div class="rc-footer__col">
-      <p class="rc-footer__col-title">Vad vi gör</p>
+      <h2 class="rc-footer__col-title">Vad vi gör</h2>
       <ul class="rc-footer__nav">
         <li><a href="/pages/vad-vi-gor#inventering">Inventering</a></li>
         <li><a href="/pages/vad-vi-gor#demontering">Demontering</a></li>
@@ -177,7 +178,7 @@
 
     <!-- Våra golv -->
     <div class="rc-footer__col">
-      <p class="rc-footer__col-title">Våra golv</p>
+      <h2 class="rc-footer__col-title">Våra golv</h2>
       <ul class="rc-footer__nav">
         <li><a href="/collections/aterbrukade-textilplattor">Återbrukade textilplattor</a></li>
         <li><a href="/collections/nya-textilplattor">Milliken textilplattor</a></li>
@@ -187,7 +188,7 @@
 
     <!-- Kontakta ReCarpet -->
     <div class="rc-footer__col">
-      <p class="rc-footer__col-title">Kontakta ReCarpet</p>
+      <h2 class="rc-footer__col-title">Kontakta ReCarpet</h2>
       <ul class="rc-footer__nav">
         <li><a href="/pages/kontakta-oss">Kontakta oss</a></li>
         <li><a href="/pages/om-oss">Om oss</a></li>
