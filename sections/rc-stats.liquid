@@ -1,0 +1,173 @@
+{% comment %}
+  reCarpet Stats — Standalone statistics/key-figures section
+  Used on: Våra kunder (hållbarhet/CO₂), can be reused anywhere
+  Design matches rc-kundgrupp stats pattern
+{% endcomment %}
+
+<style>
+  .rc-stats {
+    background: var(--rc-white, #fff);
+    padding: var(--rc-section-md) 0;
+  }
+  .rc-stats--cream {
+    background: var(--rc-cream, #f5f3ef);
+  }
+  .rc-stats__inner {
+    max-width: var(--rc-max-width);
+    margin: 0 auto;
+    padding: 0 var(--rc-page-padding);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  .rc-stats__eyebrow {
+    font-family: var(--rc-font) !important;
+    font-size: var(--rc-text-sm) !important;
+    font-weight: 600 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+    line-height: var(--rc-body-lh, 1.5);
+  }
+  .rc-stats__heading {
+    font-size: clamp(1.375rem, 2.5vw, var(--rc-h3));
+    font-weight: 500;
+    color: var(--rc-text);
+    margin: 0 0 1rem;
+  }
+  .rc-stats__body {
+    font-size: 1.125rem !important;
+    line-height: 1.75 !important;
+    color: var(--rc-text-muted) !important;
+    margin: 0 0 0.75rem;
+  }
+  .rc-stats__row {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .rc-stat {
+    text-align: left;
+  }
+  .rc-stat__number {
+    font-size: var(--rc-h3);
+    font-weight: 700;
+    color: var(--rc-green);
+    line-height: 1;
+  }
+  .rc-stat__unit {
+    font-size: var(--rc-text-base);
+    color: var(--rc-text-muted);
+  }
+  .rc-stat__label {
+    font-size: var(--rc-text-sm);
+    color: var(--rc-text-muted);
+    margin-top: 0.375rem;
+    max-width: 14rem;
+    line-height: 1.4;
+  }
+  .rc-stats__image {
+    border-radius: var(--rc-radius);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .rc-stats__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .rc-stats__btn {
+    margin-top: 1.75rem;
+  }
+
+  @media (max-width: 900px) {
+    .rc-stats__inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 0 1.25rem;
+    }
+    .rc-stats__row {
+      gap: 1.5rem;
+    }
+  }
+</style>
+
+<section class="rc-stats{% if section.settings.background == 'cream' %} rc-stats--cream{% endif %}">
+  <div class="rc-stats__inner">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="rc-stats__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="rc-stats__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.body != blank -%}
+        <p class="rc-stats__body">{{ section.settings.body }}</p>
+      {%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <div class="rc-stats__row">
+          {%- for block in section.blocks -%}
+            <div class="rc-stat">
+              <div class="rc-stat__number">{{ block.settings.number }}<span class="rc-stat__unit">{{ block.settings.unit }}</span></div>
+              <div class="rc-stat__label">{{ block.settings.label }}</div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+      {%- if section.settings.btn_label != blank -%}
+        <a href="{{ section.settings.btn_url | default: '/pages/kontakta-oss' }}" class="rc-btn rc-btn--primary rc-stats__btn">{{ section.settings.btn_label }}</a>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.image != blank -%}
+      <div class="rc-stats__image">
+        <img src="{{ section.settings.image | image_url: width: 900 }}" alt="{{ section.settings.heading }}" loading="lazy">
+      </div>
+    {%- else -%}
+      <div class="rc-stats__image" style="background:var(--rc-cream-alt, #E6E3DE);min-height:260px;"></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "reCarpet Nyckeltal",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Bakgrund",
+      "options": [
+        { "value": "white", "label": "Vit" },
+        { "value": "cream", "label": "Cream" }
+      ],
+      "default": "white"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Liten text (tagg)" },
+    { "type": "textarea", "id": "heading", "label": "Rubrik" },
+    { "type": "textarea", "id": "body", "label": "Brödtext" },
+    { "type": "image_picker", "id": "image", "label": "Bild" },
+    { "type": "text", "id": "btn_label", "label": "Knapptext" },
+    { "type": "url", "id": "btn_url", "label": "Knapp länk" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Nyckeltal",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Nummer (t.ex. 70)" },
+        { "type": "text", "id": "unit", "label": "Enhet (t.ex. %, kg, m²)" },
+        { "type": "text", "id": "label", "label": "Beskrivning" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "reCarpet Nyckeltal"
+    }
+  ]
+}
+{% endschema %}

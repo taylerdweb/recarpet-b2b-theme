@@ -1,0 +1,199 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "page_hero": {
+      "type": "rc-page-hero",
+      "settings": {
+        "background_image": "shopify://shop_images/recarpet-hero.jpg",
+        "image_position": "center center",
+        "eyebrow": "Våra kunder",
+        "heading": "Vi hjälper hela kedjan",
+        "body": "<p>Oavsett om du är fastighetsägare, arkitekt, hyresgäst eller entreprenör – vi har lösningen för just ditt golvprojekt. ReCarpet stöttar dig genom hela processen med expertis och engagemang.</p><p>Vi lever och andas textilplattor. Kontakta oss för ett hållbart samarbete!</p>"
+      }
+    },
+    "kunder": {
+      "type": "rc-vad-vi-gor",
+      "blocks": {
+        "k1": {
+          "type": "service",
+          "settings": {
+            "anchor": "fastighetsagare",
+            "eyebrow": "Fastighetsägare",
+            "nav_desc": "Maximera återbruk och minimera avfall i era fastigheter.",
+            "title": "Vi tar ansvar för hela processen",
+            "body": "En noggrann inventering är grunden för ett lyckat projekt. Vilka golv har ni, hur mycket och i vilket skick? Tillsammans utvärderar vi era möjligheter för att maximera återbruk och minska avfall. Med våra produkter och tjänster minskar vi era CO₂-utsläpp per kvadratmeter med ca 70% och kostnaderna med upp till 60%.",
+            "list": "Inventering och demontering av befintliga textilplattor\nFörmedling till nya användare via vårt nätverk\nInternt återbruk för nästa hyresgäst\nKomplettering med Millikens TractionBack-plattor vid behov",
+            "body_after": "Kunskap om produkternas potential ger nöjda kunder och hållbara lokaler. Vi har ett brett nätverk som hjälper oss att förmedla erat gamla golv vidare. Hör av er för att ta reda på era möjligheter.",
+            "image": "shopify://shop_images/rc-tjanst-inventering.jpg",
+            "btn_label": "Boka inventering",
+            "btn_url": "shopify://pages/kontakta-oss"
+          }
+        },
+        "k2": {
+          "type": "service",
+          "settings": {
+            "anchor": "arkitekter",
+            "eyebrow": "Arkitekter",
+            "nav_desc": "Utforska sortiment och beställ prover för era projekt.",
+            "title": "Utforska vårt sortiment och beställ prover",
+            "body": "Upptäck vårt utbud av återbrukade och nya textilplattor. Behöver du information inför föreskrift eller specifikationer? Vi guidar dig genom materialvalsprocessen. I de fall du inte hittar det du söker i vårt återbrukade sortiment kan vi erbjuda Millikens nytillverkade textilplattor som installeras utan externt lim.",
+            "list": "Återbrukade kvalitetsmattor till marknadens bästa pris\nNya textilplattor från Milliken – anpassade för återbruk\nProvbeställning för att visa kund\nHelhetsansvar från demontering till försäljning",
+            "body_after": "Vi hanterar hela processen, från demontering till lagerhållning och försäljning. Alla våra textilplattor är kontrollerade, sorterade och rengjorda. Redo för att göra nytta i många år framöver!",
+            "image": "shopify://shop_images/rc-tjanst-formedling.jpg",
+            "btn_label": "Se vårt sortiment",
+            "btn_url": "/collections/all"
+          }
+        },
+        "k3": {
+          "type": "service",
+          "settings": {
+            "anchor": "hyresgaster",
+            "eyebrow": "Hyresgäster",
+            "nav_desc": "Uppgradera kontorsgolvet enkelt och prisvärt.",
+            "title": "Uppgradera kontorsgolvet – enkelt och prisvärt",
+            "body": "Vi tar hand om allt från rivning till montering av nytt golv. Smidigt, miljövänligt och kostnadseffektivt – en kontakt och ett pris! Vi samarbetar med golventreprenörer i hela Sverige för att ge dig den bästa lösningen.",
+            "list": "Rivning av gammalt golv\nPlanering av arbetet för att inte störa verksamheten\nKonsultation om nytt golv\nMontering av nytt golv",
+            "body_after": "Tillsammans gör vi golvbytet enkelt och prisvärt – med en enda aktör som tar hand om hela processen. Vi erbjuder hållbara och prisvärda alternativ som passar era behov.",
+            "image": "shopify://shop_images/rc-montering-2.jpg",
+            "btn_label": "Kontakta oss",
+            "btn_url": "shopify://pages/kontakta-oss"
+          }
+        },
+        "k4": {
+          "type": "service",
+          "settings": {
+            "anchor": "entreprenorer",
+            "eyebrow": "Entreprenörer",
+            "nav_desc": "Rätt produkt, i rätt tid, med minimerat avfall.",
+            "title": "Vi säkerställer rätt produkt, i rätt tid",
+            "body": "Återbrukade textilplattor blir allt vanligare i svenska byggprojekt. Vi har nära samarbeten med fastighetsägare och arkitekter för att leverera rätt platta till rätt lokal. Genom att välja och montera återbrukade textilplattor bidrar ni till en mer hållbar byggbransch.",
+            "list": "Hållbar helhetslösning – minimera avfall och CO₂\nPrisvärda kvalitetsgolv utan att kompromissa\nSmidigt samarbete med tydlig kommunikation\nBli ReCarpet Certifierad Återbrukspartner",
+            "body_after": "Återbrukade golv kan kännas ovant, men alla våra plattor är noggrant rengjorda, sorterade och packade på EU-pall. Slutresultatet blir unikt och vackert – ett hållbart val som uppskattas av många hyresgäster.",
+            "image": "shopify://shop_images/rc-service-underhall.jpg",
+            "btn_label": "Kontakta oss",
+            "btn_url": "shopify://pages/kontakta-oss"
+          }
+        }
+      },
+      "block_order": [
+        "k1",
+        "k2",
+        "k3",
+        "k4"
+      ],
+      "settings": {}
+    },
+    "stats": {
+      "type": "rc-stats",
+      "blocks": {
+        "st1": {
+          "type": "stat",
+          "settings": {
+            "number": "70",
+            "unit": "%",
+            "label": "Minskning av CO₂-utsläpp per m² med återbrukade plattor"
+          }
+        },
+        "st2": {
+          "type": "stat",
+          "settings": {
+            "number": "60",
+            "unit": "%",
+            "label": "Kostnadsbesparing jämfört med nya plattor"
+          }
+        },
+        "st3": {
+          "type": "stat",
+          "settings": {
+            "number": "7,1",
+            "unit": "kg",
+            "label": "CO₂/m² sparas genom att undvika deponi"
+          }
+        }
+      },
+      "block_order": ["st1", "st2", "st3"],
+      "settings": {
+        "background": "white",
+        "eyebrow": "Hållbarhet",
+        "heading": "Minska CO₂-utsläppen och kostnaderna med ReCarpet",
+        "body": "Genom att välja våra textilplattor minskar du utsläppen per kvadratmeter avsevärt. Textilplattor står för ca 70% av CO₂-utsläppet per kvadratmeter inredning – ditt företag kan göra en stor miljötjänst med vårt koncept.",
+        "image": "shopify://shop_images/rc-omoss-hallbarhet.jpg",
+        "btn_label": "Boka inventering",
+        "btn_url": "shopify://pages/kontakta-oss"
+      }
+    },
+    "faq": {
+      "type": "rc-faq",
+      "blocks": {
+        "faq1": {
+          "type": "faq",
+          "settings": {
+            "question": "Hur monterar man återbrukade textilplattor?",
+            "answer": "Det beror på produktens typ, men generellt är det ingen större skillnad från att lägga nya plattor. Om monteringssätt inte är specat så rekommenderar vi att undvika lim så mycket som möjligt. Om du är osäker, kontakta oss för rådgivning."
+          }
+        },
+        "faq2": {
+          "type": "faq",
+          "settings": {
+            "question": "Har ni garanti på materialet?",
+            "answer": "Vanligtvis har vi ingen garanti eftersom vi inte har producerat produkterna. Att ge garanti på återbrukat material kan vara svårt. Vi står dock för vår expertis kring de produkter vi förmedlar. Om specifik materialgaranti krävs, kontakta oss så ser vi vad vi kan göra."
+          }
+        },
+        "faq3": {
+          "type": "faq",
+          "settings": {
+            "question": "Hur kommer slutresultatet bli?",
+            "answer": "Eftersom plattorna har använts tidigare kan det förekomma variationer i färg. Produkterna kan ha legat i olika delar av den tidigare lokalen, vilket påverkat deras utseende. Detta kan ge ett unikt utseende vid montering i en ny miljö. För bästa resultat, var extra noggrann vid installationen."
+          }
+        },
+        "faq4": {
+          "type": "faq",
+          "settings": {
+            "question": "Kan man få en provbit för att visa kund?",
+            "answer": "Absolut! Kontakta oss med era önskemål om färg och antal, så hjälper vi er med passande alternativ."
+          }
+        }
+      },
+      "block_order": ["faq1", "faq2", "faq3", "faq4"],
+      "settings": {
+        "heading": "Vanliga frågor"
+      }
+    },
+    "quote": {
+      "type": "rc-quote",
+      "settings": {
+        "quote_text": "Vi har fått återbrukade textilplattor installerade av ReCarpet och vi är mycket nöjda. Snabb service och kvaliteten och stilen överträffade våra förväntningar.",
+        "author_name": "Rasmus Andersson",
+        "author_title": "VD och grundare",
+        "background_color": "var(--rc-cream, #F6F6F6)"
+      }
+    },
+    "contact_cta": {
+      "type": "rc-contact-cta",
+      "settings": {
+        "heading": "Redo att ta nästa steg?",
+        "body": "Oavsett om du är fastighetsägare, arkitekt, hyresgäst eller entreprenör – vi hjälper dig gärna med ditt golvprojekt.",
+        "btn1_label": "Kontakta oss",
+        "btn1_url": "shopify://pages/kontakta-oss",
+        "btn2_label": "Se vårt sortiment",
+        "btn2_url": "/collections/all"
+      }
+    }
+  },
+  "order": [
+    "page_hero",
+    "kunder",
+    "stats",
+    "faq",
+    "quote",
+    "contact_cta"
+  ]
+}
