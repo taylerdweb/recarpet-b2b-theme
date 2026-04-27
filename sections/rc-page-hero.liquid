@@ -10,6 +10,8 @@
     display: flex;
     align-items: flex-end;
     overflow: hidden;
+    /* Override Dawn's foreground color so inherited styles render white */
+    --color-foreground: 255, 255, 255;
   }
   .rc-page-hero__bg {
     position: absolute;
@@ -27,12 +29,8 @@
   .rc-page-hero__overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to top,
-      rgba(0,0,0,0.75) 0%,
-      rgba(0,0,0,0.5) 50%,
-      rgba(0,0,0,0.35) 100%
-    );
+    z-index: 1;
+    background: rgba(0,0,0,0.5);
   }
   .rc-page-hero--no-image .rc-page-hero__overlay {
     background: transparent;
