@@ -1,6 +1,7 @@
 {% comment %}
   reCarpet Page Hero
   Dark overlay hero for interior pages (Vad vi gör, Om oss, etc.)
+  Layout: eyebrow + H1 left, rich-text body right (two-column grid)
 {% endcomment %}
 
 <style>
@@ -47,32 +48,53 @@
     padding: var(--rc-section-md) var(--rc-page-padding);
     width: 100%;
     color: #fff !important;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+  }
+  /* Left column: eyebrow + heading */
+  .rc-page-hero__left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
   .rc-page-hero__eyebrow {
-    font-size: var(--rc-text-sm);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-family: var(--rc-font) !important;
+    font-size: var(--rc-text-sm) !important;
+    font-weight: 600 !important;
     color: rgba(255,255,255,0.7) !important;
     margin-bottom: 0.75rem;
+    display: inline-block;
+    line-height: var(--rc-body-lh, 1.5);
   }
   .rc-page-hero__heading {
     font-size: clamp(1.875rem, 4.5vw, var(--rc-h1));
     font-weight: 500;
     line-height: 1.1;
     color: #fff !important;
-    margin: 0 0 1rem;
-    max-width: 42.5rem;
-  }
-  .rc-page-hero__subtext {
-    font-size: var(--rc-text-md);
-    line-height: 1.6;
-    color: rgba(255,255,255,0.85) !important;
-    max-width: 35rem;
     margin: 0;
   }
+  /* Right column: rich-text body */
+  .rc-page-hero__body {
+    align-self: end;
+  }
+  .rc-page-hero__body p {
+    font-family: var(--rc-font) !important;
+    font-size: 1.25rem !important;
+    line-height: 1.6 !important;
+    color: rgba(255,255,255,0.85) !important;
+    margin: 0 0 1.25rem !important;
+  }
+  .rc-page-hero__body p:last-child {
+    margin-bottom: 0 !important;
+  }
   @media (max-width: 768px) {
-    .rc-page-hero__content { padding: 2.5rem 1.25rem; }
+    .rc-page-hero__content {
+      padding: 2.5rem 1.25rem;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
     .rc-page-hero { min-height: 22rem; }
   }
 </style>
@@ -84,12 +106,14 @@
     {%- endif -%}
   </div>
   <div class="rc-page-hero__content">
-    {%- if section.settings.eyebrow != blank -%}
-      <p class="rc-page-hero__eyebrow">{{ section.settings.eyebrow }}</p>
-    {%- endif -%}
-    <h1 class="rc-page-hero__heading">{{ section.settings.heading | default: page.title }}</h1>
-    {%- if section.settings.subtext != blank -%}
-      <p class="rc-page-hero__subtext">{{ section.settings.subtext }}</p>
+    <div class="rc-page-hero__left">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="rc-page-hero__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      <h1 class="rc-page-hero__heading">{{ section.settings.heading | default: page.title }}</h1>
+    </div>
+    {%- if section.settings.body != blank -%}
+      <div class="rc-page-hero__body">{{ section.settings.body }}</div>
     {%- endif -%}
   </div>
 </section>
@@ -119,7 +143,7 @@
     {
       "type": "text",
       "id": "eyebrow",
-      "label": "Liten text"
+      "label": "Liten text (tagg)"
     },
     {
       "type": "textarea",
@@ -127,9 +151,9 @@
       "label": "Rubrik (tom = sidans titel)"
     },
     {
-      "type": "textarea",
-      "id": "subtext",
-      "label": "Undertext"
+      "type": "richtext",
+      "id": "body",
+      "label": "Brödtext (högerkolumn)"
     }
   ],
   "presets": [

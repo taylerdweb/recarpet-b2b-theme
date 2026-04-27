@@ -15,8 +15,8 @@
         "background_image": "shopify://shop_images/recarpet-hero.jpg",
         "image_position": "center center",
         "eyebrow": "Vad vi gör",
-        "heading": "Vad vi gör",
-        "subtext": "Vi erbjuder heltäckande tjänster för textilplattor — från inventering och demontering till förmedling och montering."
+        "heading": "Våra tjänster",
+        "body": "<p>Vi är experter på golv och finns här för att hjälpa dig med allt från demontering och installation till service och underhåll. Oavsett om du vill beställa nya plattor, återbruka eller få hjälp med en envis kaffefläck – vi fixar det!</p><p>ReCarpet stöttar dig genom hela processen: inventering, försäljning och underhåll. Vi ser till att dina textilplattor får ett långt liv och minimerar behovet av nya. Vi lever och andas textilplattor. Kontakta oss för ett hållbart samarbete!</p>"
       }
     },
     "services": {
