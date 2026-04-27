@@ -55,7 +55,7 @@ This is the Shopify Liquid code that generates the page layout
       <div class="b2b-intro-image{% if section.settings.background_width == 'cover' %} image-cover{% endif %}" style="background-image: url('{{ section.settings.featured_image.src | img_url: '1000x' }}'); background-color: {{ section.settings.background_color }}; background-repeat: no-repeat;">
       </div>
 
-      <div class="b2b-login-area" style="background: {{ section.settings.background_color }};">
+      <div class="b2b-login-area">
 
           {%- comment -%} ── HEADER ── {%- endcomment -%}
           <div class="b2b-header-primary">{{ section.settings.title }}</div>
@@ -324,6 +324,7 @@ This is the CSS that controls the page layout and design
   padding: 3.5rem;
   display: flex;
   flex-direction: column;
+  background: var(--rc-off-white, #f6f6f6);
 }
 
 /* Divider */
@@ -945,7 +946,7 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "textarea",
 "id": "intro_text",
 "label": "Introduction Text",
-"default": "Logga in på ditt konto eller ansök om att bli B2B-kund."
+"default": "Logga in på ditt befintliga konto eller ansök om att bli B2B-kund."
 },
 
 {
