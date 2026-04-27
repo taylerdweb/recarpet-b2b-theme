@@ -56,108 +56,107 @@ This is the Shopify Liquid code that generates the page layout
       </div>
 
       <div class="b2b-login-area" style="background: {{ section.settings.background_color }};">
-          <div class="b2b-header-primary">{{ section.settings.title }}</div>
 
-          <div class="b2b-body-text">
-              <p>{{ section.settings.intro_text }}</p>
-          </div>
+          {%- comment -%} ── LOGIN SECTION ── {%- endcomment -%}
+          <div class="b2b-section b2b-section--login">
+            <div class="b2b-header-primary">{{ section.settings.title }}</div>
+            <div class="b2b-body-text">
+                <p>{{ section.settings.intro_text }}</p>
+            </div>
 
-          <div class="b2b-form">
+            <div class="b2b-form">
+              {% if section.settings.login_type == 'passwordless' %}
+                <a class="b2b-btn b2b-btn-primary" href="{{ routes.account_login_url }}">
+                  {{ section.settings.sign_in }}
+                </a>
+              {% else %}
+                <form method="post" action="/account/login" id="customer_login" accept-charset="UTF-8" novalidate>
+                    <input type="hidden" name="form_type" value="customer_login">
+                    <input type="hidden" name="utf8" value="✓">
 
-            
-          {% if section.settings.login_type == 'passwordless' %}
-            <a class="b2b-btn b2b-btn-primary" href="{{ routes.account_login_url }}">
-              {{ section.settings.sign_in }}
-            </a>
-          {% else %}
-
-            <form method="post" action="/account/login" id="customer_login" accept-charset="UTF-8" novalidate>
-                <input type="hidden" name="form_type" value="customer_login">
-                <input type="hidden" name="utf8" value="✓">
-
-                <div class="b2b-form-item">
-                    <input
-                        id="CustomerEmail"
-                        type="email"
-                        name="customer[email]"
-                        class="b2b-input"
-                        aria-required="true"
-                        autocorrect="off"
-                        autocapitalize="off"
-                        autocomplete="email"
-                        placeholder="{{ 'customer.login_page.email' | t }}"
-                        required
-                    >
-                </div>
-
-                <div class="b2b-form-item">
-                    <input
-                        id="CustomerPassword"
-                        type="password"
-                        name="customer[password]"
-                        class="b2b-input"
-                        aria-required="true"
-                        autocorrect="off"
-                        autocapitalize="off"
-                        autocomplete="current-password"
-                        placeholder="{{ 'customer.login_page.password' | t }}"
-                        required
-                    >
-                    <div class="b2b-form-help">
-                        <a href="/account/login#recover" class="b2b-link-text">
-                          {{ 'customer.login_page.forgot_password' | t }}
-                        </a>
+                    <div class="b2b-form-item">
+                        <input
+                            id="CustomerEmail"
+                            type="email"
+                            name="customer[email]"
+                            class="b2b-input"
+                            aria-required="true"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            autocomplete="email"
+                            placeholder="{{ 'customer.login_page.email' | t }}"
+                            required
+                        >
                     </div>
-                </div>
 
-                <button class="b2b-btn b2b-btn-primary">
-                  {{ 'customer.login_page.sign_in' | t }}
-                </button>
-            </form>
-
-            {% endif %}
-
-              <div class="b2b-apply-account" id="b2b-apply">
-                  <div class="b2b-header-secondary">{{ section.settings.open_account_title }}</div>
-                  <div class="b2b-body-text">
-                    {{ section.settings.open_account_text }}
-                  </div>
-
-                {% if section.settings.form_action == "redirect" %}
-                  <a href="{{ section.settings.redirect_url }}" class="b2b-btn b2b-btn-secondary">
-                      {{ section.settings.open_account_button }}
-                  </a>
-                {% else %}
-
-                  <a href="#b2b-apply" onclick="b2bRegister()" class="b2b-btn b2b-btn-secondary">
-                      {{ section.settings.open_account_button }}
-                  </a>
-
-                  {% if section.settings.form_action == "custom_form" %}
-
-                    <div id="b2b-register" class="b2b-registration-form">
-                        <div class="b2b-application-form-wrapper">
-                            {{ section.settings.custom_form_html }}
+                    <div class="b2b-form-item">
+                        <input
+                            id="CustomerPassword"
+                            type="password"
+                            name="customer[password]"
+                            class="b2b-input"
+                            aria-required="true"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            autocomplete="current-password"
+                            placeholder="{{ 'customer.login_page.password' | t }}"
+                            required
+                        >
+                        <div class="b2b-form-help">
+                            <a href="/account/login#recover" class="b2b-link-text">
+                              {{ 'customer.login_page.forgot_password' | t }}
+                            </a>
                         </div>
                     </div>
-                  {% else %}
-                    
-                   {%- form 'contact', id: 'ContactForm' -%}
-                    {%- if form.posted_successfully? -%}
-                      <div class="b2b-form-success b2b-form-message" tabindex="-1" autofocus>
-                        {{ section.settings.form_message_success }}
-                      </div>
-                      <div class="b2b-create-account-prompt">
-                        <p class="b2b-body-text">{{ section.settings.form_message_create_account_text }}</p>
-                        <a href="{{ routes.account_login_url }}" class="b2b-btn b2b-btn-primary b2b-create-account-btn">
-                          {{ section.settings.form_message_create_account_button }}
-                        </a>
-                      </div>
-                    {%- elsif form.errors -%}
-                      <div class="b2b-form-error b2b-form-message">
-                      {{ section.settings.form_message_error }}
-                      </div>
-                    {%- endif -%}
+
+                    <button class="b2b-btn b2b-btn-primary">
+                      {{ 'customer.login_page.sign_in' | t }}
+                    </button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+
+          {%- comment -%} ── DIVIDER ── {%- endcomment -%}
+          <div class="b2b-divider"></div>
+
+          {%- comment -%} ── REGISTER SECTION ── {%- endcomment -%}
+          <div class="b2b-section b2b-section--register" id="b2b-apply">
+              <div class="b2b-eyebrow">Ny kund?</div>
+              <div class="b2b-header-secondary">{{ section.settings.open_account_title }}</div>
+              <div class="b2b-body-text">
+                {{ section.settings.open_account_text }}
+              </div>
+
+            {% if section.settings.form_action == "redirect" %}
+              <a href="{{ section.settings.redirect_url }}" class="b2b-btn b2b-btn-secondary">
+                  {{ section.settings.open_account_button }}
+              </a>
+            {% else %}
+
+              <a href="#b2b-apply" onclick="b2bRegister()" class="b2b-btn b2b-btn-secondary">
+                  {{ section.settings.open_account_button }}
+              </a>
+
+              {% if section.settings.form_action == "custom_form" %}
+
+                <div id="b2b-register" class="b2b-registration-form">
+                    <div class="b2b-application-form-wrapper">
+                        {{ section.settings.custom_form_html }}
+                    </div>
+                </div>
+              {% else %}
+
+               {%- form 'contact', id: 'ContactForm' -%}
+                {%- if form.posted_successfully? -%}
+                  <div class="b2b-form-success b2b-form-message" tabindex="-1" autofocus>
+                    {{ section.settings.form_message_success }}
+                  </div>
+                {%- elsif form.errors -%}
+                  <div class="b2b-form-error b2b-form-message">
+                  {{ section.settings.form_message_error }}
+                  </div>
+                {%- endif -%}
                     
                     <div id="b2b-register" class="b2b-registration-form">
                       <div class="b2b-contact-fields">
@@ -265,30 +264,29 @@ This is the Shopify Liquid code that generates the page layout
               {%- endform -%}
              {% endif %}
              {% endif %}
-            </div>
-
-              {% if section.settings.show_faqs %}
-                  <div class="b2b-faqs" id="faqs">
-                      <div class="b2b-header-secondary">{{ section.settings.faq_title }}</div>
-                    
-                     {% assign faq_blocks = section.blocks | where: "type", "feature" %}
-
-                      {% for block in faq_blocks %}
-                          <div class="b2b-faq-item">
-                              <div class="b2b-faq-question">
-                                  {{ block.settings.block_title }}
-                                  <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-caret" viewBox="0 0 10 6">
-                                      <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path>
-                                  </svg>
-                              </div>
-                              <div class="b2b-faq-answer b2b-body-text">{{ block.settings.block_text }}</div>
-                          </div>
-                      {% endfor %}
-
-                  </div>
-              {% endif %}
-            
           </div>
+
+          {% if section.settings.show_faqs %}
+            <div class="b2b-divider"></div>
+            <div class="b2b-section b2b-section--faqs" id="faqs">
+                <div class="b2b-header-secondary">{{ section.settings.faq_title }}</div>
+
+               {% assign faq_blocks = section.blocks | where: "type", "feature" %}
+
+                {% for block in faq_blocks %}
+                    <div class="b2b-faq-item">
+                        <div class="b2b-faq-question">
+                            {{ block.settings.block_title }}
+                            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-caret" viewBox="0 0 10 6">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                        <div class="b2b-faq-answer b2b-body-text">{{ block.settings.block_text }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+          {% endif %}
+
       </div>
   </div>
 </div>
@@ -305,281 +303,297 @@ This is the CSS that controls the page layout and design
 {% endcomment %}
 
 <style>
- 
-/* B2B Login Container */
+/* ===== B2B Login — reCarpet Design System ===== */
 
+/* Container */
 .b2b-login {
-width: 100%;
-}
-
-.b2b-login-wrapper {
-display: flex;
-flex-wrap: wrap;
-}
-
-.b2b-intro-image {
-width: 50%;
-background-size: 100%;
-min-height: 300px;
-}
-
-.b2b-intro-image.image-cover {
-background-size: cover;
-}
-
-.b2b-login-area {
-width: 50%;
-padding: {{ section.settings.base_page_spacing }}px;;
-}
-
-
-/* General styles */
-
-.b2b-header-primary {
-color: {{ section.settings.base_header_primary_color }};
-font-size: {{ section.settings.base_header_primary_font_size }}px;
-line-height: 1.5;
-margin: 0 0 0.25em
-}
-
-.b2b-header-secondary {
-color: {{ section.settings.base_header_secondary_color }};
-font-size: {{ section.settings.base_header_secondary_font_size }}px;
-line-height: 1.5;
-margin: 0 0 0.5em
-}
-
-.b2b-body-text {
-color: {{ section.settings.base_font_color }};
-font-size: {{ section.settings.base_font_size }}px;
-line-height: 1.5
-}
-
-.b2b-body-text p {
-margin: 0 0 1em
-}
-
-.b2b-link-text {
-color: {{ section.settings.base_link_color }};
-text-decoration: none
-}
-
-.b2b-link-text:hover {
-text-decoration: underline
-}
-
-/* Input Fields */
-
-.b2b-input {
-width: 100%;
-padding: 10px;
-border: 1px solid {{ section.settings.input_border_color }};
-background-color: {{ section.settings.input_background }};
-color: {{ section.settings.input_text_color }};
-font-size: {{ section.settings.input_font_size }}px;
-border-radius: {{ section.settings.input_border_radius }}px;
-font-family: inherit;
-transition: all 0.3s;
-display: block;
-margin: 0
-}
-
-.b2b-input:hover {
-border-color: {{ section.settings.input_border_hover_color }};
-
-}
-
-.b2b-input:focus {
-outline: none;
-border-color: {{ section.settings.input_border_hover_color }};
-outline-offset: unset;
-box-shadow: none;
-}
-
-/* Buttons */
-
-.b2b-btn {
-display: inline-block;
-padding: 12px 20px;
-font-size: {{ section.settings.button_font_size }}px;
-border: 1px solid {{ section.settings.button_border_color }};
-border-radius: {{ section.settings.button_border_radius }}px;
-text-align: center;
-cursor: pointer;
-transition: background-color 0.3s ease-in-out;
-font-family: inherit;
-text-decoration: none;
-line-height: 1;
-}
-
-.b2b-btn-primary {
-background-color: {{ section.settings.button_color }};
-color: {{ section.settings.button_font_color }};
-}
-
-.b2b-btn-primary:hover {
-background-color: {{ section.settings.button_hover_color }};
-}
-
-.b2b-btn-secondary {
-background-color: {{ section.settings.button_secondary_color }};
-color: {{ section.settings.button_secondary_font_color }};
-border: 1px solid {{ section.settings.button_secondary_border_color }};
-}
-
-.b2b-btn-secondary:hover {
-background-color: {{ section.settings.button_secondary_hover_color }};
-}
-
-/* Messages */
-
-.b2b-form-message {
-line-height: 1.4;
-font-size: 14px;
-margin: 1em 0 0;
-border-radius: 4px;
-text-align: center;
-padding: 10px;
-}
-.b2b-form-success {
-border: 1px solid #00A372;
-background: #e5fff5;
-color: #00a372;
-}
-
-.b2b-form-error {
-border: 1px solid red;
-background: red;
-color: white;
-}
-
-/* Post-submit create account prompt */
-
-.b2b-create-account-prompt {
-  margin-top: 1.5em;
-  padding: 1.25em;
-  background: #f8f8f8;
-  border-radius: 6px;
-  border: 1px solid #e0e0e0;
-}
-
-.b2b-create-account-prompt .b2b-body-text {
-  margin-bottom: 1em;
-}
-
-.b2b-create-account-btn {
   width: 100%;
-  display: block;
-  text-align: center;
-  box-sizing: border-box;
+  padding: var(--rc-section-md) 0;
 }
 
-/* Login fields */
-
-.b2b-form-help {
-margin: 0.5em 0 0;
-font-size: {{ section.settings.base_font_size }}px;
-text-align: left;
-}
-.b2b-form-item {
-margin-bottom: 0.75em;
-}
-
-/* Apply for an account */
-
-.b2b-apply-account {
-margin: 2em 0 0
-}
-
-.b2b-contact-fields {
-margin: 1em 0 0
-}
-
-/* FAQs */
-
-.b2b-faqs {
-margin-top: 3rem;
-padding-top: 3rem;
-border-top: 1px solid #ccc;
-}
-
-.b2b-faqs .b2b-header-secondary {
-margin: 0 0 1em
-}
-
-.b2b-faq-item {
-margin-bottom: 1rem;
-}
-
-.b2b-faq-question {
-display: block;
-padding: 0.75em 1em;
-background: #fff;
-cursor: pointer;
-position: relative;
-font-size: {{ section.settings.base_font_size }}px;
-}
-
-.b2b-faq-question svg {
-width: 16px;
-position: absolute;
-right: 15px;
-top: 21px;
-transition: all .2s;
-}
-
-.b2b-faq-item.active {
-color: {{ section.settings.base_link_color }};
-}
-
-.b2b-faq-item:hover,
-.b2b-faq-item.active:hover {
-color: {{ section.settings.base_link_color }};
-} 
-
-.b2b-faq-item.active svg {
-transform: rotate(180deg);
-}
-
-.b2b-faq-answer {
-overflow: hidden;
-visibility: hidden;
-transition: all .3s ease-in;
-background: #fff;
-max-height: 0
-}
-
-.b2b-faq-item.active .b2b-faq-answer {
-max-height: 100% !important;  
-visibility: visible;
-}
-
-.b2b-faq-answer p {
-margin: 0;
-padding: 0 1em 1em;
-font-weight: normal
-}
-
-.b2b-faq-answer p a {
-color: {{ section.settings.base_link_color }};
-text-decoration: none
-}
-
-.b2b-faq-answer p a:hover {
-text-decoration: underline
-}  
-
-/* Mobile */
-@media only screen and (max-width: 850px) {
 .b2b-login-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Image column */
+.b2b-intro-image {
+  width: 50%;
+  background-size: 100%;
+  min-height: 300px;
+}
+.b2b-intro-image.image-cover {
+  background-size: cover;
+}
+
+/* Content column */
+.b2b-login-area {
+  width: 50%;
+  padding: 3.5rem;
+  display: flex;
   flex-direction: column;
 }
 
-.b2b-intro-image, .b2b-login-area {
-  width: 100%;
-}
+/* Sections */
+.b2b-section {
+  /* no extra margin needed — divider handles spacing */
 }
 
+/* Divider between login and register */
+.b2b-divider {
+  border: none;
+  border-top: 1px solid var(--rc-neutral-lighter, #ccc);
+  margin: 2.5rem 0;
+}
+
+/* Eyebrow label */
+.b2b-eyebrow {
+  font-family: var(--rc-font);
+  font-size: var(--rc-text-sm);
+  font-weight: 600;
+  color: var(--rc-sage, #6c9985);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+/* Typography */
+.b2b-header-primary {
+  font-family: var(--rc-font);
+  font-size: var(--rc-h4, 2rem);
+  font-weight: var(--rc-heading-weight, 500);
+  line-height: var(--rc-heading-lh, 1.2);
+  color: var(--rc-off-black, #121212);
+  margin: 0 0 0.5rem;
+}
+
+.b2b-header-secondary {
+  font-family: var(--rc-font);
+  font-size: var(--rc-h5, 1.5rem);
+  font-weight: var(--rc-heading-weight, 500);
+  line-height: var(--rc-heading-lh, 1.2);
+  color: var(--rc-off-black, #121212);
+  margin: 0 0 0.5rem;
+}
+
+.b2b-body-text {
+  font-family: var(--rc-font);
+  color: var(--rc-off-black, #121212);
+  font-size: var(--rc-text-base, 1rem);
+  line-height: var(--rc-body-lh, 1.5);
+}
+
+.b2b-body-text p {
+  margin: 0 0 1rem;
+}
+
+.b2b-link-text {
+  color: var(--rc-green, #1e4433);
+  text-decoration: none;
+}
+.b2b-link-text:hover {
+  text-decoration: underline;
+}
+
+/* Input Fields */
+.b2b-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--rc-neutral-lighter, #ccc);
+  background-color: #fff;
+  color: var(--rc-off-black, #121212);
+  font-size: var(--rc-text-base, 1rem);
+  font-family: var(--rc-font);
+  border-radius: var(--rc-radius, 0.5rem);
+  transition: border-color 0.2s;
+  display: block;
+  margin: 0;
+  box-sizing: border-box;
+}
+.b2b-input::placeholder {
+  color: var(--rc-neutral-light, #aaa);
+}
+.b2b-input:hover {
+  border-color: var(--rc-neutral, #666);
+}
+.b2b-input:focus {
+  outline: none;
+  border-color: var(--rc-green, #1e4433);
+  box-shadow: 0 0 0 1px var(--rc-green, #1e4433);
+  outline-offset: unset;
+}
+
+select.b2b-input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+/* Buttons */
+.b2b-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.4;
+  border-radius: var(--rc-radius, 0.5rem);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  text-decoration: none;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+}
+
+.b2b-btn-primary {
+  background: var(--rc-green, #1e4433);
+  color: #fff;
+  border-color: var(--rc-green, #1e4433);
+}
+.b2b-btn-primary:hover {
+  background: var(--rc-green-hover, #264f3f);
+  border-color: var(--rc-green-hover, #264f3f);
+  color: #fff;
+}
+
+.b2b-btn-secondary {
+  background: transparent;
+  color: var(--rc-green, #1e4433);
+  border-color: var(--rc-green, #1e4433);
+}
+.b2b-btn-secondary:hover {
+  background: var(--rc-green, #1e4433);
+  color: #fff;
+}
+
+/* Messages */
+.b2b-form-message {
+  line-height: 1.5;
+  font-size: var(--rc-text-sm, 0.875rem);
+  font-family: var(--rc-font);
+  margin: 1.25rem 0 0;
+  border-radius: var(--rc-radius, 0.5rem);
+  text-align: center;
+  padding: 0.875rem 1rem;
+}
+.b2b-form-success {
+  border: 1px solid var(--base-color-system--success-green, #027a48);
+  background: var(--base-color-system--success-green-light, #ecfdf3);
+  color: var(--base-color-system--success-green, #027a48);
+}
+.b2b-form-error {
+  border: 1px solid var(--base-color-system--error-red, #b42318);
+  background: var(--base-color-system--error-red-light, #fef3f2);
+  color: var(--base-color-system--error-red, #b42318);
+}
+
+/* Form fields */
+.b2b-form-help {
+  margin: 0.5rem 0 0;
+  font-size: var(--rc-text-sm, 0.875rem);
+  text-align: left;
+}
+
+.b2b-form-item {
+  margin-bottom: 0.875rem;
+}
+
+/* Registration form (expandable) */
+.b2b-contact-fields {
+  margin: 1.25rem 0 0;
+}
+
+/* FAQs */
+.b2b-section--faqs .b2b-header-secondary {
+  margin: 0 0 1rem;
+}
+
+.b2b-faq-item {
+  margin-bottom: 0.5rem;
+}
+
+.b2b-faq-question {
+  display: block;
+  padding: 0.875rem 1rem;
+  padding-right: 2.5rem;
+  background: #fff;
+  cursor: pointer;
+  position: relative;
+  font-size: var(--rc-text-base, 1rem);
+  font-family: var(--rc-font);
+  border-radius: var(--rc-radius-sm, 0.25rem);
+  transition: background 0.15s;
+}
+.b2b-faq-question:hover {
+  background: var(--rc-off-white, #f6f6f6);
+}
+
+.b2b-faq-question svg {
+  width: 14px;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform 0.2s;
+}
+
+.b2b-faq-item.active {
+  color: var(--rc-off-black, #121212);
+}
+.b2b-faq-item.active svg {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.b2b-faq-answer {
+  overflow: hidden;
+  visibility: hidden;
+  transition: all 0.3s ease-in;
+  background: #fff;
+  max-height: 0;
+}
+
+.b2b-faq-item.active .b2b-faq-answer {
+  max-height: 100% !important;
+  visibility: visible;
+}
+
+.b2b-faq-answer p {
+  margin: 0;
+  padding: 0.5rem 1rem 1rem;
+  font-weight: normal;
+  font-family: var(--rc-font);
+  font-size: var(--rc-text-base, 1rem);
+  line-height: var(--rc-body-lh, 1.5);
+}
+
+.b2b-faq-answer p a {
+  color: var(--rc-green, #1e4433);
+  text-decoration: none;
+}
+.b2b-faq-answer p a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile */
+@media only screen and (max-width: 850px) {
+  .b2b-login-wrapper {
+    flex-direction: column;
+  }
+  .b2b-intro-image,
+  .b2b-login-area {
+    width: 100%;
+  }
+  .b2b-login-area {
+    padding: 2rem 1.25rem;
+  }
+}
 </style>
 
 {% comment %}
@@ -701,7 +715,7 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "color",
 "id": "background_color",
 "label": "Background color",
-"default": "#f1f1f1"
+"default": "#f6f6f6"
 },
 
 {
@@ -857,25 +871,13 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "text",
 "id": "form_message_success",
 "label": "Form Submit - Success Message",
-"default": "Tack för din ansökan! Vi återkommer inom 1–2 arbetsdagar."
+"default": "Tack för din ansökan! Vi granskar den och återkommer inom 1–2 arbetsdagar med inloggningsuppgifter."
 },
 {
 "type": "text",
 "id": "form_message_error",
 "label": "Form Submit - Error Message",
 "default": "Det uppstod ett fel vid skickandet. Vänligen försök igen."
-},
-{
-"type": "text",
-"id": "form_message_create_account_text",
-"label": "Post-submit: Create account text",
-"default": "Sista steget — skapa ditt inloggningskonto med samma e-postadress som du angav ovan. Vi aktiverar ditt B2B-konto när vi granskat din ansökan."
-},
-{
-"type": "text",
-"id": "form_message_create_account_button",
-"label": "Post-submit: Create account button",
-"default": "Skapa inloggningskonto →"
 },
 {
 "type": "header",
@@ -1029,13 +1031,13 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "color",
 "id": "button_color",
 "label": "Button Background Color - Primary",
-"default": "#000"
+"default": "#1e4433"
 },
 {
 "type": "color",
 "id": "button_hover_color",
 "label": "Button Background Hover Color - Primary",
-"default": "#333"
+"default": "#264f3f"
 },
 {
 "type": "color",
@@ -1049,25 +1051,25 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "color",
 "id": "button_border_color",
 "label": "Button Border Color - Primary",
-"default": "#000"
+"default": "#1e4433"
 },
 {
 "type": "color",
 "id": "button_secondary_color",
 "label": "Button Background Color - Secondary",
-"default": "#fff"
+"default": "#ffffff"
 },
 {
 "type": "color",
 "id": "button_secondary_hover_color",
 "label": "Button Background Hover Color - Secondary",
-"default": "#eee"
+"default": "#1e4433"
 },
 {
 "type": "color",
 "id": "button_secondary_font_color",
 "label": "Button Font Color - Secondary",
-"default": "#000"
+"default": "#1e4433"
 },
 
 
@@ -1075,7 +1077,7 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "color",
 "id": "button_secondary_border_color",
 "label": "Button Border Color - Secondary",
-"default": "#000"
+"default": "#1e4433"
 },
 {
 "type": "range",
