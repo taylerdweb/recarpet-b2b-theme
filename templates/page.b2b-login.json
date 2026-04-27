@@ -37,8 +37,6 @@
         "apply_submit": "Skicka ansökan",
         "form_message_success": "Tack för din ansökan! Du kan nu logga in med din e-postadress nedan.",
         "form_message_error": "Det uppstod ett fel vid skickandet. Vänligen försök igen.",
-        "form_message_create_account_text": "Sista steget — skapa ditt inloggningskonto med samma e-postadress som du angav ovan. Vi aktiverar ditt B2B-konto när vi granskat din ansökan.",
-        "form_message_create_account_button": "Skapa inloggningskonto →",
         "form_action": "email",
         "custom_form_html": "<p>Paste your custom form HTML here</p>",
         "redirect_url": "",
