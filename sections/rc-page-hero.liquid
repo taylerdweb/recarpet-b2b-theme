@@ -6,7 +6,7 @@
 <style>
   .rc-page-hero {
     position: relative;
-    min-height: 25rem;
+    min-height: 32rem;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
@@ -16,6 +16,7 @@
   .rc-page-hero__bg {
     position: absolute;
     inset: 0;
+    z-index: 0;
   }
   .rc-page-hero__bg img {
     width: 100%;
@@ -26,14 +27,17 @@
   .rc-page-hero--no-image .rc-page-hero__bg {
     background: var(--rc-green);
   }
-  .rc-page-hero__overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: rgba(0,0,0,0.5);
+  /* Dark overlay via ::after — bulletproof against external style interference */
+  .rc-page-hero::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,0.5) !important;
+    z-index: 1 !important;
+    pointer-events: none;
   }
-  .rc-page-hero--no-image .rc-page-hero__overlay {
-    background: transparent;
+  .rc-page-hero--no-image::after {
+    display: none !important;
   }
   .rc-page-hero__content {
     position: relative;
@@ -69,7 +73,7 @@
   }
   @media (max-width: 768px) {
     .rc-page-hero__content { padding: 2.5rem 1.25rem; }
-    .rc-page-hero { min-height: 18.75rem; }
+    .rc-page-hero { min-height: 22rem; }
   }
 </style>
 
@@ -79,7 +83,6 @@
       {{ section.settings.background_image | image_url: width: 1920 | image_tag: loading: 'eager', sizes: '100vw' }}
     {%- endif -%}
   </div>
-  <div class="rc-page-hero__overlay"></div>
   <div class="rc-page-hero__content">
     {%- if section.settings.eyebrow != blank -%}
       <p class="rc-page-hero__eyebrow">{{ section.settings.eyebrow }}</p>

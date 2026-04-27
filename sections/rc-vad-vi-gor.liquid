@@ -84,30 +84,12 @@
   .rc-timeline-nav__dot:hover {
     transform: scale(1.3);
   }
-  /* Arrow between dots */
-  .rc-timeline-nav__arrow {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translate(50%, -50%);
-    z-index: 3;
-    color: var(--rc-green, #1e4433);
-    display: flex;
-    align-items: center;
-    background: var(--rc-cream, #f5f3ef);
-    padding: 0 0.125rem;
-  }
-  .rc-timeline-nav__arrow svg {
-    width: 16px;
-    height: 17px;
-  }
 
   /* ===== Service detail section ===== */
   .rc-service-detail {
     padding: var(--rc-section-md) 0;
+    background: var(--rc-cream, #f5f3ef);
   }
-  .rc-service-detail:nth-child(even) { background: var(--rc-cream); }
-  .rc-service-detail:nth-child(odd) { background: var(--rc-white); }
   .rc-service-detail__inner {
     max-width: var(--rc-max-width);
     margin: 0 auto;
@@ -117,15 +99,13 @@
     gap: 4rem;
     align-items: center;
   }
-  .rc-service-detail--reverse .rc-service-detail__text { order: 2; }
-  .rc-service-detail--reverse .rc-service-detail__image { order: 1; }
   .rc-service-detail__eyebrow {
-    font-size: var(--rc-text-xs);
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--rc-text-muted);
+    font-family: var(--rc-font);
+    font-size: var(--rc-text-sm, 0.875rem);
+    font-weight: 600;
+    color: var(--rc-off-black, #1a1a1a);
     margin-bottom: 0.5rem;
+    display: inline-block;
   }
   .rc-service-detail__heading {
     font-size: clamp(1.5rem, 3vw, var(--rc-h3));
@@ -133,7 +113,12 @@
     color: var(--rc-text);
     margin: 0 0 1rem;
   }
-  .rc-service-detail__body { font-size: var(--rc-text-base); line-height: 1.75; color: var(--rc-text-muted); margin: 0 0 0.75rem; }
+  .rc-service-detail__body {
+    font-size: var(--rc-text-base);
+    line-height: 1.75;
+    color: var(--rc-text-muted);
+    margin: 0 0 0.75rem;
+  }
   .rc-service-detail__list {
     list-style: none;
     padding: 0;
@@ -159,6 +144,12 @@
     background-repeat: no-repeat;
     background-size: contain;
   }
+  .rc-service-detail__body-after {
+    font-size: var(--rc-text-base);
+    line-height: 1.75;
+    color: var(--rc-text-muted);
+    margin: 0 0 1.5rem;
+  }
   .rc-service-detail__image { border-radius: var(--rc-radius); overflow: hidden; aspect-ratio: 4/3; }
   .rc-service-detail__image img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -181,8 +172,6 @@
     }
     /* Service detail mobile */
     .rc-service-detail__inner { grid-template-columns: 1fr; gap: 2rem; }
-    .rc-service-detail--reverse .rc-service-detail__text,
-    .rc-service-detail--reverse .rc-service-detail__image { order: unset; }
     .rc-service-detail__inner { padding: 0 1.25rem; }
   }
 </style>
@@ -221,13 +210,6 @@
         </div>
         <div class="rc-timeline-nav__dot-cell" style="grid-column: {{ forloop.index }}">
           <a href="#{{ block.settings.anchor }}" class="rc-timeline-nav__dot" aria-label="{{ block.settings.eyebrow }}"></a>
-          {%- unless forloop.last -%}
-            <span class="rc-timeline-nav__arrow">
-              <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.52867 12.0288L8.47133 12.9715L12.9427 8.50014L8.47133 4.02881L7.52867 4.97147L10.3907 7.83348H4V9.16681H10.3907L7.52867 12.0288Z" fill="currentColor"/>
-              </svg>
-            </span>
-          {%- endunless -%}
         </div>
       {%- endfor -%}
     </div>
@@ -236,9 +218,8 @@
 
 <!-- Service detail blocks -->
 {%- for block in section.blocks -%}
-  {%- assign is_reverse = forloop.index | modulo: 2 -%}
   <section
-    class="rc-service-detail{% if is_reverse == 0 %} rc-service-detail--reverse{% endif %}"
+    class="rc-service-detail"
     id="{{ block.settings.anchor | default: block.settings.title | downcase | replace: ' ', '-' }}"
     data-service-section="{{ block.settings.anchor | default: block.settings.title | downcase | replace: ' ', '-' }}"
   >
@@ -256,6 +237,9 @@
               {%- if item != blank -%}<li>{{ item | strip }}</li>{%- endif -%}
             {%- endfor -%}
           </ul>
+        {%- endif -%}
+        {%- if block.settings.body_after != blank -%}
+          <p class="rc-service-detail__body-after">{{ block.settings.body_after }}</p>
         {%- endif -%}
         {%- if block.settings.btn_label != blank -%}
           <a href="{{ block.settings.btn_url | default: '/pages/kontakta-oss' }}" class="rc-btn rc-btn--outline">{{ block.settings.btn_label }}</a>
@@ -287,8 +271,9 @@
         { "type": "text", "id": "eyebrow", "label": "Liten text" },
         { "type": "textarea", "id": "nav_desc", "label": "Kort beskrivning (visas i tidslinjen)" },
         { "type": "text", "id": "title", "label": "Titel" },
-        { "type": "textarea", "id": "body", "label": "Text" },
+        { "type": "textarea", "id": "body", "label": "Brödtext" },
         { "type": "textarea", "id": "list", "label": "Lista (en rad per punkt)" },
+        { "type": "textarea", "id": "body_after", "label": "Brödtext efter listan (valfri)" },
         { "type": "image_picker", "id": "image", "label": "Bild" },
         { "type": "text", "id": "btn_label", "label": "Knapptext" },
         { "type": "url", "id": "btn_url", "label": "Knapp länk" }
