@@ -142,12 +142,9 @@ This is the Shopify Liquid code that generates the page layout
                     </div>
                     <div class="b2b-success-state__title">Tack för din ansökan!</div>
                     <div class="b2b-success-state__text">
-                      Vi granskar din ansökan och återkommer inom 1–2 arbetsdagar via e-post med bekräftelse och inloggningsuppgifter.
+                      Vi granskar din ansökan och återkommer inom 1–2 arbetsdagar via e-post med bekräftelse och länk för inloggning.
                     </div>
-                    <a class="b2b-btn b2b-btn-primary" href="{{ routes.account_login_url }}">
-                      Logga in
-                    </a>
-                    <a href="/" class="b2b-success-state__home">Tillbaka till startsidan</a>
+                    <a href="/" class="b2b-btn b2b-btn-primary">Tillbaka till startsidan</a>
                   </div>
 
                 {%- else -%}
@@ -303,6 +300,7 @@ This is the CSS that controls the page layout and design
 .b2b-login {
   width: 100%;
   padding: var(--rc-section-md) 0;
+  background: var(--rc-off-white, #f6f6f6);
 }
 
 .b2b-login-wrapper {
