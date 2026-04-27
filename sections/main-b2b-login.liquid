@@ -132,108 +132,127 @@ This is the Shopify Liquid code that generates the page layout
             {% else %}
               {%- form 'contact', id: 'ContactForm' -%}
                 {%- if form.posted_successfully? -%}
-                  <div class="b2b-form-success b2b-form-message" tabindex="-1" autofocus>
-                    {{ section.settings.form_message_success }}
-                  </div>
-                {%- elsif form.errors -%}
-                  <div class="b2b-form-error b2b-form-message">
-                    {{ section.settings.form_message_error }}
-                  </div>
-                {%- endif -%}
 
-                <div class="b2b-contact-fields">
-                  <input class="field__input" type="hidden" id="ContactForm-B2B" name="contact[B2B_Application]" value="{{ section.settings.form_email_subject }}">
-
-                  {% assign form_fields = section.blocks | where: "type", "form_field" %}
-
-                  {% if section.settings.form_email_field1 != blank %}
-                  <div class="b2b-form-item">
-                    <input class="b2b-input" type="text"
-                      {% if section.settings.form_email_field1_required %} required {% endif %}
-                      id="ContactForm-{{ section.settings.form_email_field1 | replace: ' ', '_' | downcase }}"
-                      name="contact[{{ section.settings.form_email_field1 | replace: ' ', '_' | downcase }}]"
-                      placeholder="{{ section.settings.form_email_field1 }}">
-                  </div>
-                  {% endif %}
-
-                  {% if section.settings.form_email_field2 != blank %}
-                  <div class="b2b-form-item">
-                    <input class="b2b-input" type="email"
-                      {% if section.settings.form_email_field2_required %} required {% endif %}
-                      id="ContactForm-email" name="contact[email]" autocomplete="email"
-                      placeholder="{{ section.settings.form_email_field2 }}">
-                  </div>
-                  {% endif %}
-
-                  {% if section.settings.form_email_field3 != blank %}
-                  <div class="b2b-form-item">
-                    <input class="b2b-input" type="text"
-                      {% if section.settings.form_email_field3_required %} required {% endif %}
-                      id="ContactForm-{{ section.settings.form_email_field3 | replace: ' ', '_' | downcase }}"
-                      name="contact[{{ section.settings.form_email_field3 | replace: ' ', '_' | downcase }}]"
-                      placeholder="{{ section.settings.form_email_field3 }}">
-                  </div>
-                  {% endif %}
-
-                  {% if section.settings.form_email_field4 != blank %}
-                  <div class="b2b-form-item">
-                    <input class="b2b-input" type="text"
-                      {% if section.settings.form_email_field4_required %} required {% endif %}
-                      id="ContactForm-{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}"
-                      name="contact[{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}]"
-                      placeholder="{{ section.settings.form_email_field4 }}">
-                  </div>
-                  {% endif %}
-
-                  <div class="b2b-form-item">
-                    <select class="b2b-input" name="contact[roll]" id="ContactForm-roll" required>
-                      <option value="" disabled selected>Roll / Verksamhet</option>
-                      <option value="Arkitekt">Arkitekt</option>
-                      <option value="Byggare">Byggare</option>
-                      <option value="Golvläggare">Golvläggare</option>
-                      <option value="Fastighetsbolag">Fastighetsbolag</option>
-                      <option value="Entreprenör">Entreprenör</option>
-                      <option value="Hyresgäst">Hyresgäst</option>
-                    </select>
-                  </div>
-
-                  {% for block in form_fields %}
-                    <div class="b2b-form-item">
-                      {% if block.settings.field_type == "hidden" %}
-                        <input type="hidden"
-                          id="ContactForm-{{ block.settings.field_name | replace: ' ', '_' | downcase }}"
-                          name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
-                          value="{{ block.settings.default_value }}">
-                      {% elsif block.settings.field_type == "textarea" %}
-                        <textarea class="b2b-input"
-                          id="ContactForm-{{ block.settings.field_name | replace: ' ', '_' | downcase }}"
-                          name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
-                          placeholder="{{ block.settings.placeholder }}"
-                          {% if block.settings.field_required %} required {% endif %}></textarea>
-                      {% else %}
-                        <input class="b2b-input"
-                          type="{{ block.settings.field_type }}"
-                          name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
-                          placeholder="{{ block.settings.placeholder }}"
-                          {% if block.settings.field_required %} required {% endif %}>
-                      {% endif %}
+                  <div class="b2b-success-state">
+                    <div class="b2b-success-state__icon">
+                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="24" cy="24" r="24" fill="#ecfdf3"/>
+                        <path d="M15 24.5L21 30.5L33 18.5" stroke="#027a48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
                     </div>
-                  {% endfor %}
-
-                  {% if section.settings.form_email_field5 != blank %}
-                  <div class="b2b-form-item">
-                    <textarea class="b2b-input"
-                      {% if section.settings.form_email_field5_required %} required {% endif %}
-                      id="ContactForm-{{ section.settings.form_email_field5 | replace: ' ', '_' | downcase }}"
-                      name="contact[{{ section.settings.form_email_field5 | replace: ' ', '_' | downcase }}]"
-                      placeholder="{{ section.settings.form_email_field5 }}"></textarea>
+                    <div class="b2b-success-state__title">Tack för din ansökan!</div>
+                    <div class="b2b-success-state__text">
+                      Vi granskar din ansökan och återkommer inom 1–2 arbetsdagar via e-post med bekräftelse och inloggningsuppgifter.
+                    </div>
+                    <a class="b2b-btn b2b-btn-primary" href="{{ routes.account_login_url }}">
+                      Logga in
+                    </a>
+                    <a href="/" class="b2b-success-state__home">Tillbaka till startsidan</a>
                   </div>
-                  {% endif %}
 
-                  <button type="submit" class="b2b-btn b2b-btn-primary">
-                    {{ section.settings.apply_submit }}
-                  </button>
-                </div>
+                {%- else -%}
+
+                  {%- if form.errors -%}
+                    <div class="b2b-form-error b2b-form-message">
+                      {{ section.settings.form_message_error }}
+                    </div>
+                  {%- endif -%}
+
+                  <div class="b2b-contact-fields">
+                    <input class="field__input" type="hidden" id="ContactForm-B2B" name="contact[B2B_Application]" value="{{ section.settings.form_email_subject }}">
+
+                    {% assign form_fields = section.blocks | where: "type", "form_field" %}
+
+                    {% if section.settings.form_email_field1 != blank %}
+                    <div class="b2b-form-item">
+                      <input class="b2b-input" type="text"
+                        {% if section.settings.form_email_field1_required %} required {% endif %}
+                        id="ContactForm-{{ section.settings.form_email_field1 | replace: ' ', '_' | downcase }}"
+                        name="contact[{{ section.settings.form_email_field1 | replace: ' ', '_' | downcase }}]"
+                        placeholder="{{ section.settings.form_email_field1 }}">
+                    </div>
+                    {% endif %}
+
+                    {% if section.settings.form_email_field2 != blank %}
+                    <div class="b2b-form-item">
+                      <input class="b2b-input" type="email"
+                        {% if section.settings.form_email_field2_required %} required {% endif %}
+                        id="ContactForm-email" name="contact[email]" autocomplete="email"
+                        placeholder="{{ section.settings.form_email_field2 }}">
+                    </div>
+                    {% endif %}
+
+                    {% if section.settings.form_email_field3 != blank %}
+                    <div class="b2b-form-item">
+                      <input class="b2b-input" type="text"
+                        {% if section.settings.form_email_field3_required %} required {% endif %}
+                        id="ContactForm-{{ section.settings.form_email_field3 | replace: ' ', '_' | downcase }}"
+                        name="contact[{{ section.settings.form_email_field3 | replace: ' ', '_' | downcase }}]"
+                        placeholder="{{ section.settings.form_email_field3 }}">
+                    </div>
+                    {% endif %}
+
+                    {% if section.settings.form_email_field4 != blank %}
+                    <div class="b2b-form-item">
+                      <input class="b2b-input" type="text"
+                        {% if section.settings.form_email_field4_required %} required {% endif %}
+                        id="ContactForm-{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}"
+                        name="contact[{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}]"
+                        placeholder="{{ section.settings.form_email_field4 }}">
+                    </div>
+                    {% endif %}
+
+                    <div class="b2b-form-item">
+                      <select class="b2b-input" name="contact[roll]" id="ContactForm-roll" required>
+                        <option value="" disabled selected>Roll / Verksamhet</option>
+                        <option value="Arkitekt">Arkitekt</option>
+                        <option value="Byggare">Byggare</option>
+                        <option value="Golvläggare">Golvläggare</option>
+                        <option value="Fastighetsbolag">Fastighetsbolag</option>
+                        <option value="Entreprenör">Entreprenör</option>
+                        <option value="Hyresgäst">Hyresgäst</option>
+                      </select>
+                    </div>
+
+                    {% for block in form_fields %}
+                      <div class="b2b-form-item">
+                        {% if block.settings.field_type == "hidden" %}
+                          <input type="hidden"
+                            id="ContactForm-{{ block.settings.field_name | replace: ' ', '_' | downcase }}"
+                            name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
+                            value="{{ block.settings.default_value }}">
+                        {% elsif block.settings.field_type == "textarea" %}
+                          <textarea class="b2b-input"
+                            id="ContactForm-{{ block.settings.field_name | replace: ' ', '_' | downcase }}"
+                            name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
+                            placeholder="{{ block.settings.placeholder }}"
+                            {% if block.settings.field_required %} required {% endif %}></textarea>
+                        {% else %}
+                          <input class="b2b-input"
+                            type="{{ block.settings.field_type }}"
+                            name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
+                            placeholder="{{ block.settings.placeholder }}"
+                            {% if block.settings.field_required %} required {% endif %}>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+
+                    {% if section.settings.form_email_field5 != blank %}
+                    <div class="b2b-form-item">
+                      <textarea class="b2b-input"
+                        {% if section.settings.form_email_field5_required %} required {% endif %}
+                        id="ContactForm-{{ section.settings.form_email_field5 | replace: ' ', '_' | downcase }}"
+                        name="contact[{{ section.settings.form_email_field5 | replace: ' ', '_' | downcase }}]"
+                        placeholder="{{ section.settings.form_email_field5 }}"></textarea>
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="b2b-btn b2b-btn-primary">
+                      {{ section.settings.apply_submit }}
+                    </button>
+                  </div>
+
+                {%- endif -%}
               {%- endform -%}
             {% endif %}
           </div>
@@ -390,6 +409,50 @@ This is the CSS that controls the page layout and design
 }
 .b2b-back:hover {
   opacity: 0.7;
+}
+
+/* ===== Success state ===== */
+.b2b-success-state {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.b2b-success-state__icon {
+  margin-bottom: 1.5rem;
+}
+
+.b2b-success-state__title {
+  font-family: var(--rc-font);
+  font-size: var(--rc-h5, 1.5rem);
+  font-weight: var(--rc-heading-weight, 500);
+  color: var(--rc-off-black, #121212);
+  margin-bottom: 0.75rem;
+}
+
+.b2b-success-state__text {
+  font-family: var(--rc-font);
+  font-size: var(--rc-text-base, 1rem);
+  color: var(--rc-neutral, #666);
+  line-height: var(--rc-body-lh, 1.5);
+  margin-bottom: 2rem;
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.b2b-success-state .b2b-btn {
+  margin-bottom: 1rem;
+}
+
+.b2b-success-state__home {
+  display: block;
+  font-family: var(--rc-font);
+  font-size: var(--rc-text-sm, 0.875rem);
+  color: var(--rc-green, #1e4433);
+  text-decoration: none;
+}
+.b2b-success-state__home:hover {
+  text-decoration: underline;
 }
 
 /* Footer help */
@@ -683,9 +746,23 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
 
-    // If form was just submitted (success or error), show register view directly
-    var formMessage = document.querySelector(".b2b-form-message");
-    if (formMessage) {
+    // If form was successfully submitted, show success state in register view
+    var successState = document.querySelector(".b2b-success-state");
+    if (successState) {
+        b2bShowView("register");
+        // Hide back link, heading & description — success state replaces everything
+        var registerView = document.getElementById("b2b-view-register");
+        var backLink = registerView.querySelector(".b2b-back");
+        var heading = registerView.querySelector(".b2b-header-secondary");
+        var bodyText = registerView.querySelector(".b2b-body-text");
+        if (backLink) backLink.style.display = "none";
+        if (heading) heading.style.display = "none";
+        if (bodyText) bodyText.style.display = "none";
+    }
+
+    // If form had errors, show register view with form visible
+    var formError = document.querySelector(".b2b-form-error");
+    if (formError && !successState) {
         b2bShowView("register");
     }
 
