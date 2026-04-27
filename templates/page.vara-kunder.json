@@ -99,23 +99,23 @@
           "settings": {
             "number": "70",
             "unit": "%",
-            "label": "Minskning av CO₂-utsläpp per m² med återbrukade plattor"
+            "label": "Textilplattor står för ca 70% av Co2 utsläppet per kvadratmeter inredning."
           }
         },
         "st2": {
           "type": "stat",
           "settings": {
-            "number": "60",
-            "unit": "%",
-            "label": "Kostnadsbesparing jämfört med nya plattor"
+            "number": "6",
+            "unit": "kg CO₂/m²",
+            "label": "Kostnad CO2/m2 GWP A1-A3 snittvärde marknadsledande produkter (kontakta oss för transparent uträkning produkt för produkt via EPD)"
           }
         },
         "st3": {
           "type": "stat",
           "settings": {
             "number": "7,1",
-            "unit": "kg",
-            "label": "CO₂/m² sparas genom att undvika deponi"
+            "unit": "kg CO₂/m²",
+            "label": "Kostnad CO2/m2 Deponi (Källa IVL)"
           }
         }
       },
@@ -126,12 +126,13 @@
       ],
       "settings": {
         "background": "cream",
-        "eyebrow": "Hållbarhet",
+        "eyebrow": "",
         "heading": "Minska CO₂-utsläppen och kostnaderna med ReCarpet",
-        "body": "Genom att välja våra textilplattor minskar du utsläppen per kvadratmeter avsevärt. Textilplattor står för ca 70% av CO₂-utsläppet per kvadratmeter inredning – ditt företag kan göra en stor miljötjänst med vårt koncept.",
+        "body": "Genom att välja våra textilplattor minskar du utsläppen per kvadratmeter avsevärt. Med våra produkter och tjänster minskar vi era Co2 utsläpp per kvadratmeter med ca 70% och kostnaderna med upp till 60%. Då textilplattor står för en stor del av den totala Co2 kostnaden sett till inredningsmaterial så kan ditt företag göra en stor miljötjänst tillsammans med oss och vårt koncept.",
+        "subheading": "Textilplattors påverkan på miljön:",
         "image": "shopify://shop_images/rc-omoss-hallbarhet.jpg",
-        "btn_label": "Boka inventering",
-        "btn_url": "shopify://pages/kontakta-oss"
+        "btn_label": "",
+        "btn_url": ""
       }
     },
     "faq": {

@@ -6,7 +6,7 @@
 
 <style>
   .rc-stats {
-    background: var(--rc-cream, #f5f3ef);
+    background: #e6e3de;
     padding: var(--rc-section-md) 0;
   }
   .rc-stats--white {
@@ -36,7 +36,14 @@
     font-weight: 500 !important;
     line-height: 120% !important;
     color: var(--rc-off-black, #1a1a1a) !important;
-    margin: 0 0 1rem;
+    margin: 0 0 1.5rem;
+  }
+  .rc-stats__subheading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 1.5rem 0 0.5rem;
   }
   .rc-stats__body {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
@@ -114,6 +121,9 @@
       {%- if section.settings.body != blank -%}
         <p class="rc-stats__body">{{ section.settings.body }}</p>
       {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="rc-stats__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
       {%- if section.blocks.size > 0 -%}
         <div class="rc-stats__row">
           {%- for block in section.blocks -%}
@@ -157,6 +167,7 @@
     { "type": "text", "id": "eyebrow", "label": "Liten text (tagg)" },
     { "type": "textarea", "id": "heading", "label": "Rubrik" },
     { "type": "textarea", "id": "body", "label": "Brödtext" },
+    { "type": "text", "id": "subheading", "label": "Underrubrik (ovanför nyckeltalen)" },
     { "type": "image_picker", "id": "image", "label": "Bild" },
     { "type": "text", "id": "btn_label", "label": "Knapptext" },
     { "type": "url", "id": "btn_url", "label": "Knapp länk" }
