@@ -71,9 +71,6 @@
   }
 </style>
 
-{%- assign showcase_collection = section.settings.collection -%}
-{%- assign products_to_show = section.settings.products_to_show | default: 4 -%}
-
 <section class="rc-product-showcase">
   <div class="rc-product-showcase__inner">
     {%- if section.settings.heading != blank -%}
@@ -81,10 +78,10 @@
     {%- endif -%}
 
     <div class="rc-product-showcase__grid">
-      {%- if showcase_collection != blank -%}
-        {%- for product in showcase_collection.products limit: products_to_show -%}
+      {%- for block in section.blocks -%}
+        {%- if block.settings.product != blank -%}
           {%- render 'card-product',
-            card_product: product,
+            card_product: block.settings.product,
             media_aspect_ratio: 'square',
             image_shape: 'default',
             show_secondary_image: false,
@@ -95,9 +92,7 @@
             section_id: section.id,
             quick_add: 'none'
           -%}
-        {%- endfor -%}
-      {%- else -%}
-        {%- for i in (1..products_to_show) -%}
+        {%- else -%}
           {%- render 'card-product',
             media_aspect_ratio: 'square',
             image_shape: 'default',
@@ -107,13 +102,13 @@
             skip_styles: true,
             section_id: section.id
           -%}
-        {%- endfor -%}
-      {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
     </div>
 
-    {%- if section.settings.show_view_all and showcase_collection != blank -%}
+    {%- if section.settings.show_view_all and section.settings.view_all_url != blank -%}
       <div class="rc-product-showcase__viewall">
-        <a href="{{ showcase_collection.url }}">{{ section.settings.view_all_text | default: 'Se alla produkter' }}</a>
+        <a href="{{ section.settings.view_all_url }}">{{ section.settings.view_all_text | default: 'Se alla produkter' }}</a>
       </div>
     {%- endif -%}
   </div>
@@ -132,24 +127,15 @@
       "default": "Utvalda produkter"
     },
     {
-      "type": "collection",
-      "id": "collection",
-      "label": "Kollektion"
-    },
-    {
-      "type": "range",
-      "id": "products_to_show",
-      "min": 2,
-      "max": 8,
-      "step": 1,
-      "default": 4,
-      "label": "Antal produkter"
-    },
-    {
       "type": "checkbox",
       "id": "show_view_all",
       "label": "Visa 'Se alla' knapp",
       "default": true
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "Knapp länk"
     },
     {
       "type": "text",
@@ -158,9 +144,28 @@
       "default": "Se alla produkter"
     }
   ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Produkt",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Välj produkt"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "reCarpet Produkter"
+      "name": "reCarpet Produkter",
+      "blocks": [
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" },
+        { "type": "product" }
+      ]
     }
   ]
 }
