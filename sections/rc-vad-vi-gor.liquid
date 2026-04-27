@@ -100,18 +100,19 @@
     align-items: center;
   }
   .rc-service-detail__eyebrow {
-    font-family: var(--rc-font);
-    font-size: var(--rc-text-sm, 0.875rem);
-    font-weight: 600;
-    color: var(--rc-off-black, #1a1a1a);
+    font-family: var(--rc-font) !important;
+    font-size: var(--rc-text-sm, 0.875rem) !important;
+    font-weight: 600 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
     margin-bottom: 0.5rem;
     display: inline-block;
+    line-height: var(--rc-body-lh, 1.5);
   }
   .rc-service-detail__heading {
     font-size: clamp(1.5rem, 3vw, var(--rc-h3));
     font-weight: 500;
     color: var(--rc-text);
-    margin: 0 0 1rem;
+    margin: 0 0 1.5rem;
   }
   .rc-service-detail__body {
     font-size: var(--rc-text-base);
@@ -226,9 +227,9 @@
     <div class="rc-service-detail__inner">
       <div class="rc-service-detail__text">
         {%- if block.settings.eyebrow != blank -%}
-          <p class="rc-service-detail__eyebrow">{{ block.settings.eyebrow }}</p>
+          <span class="rc-service-detail__eyebrow">{{ block.settings.eyebrow }}</span>
         {%- endif -%}
-        <h2 class="rc-service-detail__heading">{{ block.settings.title }}</h2>
+        <h3 class="rc-service-detail__heading">{{ block.settings.title }}</h3>
         <p class="rc-service-detail__body">{{ block.settings.body }}</p>
         {%- if block.settings.list != blank -%}
           <ul class="rc-service-detail__list">
