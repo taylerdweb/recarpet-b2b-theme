@@ -12,6 +12,7 @@
     "page_hero": {
       "type": "rc-page-hero",
       "settings": {
+        "background_image": "shopify://shop_images/recarpet-hero.jpg",
         "image_position": "center center",
         "eyebrow": "Vad vi gör",
         "heading": "Vad vi gör",
