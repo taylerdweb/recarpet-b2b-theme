@@ -14,8 +14,12 @@
     "rc_footer": {
       "type": "rc-footer",
       "settings": {
+        "logo": "shopify://shop_images/rc-logo-light.png",
         "phone": "0700733682",
-        "email": "jonas@recarpet.se"
+        "email": "jonas@recarpet.se",
+        "address": "",
+        "linkedin_url": "",
+        "linkedin_jonas": ""
       }
     }
   },
