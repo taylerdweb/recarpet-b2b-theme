@@ -26,19 +26,44 @@
     },
     "rc_featured_products": {
       "type": "rc-product-showcase",
+      "blocks": {
+        "product_Wb7Xye": {
+          "type": "product",
+          "settings": {
+            "product": "artistic-liberties-saten"
+          }
+        },
+        "product_WQAQiC": {
+          "type": "product",
+          "settings": {
+            "product": "stoneage-160"
+          }
+        },
+        "product_8zbmL3": {
+          "type": "product",
+          "settings": {
+            "product": "out-of-shadows-umbra"
+          }
+        },
+        "product_3Ha3L8": {
+          "type": "product",
+          "settings": {
+            "product": "formwork-fwk169-sash"
+          }
+        }
+      },
+      "block_order": [
+        "product_Wb7Xye",
+        "product_WQAQiC",
+        "product_8zbmL3",
+        "product_3Ha3L8"
+      ],
       "settings": {
         "heading": "Utvalda produkter",
         "show_view_all": true,
-        "view_all_url": "/collections/all",
+        "view_all_url": "",
         "view_all_text": "Se alla produkter"
-      },
-      "blocks": {
-        "product_1": { "type": "product", "settings": {} },
-        "product_2": { "type": "product", "settings": {} },
-        "product_3": { "type": "product", "settings": {} },
-        "product_4": { "type": "product", "settings": {} }
-      },
-      "block_order": ["product_1", "product_2", "product_3", "product_4"]
+      }
     },
     "rc_cta_banner": {
       "type": "rc-cta-banner",
