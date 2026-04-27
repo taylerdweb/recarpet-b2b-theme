@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "page_hero": {
@@ -24,8 +33,8 @@
             "list": "Inventering och demontering av befintliga textilplattor\nFörmedling till nya användare via vårt nätverk\nInternt återbruk för nästa hyresgäst\nKomplettering med Millikens TractionBack-plattor vid behov",
             "body_after": "Kunskap om produkternas potential ger nöjda kunder och hållbara lokaler. Vi har ett brett nätverk som hjälper oss att förmedla erat gamla golv vidare. Hör av er för att ta reda på era möjligheter.",
             "image": "shopify://shop_images/rc-tjanst-inventering.jpg",
-            "btn_label": "Boka inventering",
-            "btn_url": "shopify://pages/kontakta-oss"
+            "btn_label": "Upptäck våra tjänster",
+            "btn_url": "shopify://pages/vad-vi-gor"
           }
         },
         "k2": {
@@ -40,7 +49,7 @@
             "body_after": "Vi hanterar hela processen, från demontering till lagerhållning och försäljning. Alla våra textilplattor är kontrollerade, sorterade och rengjorda. Redo för att göra nytta i många år framöver!",
             "image": "shopify://shop_images/rc-tjanst-formedling.jpg",
             "btn_label": "Se vårt sortiment",
-            "btn_url": "/collections/all"
+            "btn_url": "shopify://collections/all"
           }
         },
         "k3": {
@@ -110,7 +119,11 @@
           }
         }
       },
-      "block_order": ["st1", "st2", "st3"],
+      "block_order": [
+        "st1",
+        "st2",
+        "st3"
+      ],
       "settings": {
         "background": "white",
         "eyebrow": "Hållbarhet",
@@ -153,7 +166,12 @@
           }
         }
       },
-      "block_order": ["faq1", "faq2", "faq3", "faq4"],
+      "block_order": [
+        "faq1",
+        "faq2",
+        "faq3",
+        "faq4"
+      ],
       "settings": {
         "heading": "Vanliga frågor"
       }
