@@ -96,7 +96,7 @@
     padding: 0 var(--rc-page-padding);
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: 5.5rem;
     align-items: center;
   }
   .rc-service-detail__eyebrow {
@@ -229,7 +229,7 @@
         {%- if block.settings.eyebrow != blank -%}
           <span class="rc-service-detail__eyebrow">{{ block.settings.eyebrow }}</span>
         {%- endif -%}
-        <h3 class="rc-service-detail__heading">{{ block.settings.title }}</h3>
+        <h2 class="rc-service-detail__heading">{{ block.settings.title }}</h2>
         <p class="rc-service-detail__body">{{ block.settings.body }}</p>
         {%- if block.settings.list != blank -%}
           <ul class="rc-service-detail__list">
