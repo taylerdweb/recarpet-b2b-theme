@@ -29,7 +29,8 @@
     margin-bottom: 1.5rem;
     display: block;
   }
-  .rc-footer__logo img { height: 6rem; width: auto; }
+  .rc-footer__logo img,
+  .rc-footer__logo svg { height: 6rem; width: auto; }
 
   .rc-footer__contact p {
     font-size: var(--rc-text-sm);
@@ -124,10 +125,12 @@
     <!-- Brand column -->
     <div class="rc-footer__brand">
       <a href="/" class="rc-footer__logo">
-        {%- if settings.logo != blank -%}
-          {{ settings.logo | image_url: width: 240 | image_tag: class: 'rc-footer__logo', alt: shop.name, loading: 'lazy' }}
+        {%- if section.settings.logo != blank -%}
+          {{ section.settings.logo | image_url: width: 400 | image_tag: alt: shop.name, loading: 'lazy' }}
         {%- else -%}
-          ReCarpet
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 80" role="img" aria-label="{{ shop.name }}">
+            <text x="0" y="60" font-family="'DM Sans', sans-serif" font-size="64" font-weight="500" fill="#ffffff" letter-spacing="-1">ReCarpet</text>
+          </svg>
         {%- endif -%}
       </a>
 
@@ -215,7 +218,11 @@
   "tag": "div",
   "class": "rc-footer-wrapper",
   "settings": [
-
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logotyp (vit, för mörk bakgrund)"
+    },
     {
       "type": "text",
       "id": "phone",
