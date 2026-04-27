@@ -57,222 +57,193 @@ This is the Shopify Liquid code that generates the page layout
 
       <div class="b2b-login-area" style="background: {{ section.settings.background_color }};">
 
-          {%- comment -%} ── LOGIN SECTION ── {%- endcomment -%}
-          <div class="b2b-section b2b-section--login">
-            <div class="b2b-header-primary">{{ section.settings.title }}</div>
-            <div class="b2b-body-text">
-                <p>{{ section.settings.intro_text }}</p>
+          {%- comment -%} ── HEADER ── {%- endcomment -%}
+          <div class="b2b-header-primary">{{ section.settings.title }}</div>
+          <div class="b2b-body-text">
+              <p>{{ section.settings.intro_text }}</p>
+          </div>
+
+          {%- comment -%} ── CHOOSER: two cards ── {%- endcomment -%}
+          <div class="b2b-chooser" id="b2b-chooser">
+            <div class="b2b-choice-card" onclick="b2bShowView('login')">
+              <div class="b2b-choice-card__title">{{ section.settings.sign_in }}</div>
+              <div class="b2b-choice-card__desc">Jag har redan ett B2B-konto och vill logga in.</div>
+              <svg class="b2b-choice-card__arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
-
-            <div class="b2b-form">
-              {% if section.settings.login_type == 'passwordless' %}
-                <a class="b2b-btn b2b-btn-primary" href="{{ routes.account_login_url }}">
-                  {{ section.settings.sign_in }}
-                </a>
-              {% else %}
-                <form method="post" action="/account/login" id="customer_login" accept-charset="UTF-8" novalidate>
-                    <input type="hidden" name="form_type" value="customer_login">
-                    <input type="hidden" name="utf8" value="✓">
-
-                    <div class="b2b-form-item">
-                        <input
-                            id="CustomerEmail"
-                            type="email"
-                            name="customer[email]"
-                            class="b2b-input"
-                            aria-required="true"
-                            autocorrect="off"
-                            autocapitalize="off"
-                            autocomplete="email"
-                            placeholder="{{ 'customer.login_page.email' | t }}"
-                            required
-                        >
-                    </div>
-
-                    <div class="b2b-form-item">
-                        <input
-                            id="CustomerPassword"
-                            type="password"
-                            name="customer[password]"
-                            class="b2b-input"
-                            aria-required="true"
-                            autocorrect="off"
-                            autocapitalize="off"
-                            autocomplete="current-password"
-                            placeholder="{{ 'customer.login_page.password' | t }}"
-                            required
-                        >
-                        <div class="b2b-form-help">
-                            <a href="/account/login#recover" class="b2b-link-text">
-                              {{ 'customer.login_page.forgot_password' | t }}
-                            </a>
-                        </div>
-                    </div>
-
-                    <button class="b2b-btn b2b-btn-primary">
-                      {{ 'customer.login_page.sign_in' | t }}
-                    </button>
-                </form>
-              {% endif %}
+            <div class="b2b-choice-card" onclick="b2bShowView('register')">
+              <div class="b2b-choice-card__title">{{ section.settings.open_account_title }}</div>
+              <div class="b2b-choice-card__desc">Jag vill bli kund och börja lägga beställningar.</div>
+              <svg class="b2b-choice-card__arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
           </div>
 
-          {%- comment -%} ── DIVIDER ── {%- endcomment -%}
-          <div class="b2b-divider"></div>
+          {%- comment -%} ── VIEW: Login ── {%- endcomment -%}
+          <div class="b2b-view" id="b2b-view-login" style="display:none;">
+            <a href="#" class="b2b-back" onclick="b2bShowView('chooser'); return false;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Tillbaka
+            </a>
+            <div class="b2b-header-secondary">{{ section.settings.sign_in }}</div>
+            <div class="b2b-body-text">
+              <p>Ange din e-postadress så skickar vi en inloggningskod.</p>
+            </div>
 
-          {%- comment -%} ── REGISTER SECTION ── {%- endcomment -%}
-          <div class="b2b-section b2b-section--register" id="b2b-apply">
-              <div class="b2b-eyebrow">Ny kund?</div>
-              <div class="b2b-header-secondary">{{ section.settings.open_account_title }}</div>
-              <div class="b2b-body-text">
-                {{ section.settings.open_account_text }}
-              </div>
-
-            {% if section.settings.form_action == "redirect" %}
-              <a href="{{ section.settings.redirect_url }}" class="b2b-btn b2b-btn-secondary">
-                  {{ section.settings.open_account_button }}
+            {% if section.settings.login_type == 'passwordless' %}
+              <a class="b2b-btn b2b-btn-primary" href="{{ routes.account_login_url }}">
+                {{ section.settings.sign_in }}
               </a>
             {% else %}
+              <form method="post" action="/account/login" id="customer_login" accept-charset="UTF-8" novalidate>
+                  <input type="hidden" name="form_type" value="customer_login">
+                  <input type="hidden" name="utf8" value="✓">
+                  <div class="b2b-form-item">
+                      <input id="CustomerEmail" type="email" name="customer[email]" class="b2b-input" aria-required="true" autocorrect="off" autocapitalize="off" autocomplete="email" placeholder="{{ 'customer.login_page.email' | t }}" required>
+                  </div>
+                  <div class="b2b-form-item">
+                      <input id="CustomerPassword" type="password" name="customer[password]" class="b2b-input" aria-required="true" autocorrect="off" autocapitalize="off" autocomplete="current-password" placeholder="{{ 'customer.login_page.password' | t }}" required>
+                      <div class="b2b-form-help">
+                          <a href="/account/login#recover" class="b2b-link-text">{{ 'customer.login_page.forgot_password' | t }}</a>
+                      </div>
+                  </div>
+                  <button class="b2b-btn b2b-btn-primary">{{ 'customer.login_page.sign_in' | t }}</button>
+              </form>
+            {% endif %}
+          </div>
 
-              <a href="#b2b-apply" onclick="b2bRegister()" class="b2b-btn b2b-btn-secondary">
+          {%- comment -%} ── VIEW: Register ── {%- endcomment -%}
+          <div class="b2b-view" id="b2b-view-register" style="display:none;">
+            <a href="#" class="b2b-back" onclick="b2bShowView('chooser'); return false;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Tillbaka
+            </a>
+            <div class="b2b-header-secondary">{{ section.settings.open_account_title }}</div>
+            <div class="b2b-body-text">
+              {{ section.settings.open_account_text }}
+            </div>
+
+            {% if section.settings.form_action == "redirect" %}
+              <a href="{{ section.settings.redirect_url }}" class="b2b-btn b2b-btn-primary">
                   {{ section.settings.open_account_button }}
               </a>
-
-              {% if section.settings.form_action == "custom_form" %}
-
-                <div id="b2b-register" class="b2b-registration-form">
-                    <div class="b2b-application-form-wrapper">
-                        {{ section.settings.custom_form_html }}
-                    </div>
-                </div>
-              {% else %}
-
-               {%- form 'contact', id: 'ContactForm' -%}
+            {% elsif section.settings.form_action == "custom_form" %}
+              <div class="b2b-application-form-wrapper">
+                  {{ section.settings.custom_form_html }}
+              </div>
+            {% else %}
+              {%- form 'contact', id: 'ContactForm' -%}
                 {%- if form.posted_successfully? -%}
                   <div class="b2b-form-success b2b-form-message" tabindex="-1" autofocus>
                     {{ section.settings.form_message_success }}
                   </div>
                 {%- elsif form.errors -%}
                   <div class="b2b-form-error b2b-form-message">
-                  {{ section.settings.form_message_error }}
+                    {{ section.settings.form_message_error }}
                   </div>
                 {%- endif -%}
-                    
-                    <div id="b2b-register" class="b2b-registration-form">
-                      <div class="b2b-contact-fields">
-                        <input class="field__input" type="hidden" id="ContactForm-B2B" name="contact[B2B_Application]" value="{{ section.settings.form_email_subject }}">
-                      
-                      {% assign form_fields = section.blocks | where: "type", "form_field" %}
 
-                      {% if section.settings.form_email_field1 != blank %}  
-                      <div class="b2b-form-item">
-                        <input class="b2b-input" 
-                        type="text" 
-                        {% if section.settings.form_email_field1_required %} required {% endif %}
-                        id="ContactForm-{{ section.settings.form_email_field1 | replace: ' ', '_' | downcase }}" 
-                        name="contact[{{ section.settings.form_email_field1 | replace: ' ', '_' | downcase }}]" 
-                        placeholder="{{ section.settings.form_email_field1 }}">
-                      </div>
-                      {% endif %}
-                        
-                      {% if section.settings.form_email_field2 != blank %}
-                      <div class="b2b-form-item">
-                        <input class="b2b-input"
-                        type="email"
-                        {% if section.settings.form_email_field2_required %} required {% endif %}
-                        id="ContactForm-email"
-                        name="contact[email]"
-                        autocomplete="email"
-                        placeholder="{{ section.settings.form_email_field2 }}">
-                      </div>
-                      {% endif %}
-                        
-                      {% if section.settings.form_email_field3 != blank %}
-                        <div class="b2b-form-item">
-                        <input class="b2b-input" 
-                        type="text" 
-                        {% if section.settings.form_email_field3_required %} required {% endif %}
-                        id="ContactForm-{{ section.settings.form_email_field3 | replace: ' ', '_' | downcase }}" 
-                        name="contact[{{ section.settings.form_email_field3 | replace: ' ', '_' | downcase }}]" 
-                        placeholder="{{ section.settings.form_email_field3 }}">                        
-                        </div>
-                      {% endif %}
+                <div class="b2b-contact-fields">
+                  <input class="field__input" type="hidden" id="ContactForm-B2B" name="contact[B2B_Application]" value="{{ section.settings.form_email_subject }}">
 
-                      {% if section.settings.form_email_field4 != blank %}
-                      <div class="b2b-form-item">
-                        <input class="b2b-input"
-                        type="text"
-                        {% if section.settings.form_email_field4_required %} required {% endif %}
-                        id="ContactForm-{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}"
-                        name="contact[{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}]"
-                        placeholder="{{ section.settings.form_email_field4 }}">
-                      </div>
-                      {% endif %}
+                  {% assign form_fields = section.blocks | where: "type", "form_field" %}
 
-                      <!-- Roll-dropdown (hardcoded) -->
-                      <div class="b2b-form-item">
-                        <select class="b2b-input" name="contact[roll]" id="ContactForm-roll" required>
-                          <option value="" disabled selected>Roll / Verksamhet</option>
-                          <option value="Arkitekt">Arkitekt</option>
-                          <option value="Byggare">Byggare</option>
-                          <option value="Golvläggare">Golvläggare</option>
-                          <option value="Fastighetsbolag">Fastighetsbolag</option>
-                          <option value="Entreprenör">Entreprenör</option>
-                          <option value="Hyresgäst">Hyresgäst</option>
-                        </select>
-                      </div>
-
-                     {% for block in form_fields %}
-                        <div class="b2b-form-item">
-                            {% if block.settings.field_type == "hidden" %}
-                                <input type="hidden" 
-                                       id="ContactForm-{{ block.settings.field_name | replace: ' ', '_' | downcase }}" 
-                                       name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]" 
-                                       value="{{ block.settings.default_value }}">
-                            {% elsif block.settings.field_type == "textarea" %}
-                                <textarea class="b2b-input" 
-                                          id="ContactForm-{{ block.settings.field_name | replace: ' ', '_' | downcase }}" 
-                                          name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]" 
-                                          placeholder="{{ block.settings.placeholder }}"
-                                          {% if block.settings.field_required %} required {% endif %}></textarea>
-                            {% else %}
-                                <input class="b2b-input" 
-                                       type="{{ block.settings.field_type }}" 
-                                       name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]" 
-                                       placeholder="{{ block.settings.placeholder }}"
-                                       {% if block.settings.field_required %} required {% endif %}>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-
-                      {% if section.settings.form_email_field5 != blank %}   
-                      <div class="b2b-form-item">
-                       <textarea class="b2b-input"
-                         {% if section.settings.form_email_field5_required %} required {% endif %}  
-                         id="ContactForm-{{ section.settings.form_email_field5 | replace: ' ', '_' | downcase }}" 
-                         name="contact[{{ section.settings.form_email_field5 | replace: ' ', '_' | downcase }}]" 
-                         placeholder="{{ section.settings.form_email_field5 }}"></textarea>
-                      </div>
-                      {% endif %}
-                        
-            
-                      <button type="submit" class="b2b-btn b2b-btn-primary">
-                          {{ section.settings.apply_submit }}
-                      </button>
+                  {% if section.settings.form_email_field1 != blank %}
+                  <div class="b2b-form-item">
+                    <input class="b2b-input" type="text"
+                      {% if section.settings.form_email_field1_required %} required {% endif %}
+                      id="ContactForm-{{ section.settings.form_email_field1 | replace: ' ', '_' | downcase }}"
+                      name="contact[{{ section.settings.form_email_field1 | replace: ' ', '_' | downcase }}]"
+                      placeholder="{{ section.settings.form_email_field1 }}">
                   </div>
-              </div>
+                  {% endif %}
+
+                  {% if section.settings.form_email_field2 != blank %}
+                  <div class="b2b-form-item">
+                    <input class="b2b-input" type="email"
+                      {% if section.settings.form_email_field2_required %} required {% endif %}
+                      id="ContactForm-email" name="contact[email]" autocomplete="email"
+                      placeholder="{{ section.settings.form_email_field2 }}">
+                  </div>
+                  {% endif %}
+
+                  {% if section.settings.form_email_field3 != blank %}
+                  <div class="b2b-form-item">
+                    <input class="b2b-input" type="text"
+                      {% if section.settings.form_email_field3_required %} required {% endif %}
+                      id="ContactForm-{{ section.settings.form_email_field3 | replace: ' ', '_' | downcase }}"
+                      name="contact[{{ section.settings.form_email_field3 | replace: ' ', '_' | downcase }}]"
+                      placeholder="{{ section.settings.form_email_field3 }}">
+                  </div>
+                  {% endif %}
+
+                  {% if section.settings.form_email_field4 != blank %}
+                  <div class="b2b-form-item">
+                    <input class="b2b-input" type="text"
+                      {% if section.settings.form_email_field4_required %} required {% endif %}
+                      id="ContactForm-{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}"
+                      name="contact[{{ section.settings.form_email_field4 | replace: ' ', '_' | downcase }}]"
+                      placeholder="{{ section.settings.form_email_field4 }}">
+                  </div>
+                  {% endif %}
+
+                  <div class="b2b-form-item">
+                    <select class="b2b-input" name="contact[roll]" id="ContactForm-roll" required>
+                      <option value="" disabled selected>Roll / Verksamhet</option>
+                      <option value="Arkitekt">Arkitekt</option>
+                      <option value="Byggare">Byggare</option>
+                      <option value="Golvläggare">Golvläggare</option>
+                      <option value="Fastighetsbolag">Fastighetsbolag</option>
+                      <option value="Entreprenör">Entreprenör</option>
+                      <option value="Hyresgäst">Hyresgäst</option>
+                    </select>
+                  </div>
+
+                  {% for block in form_fields %}
+                    <div class="b2b-form-item">
+                      {% if block.settings.field_type == "hidden" %}
+                        <input type="hidden"
+                          id="ContactForm-{{ block.settings.field_name | replace: ' ', '_' | downcase }}"
+                          name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
+                          value="{{ block.settings.default_value }}">
+                      {% elsif block.settings.field_type == "textarea" %}
+                        <textarea class="b2b-input"
+                          id="ContactForm-{{ block.settings.field_name | replace: ' ', '_' | downcase }}"
+                          name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
+                          placeholder="{{ block.settings.placeholder }}"
+                          {% if block.settings.field_required %} required {% endif %}></textarea>
+                      {% else %}
+                        <input class="b2b-input"
+                          type="{{ block.settings.field_type }}"
+                          name="contact[{{ block.settings.field_name | replace: ' ', '_' | downcase }}]"
+                          placeholder="{{ block.settings.placeholder }}"
+                          {% if block.settings.field_required %} required {% endif %}>
+                      {% endif %}
+                    </div>
+                  {% endfor %}
+
+                  {% if section.settings.form_email_field5 != blank %}
+                  <div class="b2b-form-item">
+                    <textarea class="b2b-input"
+                      {% if section.settings.form_email_field5_required %} required {% endif %}
+                      id="ContactForm-{{ section.settings.form_email_field5 | replace: ' ', '_' | downcase }}"
+                      name="contact[{{ section.settings.form_email_field5 | replace: ' ', '_' | downcase }}]"
+                      placeholder="{{ section.settings.form_email_field5 }}"></textarea>
+                  </div>
+                  {% endif %}
+
+                  <button type="submit" class="b2b-btn b2b-btn-primary">
+                    {{ section.settings.apply_submit }}
+                  </button>
+                </div>
               {%- endform -%}
-             {% endif %}
-             {% endif %}
+            {% endif %}
           </div>
 
+          {%- comment -%} ── FAQs ── {%- endcomment -%}
           {% if section.settings.show_faqs %}
             <div class="b2b-divider"></div>
             <div class="b2b-section b2b-section--faqs" id="faqs">
                 <div class="b2b-header-secondary">{{ section.settings.faq_title }}</div>
-
-               {% assign faq_blocks = section.blocks | where: "type", "feature" %}
-
+                {% assign faq_blocks = section.blocks | where: "type", "feature" %}
                 {% for block in faq_blocks %}
                     <div class="b2b-faq-item">
                         <div class="b2b-faq-question">
@@ -286,6 +257,10 @@ This is the Shopify Liquid code that generates the page layout
                 {% endfor %}
             </div>
           {% endif %}
+
+          <div class="b2b-footer-help">
+            <p>Har du frågor? <a href="/pages/kontakta-oss">Kontakta oss</a></p>
+          </div>
 
       </div>
   </div>
@@ -334,27 +309,104 @@ This is the CSS that controls the page layout and design
   flex-direction: column;
 }
 
-/* Sections */
-.b2b-section {
-  /* no extra margin needed — divider handles spacing */
-}
-
-/* Divider between login and register */
+/* Divider */
 .b2b-divider {
   border: none;
   border-top: 1px solid var(--rc-neutral-lighter, #ccc);
   margin: 2.5rem 0;
 }
 
-/* Eyebrow label */
-.b2b-eyebrow {
+/* ===== Chooser cards ===== */
+.b2b-chooser {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.b2b-choice-card {
+  border: 1px solid var(--rc-neutral-lighter, #ccc);
+  border-radius: var(--rc-radius, 0.5rem);
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+  padding-right: 3rem;
+}
+.b2b-choice-card:hover {
+  border-color: var(--rc-green, #1e4433);
+  background: rgba(30, 68, 51, 0.03);
+}
+
+.b2b-choice-card__title {
   font-family: var(--rc-font);
-  font-size: var(--rc-text-sm);
-  font-weight: 600;
-  color: var(--rc-sage, #6c9985);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--rc-off-black, #121212);
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.b2b-choice-card__desc {
+  font-family: var(--rc-font);
+  font-size: var(--rc-text-sm, 0.875rem);
+  color: var(--rc-neutral, #666);
+  line-height: 1.5;
+}
+
+.b2b-choice-card__arrow {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rc-neutral-light, #aaa);
+  transition: color 0.15s;
+}
+.b2b-choice-card:hover .b2b-choice-card__arrow {
+  color: var(--rc-green, #1e4433);
+}
+
+/* ===== Views (login / register) ===== */
+.b2b-view {
+  animation: b2bFadeIn 0.2s ease;
+}
+
+@keyframes b2bFadeIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Back link */
+.b2b-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: var(--rc-font);
+  font-size: var(--rc-text-sm, 0.875rem);
+  color: var(--rc-green, #1e4433);
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+  transition: opacity 0.15s;
+}
+.b2b-back:hover {
+  opacity: 0.7;
+}
+
+/* Footer help */
+.b2b-footer-help {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rc-neutral-lighter, #ccc);
+}
+.b2b-footer-help p {
+  font-family: var(--rc-font);
+  font-size: var(--rc-text-sm, 0.875rem);
+  color: var(--rc-neutral, #666);
+  margin: 0;
+}
+.b2b-footer-help a {
+  color: var(--rc-green, #1e4433);
+  text-decoration: underline;
 }
 
 /* Typography */
@@ -611,18 +663,39 @@ This is the JavaScript that controls basic behaviour such as the form showing an
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // FAQ Accordion Functionality
-    var faqItems = document.querySelectorAll(".b2b-faq-question");
 
+    // ===== View switching =====
+    var chooser = document.getElementById("b2b-chooser");
+    var viewLogin = document.getElementById("b2b-view-login");
+    var viewRegister = document.getElementById("b2b-view-register");
+
+    window.b2bShowView = function(view) {
+        chooser.style.display = "none";
+        viewLogin.style.display = "none";
+        viewRegister.style.display = "none";
+
+        if (view === "chooser") {
+            chooser.style.display = "flex";
+        } else if (view === "login") {
+            viewLogin.style.display = "block";
+        } else if (view === "register") {
+            viewRegister.style.display = "block";
+        }
+    };
+
+    // If form was just submitted (success or error), show register view directly
+    var formMessage = document.querySelector(".b2b-form-message");
+    if (formMessage) {
+        b2bShowView("register");
+    }
+
+    // ===== FAQ Accordion =====
+    var faqItems = document.querySelectorAll(".b2b-faq-question");
     faqItems.forEach(function(item) {
         item.addEventListener("click", function() {
             var answer = this.nextElementSibling;
             var parent = this.parentElement;
-
-            // Toggle active class
             parent.classList.toggle("active");
-
-            // Expand/Collapse Answer
             if (answer.style.maxHeight && answer.style.maxHeight !== "0px") {
                 answer.style.maxHeight = "0px";
             } else {
@@ -630,23 +703,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
-
-    // Ensure the B2B Registration Form is hidden by default
-    var registerForm = document.getElementById("b2b-register");
-    if (registerForm) {
-        registerForm.style.maxHeight = "0px";
-        registerForm.style.overflow = "hidden";
-        registerForm.style.transition = "max-height 0.3s ease-in-out";
-    }
-
-    // Toggle B2B Registration Form
-    window.b2bRegister = function() {
-        if (registerForm.style.maxHeight === "0px" || registerForm.style.maxHeight === "") {
-            registerForm.style.maxHeight = registerForm.scrollHeight + "px";
-        } else {
-            registerForm.style.maxHeight = "0px";
-        }
-    };
 });
 </script>
 
@@ -814,7 +870,7 @@ This is the scheme that controls the content in the Shopify Customizer tool
 "type": "textarea",
 "id": "intro_text",
 "label": "Introduction Text",
-"default": "Logga in nedan för att komma åt ditt B2B-konto och börja lägga beställningar."
+"default": "Logga in på ditt konto eller ansök om att bli B2B-kund."
 },
 
 {
