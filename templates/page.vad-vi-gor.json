@@ -27,6 +27,7 @@
           "settings": {
             "anchor": "inventering",
             "eyebrow": "Inventering",
+            "nav_desc": "Vi kartlägger golvets skick och potential för återbruk.",
             "title": "Inspektion och bedömning av era golv",
             "body": "Få full kontroll av golvens skick och möjligheter innan projektstart. En noggrann inventering är första steget för att optimera återbruk och minimera kostnader.",
             "list": "Vi dokumenterar golvens skick och möjligt återbrukbara plattor\nIdentifiering av vilka plattor som kräver åtgärder eller utbyte\nDetaljerad rapport om möjlig återanvändning och kostnadsbesparingar\nRådgivning inför nästa steg i projektet",
@@ -40,6 +41,7 @@
           "settings": {
             "anchor": "demontering",
             "eyebrow": "Demontering",
+            "nav_desc": "Effektiv demontering med fokus på återbruk.",
             "title": "Demonterar och rengör era befintliga mattor",
             "body": "En effektiv och säker demontering är avgörande för att återbruket ska bli framgångsrikt. Vi demonterar med noggrannhet och tar hand om textilplattorna så att de kan få ett nytt liv i andra projekt.",
             "list": "Professionell demontering utan att skada plattorna\nLogistisk planering för att minimera störningar på plats\nSäker transport och lagerhållning av demonterat material\nRådgivning om nästa steg för att återanvända plattorna",
@@ -53,6 +55,7 @@
           "settings": {
             "anchor": "formedling",
             "eyebrow": "Förmedling",
+            "nav_desc": "Vi hittar nya användare för dina gamla textilplattor.",
             "title": "Säljer återbrukade och nya textilplattor",
             "body": "Ge dina gamla textilplattor en ny chans genom vår förmedlingstjänst. Vi ser till att de hittar nya användare som uppskattar både kvaliteten och hållbarheten i återbrukade produkter.",
             "list": "Vi kvalitetskontrollerar och sorterar plattorna\nMarknadsföring av plattorna till potentiella kunder\nLogistik och leverans av plattor till nya användare\nTransparenta processer och tydlig kommunikation",
@@ -66,6 +69,7 @@
           "settings": {
             "anchor": "montering",
             "eyebrow": "Montering",
+            "nav_desc": "Snabb och smidig installation av återbrukade eller nya golv.",
             "title": "Behöver du hjälp med montering?",
             "body": "Vi monterar både återbrukade och nya textilplattor med samma precision och noggrannhet. Våra samarbetspartners består av erfarna golventreprenörer som säkerställer att resultatet blir perfekt. Vi finns från norr till söder.",
             "list": "Noggrann förberedelse av ytan inför montering\nProfessionell installation med rätt teknik och verktyg\nAnpassning till er verksamhet för att minimera störningar\nRådgivning om skötsel och underhåll av det nya golvet",
@@ -79,6 +83,7 @@
           "settings": {
             "anchor": "service",
             "eyebrow": "Service & underhåll",
+            "nav_desc": "Vi hjälper dig att hålla golven fräscha och i toppskick.",
             "title": "Vi underhåller era befintliga golv",
             "body": "Håll era golv i toppskick med vår service och underhållstjänst. Vi hjälper er att förlänga livslängden på era textilplattor genom regelbunden rengöring och reparation vid behov.",
             "list": "Djupgående rengöring av golv för att ta bort svåra fläckar\nReparation av skadade plattor eller byte vid behov\nRådgivning om daglig skötsel för att maximera hållbarheten\nÅtgärder för att motverka slitage i särskilt utsatta områden",
@@ -92,6 +97,7 @@
           "settings": {
             "anchor": "internt-aterbruk",
             "eyebrow": "Internt återbruk",
+            "nav_desc": "Behåll golvet i fastigheten – vi gör det som nytt igen.",
             "title": "Återbruk av ert befintliga golv för er nästa hyresgäst",
             "body": "Vill ni behålla golvet inom fastigheten? Vi hjälper er att återbruka befintliga textilplattor för er nästa hyresgäst, vilket sparar både pengar och resurser.",
             "list": "Inspektion och rengöring av befintligt golv\nSortering och eventuella reparationer av skadade plattor\nKomplettering med nya eller återbrukade plattor vid behov\nMontering och anpassning efter hyresgästens önskemål",

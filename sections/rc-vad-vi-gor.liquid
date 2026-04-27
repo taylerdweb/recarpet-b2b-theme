@@ -4,91 +4,105 @@
 {% endcomment %}
 
 <style>
-  /* Timeline navigation */
-  .rc-services-nav {
-    background: var(--rc-green);
-    padding: var(--rc-section-sm) var(--rc-page-padding);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    overflow-x: auto;
-    overflow-y: hidden;
+  /* ===== Timeline navigation ===== */
+  .rc-timeline-nav {
+    background: var(--rc-cream, #f5f3ef);
+    padding: var(--rc-section-md) var(--rc-page-padding);
   }
-  .rc-services-nav__inner {
+  .rc-timeline-nav__inner {
     max-width: var(--rc-max-width);
     margin: 0 auto;
-    display: flex;
-    gap: 0;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    min-height: 7.5rem;
   }
-  /* Timeline line */
-  .rc-services-nav__inner::before {
+  .rc-timeline-nav__track {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto 2rem auto;
+    position: relative;
+  }
+  /* Horizontal connecting line */
+  .rc-timeline-nav__track::before {
     content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
+    grid-row: 2;
+    grid-column: 1 / -1;
     height: 2px;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-50%);
+    background: var(--rc-off-black, #1a1a1a);
+    align-self: center;
     z-index: 1;
   }
-  /* Timeline node wrapper */
-  .rc-services-nav__node {
+  /* Top text (odd items: 1,3,5) */
+  .rc-timeline-nav__text--top {
+    grid-row: 1;
+    align-self: end;
+    padding-bottom: 1.25rem;
+  }
+  /* Bottom text (even items: 2,4,6) */
+  .rc-timeline-nav__text--bottom {
+    grid-row: 3;
+    align-self: start;
+    padding-top: 1.25rem;
+  }
+  .rc-timeline-nav__link {
+    text-decoration: none;
+    display: block;
+  }
+  .rc-timeline-nav__link:hover .rc-timeline-nav__title {
+    color: var(--rc-green, #1e4433);
+  }
+  .rc-timeline-nav__title {
+    font-family: var(--rc-font);
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 600;
+    color: var(--rc-off-black, #1a1a1a);
+    margin-bottom: 0.375rem;
+    line-height: 1.3;
+    transition: color 0.2s;
+  }
+  .rc-timeline-nav__desc {
+    font-family: var(--rc-font);
+    font-size: var(--rc-text-sm, 0.875rem);
+    color: var(--rc-text-muted, #666);
+    line-height: 1.5;
+    max-width: 15rem;
+  }
+  /* Dot cells */
+  .rc-timeline-nav__dot-cell {
+    grid-row: 2;
+    display: flex;
+    align-items: center;
     position: relative;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    flex: 1;
-    text-align: center;
   }
-  /* Node circle */
-  .rc-services-nav__node-circle {
-    width: 3rem;
-    height: 3rem;
+  .rc-timeline-nav__dot {
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--rc-green, #1e4433);
+    display: block;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+  .rc-timeline-nav__dot:hover {
+    transform: scale(1.3);
+  }
+  /* Arrow between dots */
+  .rc-timeline-nav__arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    z-index: 3;
+    color: var(--rc-green, #1e4433);
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: var(--rc-text-base);
-    font-weight: 600;
-    color: #fff;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    flex-shrink: 0;
+    background: var(--rc-cream, #f5f3ef);
+    padding: 0 0.125rem;
   }
-  .rc-services-nav__node.active .rc-services-nav__node-circle {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: #fff;
-    transform: scale(1.1);
-  }
-  .rc-services-nav__node:hover .rc-services-nav__node-circle {
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.05);
-  }
-  /* Node text/label */
-  .rc-services-nav__node-label {
-    font-size: var(--rc-text-sm);
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.8);
-    white-space: nowrap;
-    transition: color 0.3s ease;
-    text-decoration: none;
-  }
-  .rc-services-nav__node.active .rc-services-nav__node-label {
-    color: #fff;
-  }
-  .rc-services-nav__node:hover .rc-services-nav__node-label {
-    color: #fff;
+  .rc-timeline-nav__arrow svg {
+    width: 16px;
+    height: 17px;
   }
 
-  /* Service detail section */
+  /* ===== Service detail section ===== */
   .rc-service-detail {
     padding: var(--rc-section-md) 0;
   }
@@ -131,114 +145,91 @@
   .rc-service-detail__list li {
     font-size: var(--rc-text-sm);
     color: var(--rc-text-muted);
-    padding-left: 1.25rem;
+    padding-left: 1.75rem;
     position: relative;
   }
   .rc-service-detail__list li::before {
-    content: '—';
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--rc-green);
-    font-weight: 700;
+    top: 0.25em;
+    width: 16px;
+    height: 17px;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='17' viewBox='0 0 16 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7.52867 12.0288L8.47133 12.9715L12.9427 8.50014L8.47133 4.02881L7.52867 4.97147L10.3907 7.83348H4V9.16681H10.3907L7.52867 12.0288Z' fill='%231E4433'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
   }
   .rc-service-detail__image { border-radius: var(--rc-radius); overflow: hidden; aspect-ratio: 4/3; }
   .rc-service-detail__image img { width: 100%; height: 100%; object-fit: cover; }
 
   @media (max-width: 900px) {
+    /* Timeline mobile — vertical list */
+    .rc-timeline-nav {
+      padding: 2rem 1.25rem;
+    }
+    .rc-timeline-nav__track {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .rc-timeline-nav__track::before { display: none; }
+    .rc-timeline-nav__dot-cell { display: none; }
+    .rc-timeline-nav__text--top,
+    .rc-timeline-nav__text--bottom {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    /* Service detail mobile */
     .rc-service-detail__inner { grid-template-columns: 1fr; gap: 2rem; }
     .rc-service-detail--reverse .rc-service-detail__text,
     .rc-service-detail--reverse .rc-service-detail__image { order: unset; }
     .rc-service-detail__inner { padding: 0 1.25rem; }
-    .rc-services-nav {
-      padding: 2rem 1.25rem;
-    }
-    .rc-services-nav__inner {
-      min-height: 6.25rem;
-    }
-    .rc-services-nav__node-circle {
-      width: 2.5rem;
-      height: 2.5rem;
-      font-size: 0.875rem;
-    }
-    .rc-services-nav__node-label {
-      font-size: 0.75rem;
-    }
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const nav = document.querySelector('.rc-services-nav');
-    const nodes = document.querySelectorAll('.rc-services-nav__node');
-    const sections = document.querySelectorAll('[data-service-section]');
-
-    // Smooth scroll on node click
-    nodes.forEach(node => {
-      node.addEventListener('click', function(e) {
-        e.preventDefault();
-        const anchor = this.dataset.anchor;
-        const target = document.querySelector(`[data-service-section="${anchor}"]`);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-
-    // Intersection Observer for active state tracking
-    const observerOptions = {
-      root: null,
-      rootMargin: '-25% 0px -75% 0px',
-      threshold: 0
-    };
-
-    const observer = new IntersectionObserver(function(entries) {
-      entries.forEach(entry => {
-        const anchor = entry.target.dataset.serviceSection;
-        const node = document.querySelector(`[data-anchor="${anchor}"]`);
-        
-        if (entry.isIntersecting) {
-          // Remove active from all nodes
-          nodes.forEach(n => n.classList.remove('active'));
-          // Add active to current node
-          if (node) {
-            node.classList.add('active');
+    // Smooth scroll when clicking timeline links
+    document.querySelectorAll('.rc-timeline-nav__link, .rc-timeline-nav__dot').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        var anchor = this.getAttribute('href');
+        if (anchor && anchor.startsWith('#')) {
+          e.preventDefault();
+          var target = document.querySelector('[data-service-section="' + anchor.substring(1) + '"]');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         }
       });
-    }, observerOptions);
-
-    sections.forEach(section => {
-      observer.observe(section);
     });
   });
 </script>
 
 <!-- Timeline navigation -->
-<nav class="rc-services-nav" aria-label="Tjänster">
-  <div class="rc-services-nav__inner">
-    <div class="rc-services-nav__node active" data-anchor="inventering" role="button" tabindex="0">
-      <div class="rc-services-nav__node-circle">1</div>
-      <a href="#inventering" class="rc-services-nav__node-label">Inventering</a>
-    </div>
-    <div class="rc-services-nav__node" data-anchor="demontering" role="button" tabindex="0">
-      <div class="rc-services-nav__node-circle">2</div>
-      <a href="#demontering" class="rc-services-nav__node-label">Demontering</a>
-    </div>
-    <div class="rc-services-nav__node" data-anchor="formedling" role="button" tabindex="0">
-      <div class="rc-services-nav__node-circle">3</div>
-      <a href="#formedling" class="rc-services-nav__node-label">Förmedling</a>
-    </div>
-    <div class="rc-services-nav__node" data-anchor="montering" role="button" tabindex="0">
-      <div class="rc-services-nav__node-circle">4</div>
-      <a href="#montering" class="rc-services-nav__node-label">Montering</a>
-    </div>
-    <div class="rc-services-nav__node" data-anchor="service" role="button" tabindex="0">
-      <div class="rc-services-nav__node-circle">5</div>
-      <a href="#service" class="rc-services-nav__node-label">Service & underhåll</a>
-    </div>
-    <div class="rc-services-nav__node" data-anchor="internt-aterbruk" role="button" tabindex="0">
-      <div class="rc-services-nav__node-circle">6</div>
-      <a href="#internt-aterbruk" class="rc-services-nav__node-label">Internt återbruk</a>
+<nav class="rc-timeline-nav" aria-label="Tjänster">
+  <div class="rc-timeline-nav__inner">
+    <div class="rc-timeline-nav__track">
+      {%- for block in section.blocks -%}
+        {%- assign mod = forloop.index | modulo: 2 -%}
+        <div class="rc-timeline-nav__text {% if mod == 1 %}rc-timeline-nav__text--top{% else %}rc-timeline-nav__text--bottom{% endif %}" style="grid-column: {{ forloop.index }}">
+          <a href="#{{ block.settings.anchor }}" class="rc-timeline-nav__link">
+            <div class="rc-timeline-nav__title">{{ block.settings.eyebrow }}</div>
+            {%- if block.settings.nav_desc != blank -%}
+              <div class="rc-timeline-nav__desc">{{ block.settings.nav_desc }}</div>
+            {%- endif -%}
+          </a>
+        </div>
+        <div class="rc-timeline-nav__dot-cell" style="grid-column: {{ forloop.index }}">
+          <a href="#{{ block.settings.anchor }}" class="rc-timeline-nav__dot" aria-label="{{ block.settings.eyebrow }}"></a>
+          {%- unless forloop.last -%}
+            <span class="rc-timeline-nav__arrow">
+              <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.52867 12.0288L8.47133 12.9715L12.9427 8.50014L8.47133 4.02881L7.52867 4.97147L10.3907 7.83348H4V9.16681H10.3907L7.52867 12.0288Z" fill="currentColor"/>
+              </svg>
+            </span>
+          {%- endunless -%}
+        </div>
+      {%- endfor -%}
     </div>
   </div>
 </nav>
@@ -294,6 +285,7 @@
       "settings": [
         { "type": "text", "id": "anchor", "label": "Ankarlänk (t.ex. demontering)" },
         { "type": "text", "id": "eyebrow", "label": "Liten text" },
+        { "type": "textarea", "id": "nav_desc", "label": "Kort beskrivning (visas i tidslinjen)" },
         { "type": "text", "id": "title", "label": "Titel" },
         { "type": "textarea", "id": "body", "label": "Text" },
         { "type": "textarea", "id": "list", "label": "Lista (en rad per punkt)" },
@@ -312,8 +304,9 @@
           "settings": {
             "anchor": "inventering",
             "eyebrow": "Inventering",
+            "nav_desc": "Vi kartlägger golvets skick och potential för återbruk.",
             "title": "Inspektion och bedömning av era mattor",
-            "body": "Känns det ogranskat om ni funderar på att återbruka era textilplattor? ReCarpet guidar er genom materialåterbruksprocessen. I det läge ni inte vet vart ni ska börja — vi hjälper med en inventering för att ge bild av plattornas skick.",
+            "body": "Känns det ogranskat om ni funderar på att återbruka era textilplattor? ReCarpet guidar er genom materialåterbruksprocessen.",
             "btn_label": "Kontakta oss för inventering"
           }
         },
@@ -322,8 +315,9 @@
           "settings": {
             "anchor": "demontering",
             "eyebrow": "Demontering",
+            "nav_desc": "Effektiv demontering med fokus på återbruk.",
             "title": "Monterar bort och tvättar era befintliga mattor",
-            "body": "Vi tillhandahåller professionell demonteringstjänst för era textilplattor. Vi tar hand om hela processen för ett hållbart och smidigt resultat.",
+            "body": "Vi tillhandahåller professionell demonteringstjänst för era textilplattor.",
             "btn_label": "Kontakta oss för demontering"
           }
         },
@@ -332,8 +326,9 @@
           "settings": {
             "anchor": "formedling",
             "eyebrow": "Förmedling",
+            "nav_desc": "Vi hittar nya användare för dina gamla textilplattor.",
             "title": "Säljer återbrukade och nya textilplattor",
-            "body": "Vi förmedlar återbrukade och nya kvalitetstextilplattor till konkurrenskraftiga priser. Alla plattor är kvalitetssäkrade och redo för ett nytt hem.",
+            "body": "Vi förmedlar återbrukade och nya kvalitetstextilplattor till konkurrenskraftiga priser.",
             "btn_label": "Se vårt sortiment"
           }
         },
@@ -342,8 +337,9 @@
           "settings": {
             "anchor": "montering",
             "eyebrow": "Montering",
+            "nav_desc": "Snabb och smidig installation av återbrukade eller nya golv.",
             "title": "Vi utför självklart montering av era nya mattor",
-            "body": "Vi har samarbeten med professionella montörer från syd till norr. Vi hjälper dig med ditt projekt från start till mål — enkelt och smidigt.",
+            "body": "Vi har samarbeten med professionella montörer från syd till norr.",
             "btn_label": "Kontakta oss för montering"
           }
         },
@@ -352,8 +348,9 @@
           "settings": {
             "anchor": "service",
             "eyebrow": "Service & underhåll",
+            "nav_desc": "Vi hjälper dig att hålla golven fräscha och i toppskick.",
             "title": "Vi underhåller era monterade mattor",
-            "body": "Behöver du hjälp med fläckar, trasiga plattor eller lösa kanter? Vi hjälper er med de problem som kan uppstå med ditt nya eller återbrukade golv.",
+            "body": "Behöver du hjälp med fläckar, trasiga plattor eller lösa kanter?",
             "btn_label": "Kontakta oss"
           }
         },
@@ -362,8 +359,9 @@
           "settings": {
             "anchor": "internt-aterbruk",
             "eyebrow": "Internt återbruk",
+            "nav_desc": "Behåll golvet i fastigheten – vi gör det som nytt igen.",
             "title": "Återbruk av era tidigare mattor för er nästa hyresgäst",
-            "body": "Behåll golvet i fastigheten! Vi uppgraderar befintliga plattor och förbereder dem för nästa hyresgäst — ett kostnadseffektivt och hållbart alternativ.",
+            "body": "Behåll golvet i fastigheten! Vi uppgraderar befintliga plattor och förbereder dem för nästa hyresgäst.",
             "btn_label": "Läs mer"
           }
         }
