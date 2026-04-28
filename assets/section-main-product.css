@@ -1493,6 +1493,29 @@ a.product__text {
   }
 }
 
+/* ── reCarpet PDP overrides ─────────────────────────── */
+
+/* Vendor / collection tag — match Webflow .text-size-medium */
+.product__text.caption-with-letter-spacing {
+  font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+  font-size: 1.125rem !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  color: var(--rc-off-black, #1a1a1a) !important;
+  line-height: 1.4 !important;
+}
+
+/* Product title — match Webflow .heading-style-h3 */
+.product__title h1,
+.product__title .h1 {
+  font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+  font-size: 2.5rem !important; /* 40px */
+  font-weight: 500 !important;
+  line-height: 120% !important;
+  color: var(--rc-off-black, #1a1a1a) !important;
+}
+
 /* B2B Logged-out state */
 .b2b-price-note {
   font-size: 1.2rem;
