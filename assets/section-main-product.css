@@ -1597,6 +1597,15 @@ p.b2b-awaiting-note,
   margin-bottom: 0;
 }
 
+/* "You may also like" heading */
+.related-products__heading {
+  font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  line-height: 120% !important;
+  color: var(--rc-off-black, #1a1a1a) !important;
+}
+
 /* rc-signup-cta — pending / upgrade CTA on PDP & PLP */
 .rc-signup-cta,
 .product__info-container .rc-signup-cta {
@@ -1610,7 +1619,7 @@ p.b2b-awaiting-note,
 .rc-signup-cta__title,
 p.rc-signup-cta__title,
 .product__info-container .rc-signup-cta__title {
-  font-size: 1rem !important; /* 16px */
+  font-size: 1.125rem !important; /* 18px */
   font-weight: 600 !important;
   line-height: 1.3 !important;
   margin: 0 0 0.25rem !important;
