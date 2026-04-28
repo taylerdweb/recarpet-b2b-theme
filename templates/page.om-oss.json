@@ -104,12 +104,7 @@
         "projects3"
       ],
       "settings": {
-        "intro_heading": "Välkommen till ReCarpet",
-        "intro_body_1": "ReCarpet grundades 2022 och är idag verksamma i hela Sverige. För att motverka byggbranschens stora problem med att cirkulera material tar vi nu saken i egna händer.",
-        "intro_body_2": "Som oberoende part bidrar vi med kunskap om golvmaterial och golventreprenad som främjar framtida återbruk. ReCarpet är en komplett leverantör inom produktkategorin textilplattor och utför jobbet från demontering till förmedling.",
-        "quote": "Vi demonterar inte bara golven – vi cirkulerar dem!",
-        "quote_author": "Jonas Hallman",
-        "quote_title": "Ägare",
+        "team_image": "shopify://shop_images/recarpet-agare.jpg",
         "projects_heading": "Några av våra lyckade projekt",
         "expertise_body": "Med vår erfarenhet kan ReCarpet stötta våra kunder genom hela processen – från förberedelser på betonggolv till montering av plattor som ger lokalen sin färdiga, funktionell toppyta.",
         "expertise_quote": "En textilplatta är inte återbrukad förrän den är monterad på nytt.",
