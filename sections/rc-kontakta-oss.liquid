@@ -79,8 +79,8 @@
 
   /* Contact persons — in left column */
   .rc-contact-persons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2.5rem;
   }
   .rc-contact-person {
@@ -174,7 +174,7 @@
     width: 100%;
     padding: 0.75rem 0.875rem;
     border: 1px solid var(--rc-off-black, #1a1a1a) !important;
-    border-radius: var(--rc-radius-sm, 0.375rem);
+    border-radius: 2px;
     font-size: 0.875rem;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
     color: var(--rc-off-black, #1a1a1a);
@@ -231,7 +231,7 @@
     cursor: pointer;
     padding: 0.625rem 1rem !important;
     border: 1px solid var(--rc-off-black, #1a1a1a) !important;
-    border-radius: var(--rc-radius-sm, 0.375rem) !important;
+    border-radius: 2px !important;
     background: var(--rc-white, #fff) !important;
     transition: all 0.15s;
     display: flex !important;
