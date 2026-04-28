@@ -71,9 +71,6 @@
       letter-spacing: 0.01em;
       padding: 0.625rem 1rem;
       text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 110;
     }
     .rc-guest-banner__text,
     .rc-guest-banner__link {
@@ -100,22 +97,14 @@
   </style>
 
   <script>
-    /* Keep the sticky header directly below the sticky banner */
-    (function() {
-      function sync() {
-        var banner = document.querySelector('.rc-guest-banner');
-        var header = document.querySelector('.header-wrapper');
-        if (!banner || !header) return;
-        header.style.top = banner.offsetHeight + 'px';
+    /*  Move the banner inside .header-wrapper so both live in
+        the same sticky container — no dual-sticky needed.       */
+    document.addEventListener('DOMContentLoaded', function() {
+      var banner = document.querySelector('.rc-guest-banner');
+      var header = document.querySelector('.header-wrapper');
+      if (banner && header) {
+        header.insertBefore(banner, header.firstChild);
       }
-      /* Run after DOM + layout are ready */
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', sync);
-      } else {
-        sync();
-      }
-      window.addEventListener('resize', sync);
-      window.addEventListener('load', sync);
-    })();
+    });
   </script>
 {%- endif -%}
