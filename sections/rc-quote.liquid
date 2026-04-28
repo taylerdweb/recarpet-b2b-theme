@@ -38,9 +38,15 @@
     font-weight: 700 !important;
     line-height: 140% !important;
     color: var(--rc-off-black, #1a1a1a) !important;
-    margin: 0 0 2.5rem;
+    margin: 0 0 2.5rem !important;
     text-align: center;
-    font-style: normal;
+    font-style: normal !important;
+    /* Kill Dawn blockquote styles */
+    border: none !important;
+    border-left: none !important;
+    padding: 0 !important;
+    padding-left: 0 !important;
+    quotes: none !important;
   }
 
   /* Attribution row */
@@ -82,12 +88,12 @@
 
   /* Company logo */
   .rc-quote__logo img {
-    height: 1.75rem;
+    height: 2.25rem;
     width: auto;
     display: block;
   }
   .rc-quote__logo svg {
-    height: 1.75rem;
+    height: 2.25rem;
     width: auto;
     display: block;
   }
