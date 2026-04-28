@@ -248,7 +248,7 @@
                   <div {{ block.shopify_attributes }}>
                     {% render 'price', product: product, use_variant: true, show_badges: true %}
                   </div>
-                  <p class="b2b-price-note b2b-awaiting-note">Ditt konto granskas — rabatter aktiveras när vi godkänt din ansökan.</p>
+                  {%- comment -%} Removed duplicate — rc-signup-cta box below handles pending message {%- endcomment -%}
                 {%- else -%}
                   {%- comment -%} Utloggad — Shopifys native pris {%- endcomment -%}
                   <div {{ block.shopify_attributes }}>
