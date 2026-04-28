@@ -72,8 +72,10 @@
       letter-spacing: 0.01em;
       padding: 0.625rem 1rem; /* 10px 16px */
       text-align: center;
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 110;
     }
     .rc-guest-banner__text,
@@ -99,8 +101,14 @@
     }
     .rc-guest-banner__link:hover { opacity: 0.85; }
 
-    /* Push header below the sticky banner */
-    .header-wrapper { top: var(--rc-banner-height, 0px) !important; }
+    /* Header sits right below the fixed banner — no gap */
+    .header-wrapper {
+      top: var(--rc-banner-height, 0px) !important;
+      margin-top: 0 !important;
+      border-top: none !important;
+    }
+    /* Push page content down to account for fixed banner */
+    body { padding-top: var(--rc-banner-height, 0px) !important; }
   </style>
 
   <script>
