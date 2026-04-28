@@ -30,17 +30,19 @@
   }
 
   .rc-faq__container {
-    max-width: 50rem;
+    max-width: var(--rc-max-width);
     margin: 0 auto;
+    padding: 0 var(--rc-page-padding);
   }
 
   .rc-faq__heading {
-    font-size: clamp(1.75rem, 3vw, var(--rc-h3));
-    font-weight: var(--rc-heading-weight);
-    margin: 0 0 3.75rem 0;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: clamp(1.75rem, 3vw, 2.5rem) !important;
+    font-weight: 500 !important;
+    line-height: 120% !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 3rem 0;
     text-align: center;
-    font-family: var(--rc-font);
-    color: var(--rc-text);
   }
 
   .rc-faq__list {
@@ -49,7 +51,8 @@
   }
 
   .rc-faq__item {
-    border-bottom: 1px solid var(--rc-neutral-lightest);
+    border-bottom: 1px solid var(--rc-off-black, #1a1a1a) !important;
+    opacity: 1;
   }
 
   .rc-faq__item:last-child {
@@ -72,9 +75,10 @@
   }
 
   .rc-faq__question {
-    font-size: var(--rc-text-base);
-    font-weight: var(--rc-heading-weight-bold);
-    color: var(--rc-text);
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.125rem !important;
+    font-weight: 700 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
     flex: 1;
     padding-right: 1.25rem;
     text-align: left;
@@ -95,7 +99,7 @@
     content: '';
     width: 1rem;
     height: 0.125rem;
-    background-color: var(--rc-green);
+    background-color: var(--rc-off-black, #1a1a1a);
     position: absolute;
   }
 
@@ -103,7 +107,7 @@
     content: '';
     width: 0.125rem;
     height: 1rem;
-    background-color: var(--rc-green);
+    background-color: var(--rc-off-black, #1a1a1a);
     position: absolute;
   }
 
@@ -118,11 +122,12 @@
 
   .rc-faq__answer {
     padding: 0 0 1.5rem 0;
-    font-size: var(--rc-text-sm);
-    font-weight: 400;
-    line-height: 1.6;
-    color: var(--rc-text);
-    font-family: var(--rc-font);
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.125rem !important;
+    font-weight: 400 !important;
+    line-height: 1.6 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    text-transform: none !important;
     animation: slideDown 0.3s ease-out;
   }
 
@@ -151,13 +156,17 @@
     }
 
     .rc-faq__question {
-      font-size: var(--rc-text-sm);
+      font-size: 1rem !important;
       padding-right: 1rem;
     }
 
     .rc-faq__answer {
-      font-size: var(--rc-text-sm);
+      font-size: 1rem !important;
       padding-bottom: 1.25rem;
+    }
+
+    .rc-faq__container {
+      padding: 0 1.25rem;
     }
   }
 </style>
