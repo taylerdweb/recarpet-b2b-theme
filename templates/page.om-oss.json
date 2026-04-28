@@ -106,7 +106,7 @@
       "settings": {
         "team_image": "shopify://shop_images/recarpet-agare.jpg",
         "impact_heading": "Sedan start har vi demonterat och förmedlat 40.000m2 textilplattor och bidragit stort för miljön tillsammans med våra kunder.",
-        "impact_body": "<p>Vi är baserade i Stockholm, men utför uppdrag över hela Sverige och även i andra delar av Norden. I samarbete med lokala företag utför vi både demontering och montering på ett professionellt sätt i hela landet.</p><p><strong>Några av våra lyckade projekt:</strong><br>Demontering – Kv Yrket – NCC<br>Demontering – Upplands Väsby Kommunhus – ByggDialog<br>Demontering – Kåkenhusen – Hufvudstaden<br>Återbrukade textilplattor – Veidekke HK<br>Återbrukade textilplattor – Skanska HK<br>Återbrukade textilplattor – Vossloh<br>Milliken – Deloitte HK<br>Milliken – Meta HK<br>Milliken – Disney HK</p><p>Vill du veta mer? <a href=\"mailto:jonas@recarpet.se\">jonas@recarpet.se</a></p>",
+        "impact_body": "<p>Vi är baserade i Stockholm, men utför uppdrag över hela Sverige och även i andra delar av Norden. I samarbete med lokala företag utför vi både demontering och montering på ett professionellt sätt i hela landet.</p><p><strong>Några av våra lyckade projekt:</strong><br/>Demontering – Kv Yrket – NCC<br/>Demontering – Upplands Väsby Kommunhus – ByggDialog<br/>Demontering – Kåkenhusen – Hufvudstaden<br/>Återbrukade textilplattor – Veidekke HK<br/>Återbrukade textilplattor – Skanska HK<br/>Återbrukade textilplattor – Vossloh<br/>Milliken – Deloitte HK<br/>Milliken – Meta HK<br/>Milliken – Disney HK</p><p>Vill du veta mer? <a href=\"mailto:jonas@recarpet.se\">jonas@recarpet.se</a></p>",
         "expertise_body": "Återbruk av textilplattor kräver både produktkunskap och förståelse för byggnation och golventreprenad. Med vår erfarenhet kan ReCarpet stötta våra kunder genom hela processen – från förberedelser på betonggolv till montering av plattor som ger lokalen sitt färdiga, funktionella ytskikt.",
         "expertise_quote": "En textilplatta är inte återbrukad förrän den är monterad på nytt",
         "services_eyebrow": "Våra tjänster",
@@ -118,13 +118,14 @@
         "services_btn2_url": "/pages/offertkalkyl",
         "vision_heading": "Vår vision",
         "vision_body": "Vi strävar efter att göra textilplattor helt cirkulära genom att minimera avfall och maximera återbruk. Genom innovativa lösningar för återanvändning skapar vi hållbara och vackra miljöer för framtidens arbetsplatser.",
-        "sustainability_eyebrow": "En hållbar lösning",
+        "sustainability_eyebrow": "",
         "sustainability_heading": "Hållbara golv är vår passion",
         "sustainability_body": "Vi arbetar för miljön, men vi behöver beslutsfattare som också vill förändra. ReCarpet är redo att leverera återbrukade textilplattor till alla de som vill göra skillnad. För att lyckas behöver vi få in golv via demontering eller att kunder skickar dem till oss. Våra kunder som satsar på hållbarhet förstår att vi kan cirkulera stora mängder golv och skapa verklig förändring. En vanlig tankevurpa är att man tror att det räcker med att demontera för att \"återbruka\" – det krävs mer än så, golvet måste hitta en väg ut igen och genom vårt kontaktnät bland beställare och arkitekter gör vi det möjligt. Att jobba med återbrukat material kräver lite mer jobb och processen ser ibland annorlunda ut, men det är värt det!",
+        "sustainability_image": "shopify://shop_images/recarpet-en-hallbar-losning.jpg",
         "sustainability_btn_label": "Kontakta oss",
         "sustainability_btn_url": "/pages/kontakta-oss",
-        "sustainability_btn2_label": "Vill ni ha referenser? Kontakta oss",
-        "sustainability_btn2_url": "/pages/kontakta-oss"
+        "sustainability_btn2_label": "",
+        "sustainability_btn2_url": ""
       }
     },
     "logo_bar": {
@@ -133,30 +134,34 @@
         "l1": {
           "type": "logo",
           "settings": {
+            "logo": "shopify://shop_images/67482595a20da5da14a77d59_Logo_container_Veidekke_Black.svg",
             "text": "Veidekke",
-            "alt": "",
+            "alt": "Veidekke logo",
             "url": ""
           }
         },
         "l2": {
           "type": "logo",
           "settings": {
+            "logo": "shopify://shop_images/673458673a0d213279b7ad32_Logo_container.webp",
             "text": "Vasakronan",
-            "alt": "",
+            "alt": "Vasakronan",
             "url": ""
           }
         },
         "l3": {
           "type": "logo",
           "settings": {
+            "logo": "shopify://shop_images/681c8044d1bc21257a4a2b03_Logotyp_LundbergsFastigheter_liggande_RGB_gron_svart.png",
             "text": "Lundbergs",
-            "alt": "",
+            "alt": "Lundbergs",
             "url": ""
           }
         },
         "l4": {
           "type": "logo",
           "settings": {
+            "logo": "shopify://shop_images/673458673a0d213279b7ad56_Logo_container-4.svg",
             "text": "Zengun",
             "alt": "",
             "url": ""
@@ -165,8 +170,9 @@
         "l5": {
           "type": "logo",
           "settings": {
+            "logo": "shopify://shop_images/673458673a0d213279b7ad50_Logo_container-5.svg",
             "text": "taylerd",
-            "alt": "",
+            "alt": "taylerd logo",
             "url": ""
           }
         }
