@@ -98,5 +98,20 @@
       font-weight: 500 !important;
     }
     .rc-guest-banner__link:hover { opacity: 0.85; }
+
+    /* Push header below the sticky banner */
+    .header-wrapper { top: var(--rc-banner-height, 0px) !important; }
   </style>
+
+  <script>
+    (function() {
+      var banner = document.querySelector('.rc-guest-banner');
+      if (!banner) return;
+      function sync() {
+        document.documentElement.style.setProperty('--rc-banner-height', banner.offsetHeight + 'px');
+      }
+      sync();
+      window.addEventListener('resize', sync);
+    })();
+  </script>
 {%- endif -%}
