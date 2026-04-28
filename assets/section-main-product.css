@@ -1495,6 +1495,31 @@ a.product__text {
 
 /* ── reCarpet PDP overrides ─────────────────────────── */
 
+/* Price — clean up Dawn's oversized styling */
+.product .price,
+.product .price .price-item,
+.product .price .price-item--regular {
+  font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  color: var(--rc-off-black, #1a1a1a) !important;
+  line-height: 1.3 !important;
+}
+
+/* Product metafields table (Format, I lager) */
+.product__info-container .product__metafield-row,
+.product__info-container table,
+.product__info-container table td,
+.product__info-container table th,
+.product__info-container .rc-metafield-label,
+.product__info-container .rc-metafield-value {
+  font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  color: var(--rc-off-black, #1a1a1a) !important;
+}
+
 /* Vendor / collection tag — match Webflow .text-size-medium */
 .product__text.caption-with-letter-spacing {
   font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
