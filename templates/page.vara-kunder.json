@@ -183,6 +183,9 @@
         "quote_text": "Vi har fått återbrukade textilplattor installerade av ReCarpet och vi är mycket nöjda. Snabb service och kvaliteten och stilen överträffade våra förväntningar.",
         "author_name": "Rasmus Andersson",
         "author_title": "VD och grundare",
+        "show_stars": true,
+        "company_logo": "shopify://shop_images/taylerd-logo-black.svg",
+        "company_name": "Logo",
         "background_color": "var(--rc-cream, #F6F6F6)"
       }
     },
