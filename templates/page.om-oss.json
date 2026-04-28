@@ -1,40 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "page_hero": {
       "type": "rc-page-hero",
       "settings": {
+        "background_image": "shopify://shop_images/rc-omoss-hero.jpg",
+        "image_position": "center center",
         "eyebrow": "Om oss",
         "heading": "Välkommen till ReCarpet",
-        "subtext": "Vi är ett team som brinner för cirkulära golvlösningar och hållbart byggande."
+        "body": "<p>ReCarpet är grundat 2022 och är idag verksamma i hela Sverige. För att stävja golvbranschens stora problem med att cirkulera material så tar vi nu saken i egna händer. Som oberoende part bidrar vi med kunskap om golvmaterial och golventreprenad som främjar framtida återbruk. ReCarpet är en helhetsleverantör inom produktkategorin textilplattor och gör jobbet från demontering till förmedling. Tillsammans med miljömedvetna aktörer inom bygg- och fastighetsbranschen kan vi bidra till förändring.<br/>Vi demonterar inte bara golven - vi cirkulerar dem!<br/></p>"
       }
     },
     "om_oss": {
       "type": "rc-om-oss",
-      "settings": {
-        "intro_heading": "Välkommen till ReCarpet",
-        "intro_body_1": "ReCarpet grundades 2022 och är idag verksamma i hela Sverige. För att motverka byggbranschens stora problem med att cirkulera material tar vi nu saken i egna händer.",
-        "intro_body_2": "Som oberoende part bidrar vi med kunskap om golvmaterial och golventreprenad som främjar framtida återbruk. ReCarpet är en komplett leverantör inom produktkategorin textilplattor och utför jobbet från demontering till förmedling.",
-        "quote": "Vi demonterar inte bara golven – vi cirkulerar dem!",
-        "quote_author": "Jonas Hallman",
-        "quote_title": "Ägare",
-        "team_heading": "Vårt team",
-        "projects_heading": "Några av våra lyckade projekt",
-        "expertise_body": "Med vår erfarenhet kan ReCarpet stötta våra kunder genom hela processen – från förberedelser på betonggolv till montering av plattor som ger lokalen sin färdiga, funktionell toppyta.",
-        "expertise_quote": "En textilplatta är inte återbrukad förrän den är monterad på nytt.",
-        "services_heading": "Våra tjänster",
-        "services_list": "Demontering befintligt golv\nLagerhållning\nFörsäljning\nMontering\nService & underhåll för bättre hållbarhet",
-        "services_btn1_label": "Se våra tjänster",
-        "services_btn1_url": "/pages/tjanster",
-        "services_btn2_label": "Gör en offertförfrågan",
-        "services_btn2_url": "/pages/offertkalkyl",
-        "vision_heading": "Vår vision",
-        "vision_body": "Vi vill göra textilplattor helt cirkulära genom att minimera avfall och maximera återbruk. Genom innovativa återbrukslösningar skapar vi hållbara och vackra miljöer för framtidens arbetsplatser.",
-        "sustainability_heading": "En hållbar lösning",
-        "sustainability_subtitle": "Hållbara golv är vår passion",
-        "sustainability_body": "Vi jobbar för miljön, men vi behöver beslutsfattare som också vill förändra. ReCarpet är redo att leverera återbrukade textilplattor till alla som vill göra skillnad.",
-        "sustainability_btn_label": "Läs mer om hållbarhet",
-        "sustainability_btn_url": "/pages/hallbarhet"
-      },
       "blocks": {
         "team1": {
           "type": "team_member",
@@ -116,42 +102,74 @@
         "projects1",
         "projects2",
         "projects3"
-      ]
+      ],
+      "settings": {
+        "intro_heading": "Välkommen till ReCarpet",
+        "intro_body_1": "ReCarpet grundades 2022 och är idag verksamma i hela Sverige. För att motverka byggbranschens stora problem med att cirkulera material tar vi nu saken i egna händer.",
+        "intro_body_2": "Som oberoende part bidrar vi med kunskap om golvmaterial och golventreprenad som främjar framtida återbruk. ReCarpet är en komplett leverantör inom produktkategorin textilplattor och utför jobbet från demontering till förmedling.",
+        "quote": "Vi demonterar inte bara golven – vi cirkulerar dem!",
+        "quote_author": "Jonas Hallman",
+        "quote_title": "Ägare",
+        "team_heading": "Vårt team",
+        "projects_heading": "Några av våra lyckade projekt",
+        "expertise_body": "Med vår erfarenhet kan ReCarpet stötta våra kunder genom hela processen – från förberedelser på betonggolv till montering av plattor som ger lokalen sin färdiga, funktionell toppyta.",
+        "expertise_quote": "En textilplatta är inte återbrukad förrän den är monterad på nytt.",
+        "services_heading": "Våra tjänster",
+        "services_list": "Demontering befintligt golv\nLagerhållning\nFörsäljning\nMontering\nService & underhåll för bättre hållbarhet",
+        "services_btn1_label": "Se våra tjänster",
+        "services_btn1_url": "/pages/tjanster",
+        "services_btn2_label": "Gör en offertförfrågan",
+        "services_btn2_url": "/pages/offertkalkyl",
+        "vision_heading": "Vår vision",
+        "vision_body": "Vi vill göra textilplattor helt cirkulära genom att minimera avfall och maximera återbruk. Genom innovativa återbrukslösningar skapar vi hållbara och vackra miljöer för framtidens arbetsplatser.",
+        "sustainability_heading": "En hållbar lösning",
+        "sustainability_subtitle": "Hållbara golv är vår passion",
+        "sustainability_body": "Vi jobbar för miljön, men vi behöver beslutsfattare som också vill förändra. ReCarpet är redo att leverera återbrukade textilplattor till alla som vill göra skillnad.",
+        "sustainability_btn_label": "Läs mer om hållbarhet",
+        "sustainability_btn_url": "/pages/hallbarhet"
+      }
     },
     "logo_bar": {
       "type": "rc-logo-bar",
-      "settings": {
-        "heading": "Några av våra kunder"
-      },
       "blocks": {
         "l1": {
           "type": "logo",
           "settings": {
-            "text": "Veidekke"
+            "text": "Veidekke",
+            "alt": "",
+            "url": ""
           }
         },
         "l2": {
           "type": "logo",
           "settings": {
-            "text": "Vasakronan"
+            "text": "Vasakronan",
+            "alt": "",
+            "url": ""
           }
         },
         "l3": {
           "type": "logo",
           "settings": {
-            "text": "Lundbergs"
+            "text": "Lundbergs",
+            "alt": "",
+            "url": ""
           }
         },
         "l4": {
           "type": "logo",
           "settings": {
-            "text": "Zengun"
+            "text": "Zengun",
+            "alt": "",
+            "url": ""
           }
         },
         "l5": {
           "type": "logo",
           "settings": {
-            "text": "taylerd"
+            "text": "taylerd",
+            "alt": "",
+            "url": ""
           }
         }
       },
@@ -161,7 +179,10 @@
         "l3",
         "l4",
         "l5"
-      ]
+      ],
+      "settings": {
+        "heading": "Några av våra kunder"
+      }
     },
     "contact_cta": {
       "type": "rc-contact-cta",
@@ -169,7 +190,9 @@
         "heading": "Kontakta oss för ditt mattgolvprojekt",
         "body": "Oavsett om du vill beställa prover, boka en inventering eller bara ställa en fråga — vi hjälper dig gärna.",
         "btn1_label": "Kontakta oss",
-        "btn1_url": "/pages/kontakta-oss"
+        "btn1_url": "/pages/kontakta-oss",
+        "btn2_label": "",
+        "btn2_url": ""
       }
     }
   },
