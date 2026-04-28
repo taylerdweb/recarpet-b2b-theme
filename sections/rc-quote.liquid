@@ -79,23 +79,26 @@
 
   /* Vertical divider */
   .rc-quote__divider {
-    width: 1px;
-    height: 2.5rem;
-    background: var(--rc-off-black, #1a1a1a);
-    opacity: 0.2;
-    flex-shrink: 0;
+    width: 1px !important;
+    min-width: 1px !important;
+    height: 3rem !important;
+    min-height: 3rem !important;
+    background: var(--rc-off-black, #1a1a1a) !important;
+    opacity: 0.25 !important;
+    flex-shrink: 0 !important;
+    display: block !important;
   }
 
   /* Company logo */
   .rc-quote__logo img {
-    height: 2.25rem;
-    width: auto;
-    display: block;
+    height: 2.75rem !important;
+    width: auto !important;
+    display: block !important;
   }
   .rc-quote__logo svg {
-    height: 2.25rem;
-    width: auto;
-    display: block;
+    height: 2.75rem !important;
+    width: auto !important;
+    display: block !important;
   }
 
   /* Dark text on green background */
