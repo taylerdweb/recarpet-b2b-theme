@@ -161,46 +161,106 @@
 
   /* ===== G. Services Summary ===== */
   .rc-about-services {
-    background: var(--rc-cream);
+    background: var(--rc-cream, #f5f3ef);
     padding: var(--rc-section-md) 0;
   }
   .rc-about-services__inner {
     max-width: var(--rc-max-width);
     margin: 0 auto;
     padding: 0 var(--rc-page-padding);
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4rem !important;
+    align-items: start !important;
+  }
+  .rc-about-services__eyebrow {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 1rem !important;
+    text-transform: none !important;
   }
   .rc-about-services__heading {
-    font-size: clamp(1.75rem, 3vw, var(--rc-h3));
-    font-weight: 500;
-    color: var(--rc-text);
-    margin: 0 0 2rem;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 2rem !important;
+    font-weight: 500 !important;
+    line-height: 130% !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 !important;
   }
   .rc-about-services__list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 0 2.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
   }
   .rc-about-services__item {
-    font-size: var(--rc-text-base);
-    color: var(--rc-text-muted);
-    line-height: 1.6;
-    padding-left: 1.5rem;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    line-height: 1.5 !important;
+    padding-left: 2rem !important;
     position: relative;
   }
   .rc-about-services__item::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--rc-green);
-    font-weight: 600;
+    content: '→' !important;
+    position: absolute !important;
+    left: 0 !important;
+    color: var(--rc-green, #1e4433) !important;
+    font-weight: 600 !important;
   }
   .rc-about-services__buttons {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+    display: flex !important;
+    gap: 1.5rem !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+  }
+  .rc-about-services__btn-outline {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.875rem 2rem !important;
+    border: 1.5px solid var(--rc-green, #1e4433) !important;
+    border-radius: 100px !important;
+    background: transparent !important;
+    color: var(--rc-green, #1e4433) !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+  }
+  .rc-about-services__btn-outline:hover {
+    background: var(--rc-green, #1e4433) !important;
+    color: #fff !important;
+  }
+  .rc-about-services__btn-link {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    color: var(--rc-green, #1e4433) !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .rc-about-services__btn-link:hover {
+    opacity: 0.7;
+  }
+  .rc-about-services__btn-link svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
   }
 
   /* ===== H. Vision Section ===== */
@@ -293,10 +353,11 @@
   @media (max-width: 900px) {
     .rc-about-team__inner,
     .rc-about-impact__grid,
+    .rc-about-services__inner,
     .rc-about-vision__inner,
     .rc-about-sustainability__inner {
-      grid-template-columns: 1fr;
-      gap: 2rem;
+      grid-template-columns: 1fr !important;
+      gap: 2rem !important;
     }
     .rc-about-team__inner,
     .rc-about-impact__inner,
@@ -398,24 +459,33 @@
 {%- if section.settings.services_heading != blank -%}
   <section class="rc-about-services">
     <div class="rc-about-services__inner">
-      <h2 class="rc-about-services__heading">{{ section.settings.services_heading }}</h2>
-      {%- if section.settings.services_list != blank -%}
-        <ul class="rc-about-services__list">
-          {%- assign services = section.settings.services_list | newline_to_br | split: '<br />' -%}
-          {%- for service in services -%}
-            {%- if service != blank -%}
-              <li class="rc-about-services__item">{{ service | strip }}</li>
-            {%- endif -%}
-          {%- endfor -%}
-        </ul>
-      {%- endif -%}
-      <div class="rc-about-services__buttons">
-        {%- if section.settings.services_btn1_label != blank -%}
-          <a href="{{ section.settings.services_btn1_url }}" class="rc-btn rc-btn--primary">{{ section.settings.services_btn1_label }}</a>
+      <!-- Left column: eyebrow + heading -->
+      <div class="rc-about-services__left">
+        {%- if section.settings.services_eyebrow != blank -%}
+          <p class="rc-about-services__eyebrow">{{ section.settings.services_eyebrow }}</p>
         {%- endif -%}
-        {%- if section.settings.services_btn2_label != blank -%}
-          <a href="{{ section.settings.services_btn2_url }}" class="rc-btn rc-btn--secondary">{{ section.settings.services_btn2_label }}</a>
+        <h2 class="rc-about-services__heading">{{ section.settings.services_heading }}</h2>
+      </div>
+      <!-- Right column: list + buttons -->
+      <div class="rc-about-services__right">
+        {%- if section.settings.services_list != blank -%}
+          <ul class="rc-about-services__list">
+            {%- assign services = section.settings.services_list | newline_to_br | split: '<br />' -%}
+            {%- for service in services -%}
+              {%- if service != blank -%}
+                <li class="rc-about-services__item">{{ service | strip }}</li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
         {%- endif -%}
+        <div class="rc-about-services__buttons">
+          {%- if section.settings.services_btn1_label != blank -%}
+            <a href="{{ section.settings.services_btn1_url }}" class="rc-about-services__btn-outline">{{ section.settings.services_btn1_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.services_btn2_label != blank -%}
+            <a href="{{ section.settings.services_btn2_url }}" class="rc-about-services__btn-link">{{ section.settings.services_btn2_label }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+          {%- endif -%}
+        </div>
       </div>
     </div>
   </section>
@@ -515,6 +585,11 @@
     },
     {
       "type": "text",
+      "id": "services_eyebrow",
+      "label": "Tagg (eyebrow)"
+    },
+    {
+      "type": "textarea",
       "id": "services_heading",
       "label": "Rubrik"
     },
