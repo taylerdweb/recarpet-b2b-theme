@@ -48,6 +48,70 @@
     },
     "rc_logo_bar": {
       "type": "rc-logo-bar",
+      "blocks": {
+        "logo_7Fcqfw": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/67482595a20da5da14a77d59_Logo_container_Veidekke_Black.svg",
+            "text": "Veidekke",
+            "alt": "Veidekke logo",
+            "url": ""
+          }
+        },
+        "logo_ji6dKw": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/673458673a0d213279b7ad32_Logo_container.webp",
+            "text": "Vasakronan",
+            "alt": "Vasakronan logo",
+            "url": ""
+          }
+        },
+        "logo_xBUJCG": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/castellum_logo.svg",
+            "text": "Castellum",
+            "alt": "Castellum",
+            "url": ""
+          }
+        },
+        "logo_4QK4K8": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/673458673a0d213279b7ad56_Logo_container-4.svg",
+            "text": "Zengun",
+            "alt": "Zengun logo",
+            "url": ""
+          }
+        },
+        "logo_txHK8Y": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/673458673a0d213279b7ad50_Logo_container-5.svg",
+            "text": "Taylerd",
+            "alt": "Taylerd logo",
+            "url": ""
+          }
+        },
+        "logo_VpkUkf": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/673458673a0d213279b7ad51_Logo_container-1.webp",
+            "text": "Eq",
+            "alt": "Eq logo",
+            "url": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_7Fcqfw",
+        "logo_ji6dKw",
+        "logo_xBUJCG",
+        "logo_4QK4K8",
+        "logo_txHK8Y",
+        "logo_VpkUkf"
+      ],
       "settings": {
         "heading": "Några av våra nöjda kunder"
       }
