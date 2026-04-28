@@ -1,62 +1,54 @@
 {% comment %}
   reCarpet Kontakta oss — Contact page section
-  Includes intro split + contact form + info blocks
+  Matches Webflow design: recarpet.se/kontakta-oss
 {% endcomment %}
 
 <style>
-  /* Intro */
   .rc-contact-page {
-    background: var(--rc-white);
+    background: var(--rc-cream, #f5f3ef);
     padding: var(--rc-section-md) 0;
   }
   .rc-contact-page__inner {
     max-width: var(--rc-max-width);
     margin: 0 auto;
     padding: 0 var(--rc-page-padding);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5rem;
-    align-items: start;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 5rem !important;
+    align-items: start !important;
   }
 
   /* Left: Contact info */
-  .rc-contact-page__info-eyebrow {
-    font-size: var(--rc-text-xs);
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--rc-text-muted);
-    margin-bottom: 0.625rem;
-  }
   .rc-contact-page__info-heading {
-    font-size: clamp(1.625rem, 3vw, var(--rc-h3));
-    font-weight: 500;
-    color: var(--rc-text);
-    line-height: 1.2;
-    margin: 0 0 1.25rem;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 3rem !important;
+    font-weight: 500 !important;
+    line-height: 120% !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 1.25rem !important;
   }
   .rc-contact-page__info-body {
-    font-size: var(--rc-text-base);
-    line-height: 1.75;
-    color: var(--rc-text-muted);
-    margin: 0 0 2.5rem;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 2.5rem !important;
   }
 
   .rc-contact-blocks {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
+    margin-bottom: 3rem;
   }
   .rc-contact-block {
     display: flex;
-    gap: 1rem;
-    align-items: flex-start;
+    gap: 0.75rem;
+    align-items: center;
   }
   .rc-contact-block__icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: var(--rc-radius);
-    background: var(--rc-cream);
+    width: 2rem;
+    height: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,42 +57,98 @@
   .rc-contact-block__icon svg {
     width: 1.25rem;
     height: 1.25rem;
-    stroke: var(--rc-green);
+    stroke: var(--rc-off-black, #1a1a1a);
     fill: none;
-    stroke-width: 1.8;
+    stroke-width: 1.5;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .rc-contact-block__label {
-    font-size: var(--rc-text-xs);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--rc-text-muted);
-    margin-bottom: 0.25rem;
-  }
   .rc-contact-block__value {
-    font-size: var(--rc-text-sm);
-    color: var(--rc-text);
-    font-weight: 500;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1rem !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    font-weight: 400 !important;
   }
   .rc-contact-block__value a {
-    color: var(--rc-green);
-    text-decoration: none;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    text-decoration: none !important;
   }
-  .rc-contact-block__value a:hover { text-decoration: underline; }
+  .rc-contact-block__value a:hover {
+    text-decoration: underline !important;
+  }
+
+  /* Contact persons — in left column */
+  .rc-contact-persons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+  .rc-contact-person {
+    display: flex;
+    flex-direction: column;
+  }
+  .rc-contact-person__photo {
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  .rc-contact-person__photo img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  .rc-contact-person__name {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 0.125rem !important;
+  }
+  .rc-contact-person__title {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 1rem !important;
+  }
+  .rc-contact-person__phone {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1rem !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 0.25rem !important;
+  }
+  .rc-contact-person__phone a {
+    color: var(--rc-off-black, #1a1a1a) !important;
+    text-decoration: none !important;
+  }
+  .rc-contact-person__phone a:hover { text-decoration: underline !important; }
+  .rc-contact-person__email {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1rem !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 !important;
+  }
+  .rc-contact-person__email a {
+    color: var(--rc-off-black, #1a1a1a) !important;
+    text-decoration: none !important;
+  }
+  .rc-contact-person__email a:hover { text-decoration: underline !important; }
 
   /* Right: Form */
   .rc-contact-form-wrap {
-    background: var(--rc-cream);
-    border-radius: var(--rc-radius-lg);
+    background: var(--rc-white, #fff);
+    border-radius: var(--rc-radius-lg, 1rem);
     padding: 2.5rem;
   }
   .rc-contact-form-wrap h3 {
-    font-size: var(--rc-h5);
-    font-weight: 500;
-    color: var(--rc-text);
-    margin: 0 0 1.5rem;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.5rem !important;
+    font-weight: 500 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 1.5rem !important;
   }
   .rc-form-row {
     display: grid;
@@ -115,84 +163,90 @@
   }
   .rc-form-group--full { grid-column: 1 / -1; }
   .rc-form-group label {
-    font-size: var(--rc-text-sm);
-    font-weight: 600;
-    color: var(--rc-text);
-    letter-spacing: 0.02em;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
   }
   .rc-form-group input,
   .rc-form-group select,
   .rc-form-group textarea {
     width: 100%;
     padding: 0.75rem 0.875rem;
-    border: 1.5px solid var(--rc-cream-alt);
-    border-radius: var(--rc-radius-sm);
-    font-size: var(--rc-text-sm);
+    border: 1px solid var(--rc-off-black, #1a1a1a) !important;
+    border-radius: var(--rc-radius-sm, 0.375rem);
+    font-size: 0.875rem;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
-    color: var(--rc-text);
-    background: var(--rc-white);
+    color: var(--rc-off-black, #1a1a1a);
+    background: var(--rc-white, #fff);
     outline: none;
     transition: border-color 0.15s;
     box-sizing: border-box;
     -webkit-appearance: none;
   }
+  .rc-form-group input::placeholder,
+  .rc-form-group textarea::placeholder {
+    color: #999 !important;
+    opacity: 1 !important;
+  }
   .rc-form-group input:focus,
   .rc-form-group select:focus,
   .rc-form-group textarea:focus {
-    border-color: var(--rc-green);
+    border-color: var(--rc-green, #1e4433) !important;
   }
   .rc-form-group textarea { resize: vertical; min-height: 7.5rem; }
 
-  /* Radio button group */
+  /* Radio button group — styled as clickable boxes */
   .rc-radio-group {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
   }
   .rc-radio-group__label {
-    font-size: var(--rc-text-sm);
-    font-weight: 600;
-    color: var(--rc-text);
-    letter-spacing: 0.02em;
-    margin-bottom: 0.75rem;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin-bottom: 0.5rem;
+    font-style: italic;
   }
   .rc-radio-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
   }
   .rc-radio-option {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
   }
   .rc-radio-option input[type="radio"] {
-    width: auto;
-    padding: 0;
-    border: none;
-    margin: 0;
-    cursor: pointer;
-    accent-color: var(--rc-green);
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
   }
   .rc-radio-option label {
-    margin: 0;
+    margin: 0 !important;
     cursor: pointer;
-    padding: 0.625rem 0.875rem;
-    border: 1.5px solid var(--rc-cream-alt);
-    border-radius: var(--rc-radius-sm);
-    background: var(--rc-white);
+    padding: 0.625rem 1rem !important;
+    border: 1px solid var(--rc-off-black, #1a1a1a) !important;
+    border-radius: var(--rc-radius-sm, 0.375rem) !important;
+    background: var(--rc-white, #fff) !important;
     transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    display: flex !important;
+    align-items: center !important;
     flex: 1;
-    font-size: var(--rc-text-sm);
-    font-weight: 500;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
   }
   .rc-radio-option input[type="radio"]:checked + label {
-    border-color: var(--rc-green);
-    background: rgba(30, 68, 51, 0.05);
-    color: var(--rc-green);
+    border-color: var(--rc-green, #1e4433) !important;
+    background: rgba(30, 68, 51, 0.05) !important;
+    color: var(--rc-green, #1e4433) !important;
+    font-weight: 500 !important;
   }
 
   /* Checkbox */
@@ -209,40 +263,41 @@
     margin: 0;
     padding: 0;
     cursor: pointer;
-    accent-color: var(--rc-green);
-    border: 1.5px solid var(--rc-cream-alt);
-    border-radius: var(--rc-radius-sm);
+    accent-color: var(--rc-green, #1e4433);
+    border: 1px solid var(--rc-off-black, #1a1a1a);
+    border-radius: 0.25rem;
     flex-shrink: 0;
   }
   .rc-checkbox-group label {
-    margin: 0;
-    font-size: var(--rc-text-sm);
-    line-height: 1.5;
+    margin: 0 !important;
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
     cursor: pointer;
+    color: var(--rc-off-black, #1a1a1a) !important;
   }
   .rc-checkbox-group a {
-    color: var(--rc-green);
-    text-decoration: none;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    text-decoration: underline !important;
   }
   .rc-checkbox-group a:hover {
-    text-decoration: underline;
+    color: var(--rc-green, #1e4433) !important;
   }
 
   .rc-form-submit { margin-top: 1.5rem; }
   .rc-form-submit button {
-    width: 100%;
-    padding: 0.875rem;
-    background: var(--rc-green);
-    color: var(--rc-white);
+    padding: 0.875rem 2rem;
+    background: var(--rc-green, #1e4433);
+    color: var(--rc-white, #fff);
     border: none;
-    border-radius: var(--rc-radius-sm);
-    font-size: var(--rc-text-sm);
-    font-weight: 600;
+    border-radius: var(--rc-radius, 0.5rem);
+    font-size: 1rem;
+    font-weight: 500;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
     cursor: pointer;
     transition: background 0.2s;
   }
-  .rc-form-submit button:hover { background: var(--rc-green-hover); }
+  .rc-form-submit button:hover { background: var(--rc-green-hover, #163a28); }
 
   /* Success message */
   .rc-form-success {
@@ -254,113 +309,47 @@
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
-    background: var(--rc-green);
+    background: var(--rc-green, #1e4433);
     margin: 0 auto 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   .rc-form-success__icon svg { width: 1.75rem; height: 1.75rem; stroke: var(--rc-white); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-  .rc-form-success h4 { font-size: var(--rc-h6); font-weight: 600; margin: 0 0 0.5rem; }
-  .rc-form-success p { font-size: var(--rc-text-sm); color: var(--rc-text-muted); margin: 0; }
-
-  /* Contact persons section */
-  .rc-contact-persons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
-    margin-top: 3.75rem;
-    padding-top: 3.75rem;
-    border-top: 1px solid var(--rc-cream-alt);
-  }
-  .rc-contact-person {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .rc-contact-person__name {
-    font-size: var(--rc-text-md);
-    font-weight: 600;
-    color: var(--rc-text);
-    margin: 0;
-  }
-  .rc-contact-person__title {
-    font-size: var(--rc-text-sm);
-    font-weight: 500;
-    color: var(--rc-green);
-    letter-spacing: 0.02em;
-    margin: 0;
-  }
-  .rc-contact-person__phone {
-    font-size: var(--rc-text-sm);
-    color: var(--rc-text);
-    margin: 0.25rem 0 0 0;
-  }
-  .rc-contact-person__phone a {
-    color: var(--rc-text);
-    text-decoration: none;
-  }
-  .rc-contact-person__phone a:hover {
-    color: var(--rc-green);
-  }
-  .rc-contact-person__email {
-    font-size: var(--rc-text-sm);
-    color: var(--rc-text);
-    margin: 0;
-  }
-  .rc-contact-person__email a {
-    color: var(--rc-green);
-    text-decoration: none;
-  }
-  .rc-contact-person__email a:hover {
-    text-decoration: underline;
-  }
+  .rc-form-success h4 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem; }
+  .rc-form-success p { font-size: 0.875rem; color: var(--rc-text-muted, #666); margin: 0; }
 
   @media (max-width: 900px) {
-    .rc-contact-page__inner { grid-template-columns: 1fr; gap: 3rem; padding: 0 1.25rem; }
+    .rc-contact-page__inner {
+      grid-template-columns: 1fr !important;
+      gap: 3rem !important;
+      padding: 0 1.25rem !important;
+    }
     .rc-form-row { grid-template-columns: 1fr; }
     .rc-contact-persons { grid-template-columns: 1fr; gap: 2rem; }
   }
   @media (max-width: 600px) {
     .rc-contact-form-wrap { padding: 1.75rem 1.25rem; }
-    .rc-radio-grid { grid-template-columns: repeat(2, 1fr); }
+    .rc-radio-grid { grid-template-columns: 1fr; }
   }
 </style>
 
 <section class="rc-contact-page">
   <div class="rc-contact-page__inner">
-    <!-- Info side -->
+    <!-- Left: Info + contact persons -->
     <div>
-      {%- if section.settings.eyebrow != blank -%}
-        <p class="rc-contact-page__info-eyebrow">{{ section.settings.eyebrow }}</p>
-      {%- endif -%}
       <h2 class="rc-contact-page__info-heading">{{ section.settings.heading }}</h2>
       {%- if section.settings.body != blank -%}
         <p class="rc-contact-page__info-body">{{ section.settings.body }}</p>
       {%- endif -%}
 
       <div class="rc-contact-blocks">
-        {%- if section.settings.phone != blank -%}
-          <div class="rc-contact-block">
-            <div class="rc-contact-block__icon">
-              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.82a19.79 19.79 0 01-3.07-8.67 2 2 0 012-2.18h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 6.91a16 16 0 006.18 6.18l1.28-1.28a2 2 0 012.11-.45c.9.33 1.85.53 2.81.7A2 2 0 0122 16.92z"/></svg>
-            </div>
-            <div>
-              <div class="rc-contact-block__label">Telefon</div>
-              <div class="rc-contact-block__value"><a href="tel:{{ section.settings.phone | remove: ' ' }}">{{ section.settings.phone }}</a></div>
-            </div>
-          </div>
-        {%- endif -%}
-
         {%- if section.settings.email != blank -%}
           <div class="rc-contact-block">
             <div class="rc-contact-block__icon">
               <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </div>
-            <div>
-              <div class="rc-contact-block__label">E-post</div>
-              <div class="rc-contact-block__value"><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></div>
-            </div>
+            <div class="rc-contact-block__value"><a href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a></div>
           </div>
         {%- endif -%}
 
@@ -369,16 +358,39 @@
             <div class="rc-contact-block__icon">
               <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
-            <div>
-              <div class="rc-contact-block__label">Adress</div>
-              <div class="rc-contact-block__value">{{ section.settings.address }}</div>
-            </div>
+            <div class="rc-contact-block__value">{{ section.settings.address }}</div>
           </div>
         {%- endif -%}
       </div>
+
+      <!-- Contact persons -->
+      {%- assign person_blocks = section.blocks | where: "type", "contact_person" -%}
+      {%- if person_blocks.size > 0 -%}
+        <div class="rc-contact-persons">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'contact_person' -%}
+              <div class="rc-contact-person" {{ block.shopify_attributes }}>
+                {%- if block.settings.photo != blank -%}
+                  <div class="rc-contact-person__photo">
+                    <img src="{{ block.settings.photo | image_url: width: 300 }}" alt="{{ block.settings.name }}" loading="lazy">
+                  </div>
+                {%- endif -%}
+                <h4 class="rc-contact-person__name">{{ block.settings.name }}</h4>
+                <p class="rc-contact-person__title">{{ block.settings.title }}</p>
+                {%- if block.settings.phone != blank -%}
+                  <p class="rc-contact-person__phone"><a href="tel:{{ block.settings.phone | remove: ' ' | remove: '-' }}">{{ block.settings.phone }}</a></p>
+                {%- endif -%}
+                {%- if block.settings.email != blank -%}
+                  <p class="rc-contact-person__email"><a href="mailto:{{ block.settings.email }}">{{ block.settings.email }}</a></p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
 
-    <!-- Form side -->
+    <!-- Right: Form -->
     <div class="rc-contact-form-wrap">
       <h3>{{ section.settings.form_heading | default: 'Skicka ett meddelande' }}</h3>
       <div id="rc-contact-form-container">
@@ -395,7 +407,7 @@
           </div>
           <div class="rc-form-row">
             <div class="rc-form-group">
-              <label for="ContactFormEmail">E-post</label>
+              <label for="ContactFormEmail">Email</label>
               <input type="email" id="ContactFormEmail" name="contact[email]" autocomplete="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="din@email.se" required>
             </div>
             <div class="rc-form-group">
@@ -452,14 +464,14 @@
           </div>
           <div class="rc-form-group rc-form-group--full">
             <label for="ContactFormMessage">Meddelande</label>
-            <textarea id="ContactFormMessage" name="contact[body]" placeholder="Berätta vad du behöver hjälp med..." required></textarea>
+            <textarea id="ContactFormMessage" name="contact[body]" placeholder="Skriv ditt meddelande..." required></textarea>
           </div>
           <div class="rc-checkbox-group">
             <input type="checkbox" id="ContactFormPrivacy" name="contact[privacy]" value="accepted" required>
             <label for="ContactFormPrivacy">Jag accepterar <a href="/pages/integritetspolicy">Integritetspolicyn</a></label>
           </div>
           <div class="rc-form-submit">
-            <button type="submit">{{ section.settings.submit_label | default: 'Skicka meddelande' }}</button>
+            <button type="submit">{{ section.settings.submit_label | default: 'Skicka' }}</button>
           </div>
         {%- endform -%}
       </div>
@@ -476,24 +488,6 @@
       {%- endif -%}
     </div>
   </div>
-
-  <!-- Contact persons section -->
-  <div class="rc-contact-page__inner">
-    <div class="rc-contact-persons">
-      <div class="rc-contact-person">
-        <h4 class="rc-contact-person__name">Jonas Hallman</h4>
-        <p class="rc-contact-person__title">Demonteringar, Samarbeten</p>
-        <p class="rc-contact-person__phone"><a href="tel:+46700733682">070-073 36 82</a></p>
-        <p class="rc-contact-person__email"><a href="mailto:jonas@recarpet.se">jonas@recarpet.se</a></p>
-      </div>
-      <div class="rc-contact-person">
-        <h4 class="rc-contact-person__name">Tim Aronsson</h4>
-        <p class="rc-contact-person__title">Försäljningschef</p>
-        <p class="rc-contact-person__phone"><a href="tel:+46700733681">070-073 36 81</a></p>
-        <p class="rc-contact-person__email"><a href="mailto:tim.aronsson@recarpet.se">tim.aronsson@recarpet.se</a></p>
-      </div>
-    </div>
-  </div>
 </section>
 
 {% schema %}
@@ -502,25 +496,34 @@
   "tag": "div",
   "class": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Liten text", "default": "Kontakta oss" },
-    { "type": "textarea", "id": "heading", "label": "Rubrik", "default": "Hur kan vi hjälpa dig?" },
-    { "type": "textarea", "id": "body", "label": "Text", "default": "Beställ prover, boka en inventering eller ställ en fråga. Vi svarar inom en arbetsdag." },
-    { "type": "text", "id": "phone", "label": "Telefon" },
+    { "type": "textarea", "id": "heading", "label": "Rubrik", "default": "Kontakta oss" },
+    { "type": "textarea", "id": "body", "label": "Text" },
     { "type": "text", "id": "email", "label": "E-post" },
     { "type": "text", "id": "address", "label": "Adress" },
     { "type": "text", "id": "form_heading", "label": "Formulärrubrik", "default": "Skicka ett meddelande" },
-    { "type": "text", "id": "submit_label", "label": "Knapptext", "default": "Skicka meddelande" }
+    { "type": "text", "id": "submit_label", "label": "Knapptext", "default": "Skicka" }
+  ],
+  "blocks": [
+    {
+      "type": "contact_person",
+      "name": "Kontaktperson",
+      "settings": [
+        { "type": "image_picker", "id": "photo", "label": "Foto" },
+        { "type": "text", "id": "name", "label": "Namn" },
+        { "type": "text", "id": "title", "label": "Titel / Roll" },
+        { "type": "text", "id": "phone", "label": "Telefon" },
+        { "type": "text", "id": "email", "label": "E-post" }
+      ]
+    }
   ],
   "presets": [
     {
       "name": "reCarpet Kontakta oss",
       "settings": {
-        "eyebrow": "Kontakta oss",
-        "heading": "Hur kan vi hjälpa dig?",
-        "body": "Beställ prover, boka en inventering eller ställ en fråga. Vi svarar inom en arbetsdag.",
-        "email": "hej@recarpet.se",
+        "heading": "Kontakta oss",
+        "email": "info@recarpet.se",
         "form_heading": "Skicka ett meddelande",
-        "submit_label": "Skicka meddelande"
+        "submit_label": "Skicka"
       }
     }
   ]

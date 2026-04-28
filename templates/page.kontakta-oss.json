@@ -11,13 +11,34 @@
   "sections": {
     "rc_kontakta_oss": {
       "type": "rc-kontakta-oss",
+      "blocks": {
+        "person1": {
+          "type": "contact_person",
+          "settings": {
+            "name": "Jonas Hallman",
+            "title": "Demonteringar\nSamarbeten",
+            "phone": "070-073 36 82",
+            "email": "jonas@recarpet.se"
+          }
+        },
+        "person2": {
+          "type": "contact_person",
+          "settings": {
+            "name": "Tim Aronsson",
+            "title": "Försäljningschef",
+            "phone": "070-073 36 81",
+            "email": "tim.aronsson@recarpet.se"
+          }
+        }
+      },
+      "block_order": ["person1", "person2"],
       "settings": {
-        "eyebrow": "Kontakta oss",
-        "heading": "Hur kan vi hjälpa dig?",
-        "body": "Beställ prover, boka en inventering eller ställ en fråga. Vi svarar inom en arbetsdag.",
-        "email": "hej@recarpet.se",
-        "form_heading": "Skicka ett meddelande",
-        "submit_label": "Skicka meddelande"
+        "heading": "Kontakta oss",
+        "body": "Välkommen att kontakta oss med dina frågor om golv, återbruk och allt däremellan. Kryssa för det du vill ha hjälp med och skriv en rad, så återkommer vi till dig.",
+        "email": "info@recarpet.se",
+        "address": "Solkraftsvägen 16B, 135 70 Stockholm",
+        "form_heading": "",
+        "submit_label": "Skicka"
       }
     },
     "rc_logo_bar": {
