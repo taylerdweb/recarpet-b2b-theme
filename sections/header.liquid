@@ -625,10 +625,13 @@
           Logga in
         </a>
       {%- else -%}
-        <a href="{{ routes.account_url }}" class="rc-header-login small-hide" rel="nofollow">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Mitt konto
-        </a>
+        {%- assign _hdr_tags = customer.tags | join: ',' | downcase -%}
+        {%- if _hdr_tags contains 'b2b-member-' or _hdr_tags contains 'b2b-plus-' or _hdr_tags contains 'b2b-premium-' -%}
+          <a href="{{ routes.account_url }}" class="rc-header-login small-hide" rel="nofollow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Mitt konto
+          </a>
+        {%- endif -%}
       {%- endunless -%}
       <!-- reCarpet: B2B SparkLayer cart icon (only for approved B2B customers) -->
       {%- assign customer_tags_lower = customer.tags | join: ',' | downcase -%}
