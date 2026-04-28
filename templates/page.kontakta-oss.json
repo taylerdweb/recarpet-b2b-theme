@@ -15,6 +15,7 @@
         "person1": {
           "type": "contact_person",
           "settings": {
+            "photo": "shopify://shop_images/jonas-recarpet.jpg",
             "name": "Jonas Hallman",
             "title": "Demonteringar, Samarbeten",
             "phone": "070-073 36 82",
@@ -24,6 +25,7 @@
         "person2": {
           "type": "contact_person",
           "settings": {
+            "photo": "shopify://shop_images/tim-aronsson-recarpet.jpg",
             "name": "Tim Aronsson",
             "title": "Försäljningschef",
             "phone": "070-073 36 81",
@@ -31,7 +33,10 @@
           }
         }
       },
-      "block_order": ["person1", "person2"],
+      "block_order": [
+        "person1",
+        "person2"
+      ],
       "settings": {
         "heading": "Kontakta oss",
         "body": "Välkommen att kontakta oss med dina frågor om golv, återbruk och allt däremellan. Kryssa för det du vill ha hjälp med och skriv en rad, så återkommer vi till dig.",
