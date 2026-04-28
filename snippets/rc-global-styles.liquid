@@ -372,10 +372,19 @@
 
   /* ===== Collection page overrides ===== */
 
-  /* Hero banner — cream background */
+  /* Hero banner — beige background, two-column layout */
   .collection-hero {
-    background: var(--rc-cream, #f5f3ef) !important;
+    background: var(--base-color-brand--rc-beige, #e6e3de) !important;
     padding: 3rem 0 !important;
+  }
+  .collection-hero__inner {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 3rem !important;
+    align-items: start !important;
+  }
+  .collection-hero__text-wrapper {
+    flex-basis: auto !important;
   }
 
   /* Title — heading-style-h2 */
@@ -385,10 +394,10 @@
     font-weight: 500 !important;
     line-height: 120% !important;
     color: var(--rc-off-black, #1a1a1a) !important;
-    margin: 0 0 1rem !important;
+    margin: 0 !important;
   }
 
-  /* Description */
+  /* Description — right column */
   .collection-hero__title + .collection-hero__description,
   .collection-hero__description {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
@@ -396,11 +405,19 @@
     font-weight: 400 !important;
     line-height: 1.6 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
-    margin-top: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
   }
   .collection-hero__description p {
     font-size: 1rem !important;
     line-height: 1.6 !important;
+  }
+
+  @media screen and (max-width: 749px) {
+    .collection-hero__inner {
+      grid-template-columns: 1fr !important;
+      gap: 1.5rem !important;
+    }
   }
 
   /* Filter bar — tighten up Dawn's oversized text */
