@@ -61,34 +61,31 @@
   </div>
 
   <style>
-    :root { --rc-banner-height: 0px; }
     .rc-guest-banner {
       background: var(--rc-green, #1e4433);
       color: #fff;
       font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-      font-size: 0.8125rem !important; /* 13px */
+      font-size: 0.8125rem !important;
       font-weight: 400 !important;
       line-height: 1.5 !important;
       letter-spacing: 0.01em;
-      padding: 0.625rem 1rem; /* 10px 16px */
+      padding: 0.625rem 1rem;
       text-align: center;
-      position: fixed;
+      position: sticky;
       top: 0;
-      left: 0;
-      right: 0;
       z-index: 110;
     }
     .rc-guest-banner__text,
     .rc-guest-banner__link {
       font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-      font-size: 0.8125rem !important; /* 13px */
+      font-size: 0.8125rem !important;
       color: #fff !important;
     }
     .rc-guest-banner__inner {
-      max-width: 68.75rem; /* 1100px */
+      max-width: 68.75rem;
       margin: 0 auto;
       display: flex;
-      gap: 0.75rem; /* 12px */
+      gap: 0.75rem;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
@@ -100,26 +97,25 @@
       font-weight: 500 !important;
     }
     .rc-guest-banner__link:hover { opacity: 0.85; }
-
-    /* Header sits right below the fixed banner — no gap */
-    .header-wrapper {
-      top: var(--rc-banner-height, 0px) !important;
-      margin-top: 0 !important;
-      border-top: none !important;
-    }
-    /* Push page content down to account for fixed banner */
-    body { padding-top: var(--rc-banner-height, 0px) !important; }
   </style>
 
   <script>
+    /* Keep the sticky header directly below the sticky banner */
     (function() {
-      var banner = document.querySelector('.rc-guest-banner');
-      if (!banner) return;
       function sync() {
-        document.documentElement.style.setProperty('--rc-banner-height', banner.offsetHeight + 'px');
+        var banner = document.querySelector('.rc-guest-banner');
+        var header = document.querySelector('.header-wrapper');
+        if (!banner || !header) return;
+        header.style.top = banner.offsetHeight + 'px';
       }
-      sync();
+      /* Run after DOM + layout are ready */
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', sync);
+      } else {
+        sync();
+      }
       window.addEventListener('resize', sync);
+      window.addEventListener('load', sync);
     })();
   </script>
 {%- endif -%}
