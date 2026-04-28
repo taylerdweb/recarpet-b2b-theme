@@ -183,9 +183,9 @@
   }
   .rc-about-services__heading {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 2rem !important;
+    font-size: 2.5rem !important;
     font-weight: 500 !important;
-    line-height: 130% !important;
+    line-height: 120% !important;
     color: var(--rc-off-black, #1a1a1a) !important;
     margin: 0 !important;
   }
@@ -195,23 +195,28 @@
     margin: 0 0 2.5rem !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
   }
   .rc-about-services__item {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 1.25rem !important;
+    font-size: 1.5rem !important;
     font-weight: 700 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
-    line-height: 1.5 !important;
-    padding-left: 2rem !important;
+    line-height: 140% !important;
+    padding-left: 2.25rem !important;
     position: relative;
+    display: flex !important;
+    align-items: center !important;
   }
   .rc-about-services__item::before {
-    content: '→' !important;
+    content: '' !important;
     position: absolute !important;
     left: 0 !important;
-    color: var(--rc-green, #1e4433) !important;
-    font-weight: 600 !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e4433' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3Cpath d='m12 5 7 7-7 7'/%3E%3C/svg%3E") !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
   }
   .rc-about-services__buttons {
     display: flex !important;
@@ -224,13 +229,13 @@
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 0.875rem 2rem !important;
-    border: 1.5px solid var(--rc-green, #1e4433) !important;
-    border-radius: 100px !important;
+    padding: 0.75rem 1.5rem !important;
+    border: 1px solid var(--rc-green, #1e4433) !important;
+    border-radius: var(--rc-radius, 0.5rem) !important;
     background: transparent !important;
     color: var(--rc-green, #1e4433) !important;
     font-size: 1rem !important;
-    font-weight: 500 !important;
+    font-weight: 400 !important;
     text-decoration: none !important;
     transition: background 0.2s, color 0.2s;
     cursor: pointer;
@@ -244,7 +249,7 @@
     display: inline-flex !important;
     align-items: center !important;
     gap: 0.5rem !important;
-    color: var(--rc-green, #1e4433) !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
     font-size: 1rem !important;
     font-weight: 500 !important;
     text-decoration: none !important;
@@ -258,8 +263,8 @@
     opacity: 0.7;
   }
   .rc-about-services__btn-link svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1rem;
+    height: 1rem;
     flex-shrink: 0;
   }
 
@@ -483,7 +488,7 @@
             <a href="{{ section.settings.services_btn1_url }}" class="rc-about-services__btn-outline">{{ section.settings.services_btn1_label }}</a>
           {%- endif -%}
           {%- if section.settings.services_btn2_label != blank -%}
-            <a href="{{ section.settings.services_btn2_url }}" class="rc-about-services__btn-link">{{ section.settings.services_btn2_label }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            <a href="{{ section.settings.services_btn2_url }}" class="rc-about-services__btn-link">{{ section.settings.services_btn2_label }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
           {%- endif -%}
         </div>
       </div>
