@@ -12,7 +12,7 @@
     "page_hero": {
       "type": "rc-page-hero",
       "settings": {
-        "background_image": "shopify://shop_images/recarpet-hero.jpg",
+        "background_image": "shopify://shop_images/rc-tjanster-hero.jpg",
         "image_position": "center center",
         "eyebrow": "Våra kunder",
         "heading": "Vi hjälper hela kedjan",
