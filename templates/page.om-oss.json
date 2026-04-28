@@ -192,7 +192,7 @@
       "type": "rc-contact-cta",
       "settings": {
         "heading": "Kontakta oss för ditt mattgolvprojekt",
-        "body": "Oavsett om du vill beställa prover, boka en inventering eller bara ställa en fråga — vi hjälper dig gärna.",
+        "body": "<p>Tillsammans med våra kunder kommer vi göra stora förbättringar för miljön.</p><p>Kontakta oss om du vill samarbeta och ta del av våra olika avtalsförslag. Kroka arm med oss idag. Tiden är knapp!</p>",
         "btn1_label": "Kontakta oss",
         "btn1_url": "/pages/kontakta-oss",
         "btn2_label": "",
