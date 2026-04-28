@@ -305,44 +305,82 @@
     max-width: var(--rc-max-width);
     margin: 0 auto;
     padding: 0 var(--rc-page-padding);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4rem !important;
+    align-items: start !important;
+  }
+  .rc-about-sustainability__eyebrow {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 1rem !important;
+    text-transform: none !important;
+  }
+  .rc-about-sustainability__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 3rem !important;
+    font-weight: 500 !important;
+    line-height: 120% !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 1.5rem !important;
+  }
+  .rc-about-sustainability__body {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.125rem !important;
+    line-height: 1.65 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 2rem !important;
+  }
+  .rc-about-sustainability__body p {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.125rem !important;
+    line-height: 1.65 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    margin: 0 0 1rem !important;
+  }
+  .rc-about-sustainability__body p:last-child {
+    margin: 0 !important;
+  }
+  .rc-about-sustainability__buttons {
+    display: flex !important;
+    gap: 1.5rem !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+  }
+  .rc-about-sustainability__btn-link {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .rc-about-sustainability__btn-link:hover {
+    opacity: 0.7;
+  }
+  .rc-about-sustainability__btn-link svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
   }
   .rc-about-sustainability__image {
     border-radius: var(--rc-radius);
     overflow: hidden;
-    aspect-ratio: 4/3;
   }
   .rc-about-sustainability__image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .rc-about-sustainability__heading {
-    font-size: clamp(1.75rem, 3vw, var(--rc-h3));
-    font-weight: 500;
-    color: var(--rc-text);
-    margin: 0 0 0.5rem;
-  }
-  .rc-about-sustainability__subtitle {
-    font-size: var(--rc-text-base);
-    font-weight: 500;
-    color: var(--rc-green);
-    margin: 0 0 1.5rem;
-  }
-  .rc-about-sustainability__body {
-    font-size: var(--rc-text-base);
-    line-height: 1.75;
-    color: var(--rc-text-muted);
-    margin: 0 0 1.5rem;
-  }
-  .rc-about-sustainability__body p {
-    margin: 0 0 1rem;
-  }
-  .rc-about-sustainability__body p:last-child {
-    margin: 0;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
   }
 
   /* ===== Responsive ===== */
@@ -504,25 +542,32 @@
 {%- if section.settings.sustainability_heading != blank -%}
   <section class="rc-about-sustainability">
     <div class="rc-about-sustainability__inner">
-      {%- if section.settings.sustainability_image != blank -%}
-        <div class="rc-about-sustainability__image">
-          <img src="{{ section.settings.sustainability_image | image_url: width: 900 }}" alt="{{ section.settings.sustainability_heading }}" loading="lazy">
-        </div>
-      {%- endif -%}
-      <div>
-        <h2 class="rc-about-sustainability__heading">{{ section.settings.sustainability_heading }}</h2>
-        {%- if section.settings.sustainability_subtitle != blank -%}
-          <p class="rc-about-sustainability__subtitle">{{ section.settings.sustainability_subtitle }}</p>
+      <!-- Left column: text -->
+      <div class="rc-about-sustainability__text">
+        {%- if section.settings.sustainability_eyebrow != blank -%}
+          <p class="rc-about-sustainability__eyebrow">{{ section.settings.sustainability_eyebrow }}</p>
         {%- endif -%}
+        <h2 class="rc-about-sustainability__heading">{{ section.settings.sustainability_heading }}</h2>
         {%- if section.settings.sustainability_body != blank -%}
           <div class="rc-about-sustainability__body">
             {{ section.settings.sustainability_body | newline_to_br }}
           </div>
         {%- endif -%}
-        {%- if section.settings.sustainability_btn_label != blank -%}
-          <a href="{{ section.settings.sustainability_btn_url }}" class="rc-btn rc-btn--primary">{{ section.settings.sustainability_btn_label }}</a>
-        {%- endif -%}
+        <div class="rc-about-sustainability__buttons">
+          {%- if section.settings.sustainability_btn_label != blank -%}
+            <a href="{{ section.settings.sustainability_btn_url }}" class="rc-btn rc-btn--primary">{{ section.settings.sustainability_btn_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.sustainability_btn2_label != blank -%}
+            <a href="{{ section.settings.sustainability_btn2_url }}" class="rc-about-sustainability__btn-link">{{ section.settings.sustainability_btn2_label }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+          {%- endif -%}
+        </div>
       </div>
+      <!-- Right column: image -->
+      {%- if section.settings.sustainability_image != blank -%}
+        <div class="rc-about-sustainability__image">
+          <img src="{{ section.settings.sustainability_image | image_url: width: 900 }}" alt="{{ section.settings.sustainability_heading }}" loading="lazy">
+        </div>
+      {%- endif -%}
     </div>
   </section>
 {%- endif -%}
@@ -635,33 +680,43 @@
     },
     {
       "type": "text",
+      "id": "sustainability_eyebrow",
+      "label": "Tagg (eyebrow)"
+    },
+    {
+      "type": "text",
       "id": "sustainability_heading",
       "label": "Rubrik"
     },
     {
-      "type": "text",
-      "id": "sustainability_subtitle",
-      "label": "Underrubrik"
-    },
-    {
       "type": "textarea",
       "id": "sustainability_body",
-      "label": "Text (flerrader)"
+      "label": "Brödtext"
     },
     {
       "type": "image_picker",
       "id": "sustainability_image",
-      "label": "Bild"
+      "label": "Bild (höger kolumn)"
     },
     {
       "type": "text",
       "id": "sustainability_btn_label",
-      "label": "Knapptext"
+      "label": "Knapp 1 text"
     },
     {
       "type": "url",
       "id": "sustainability_btn_url",
-      "label": "Knapp länk"
+      "label": "Knapp 1 länk"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_btn2_label",
+      "label": "Länktext (knapp 2)"
+    },
+    {
+      "type": "url",
+      "id": "sustainability_btn2_url",
+      "label": "Länk (knapp 2)"
     }
   ],
   "blocks": [
@@ -744,7 +799,8 @@
       "name": "reCarpet Om oss",
       "settings": {
         "vision_heading": "Vår vision",
-        "sustainability_heading": "En hållbar lösning"
+        "sustainability_eyebrow": "En hållbar lösning",
+        "sustainability_heading": "Hållbara golv är vår passion"
       }
     }
   ]

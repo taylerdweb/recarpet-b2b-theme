@@ -118,11 +118,13 @@
         "services_btn2_url": "/pages/offertkalkyl",
         "vision_heading": "Vår vision",
         "vision_body": "Vi strävar efter att göra textilplattor helt cirkulära genom att minimera avfall och maximera återbruk. Genom innovativa lösningar för återanvändning skapar vi hållbara och vackra miljöer för framtidens arbetsplatser.",
-        "sustainability_heading": "En hållbar lösning",
-        "sustainability_subtitle": "Hållbara golv är vår passion",
-        "sustainability_body": "Vi jobbar för miljön, men vi behöver beslutsfattare som också vill förändra. ReCarpet är redo att leverera återbrukade textilplattor till alla som vill göra skillnad.",
-        "sustainability_btn_label": "Läs mer om hållbarhet",
-        "sustainability_btn_url": "/pages/hallbarhet"
+        "sustainability_eyebrow": "En hållbar lösning",
+        "sustainability_heading": "Hållbara golv är vår passion",
+        "sustainability_body": "Vi arbetar för miljön, men vi behöver beslutsfattare som också vill förändra. ReCarpet är redo att leverera återbrukade textilplattor till alla de som vill göra skillnad. För att lyckas behöver vi få in golv via demontering eller att kunder skickar dem till oss. Våra kunder som satsar på hållbarhet förstår att vi kan cirkulera stora mängder golv och skapa verklig förändring. En vanlig tankevurpa är att man tror att det räcker med att demontera för att \"återbruka\" – det krävs mer än så, golvet måste hitta en väg ut igen och genom vårt kontaktnät bland beställare och arkitekter gör vi det möjligt. Att jobba med återbrukat material kräver lite mer jobb och processen ser ibland annorlunda ut, men det är värt det!",
+        "sustainability_btn_label": "Kontakta oss",
+        "sustainability_btn_url": "/pages/kontakta-oss",
+        "sustainability_btn2_label": "Vill ni ha referenser? Kontakta oss",
+        "sustainability_btn2_url": "/pages/kontakta-oss"
       }
     },
     "logo_bar": {
