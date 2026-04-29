@@ -989,9 +989,40 @@
             });
           }
 
+          // ── Stepper accent color: override purple with reCarpet yellow ──
+          function injectStepperStyles(root) {
+            if (!root || root.dataset.rcStepperStyled) return;
+            root.dataset.rcStepperStyled = '1';
+            var style = document.createElement('style');
+            style.textContent = [
+              ':host { --spark-accent-color: #EDB81E; --spark-checkout-step-active-color: #EDB81E; }',
+              '[class*="step"][class*="active"], [class*="step"][class*="current"] { color: #EDB81E !important; }',
+              '[class*="step"][class*="active"] svg circle, [class*="step"][class*="current"] svg circle { fill: #EDB81E !important; stroke: #EDB81E !important; }',
+              '[class*="step"][class*="active"] svg path, [class*="step"][class*="current"] svg path { fill: #EDB81E !important; stroke: #EDB81E !important; }',
+              '[class*="step"][class*="active"] [class*="indicator"], [class*="step"][class*="current"] [class*="indicator"] { background-color: #EDB81E !important; border-color: #EDB81E !important; }',
+              '[class*="step"][class*="complete"] [class*="indicator"], [class*="step"][class*="done"] [class*="indicator"] { background-color: #EDB81E !important; border-color: #EDB81E !important; }',
+              '[class*="progress"][class*="active"], [class*="progress"][class*="fill"] { background-color: #EDB81E !important; }',
+              '[class*="stepper"] [class*="active"], [class*="stepper"] [class*="current"] { color: #EDB81E !important; border-color: #EDB81E !important; }'
+            ].join('\n');
+            root.appendChild(style);
+          }
+
+          function injectStepperToSpark() {
+            var sparkEls = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
+            sparkEls.forEach(function(el) {
+              if (el.shadowRoot) {
+                injectStepperStyles(el.shadowRoot);
+                el.shadowRoot.querySelectorAll('*').forEach(function(child) {
+                  if (child.shadowRoot) injectStepperStyles(child.shadowRoot);
+                });
+              }
+            });
+          }
+
           var fakPoll = setInterval(function() {
             runFakturaInjection();
             watchForCheckoutChanges();
+            injectStepperToSpark();
           }, 500);
           setTimeout(function() { clearInterval(fakPoll); }, 120000);
 
@@ -1521,6 +1552,14 @@
     --spark-product-card-pricing-font-size: 15px; /* Pricing font size */
     --spark-product-card-pricing-font-size-small: 14px; /* Pricing font size on mobile */
     --spark-product-card-select-min-height: 0; /* Set a min-height for select menu */
+
+    /* Checkout stepper — override default purple with reCarpet accent yellow */
+    --spark-checkout-step-active-color: #EDB81E;
+    --spark-checkout-step-completed-color: #EDB81E;
+    --spark-checkout-progress-color: #EDB81E;
+    --spark-stepper-active-color: #EDB81E;
+    --spark-stepper-completed-color: #EDB81E;
+    --spark-accent-color: #EDB81E;
   }
 
 
