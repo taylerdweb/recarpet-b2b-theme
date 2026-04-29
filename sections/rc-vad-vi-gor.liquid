@@ -177,16 +177,16 @@
       position: relative;
       padding-left: 2.75rem;
     }
-    /* Vertical connecting line */
+    /* Vertical connecting line — black, stops at last dot */
     .rc-timeline-nav__track::before {
       content: '' !important;
       position: absolute !important;
       left: 6px;
       top: 0;
-      bottom: 0;
+      bottom: 2rem;
       width: 3px !important;
       height: auto !important;
-      background: #8ba99a !important;
+      background: var(--rc-off-black, #1a1a1a) !important;
       border-radius: 2px;
       grid-row: unset;
       grid-column: unset;
