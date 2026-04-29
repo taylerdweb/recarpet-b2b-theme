@@ -194,7 +194,7 @@
                 -%}
               </a>
             {%- endif -%}
-            {%- comment -%} reCarpet: mobile flag-based locale switcher — inline flags, no dropdown {%- endcomment -%}
+            {%- comment -%} reCarpet: mobile collapsible locale switcher — trigger row with expandable options {%- endcomment -%}
             {%- if localization.available_countries and localization.available_countries.size > 1 -%}
               <div class="menu-drawer__localization header-localization" style="padding: 20px 30px;">
                 {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
@@ -210,80 +210,165 @@
                 {%- capture flag_NL -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#21468B"/><rect width="20" height="5" rx="2" fill="#AE1C28"/><rect y="5" width="20" height="5" fill="#fff"/></svg>{%- endcapture -%}
                 {%- capture flag_GB -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#012169"/><path d="M0,0 L20,15 M20,0 L0,15" stroke="#fff" stroke-width="2.5"/><path d="M0,0 L20,15 M20,0 L0,15" stroke="#C8102E" stroke-width="1.5"/><rect x="8" width="4" height="15" fill="#fff"/><rect y="5.5" width="20" height="4" fill="#fff"/><rect x="8.75" width="2.5" height="15" fill="#C8102E"/><rect y="6" width="20" height="3" fill="#C8102E"/></svg>{%- endcapture -%}
 
+                {%- comment -%} Map current country to flag + name {%- endcomment -%}
+                {%- case localization.country.iso_code -%}
+                  {%- when 'SE' -%}{%- assign _cur_flag = flag_SE -%}{%- assign _cur_name = 'Sverige' -%}
+                  {%- when 'NO' -%}{%- assign _cur_flag = flag_NO -%}{%- assign _cur_name = 'Norge' -%}
+                  {%- when 'DK' -%}{%- assign _cur_flag = flag_DK -%}{%- assign _cur_name = 'Danmark' -%}
+                  {%- when 'FI' -%}{%- assign _cur_flag = flag_FI -%}{%- assign _cur_name = 'Finland' -%}
+                  {%- when 'DE' -%}{%- assign _cur_flag = flag_DE -%}{%- assign _cur_name = 'Deutschland' -%}
+                  {%- when 'NL' -%}{%- assign _cur_flag = flag_NL -%}{%- assign _cur_name = 'Nederland' -%}
+                  {%- when 'GB' -%}{%- assign _cur_flag = flag_GB -%}{%- assign _cur_name = 'United Kingdom' -%}
+                  {%- else -%}{%- assign _cur_flag = '' -%}{%- assign _cur_name = localization.country.name -%}
+                {%- endcase -%}
+
                 <div class="rc-locale-mobile" data-rc-locale-mobile>
-                  <div class="rc-locale-mobile__flags">
+                  {%- comment -%} Trigger row: flag + country name + caret {%- endcomment -%}
+                  <button type="button" class="rc-locale-mobile__trigger" aria-expanded="false">
+                    <span class="rc-locale-mobile__flag">{{ _cur_flag }}</span>
+                    <span class="rc-locale-mobile__trigger-label">{{ _cur_name }}</span>
+                    <svg class="rc-locale-mobile__caret" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+
+                  {%- comment -%} Expandable options panel {%- endcomment -%}
+                  <div class="rc-locale-mobile__panel" hidden>
                     {%- for country in localization.available_countries -%}
+                      {%- if country.iso_code == localization.country.iso_code -%}{%- continue -%}{%- endif -%}
                       {%- case country.iso_code -%}
-                        {%- when 'SE' -%}{%- assign _mflag = flag_SE -%}{%- assign _mlabel = 'SE' -%}{%- assign _mlang = 'sv' -%}
-                        {%- when 'NO' -%}{%- assign _mflag = flag_NO -%}{%- assign _mlabel = 'NO' -%}{%- assign _mlang = 'sv' -%}
-                        {%- when 'DK' -%}{%- assign _mflag = flag_DK -%}{%- assign _mlabel = 'DK' -%}{%- assign _mlang = 'da' -%}
-                        {%- when 'FI' -%}{%- assign _mflag = flag_FI -%}{%- assign _mlabel = 'FI' -%}{%- assign _mlang = 'sv' -%}
-                        {%- when 'DE' -%}{%- assign _mflag = flag_DE -%}{%- assign _mlabel = 'DE' -%}{%- assign _mlang = 'de' -%}
-                        {%- when 'NL' -%}{%- assign _mflag = flag_NL -%}{%- assign _mlabel = 'NL' -%}{%- assign _mlang = 'nl' -%}
-                        {%- when 'GB' -%}{%- assign _mflag = flag_GB -%}{%- assign _mlabel = 'GB' -%}{%- assign _mlang = 'en' -%}
-                        {%- else -%}{%- assign _mflag = '' -%}{%- assign _mlabel = country.iso_code -%}{%- assign _mlang = 'sv' -%}
+                        {%- when 'SE' -%}{%- assign _mflag = flag_SE -%}{%- assign _mname = 'Sverige' -%}{%- assign _mlang = 'sv' -%}
+                        {%- when 'NO' -%}{%- assign _mflag = flag_NO -%}{%- assign _mname = 'Norge' -%}{%- assign _mlang = 'sv' -%}
+                        {%- when 'DK' -%}{%- assign _mflag = flag_DK -%}{%- assign _mname = 'Danmark' -%}{%- assign _mlang = 'da' -%}
+                        {%- when 'FI' -%}{%- assign _mflag = flag_FI -%}{%- assign _mname = 'Finland' -%}{%- assign _mlang = 'sv' -%}
+                        {%- when 'DE' -%}{%- assign _mflag = flag_DE -%}{%- assign _mname = 'Deutschland' -%}{%- assign _mlang = 'de' -%}
+                        {%- when 'NL' -%}{%- assign _mflag = flag_NL -%}{%- assign _mname = 'Nederland' -%}{%- assign _mlang = 'nl' -%}
+                        {%- when 'GB' -%}{%- assign _mflag = flag_GB -%}{%- assign _mname = 'United Kingdom' -%}{%- assign _mlang = 'en' -%}
+                        {%- else -%}{%- assign _mflag = '' -%}{%- assign _mname = country.name -%}{%- assign _mlang = 'sv' -%}
                       {%- endcase -%}
                       <button
                         type="button"
-                        class="rc-locale-mobile__flag-btn{% if country.iso_code == localization.country.iso_code %} rc-locale-mobile__flag-btn--active{% endif %}"
+                        class="rc-locale-mobile__option"
                         data-country-code="{{ country.iso_code }}"
                         data-locale-code="{{ _mlang }}"
-                        aria-label="{{ _mlabel }}"
                       >
                         <span class="rc-locale-mobile__flag">{{ _mflag }}</span>
-                        <span class="rc-locale-mobile__label">{{ _mlabel }}</span>
+                        <span class="rc-locale-mobile__option-name">{{ _mname }}</span>
                       </button>
                     {%- endfor -%}
                   </div>
                 </div>
 
                 <style>
-                  .rc-locale-mobile__flags {
-                    display: flex;
-                    gap: 0.5rem;
-                    flex-wrap: wrap;
+                  .rc-locale-mobile {
+                    position: relative;
                   }
-                  .rc-locale-mobile__flag-btn {
-                    display: inline-flex;
+
+                  /* — Trigger row — */
+                  .rc-locale-mobile__trigger {
+                    display: flex;
                     align-items: center;
-                    gap: 0.35rem;
-                    padding: 0.5rem 0.75rem;
-                    background: transparent;
-                    border: 1px solid #ddd;
-                    border-radius: 6px;
+                    gap: 0.5rem;
+                    width: 100%;
+                    padding: 0;
+                    background: none;
+                    border: none;
                     cursor: pointer;
                     font-family: var(--rc-font, 'DM Sans', sans-serif);
-                    font-size: 0.8rem;
+                    font-size: 14px;
                     font-weight: 500;
                     color: var(--rc-off-black, #1a1a1a);
-                    transition: border-color 0.15s, background 0.15s;
+                    line-height: 1;
                   }
-                  .rc-locale-mobile__flag-btn:hover {
-                    border-color: #aaa;
+                  .rc-locale-mobile__trigger-label {
+                    flex: 1;
+                    text-align: left;
                   }
-                  .rc-locale-mobile__flag-btn--active {
-                    border-color: var(--rc-green, #1e4433);
-                    background: rgba(30, 68, 51, 0.06);
-                    font-weight: 600;
+                  .rc-locale-mobile__caret {
+                    width: 10px;
+                    height: 6px;
+                    flex-shrink: 0;
+                    transition: transform 0.2s;
+                  }
+                  .rc-locale-mobile[data-open] .rc-locale-mobile__caret {
+                    transform: rotate(180deg);
+                  }
+                  .rc-locale-mobile__flag {
+                    display: inline-flex;
+                    align-items: center;
+                    line-height: 1;
                   }
                   .rc-locale-mobile__flag .rc-flag {
                     width: 20px;
                     height: 15px;
                     display: block;
                   }
+
+                  /* — Expandable panel — */
+                  .rc-locale-mobile__panel {
+                    display: flex;
+                    flex-direction: column;
+                    margin-top: 0.5rem;
+                    padding-top: 0.5rem;
+                    border-top: 1px solid var(--rc-beige, #e0ddd7);
+                    animation: rcLocaleMobileIn 0.15s ease;
+                  }
+                  @keyframes rcLocaleMobileIn {
+                    from { opacity: 0; transform: translateY(-4px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                  }
+
+                  .rc-locale-mobile__option {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    width: 100%;
+                    padding: 0.6rem 0;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    font-family: var(--rc-font, 'DM Sans', sans-serif);
+                    font-size: 14px;
+                    font-weight: 400;
+                    color: var(--rc-off-black, #1a1a1a);
+                    text-align: left;
+                    transition: opacity 0.15s;
+                  }
+                  .rc-locale-mobile__option:hover {
+                    opacity: 0.7;
+                  }
                 </style>
 
                 <script>
                   (function() {
                     document.querySelectorAll('[data-rc-locale-mobile]').forEach(function(root) {
-                      root.querySelectorAll('.rc-locale-mobile__flag-btn').forEach(function(btn) {
-                        btn.addEventListener('click', function() {
+                      var trigger = root.querySelector('.rc-locale-mobile__trigger');
+                      var panel   = root.querySelector('.rc-locale-mobile__panel');
+
+                      /* Toggle panel */
+                      trigger.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var isOpen = root.hasAttribute('data-open');
+                        if (isOpen) {
+                          panel.hidden = true;
+                          root.removeAttribute('data-open');
+                          trigger.setAttribute('aria-expanded', 'false');
+                        } else {
+                          panel.hidden = false;
+                          root.setAttribute('data-open', '');
+                          trigger.setAttribute('aria-expanded', 'true');
+                        }
+                      });
+
+                      /* Option click → submit form */
+                      root.querySelectorAll('.rc-locale-mobile__option').forEach(function(opt) {
+                        opt.addEventListener('click', function() {
                           var form = root.closest('.menu-drawer__localization').querySelector('form[action*="/localization"]');
                           if (!form) return;
                           var countryInput = form.querySelector('input[name="country_code"]');
-                          var langInput = form.querySelector('input[name="locale_code"]');
-                          if (countryInput) countryInput.value = btn.getAttribute('data-country-code');
-                          if (langInput) langInput.value = btn.getAttribute('data-locale-code');
+                          var langInput    = form.querySelector('input[name="locale_code"]');
+                          if (countryInput) countryInput.value = opt.getAttribute('data-country-code');
+                          if (langInput)    langInput.value    = opt.getAttribute('data-locale-code');
                           form.submit();
                         });
                       });
