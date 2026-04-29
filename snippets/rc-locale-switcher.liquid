@@ -202,6 +202,17 @@
     font-size: 0.8rem;
   }
 
+  /* ---- Mobile drawer: dropdown opens upward ---- */
+  .menu-drawer__localization .rc-locale__dropdown {
+    top: auto;
+    bottom: calc(100% + 0.5rem);
+    right: auto;
+    left: 0;
+  }
+  .menu-drawer__localization .rc-locale {
+    position: relative;
+  }
+
   /* ---- Transparent header (over hero) — white text ---- */
   .header-wrapper--transparent .rc-locale__trigger {
     color: #fff;
@@ -247,9 +258,14 @@
           var countryCode = opt.getAttribute('data-country-code');
           var localeCode  = opt.getAttribute('data-locale-code');
           /* Find the Shopify localization form in the header and submit it */
-          var form = root.closest('.menu-drawer__localization') ?
-                     (document.getElementById('HeaderCountryMobileForm') || document.getElementById('HeaderCountryForm')) :
-                     (document.getElementById('HeaderCountryForm') || document.querySelector('form[action*="/localization"]'));
+          /* Find the closest Shopify localization form — prefer the one in our container */
+          var container = root.closest('.menu-drawer__localization') || root.closest('.header__icons');
+          var form = container ? container.querySelector('form[action*="/localization"]') : null;
+          if (!form) {
+            form = document.getElementById('HeaderCountryMobileForm') ||
+                   document.getElementById('HeaderCountryForm') ||
+                   document.querySelector('form[action*="/localization"]');
+          }
           if (form) {
             /* Set country_code */
             var countryInput = form.querySelector('input[name="country_code"]');
