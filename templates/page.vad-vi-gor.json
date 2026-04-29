@@ -127,7 +127,7 @@
       "type": "rc-contact-cta",
       "settings": {
         "heading": "Kontakta oss för ditt mattgolvprojekt",
-        "body": "Oavsett om du vill boka en inventering, demontering eller montering — vi hjälper dig gärna!",
+        "body": "<p>Oavsett om du vill boka en inventering, demontering eller montering — vi hjälper dig gärna!</p>",
         "btn1_label": "Kontakta oss",
         "btn1_url": "shopify://pages/kontakta-oss",
         "btn2_label": "",

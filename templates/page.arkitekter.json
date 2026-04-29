@@ -59,7 +59,7 @@
       "type": "rc-contact-cta",
       "settings": {
         "heading": "Ta steget – Vi hjälper dig!",
-        "body": "Vill du föreskriva eller beställa återbrukade textilplattor? Vi guidar dig genom materialvalsprocessen.",
+        "body": "<p>Vill du föreskriva eller beställa återbrukade textilplattor? Vi guidar dig genom materialvalsprocessen.</p>",
         "btn1_label": "Kontakta oss",
         "btn1_url": "/pages/kontakta-oss",
         "btn2_label": "",

@@ -193,7 +193,7 @@
       "type": "rc-contact-cta",
       "settings": {
         "heading": "Redo att ta nästa steg?",
-        "body": "Oavsett om du är fastighetsägare, arkitekt, hyresgäst eller entreprenör – vi hjälper dig gärna med ditt golvprojekt.",
+        "body": "<p>Oavsett om du är fastighetsägare, arkitekt, hyresgäst eller entreprenör – vi hjälper dig gärna med ditt golvprojekt.</p>",
         "btn1_label": "Kontakta oss",
         "btn1_url": "shopify://pages/kontakta-oss",
         "btn2_label": "Se vårt sortiment",

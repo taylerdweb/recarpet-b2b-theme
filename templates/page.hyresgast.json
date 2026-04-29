@@ -75,7 +75,7 @@
       "type": "rc-contact-cta",
       "settings": {
         "heading": "Få en skräddarsydd golvlösning för ditt kontor",
-        "body": "Vi erbjuder hållbara och prisvärda alternativ som passar era behov. Från rådgivning till montering – vi finns med er hela vägen.",
+        "body": "<p>Vi erbjuder hållbara och prisvärda alternativ som passar era behov. Från rådgivning till montering – vi finns med er hela vägen.</p>",
         "btn1_label": "Kontakta oss",
         "btn1_url": "/pages/kontakta-oss",
         "btn2_label": "",

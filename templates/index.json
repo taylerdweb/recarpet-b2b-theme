@@ -323,7 +323,7 @@
       "type": "rc-contact-cta",
       "settings": {
         "heading": "Vill du cirkulera golv?",
-        "body": "Beställ prover, boka en inventering eller ställ en fråga till oss!",
+        "body": "<p>Beställ prover, boka en inventering eller ställ en fråga till oss!</p>",
         "btn1_label": "Kontakta oss",
         "btn1_url": "shopify://pages/kontakta-oss",
         "btn2_label": "",
