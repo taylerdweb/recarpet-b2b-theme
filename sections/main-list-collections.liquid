@@ -1,51 +1,130 @@
 {{ 'component-card.css' | asset_url | stylesheet_tag }}
 {{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
 
-<div class="page-width">
-  <h1 class="title title--primary inline-richtext{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-    {{ section.settings.title }}
-  </h1>
-  {%- liquid
-    case section.settings.sort
-      when 'products_high', 'products_low'
-        assign collections = collections | sort: 'all_products_count'
-      when 'date', 'date_reversed'
-        assign collections = collections | sort: 'published_at'
-    endcase
+<style>
+  .rc-collection-list {
+    background: #F6F6F6;
+    padding: 4rem 0 5rem;
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+  }
+  .rc-collection-list .page-width {
+    max-width: var(--rc-max-width, 80rem);
+    margin: 0 auto;
+    padding: 0 var(--rc-page-padding, 3rem);
+  }
+  .rc-collection-list h1.rc-collections-title {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 500;
+    line-height: 120%;
+    color: var(--rc-off-black, #121212);
+    margin: 0 0 0.5rem;
+  }
+  .rc-collection-list .rc-collections-subtitle {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+    margin: 0 0 3rem;
+    max-width: 40rem;
+  }
+  .rc-collection-list .collection-list {
+    gap: 2rem !important;
+  }
+  .rc-collection-list .card-wrapper {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .rc-collection-list .card {
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .rc-collection-list .card__inner {
+    border-radius: 4px;
+  }
+  .rc-collection-list .card__media {
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+  }
+  .rc-collection-list .card__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  .rc-collection-list .card__heading a {
+    color: var(--rc-off-black, #121212);
+  }
+  .rc-collection-list .card__heading a:hover {
+    color: var(--rc-green, #1e4433);
+  }
+  .rc-collection-list .card__caption {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 0.875rem;
+    color: #666;
+    line-height: 1.5;
+  }
+  @media (max-width: 749px) {
+    .rc-collection-list {
+      padding: 2.5rem 0 3rem;
+    }
+    .rc-collection-list .page-width {
+      padding: 0 1.25rem;
+    }
+  }
+</style>
 
-    if section.settings.sort == 'products_high' or section.settings.sort == 'date_reversed' or section.settings.sort == 'alphabetical_reversed'
-      assign collections = collections | reverse
-    endif
+<div class="rc-collection-list">
+  <div class="page-width">
+    <h1 class="rc-collections-title{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+      {{ section.settings.title }}
+    </h1>
+    <p class="rc-collections-subtitle">Utforska vårt sortiment av återbrukade, överproducerade och nya textilplattor — samt våra tjänster för inventering, montering och underhåll.</p>
+    {%- liquid
+      case section.settings.sort
+        when 'products_high', 'products_low'
+          assign collections = collections | sort: 'all_products_count'
+        when 'date', 'date_reversed'
+          assign collections = collections | sort: 'published_at'
+      endcase
 
-    assign moduloResult = 28 | modulo: section.settings.columns_desktop
-    assign paginate_by = 30
-    if moduloResult == 0
-      assign paginate_by = 28
-    endif
-  -%}
-  {%- paginate collections by paginate_by -%}
-    <ul
-      class="collection-list grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
-      role="list"
-    >
-      {%- for collection in collections -%}
-        <li
-          class="collection-list__item grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
-          {% if settings.animations_reveal_on_scroll %}
-            data-cascade
-            style="--animation-order: {{ forloop.index }};"
-          {% endif %}
-        >
-          {% render 'card-collection',
-            card_collection: collection,
-            media_aspect_ratio: section.settings.image_ratio,
-            columns: 3
-          %}
-        </li>
-      {%- endfor -%}
-    </ul>
-    {% render 'pagination', paginate: paginate %}
-  {%- endpaginate -%}
+      if section.settings.sort == 'products_high' or section.settings.sort == 'date_reversed' or section.settings.sort == 'alphabetical_reversed'
+        assign collections = collections | reverse
+      endif
+
+      assign moduloResult = 28 | modulo: section.settings.columns_desktop
+      assign paginate_by = 30
+      if moduloResult == 0
+        assign paginate_by = 28
+      endif
+    -%}
+    {%- paginate collections by paginate_by -%}
+      <ul
+        class="collection-list grid grid--{{ section.settings.columns_desktop }}-col-desktop grid--{{ section.settings.columns_mobile }}-col-tablet-down"
+        role="list"
+      >
+        {%- for collection in collections -%}
+          {%- if collection.handle == 'frontpage' -%}
+            {%- continue -%}
+          {%- endif -%}
+          <li
+            class="collection-list__item grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+            {% if settings.animations_reveal_on_scroll %}
+              data-cascade
+              style="--animation-order: {{ forloop.index }};"
+            {% endif %}
+          >
+            {% render 'card-collection',
+              card_collection: collection,
+              media_aspect_ratio: section.settings.image_ratio,
+              columns: 3
+            %}
+          </li>
+        {%- endfor -%}
+      </ul>
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+  </div>
 </div>
 {% schema %}
 {

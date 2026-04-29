@@ -12,7 +12,7 @@
     "main": {
       "type": "main-list-collections",
       "settings": {
-        "title": "Collections",
+        "title": "Våra produktserier",
         "sort": "alphabetical",
         "image_ratio": "square"
       }
