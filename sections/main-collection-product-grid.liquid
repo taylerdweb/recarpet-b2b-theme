@@ -116,15 +116,15 @@
 
 {%- if _coll_is_services and rc_sees_services == false -%}
   <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
-    <div class="page-width" style="text-align:center;padding:3rem 1rem;">
+    <div class="page-width" style="text-align:center;padding:5rem 1rem;">
       {%- if rc_is_member -%}
-        <h2>Tjänster kräver Premium-medlemskap</h2>
-        <p>Demontering, rengöring och montering finns tillgängligt för våra Premium-kunder.</p>
-        <a href="/pages/kontakta-oss" class="button button--secondary">Kontakta oss för uppgradering</a>
+        <h2 style="font-family:var(--rc-font,'DM Sans',sans-serif);font-size:1.5rem;font-weight:500;color:var(--rc-off-black,#1a1a1a);margin:0 0 1rem;">Tjänster kräver Premium-medlemskap</h2>
+        <p style="font-family:var(--rc-font,'DM Sans',sans-serif);font-size:1rem;font-weight:400;color:#666;margin:0 0 2rem;max-width:32rem;margin-left:auto;margin-right:auto;">Demontering, rengöring och montering finns tillgängligt för våra Premium-kunder.</p>
+        <a href="/pages/kontakta-oss" class="rc-btn rc-btn--outline">Kontakta oss för uppgradering</a>
       {%- else -%}
-        <h2>Bli medlem</h2>
-        <p>Ansök om B2B-konto för att se vårt fullständiga utbud.</p>
-        <a href="/pages/bli-medlem" class="button button--primary">Ansök om konto</a>
+        <h2 style="font-family:var(--rc-font,'DM Sans',sans-serif);font-size:1.5rem;font-weight:500;color:var(--rc-off-black,#1a1a1a);margin:0 0 1rem;">Bli medlem</h2>
+        <p style="font-family:var(--rc-font,'DM Sans',sans-serif);font-size:1rem;font-weight:400;color:#666;margin:0 0 2rem;max-width:32rem;margin-left:auto;margin-right:auto;">Ansök om B2B-konto för att se vårt fullständiga utbud.</p>
+        <a href="/pages/bli-medlem" class="rc-btn rc-btn--primary">Ansök om konto</a>
       {%- endif -%}
     </div>
   </div>
