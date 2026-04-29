@@ -2,9 +2,49 @@
 {{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
 
 <style>
+  /* ── Beige header banner (matches collection pages) ── */
+  .rc-collections-banner {
+    background: var(--rc-cream-alt, #E6E3DE);
+    padding: 4rem 0;
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+  }
+  .rc-collections-banner__inner {
+    max-width: var(--rc-max-width, 80rem);
+    margin: 0 auto;
+    padding: 0 var(--rc-page-padding, 3rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .rc-collections-banner h1 {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 500;
+    line-height: 120%;
+    color: var(--rc-off-black, #121212);
+    margin: 0;
+  }
+  .rc-collections-banner__desc {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--rc-off-black, #121212);
+    margin: 0;
+  }
+  @media (max-width: 749px) {
+    .rc-collections-banner { padding: 2.5rem 0; }
+    .rc-collections-banner__inner {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding: 0 1.25rem;
+    }
+  }
+
+  /* ── Card grid area ── */
   .rc-collection-list {
     background: #F6F6F6;
-    padding: 4rem 0 5rem;
+    padding: 3rem 0 5rem;
     font-family: var(--rc-font, 'DM Sans', sans-serif);
   }
   .rc-collection-list .page-width {
@@ -12,25 +52,10 @@
     margin: 0 auto;
     padding: 0 var(--rc-page-padding, 3rem);
   }
-  .rc-collection-list h1.rc-collections-title {
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    font-weight: 500;
-    line-height: 120%;
-    color: var(--rc-off-black, #121212);
-    margin: 0 0 0.5rem;
-  }
-  .rc-collection-list .rc-collections-subtitle {
-    font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #666;
-    margin: 0 0 3rem;
-    max-width: 40rem;
-  }
   .rc-collection-list .collection-list {
     gap: 2rem !important;
   }
+  /* Card styling */
   .rc-collection-list .card-wrapper {
     border-radius: 4px;
     overflow: hidden;
@@ -38,19 +63,31 @@
   .rc-collection-list .card {
     border-radius: 4px;
     overflow: hidden;
-    background: #fff;
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
   .rc-collection-list .card__inner {
     border-radius: 4px;
+    border: none;
+    box-shadow: none;
   }
   .rc-collection-list .card__media {
-    border-radius: 4px 4px 0 0;
+    border-radius: 4px;
     overflow: hidden;
+  }
+  .rc-collection-list .card__media img {
+    aspect-ratio: 16/10;
+    object-fit: cover;
+  }
+  .rc-collection-list .card__content {
+    padding: 1rem 0 0;
   }
   .rc-collection-list .card__heading {
     font-family: var(--rc-font, 'DM Sans', sans-serif);
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
+    margin: 0;
   }
   .rc-collection-list .card__heading a {
     color: var(--rc-off-black, #121212);
@@ -64,9 +101,13 @@
     color: #666;
     line-height: 1.5;
   }
+  /* Force smaller image ratio */
+  .rc-collection-list .card--media .card__inner .ratio {
+    --ratio-percent: 62.5% !important;
+  }
   @media (max-width: 749px) {
     .rc-collection-list {
-      padding: 2.5rem 0 3rem;
+      padding: 2rem 0 3rem;
     }
     .rc-collection-list .page-width {
       padding: 0 1.25rem;
@@ -74,12 +115,16 @@
   }
 </style>
 
+<!-- Beige header banner -->
+<div class="rc-collections-banner">
+  <div class="rc-collections-banner__inner">
+    <h1>{{ section.settings.title }}</h1>
+    <p class="rc-collections-banner__desc">Utforska vårt sortiment av återbrukade, överproducerade och nya textilplattor — samt våra tjänster för inventering, montering och underhåll.</p>
+  </div>
+</div>
+
 <div class="rc-collection-list">
   <div class="page-width">
-    <h1 class="rc-collections-title{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
-      {{ section.settings.title }}
-    </h1>
-    <p class="rc-collections-subtitle">Utforska vårt sortiment av återbrukade, överproducerade och nya textilplattor — samt våra tjänster för inventering, montering och underhåll.</p>
     {%- liquid
       case section.settings.sort
         when 'products_high', 'products_low'
