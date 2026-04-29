@@ -640,6 +640,8 @@
             // Price break table header
             'th.text-left:first-child { font-size: 0; visibility: hidden; position: relative; }',
             'th.text-left:first-child::after { content: "m\\00B2"; font-size: 14px; visibility: visible; }',
+            // Mobile: hide total price inside buy button (e.g. "Köp (1 090,00 Dkr)" → "Köp")
+            '@media (max-width: 749px) { button span.text-sm, button .price-total, button span[class*="text-"] { display: none; } }',
           ].join('\n');
 
           // CSS to hide the original customer-reference field immediately (prevents layout shift)
