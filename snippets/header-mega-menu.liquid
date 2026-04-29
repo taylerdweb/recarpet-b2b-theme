@@ -192,7 +192,7 @@
         {%- if link.links != blank -%}
           <!-- Has dropdown -->
           <li class="mega-menu-item has-dropdown" data-menu-trigger="{{ link.handle }}">
-            <button class="mega-menu-link" type="button" aria-expanded="false" aria-controls="menu-{{ link.handle }}">
+            <button class="mega-menu-link" type="button" aria-expanded="false" aria-controls="menu-{{ link.handle }}" data-href="{{ link.url }}">
               {{ link.title }}
               <span class="mega-menu-chevron">▾</span>
             </button>
@@ -316,12 +316,27 @@
             });
           }
 
-          // Click behavior for mobile/touch
+          // Click: on desktop navigate to link, on mobile/touch toggle dropdown
           item.querySelector('.mega-menu-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            const isOpen = item.classList.contains('is-open');
-            menuItems.forEach(other => closeMenu(other));
-            if (!isOpen) openMenu(item);
+            const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            const href = e.currentTarget.getAttribute('data-href');
+
+            if (isTouch) {
+              // Mobile: first tap opens dropdown, second tap navigates
+              e.preventDefault();
+              const isOpen = item.classList.contains('is-open');
+              menuItems.forEach(other => closeMenu(other));
+              if (!isOpen) {
+                openMenu(item);
+              } else if (href) {
+                window.location.href = href;
+              }
+            } else {
+              // Desktop: click navigates, hover handles dropdown
+              if (href) {
+                window.location.href = href;
+              }
+            }
           });
         });
 
