@@ -66,8 +66,11 @@
   @media (max-width: 989px) {
     .rc-product-showcase__grid { grid-template-columns: repeat(2, 1fr); }
   }
-  @media (max-width: 600px) {
+  @media (max-width: 749px) {
+    .rc-product-showcase__grid { grid-template-columns: 1fr; column-gap: 0; row-gap: 2rem; }
+    .rc-product-showcase__grid > *:nth-child(n+4) { display: none; }
     .rc-product-showcase__inner { padding: 0 1.25rem; }
+    h2.rc-product-showcase__heading { margin-bottom: 2.5rem; }
   }
 </style>
 
