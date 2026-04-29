@@ -437,13 +437,53 @@
    * checkbox alignment, and input sizing. Fix: restore 62.5% inside the
    * facets container so Dawn's rem math works, then set our text sizes in px.
    */
-  .facets-container,
-  .facets-vertical,
-  .facet-filters {
-    font-size: 62.5% !important;
+  /*
+   * Dawn's facets CSS uses rem values designed for html 62.5% (1rem=10px).
+   * Our html 100% reset makes 1rem=16px, breaking all sizing.
+   * Fix: override every rem-dependent property with px values.
+   */
+
+  /* Checkbox: input hitbox + SVG box alignment */
+  .facets-layout-list--text input[type='checkbox'] {
+    width: 16px !important;
+    height: 16px !important;
+    top: 7px !important;
+    left: -4px !important;
+  }
+  .facet-checkbox {
+    padding: 10px 20px 10px 0 !important;
+    font-size: 14px !important;
+  }
+  .facet-checkbox > svg {
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 12px !important;
+    flex-shrink: 0 !important;
+  }
+  .facet-checkbox > .svg-wrapper {
+    margin-right: 12px !important;
+    left: 3px !important;
+    width: 7px !important;
+    height: 7px !important;
   }
 
-  /* Now set readable text sizes in px so they don't scale with 62.5% */
+  /* Active filter pills */
+  .active-facets,
+  .active-facets-desktop,
+  .active-facets__button,
+  .active-facets__button-wrapper,
+  .active-facets__button-remove,
+  .active-facets__button--light .active-facets__button-inner {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+  .active-facets__button--light .active-facets__button-inner {
+    padding: 6px 12px !important;
+    min-height: auto !important;
+  }
+
+  /* Text sizes in px */
   .facets__heading {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
     font-size: 14px !important;
