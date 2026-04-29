@@ -247,8 +247,9 @@
           var countryCode = opt.getAttribute('data-country-code');
           var localeCode  = opt.getAttribute('data-locale-code');
           /* Find the Shopify localization form in the header and submit it */
-          var form = document.getElementById('HeaderCountryForm') ||
-                     document.querySelector('form[action*="/localization"]');
+          var form = root.closest('.menu-drawer__localization') ?
+                     (document.getElementById('HeaderCountryMobileForm') || document.getElementById('HeaderCountryForm')) :
+                     (document.getElementById('HeaderCountryForm') || document.querySelector('form[action*="/localization"]'));
           if (form) {
             /* Set country_code */
             var countryInput = form.querySelector('input[name="country_code"]');

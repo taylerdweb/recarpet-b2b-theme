@@ -391,8 +391,8 @@
 
   /* ===== Header icon size overrides (Dawn rem→px) ===== */
   .header__icon .icon {
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
   }
   .header__icon,
   .header__icon--cart .icon {
@@ -405,6 +405,17 @@
   .header__icon .svg-wrapper {
     width: 44px;
     height: 44px;
+  }
+  /* Hamburger & close icon — tighter on mobile */
+  @media (max-width: 989px) {
+    .header__icon--menu .icon {
+      height: 16px;
+      width: 16px;
+    }
+    .header__icon--menu {
+      height: 40px;
+      width: 40px;
+    }
   }
 
   /* ===== Collection page overrides ===== */

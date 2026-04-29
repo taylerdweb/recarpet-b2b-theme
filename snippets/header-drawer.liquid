@@ -194,33 +194,15 @@
                 -%}
               </a>
             {%- endif -%}
+            {%- comment -%} reCarpet: combined flag-based locale switcher (same as desktop) {%- endcomment -%}
             {%- if localization.available_countries or localization.available_languages -%}
-              <div class="menu-drawer__localization header-localization">
-                {%- if localization.available_countries and localization.available_countries.size > 1 -%}
-                  <localization-form>
-                    {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
-                      <div>
-                        <h2 class="visually-hidden" id="HeaderCountryMobileLabel">
-                          {{ 'localization.country_label' | t }}
-                        </h2>
-                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
-                      </div>
-                    {%- endform -%}
-                  </localization-form>
-                {% endif %}
-
-                {%- if localization.available_languages and localization.available_languages.size > 1 -%}
-                  <localization-form>
-                    {%- form 'localization', id: 'HeaderLanguageMobileForm', class: 'localization-form' -%}
-                      <div>
-                        <h2 class="visually-hidden" id="HeaderLanguageMobileLabel">
-                          {{ 'localization.language_label' | t }}
-                        </h2>
-                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
-                      </div>
-                    {%- endform -%}
-                  </localization-form>
-                {%- endif -%}
+              <div class="menu-drawer__localization header-localization" style="padding: 20px 30px;">
+                {%- comment -%} Hidden Shopify localization form for mobile {%- endcomment -%}
+                {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
+                  <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+                  <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
+                {%- endform -%}
+                {%- render 'rc-locale-switcher', position: 'mobile' -%}
               </div>
             {%- endif -%}
             <ul class="list list-social list-unstyled" role="list">
