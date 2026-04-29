@@ -344,12 +344,21 @@
 
                 <script>
                   (function() {
+                    /* Stop ALL clicks inside the locale area from bubbling up to
+                       Dawn's menu-drawer <details> toggle logic */
+                    document.querySelectorAll('.menu-drawer__localization').forEach(function(container) {
+                      container.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                      });
+                    });
+
                     document.querySelectorAll('[data-rc-locale-mobile]').forEach(function(root) {
                       var trigger = root.querySelector('.rc-locale-mobile__trigger');
                       var panel   = root.querySelector('.rc-locale-mobile__panel');
 
                       /* Toggle panel */
                       trigger.addEventListener('click', function(e) {
+                        e.preventDefault();
                         e.stopPropagation();
                         var isOpen = root.hasAttribute('data-open');
                         if (isOpen) {
@@ -365,7 +374,9 @@
 
                       /* Option click → submit form */
                       root.querySelectorAll('.rc-locale-mobile__option').forEach(function(opt) {
-                        opt.addEventListener('click', function() {
+                        opt.addEventListener('click', function(e) {
+                          e.preventDefault();
+                          e.stopPropagation();
                           var form = root.closest('.menu-drawer__localization').querySelector('form[action*="/localization"]');
                           if (!form) return;
                           var countryInput = form.querySelector('input[name="country_code"]');
