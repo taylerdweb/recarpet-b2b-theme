@@ -224,7 +224,7 @@
 
                 <div class="rc-locale-mobile" data-rc-locale-mobile>
                   {%- comment -%} Trigger row: flag + country name + caret {%- endcomment -%}
-                  <button type="button" class="rc-locale-mobile__trigger" aria-expanded="false">
+                  <button type="button" class="rc-locale-mobile__trigger localization-selector" aria-expanded="false">
                     <span class="rc-locale-mobile__flag">{{ _cur_flag }}</span>
                     <span class="rc-locale-mobile__trigger-label">{{ _cur_name }}</span>
                     <svg class="rc-locale-mobile__caret" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -248,7 +248,7 @@
                       {%- endcase -%}
                       <button
                         type="button"
-                        class="rc-locale-mobile__option"
+                        class="rc-locale-mobile__option localization-selector"
                         data-country-code="{{ country.iso_code }}"
                         data-locale-code="{{ _mlang }}"
                       >
