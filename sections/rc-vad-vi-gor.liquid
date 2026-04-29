@@ -177,15 +177,15 @@
       position: relative;
       padding-left: 2.75rem;
     }
-    /* Vertical connecting line — black, stops at last dot */
+    /* Vertical connecting line — black, height set by JS to stop at last dot */
     .rc-timeline-nav__track::before {
       content: '' !important;
       position: absolute !important;
       left: 6px;
-      top: 0;
-      bottom: 2rem;
+      top: 0.45rem;
+      bottom: auto !important;
       width: 3px !important;
-      height: auto !important;
+      height: var(--rc-timeline-line-height, 100%) !important;
       background: var(--rc-off-black, #1a1a1a) !important;
       border-radius: 2px;
       grid-row: unset;
@@ -249,6 +249,22 @@
         }
       });
     });
+
+    // Mobile: trim the timeline line to stop at the last dot
+    if (window.innerWidth <= 900) {
+      var track = document.querySelector('.rc-timeline-nav__track');
+      if (track) {
+        var textItems = track.querySelectorAll('[class*="rc-timeline-nav__text"]');
+        var lastText = textItems[textItems.length - 1];
+        if (lastText) {
+          // Line should end at the last dot's center (0.45rem from top of last item)
+          var trackRect = track.getBoundingClientRect();
+          var lastRect = lastText.getBoundingClientRect();
+          var lineEnd = lastRect.top - trackRect.top + 11; // 11px ≈ dot center (0.2rem + 7.5px)
+          track.style.setProperty('--rc-timeline-line-height', lineEnd + 'px');
+        }
+      }
+    }
   });
 </script>
 
