@@ -52,7 +52,7 @@
     transition: transform 0.3s;
   }
   .rc-card:hover .rc-card__image img {
-    transform: scale(1.04);
+    transform: none;
   }
   .rc-card__body {
     padding: 1.25rem;
@@ -86,10 +86,10 @@
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.5rem;
     justify-content: center;
   }
-  .rc-card__link::after { content: ' →'; }
+  .rc-card__link svg { flex-shrink: 0; }
   @media (max-width: 900px) {
     .rc-customer-cards__grid { grid-template-columns: repeat(2, 1fr); }
   }
@@ -121,7 +121,7 @@
             {%- if block.settings.text != blank -%}
               <p class="rc-card__text">{{ block.settings.text }}</p>
             {%- endif -%}
-            <span class="rc-card__link">Läs mer</span>
+            <span class="rc-card__link">Läs mer <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L6 6L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
       {%- endfor -%}
