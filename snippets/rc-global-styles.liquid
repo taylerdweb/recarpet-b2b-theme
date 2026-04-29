@@ -372,15 +372,21 @@
 
   /* ===== Collection page overrides ===== */
 
-  /* Collection page — beige background on entire page */
-  body.collection,
-  .collection .content-for-layout,
-  .collection .content-for-layout > *,
-  .collection .content-for-layout .gradient,
-  .collection .content-for-layout .color-scheme-1,
-  .collection .content-for-layout [class*="product-grid-padding"],
-  .collection .content-for-layout .rc-collection-cta {
+  /* Collection page — #F6F6F6 background everywhere */
+  body.collection {
     background: #F6F6F6 !important;
+  }
+  body.collection .content-for-layout,
+  body.collection .content-for-layout > *,
+  body.collection .content-for-layout .gradient,
+  body.collection .content-for-layout .color-scheme-1,
+  body.collection .content-for-layout .color-scheme-2,
+  body.collection .content-for-layout [class*="product-grid-padding"],
+  body.collection .content-for-layout .product-grid-container,
+  body.collection .content-for-layout .collection,
+  body.collection .content-for-layout .loading-overlay {
+    background: #F6F6F6 !important;
+    background-color: #F6F6F6 !important;
     --gradient-background: #F6F6F6 !important;
     --color-background: 246, 246, 246 !important;
   }
