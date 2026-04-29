@@ -992,22 +992,39 @@
           // ── Stepper accent color: override SparkLayer blue (#125EF8) with reCarpet yellow ──
           var RC_YELLOW = '#EDB81E';
           var RC_STEPPER_CSS = [
-            '/* Target step indicator circles: they use .rounded-full.bg-link.size-8 */',
-            '.rounded-full.bg-link { background-color: ' + RC_YELLOW + ' !important; }',
-            '/* Completed step check circle */',
-            '.rounded-full.bg-success-color { background-color: ' + RC_YELLOW + ' !important; }',
-            '/* Active step connecting line */',
-            '.bg-link:not(.rounded-full) { background-color: ' + RC_YELLOW + ' !important; }',
-            '/* Pulse animation override */',
-            '@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(237,184,30,0.5); } 70% { box-shadow: 0 0 0 8px rgba(237,184,30,0); } }',
+            '/* Override SparkLayer stepper pulse — blue → yellow */',
+            '/* Target all possible pulse/animate keyframe names */',
+            '@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(237,184,30,0.5); } 100% { box-shadow: 0 0 0 10px rgba(237,184,30,0); } }',
+            '@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(237,184,30,0.5); } 100% { box-shadow: 0 0 0 10px rgba(237,184,30,0); } }',
+            '@keyframes spark-pulse { 0% { box-shadow: 0 0 0 0 rgba(237,184,30,0.5); } 100% { box-shadow: 0 0 0 10px rgba(237,184,30,0); } }',
+            '/* Blanket override: any element with animate class that pulses */',
+            '[class*="animate-pulse"], [class*="animate-ping"] {',
+            '  animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite !important;',
+            '}',
+            '/* Direct box-shadow override on step circles */',
+            '.rounded-full.bg-link, .bg-link.rounded-full {',
+            '  box-shadow: 0 0 0 0 rgba(237,184,30,0.4) !important;',
+            '  animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite !important;',
+            '}',
+            '/* Also catch ::before / ::after pseudo pulse */',
+            '.rounded-full.bg-link::before, .rounded-full.bg-link::after {',
+            '  background-color: rgba(237,184,30,0.3) !important;',
+            '  border-color: rgba(237,184,30,0.3) !important;',
+            '}'
           ].join('\n');
 
           function injectStepperStyles(root) {
-            if (!root || root.dataset.rcStepperStyled) return;
-            root.dataset.rcStepperStyled = '1';
+            if (!root) return;
+            // ShadowRoot has no dataset — track via custom property on host or a marker style
+            if (root.querySelector && root.querySelector('[data-rc-stepper-styled]')) return;
+            var marker = document.createElement('span');
+            marker.setAttribute('data-rc-stepper-styled', '1');
+            marker.style.display = 'none';
+            try { root.appendChild(marker); } catch(e) { return; }
             var style = document.createElement('style');
             style.textContent = RC_STEPPER_CSS;
             root.appendChild(style);
+            console.log('[reCarpet] Stepper yellow CSS injected into shadow root');
           }
 
           function injectStepperToSpark() {
