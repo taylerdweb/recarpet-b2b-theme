@@ -606,6 +606,12 @@
     font-size: 14px !important;
     font-weight: 400 !important;
   }
+  /* Base font on entire drawer so nothing inherits Dawn's large sizes */
+  .mobile-facets__inner {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 14px !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
   /* Drawer header */
   .mobile-facets__heading {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
@@ -619,17 +625,31 @@
     font-weight: 400 !important;
     color: #666 !important;
   }
+  /* Close icon (X) */
+  .mobile-facets__close .svg-wrapper {
+    width: 18px !important;
+    height: 18px !important;
+  }
   /* Filter items (Availability, Price) */
   .mobile-facets__summary,
   .mobile-facets__summary > div,
-  .mobile-facets__close-button {
+  .mobile-facets__summary span,
+  .mobile-facets__close-button,
+  .mobile-facets__close-button span {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
     font-size: 14px !important;
     font-weight: 400 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
+  /* Arrow icons in filter items */
+  .mobile-facets__summary .svg-wrapper,
+  .mobile-facets__arrow {
+    width: 18px !important;
+    height: 18px !important;
+  }
   /* Filter labels + checkboxes */
-  .mobile-facets__label {
+  .mobile-facets__label,
+  .mobile-facets__label span {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
     font-size: 14px !important;
     font-weight: 400 !important;
