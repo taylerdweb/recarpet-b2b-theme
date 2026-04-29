@@ -461,18 +461,23 @@
     flex-shrink: 0 !important;
   }
   .facet-checkbox > .svg-wrapper {
-    margin-right: 12px !important;
     left: 3px !important;
-    width: 7px !important;
-    height: 7px !important;
+    top: 3px !important;
+    width: auto !important;
+    height: auto !important;
+  }
+  .facet-checkbox > .svg-wrapper .icon-checkmark {
+    width: 10px !important;
+    height: 10px !important;
   }
 
-  /* Active filter pills */
+  /* Active filter pills + "Ta bort alla" */
   .active-facets,
   .active-facets-desktop,
   .active-facets__button,
   .active-facets__button-wrapper,
   .active-facets__button-remove,
+  .active-facets__button-remove span,
   .active-facets__button--light .active-facets__button-inner {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
     font-size: 14px !important;
