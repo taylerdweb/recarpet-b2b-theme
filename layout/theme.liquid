@@ -975,12 +975,13 @@
           }
 
           // Also watch for SparkLayer re-rendering checkout steps (which destroys & recreates DOM)
+          var _fakObservedRoots = new WeakSet();
           function watchForCheckoutChanges() {
             var sparkEls = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
             sparkEls.forEach(function(el) {
               var root = el.shadowRoot;
-              if (!root || root.dataset.fakObserved) return;
-              root.dataset.fakObserved = '1';
+              if (!root || _fakObservedRoots.has(root)) return;
+              _fakObservedRoots.add(root);
               var obs = new MutationObserver(function() {
                 // Re-run injection when SparkLayer re-renders (e.g. step change)
                 setTimeout(runFakturaInjection, 100);
