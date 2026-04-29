@@ -166,22 +166,68 @@
   .rc-service-detail__image img { width: 100%; height: 100%; object-fit: cover; }
 
   @media (max-width: 900px) {
-    /* Timeline mobile — vertical list */
+    /* ===== Timeline mobile — vertical with dots & line ===== */
     .rc-timeline-nav {
-      padding: 2rem 1.25rem;
+      padding: 2.5rem 1.25rem;
     }
     .rc-timeline-nav__track {
-      display: flex;
+      display: flex !important;
       flex-direction: column;
       gap: 0;
+      position: relative;
+      padding-left: 2.75rem;
     }
-    .rc-timeline-nav__track::before { display: none; }
-    .rc-timeline-nav__dot-cell { display: none; }
+    /* Vertical connecting line */
+    .rc-timeline-nav__track::before {
+      content: '' !important;
+      position: absolute !important;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 3px !important;
+      height: auto !important;
+      background: #8ba99a !important;
+      border-radius: 2px;
+      grid-row: unset;
+      grid-column: unset;
+      align-self: unset;
+      z-index: 1;
+    }
+    /* Hide the separate dot cells — dots are on text items instead */
+    .rc-timeline-nav__dot-cell {
+      display: none !important;
+    }
+    /* Text items become timeline entries */
     .rc-timeline-nav__text--top,
     .rc-timeline-nav__text--bottom {
-      padding: 0.75rem 0;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
+      padding: 0 0 2rem 0 !important;
+      border-bottom: none;
+      position: relative;
+      grid-row: unset;
+      align-self: unset;
     }
+    /* Dot on each text item via ::before */
+    .rc-timeline-nav__text--top::before,
+    .rc-timeline-nav__text--bottom::before {
+      content: '' !important;
+      display: block !important;
+      position: absolute;
+      left: -2.75rem;
+      top: 0.2rem;
+      width: 15px;
+      height: 15px;
+      background: #8ba99a !important;
+      border-radius: 50% !important;
+      box-shadow: 0 0 0 5px var(--rc-cream, #f5f3ef);
+      z-index: 2;
+    }
+    .rc-timeline-nav__title {
+      font-size: 1.25rem;
+    }
+    .rc-timeline-nav__desc {
+      max-width: none;
+    }
+
     /* Service detail mobile */
     .rc-service-detail__inner { grid-template-columns: 1fr; gap: 2rem; }
     .rc-service-detail__inner { padding: 0 1.25rem; }
