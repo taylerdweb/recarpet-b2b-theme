@@ -431,26 +431,110 @@
   }
 
   /* Filter bar — tighten up Dawn's oversized text */
+
+  /* "Filter:" heading */
+  .facets__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+
+  /* "Sortera efter:" label */
   .facet-filters__label {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
+
+  /* Filter dropdown triggers (Availability, Price) */
   .facet-filters__summary,
   .facet-filters__sort,
   .facets__disclosure-label,
-  .facets__summary {
+  .facets__summary,
+  .facets__summary span {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+
+  /* Sort select dropdown */
+  .facet-filters__sort,
+  .select__select.caption-large {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
     font-size: 0.875rem !important;
     font-weight: 400 !important;
   }
+
+  /* "6 produkter" count */
+  .product-count,
+  .product-count__text,
+  .product-count .light {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+
+  /* Dropdown panel: checkbox labels, selected count, reset link */
+  .facets__label,
+  .facet-checkbox,
+  .facet-checkbox__text-label {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+  .facets__selected {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.8125rem !important;
+    font-weight: 400 !important;
+    color: #666 !important;
+  }
+  .facets__reset,
+  .facets__reset .link {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+
+  /* Price filter inputs & labels */
+  .facets__price .field__input,
+  .facets__price .field__label,
+  .facets .field__input {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+  .facets__price .field__currency {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+  }
+  .facets__price .field__input:focus,
+  .facets .field__input:focus {
+    border-color: var(--rc-green, #1e4433) !important;
+    box-shadow: 0 0 0 1px var(--rc-green, #1e4433) !important;
+    outline: none !important;
+  }
+
+  /* "Det högsta priset är..." text */
+  .facets__price .facets__header,
   .facets__header {
-    font-size: 0.875rem !important;
-  }
-  .product-count__text {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
+    font-size: 0.8125rem !important;
     font-weight: 400 !important;
+    color: #666 !important;
+  }
+
+  /* General .caption-large override inside facets */
+  .facets .caption-large,
+  .facets-container .caption-large,
+  .facet-filters .caption-large {
+    font-size: 0.875rem !important;
+    letter-spacing: 0 !important;
   }
 </style>
