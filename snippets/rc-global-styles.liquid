@@ -14,6 +14,15 @@
     font-size: 100% !important; /* 1rem = 16px */
   }
 
+  /* ===== Disable image hover zoom globally ===== */
+  .media.media--hover-effect > img {
+    transform: none !important;
+  }
+  .card:hover .media.media--hover-effect > img,
+  .card-wrapper:hover .media.media--hover-effect > img {
+    transform: none !important;
+  }
+
   body {
     font-size: 1rem; /* Override Dawn's 1.5rem (which assumed 10px base) */
     line-height: 1.5;
