@@ -96,62 +96,67 @@
 
   /* ===== Mobile: vertical timeline layout ===== */
   @media (max-width: 767px) {
-    .rc-customer-cards__grid {
-      grid-template-columns: 1fr;
+    .rc-customer-cards .rc-customer-cards__grid {
+      display: flex !important;
+      flex-direction: column;
       gap: 0;
       position: relative;
-      padding-left: 2.5rem;
+      padding-left: 2.75rem;
     }
     /* Vertical line */
-    .rc-customer-cards__grid::before {
+    .rc-customer-cards .rc-customer-cards__grid::before {
       content: '';
       position: absolute;
-      left: 7px;
+      left: 6px;
       top: 0;
       bottom: 0;
-      width: 2px;
+      width: 3px;
       background: var(--rc-sage, #8fa89a);
-      border-radius: 1px;
+      border-radius: 2px;
     }
-    .rc-customer-cards__inner { padding: 0 1.25rem; }
+    .rc-customer-cards .rc-customer-cards__inner { padding: 0 1.25rem; }
     .rc-customer-cards h2.rc-customer-cards__heading {
       text-align: left;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
     }
 
     /* Hide card image & link on mobile timeline */
-    .rc-card__image { display: none; }
-    .rc-card__link { display: none; }
+    .rc-customer-cards .rc-card__image { display: none !important; }
+    .rc-customer-cards .rc-card__link { display: none !important; }
 
-    .rc-card {
+    .rc-customer-cards .rc-card {
       position: relative;
       border-radius: 0;
-      padding: 0 0 2.5rem 0;
+      padding: 0 0 2rem 0;
+      background: transparent;
     }
     /* Timeline dot */
-    .rc-card::before {
-      content: '';
+    .rc-customer-cards .rc-card::before {
+      content: '' !important;
+      display: block !important;
       position: absolute;
-      left: calc(-2.5rem + 1px);
-      top: 0.25rem;
-      width: 14px;
-      height: 14px;
-      background: var(--rc-sage, #8fa89a);
-      border-radius: 50%;
-      border: 2px solid var(--rc-cream-alt, #E6E3DE);
+      left: -2.75rem;
+      top: 0.2rem;
+      width: 15px;
+      height: 15px;
+      background: #8ba99a !important;
+      border-radius: 50% !important;
+      box-shadow: 0 0 0 5px var(--rc-cream-alt, #E6E3DE);
       z-index: 2;
     }
-    .rc-card__body {
+    .rc-customer-cards .rc-card__body {
       padding: 0;
       text-align: left;
     }
     .rc-customer-cards h3.rc-card__title {
       text-align: left;
       font-size: 1.25rem;
+      margin-bottom: 0.25rem;
     }
-    .rc-card__text {
+    .rc-customer-cards .rc-card__text {
       text-align: left;
       margin: 0;
+      font-size: 0.95rem;
     }
   }
 </style>
