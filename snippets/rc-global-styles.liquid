@@ -501,24 +501,51 @@
     color: var(--rc-off-black, #1a1a1a) !important;
   }
 
-  /* Price filter inputs & labels */
-  .facets__price .field__input,
-  .facets__price .field__label,
-  .facets .field__input {
+  /* Price filter: inputs, labels, "kr" prefix */
+  .facets .field,
+  .facets__price .field {
+    font-size: 0.875rem !important;
+    height: auto !important;
+  }
+  .facets .field__input,
+  .facets__price .field__input {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+    height: 2.5rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+  .facets .field__label,
+  .facets__price .field__label {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    color: #888 !important;
+  }
+  .facets .field-currency,
+  .facets__price .field-currency {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
     font-size: 0.875rem !important;
     font-weight: 400 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
-  .facets__price .field__currency {
-    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
-  }
-  .facets__price .field__input:focus,
-  .facets .field__input:focus {
+  .facets .field__input:focus,
+  .facets__price .field__input:focus {
     border-color: var(--rc-green, #1e4433) !important;
     box-shadow: 0 0 0 1px var(--rc-green, #1e4433) !important;
     outline: none !important;
+  }
+
+  /* Sort select — tame the focus outline */
+  .facet-filters__field .select {
+    height: auto !important;
+  }
+  .facet-filters__field .select__select:focus,
+  .facet-filters__field .select__select:focus-visible {
+    outline: 1px solid var(--rc-green, #1e4433) !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
   }
 
   /* "Det högsta priset är..." text */
