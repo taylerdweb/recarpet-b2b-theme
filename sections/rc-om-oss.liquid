@@ -384,6 +384,32 @@
   }
 
   /* ===== Responsive ===== */
+  @media (max-width: 991px) {
+    /* Impact heading (h4 equivalent) */
+    .rc-about-impact__heading {
+      font-size: 32px !important;
+    }
+    /* text-size-large equivalents */
+    .rc-about-impact__body,
+    .rc-about-impact__body p,
+    .rc-about-impact__expertise,
+    .rc-about-impact__quote {
+      font-size: 1.125rem !important;
+    }
+    /* Services heading (h3 equivalent) */
+    .rc-about-services__heading {
+      font-size: 40px !important;
+    }
+    /* Services list items (h5 equivalent) */
+    .rc-about-services__item {
+      font-size: 1.25rem !important;
+    }
+    /* Sustainability heading (h2 equivalent) */
+    .rc-about-sustainability__heading {
+      font-size: 48px !important;
+    }
+  }
+
   @media (max-width: 900px) {
     .rc-about-team__inner,
     .rc-about-impact__grid,
@@ -402,6 +428,39 @@
     }
     .rc-team-member__bio {
       font-size: 1rem !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* Impact heading (h4 at mobile) */
+    .rc-about-impact__heading {
+      font-size: 24px !important;
+      line-height: 1.4 !important;
+    }
+    /* Impact stat numbers (h2 at mobile) */
+    .rc-about-impact__stat-number {
+      font-size: 36px !important;
+    }
+    /* Impact stats — stack single column */
+    .rc-about-impact__stats {
+      grid-template-columns: 1fr !important;
+      gap: 1.5rem !important;
+    }
+    /* Services heading (h3 at mobile) */
+    .rc-about-services__heading {
+      font-size: 28px !important;
+    }
+    /* Services list items (h5 at mobile) */
+    .rc-about-services__item {
+      font-size: 20px !important;
+    }
+    /* Vision body (h5 at mobile) */
+    .rc-about-vision__body {
+      font-size: 20px !important;
+    }
+    /* Sustainability heading (h2 at mobile) */
+    .rc-about-sustainability__heading {
+      font-size: 36px !important;
     }
   }
 
