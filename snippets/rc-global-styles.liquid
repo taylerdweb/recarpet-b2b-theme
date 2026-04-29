@@ -430,116 +430,102 @@
     }
   }
 
-  /* Filter bar — tighten up Dawn's oversized text */
+  /*
+   * Filter bar fix.
+   * Dawn's component-facets.css uses rem values designed for 62.5% root
+   * (1rem = 10px). Our reset to 100% (1rem = 16px) breaks all spacing,
+   * checkbox alignment, and input sizing. Fix: restore 62.5% inside the
+   * facets container so Dawn's rem math works, then set our text sizes in px.
+   */
+  .facets-container,
+  .facets-vertical,
+  .facet-filters {
+    font-size: 62.5% !important;
+  }
 
-  /* "Filter:" heading */
+  /* Now set readable text sizes in px so they don't scale with 62.5% */
   .facets__heading {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
-
-  /* "Sortera efter:" label */
   .facet-filters__label {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
+    font-size: 14px !important;
     font-weight: 500 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
-
-  /* Filter dropdown triggers (Availability, Price) */
   .facet-filters__summary,
   .facet-filters__sort,
-  .facets__disclosure-label,
   .facets__summary,
-  .facets__summary span {
-    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
-    font-weight: 400 !important;
-    color: var(--rc-off-black, #1a1a1a) !important;
-  }
-
-  /* Sort select dropdown */
-  .facet-filters__sort,
+  .facets__summary span,
   .select__select.caption-large {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
-    font-weight: 400 !important;
-  }
-
-  /* "6 produkter" count */
-  .product-count,
-  .product-count__text,
-  .product-count .light {
-    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
+    font-size: 14px !important;
     font-weight: 400 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
-
-  /* Dropdown panel: checkbox labels, selected count, reset link */
+  .product-count,
+  .product-count__text {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
   .facets__label,
   .facet-checkbox,
   .facet-checkbox__text-label {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
+    font-size: 14px !important;
     font-weight: 400 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
   .facets__selected {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.8125rem !important;
-    font-weight: 400 !important;
+    font-size: 13px !important;
     color: #666 !important;
   }
-  .facets__reset,
-  .facets__reset .link {
+  .facets__reset {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
+    font-size: 14px !important;
     font-weight: 500 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
-
-  /* Price filter: inputs, labels, "kr" prefix */
-  .facets .field,
-  .facets__price .field {
-    font-size: 0.875rem !important;
-    height: auto !important;
+  .facets__price .facets__header,
+  .facets__header {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 13px !important;
+    color: #666 !important;
   }
   .facets .field__input,
   .facets__price .field__input {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
-    font-weight: 400 !important;
+    font-size: 14px !important;
     color: var(--rc-off-black, #1a1a1a) !important;
-    height: 2.5rem !important;
-    padding: 0.5rem 0.75rem !important;
   }
   .facets .field__label,
   .facets__price .field__label {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
-    font-weight: 400 !important;
+    font-size: 14px !important;
     color: #888 !important;
+    letter-spacing: 0 !important;
+  }
+  /* Focused label (floats up) */
+  .facets .field__input:focus ~ .field__label,
+  .facets .field__input:not(:placeholder-shown) ~ .field__label {
+    font-size: 10px !important;
   }
   .facets .field-currency,
   .facets__price .field-currency {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.875rem !important;
-    font-weight: 400 !important;
+    font-size: 14px !important;
     color: var(--rc-off-black, #1a1a1a) !important;
   }
-  .facets .field__input:focus,
-  .facets__price .field__input:focus {
+  .facets .field__input:focus {
     border-color: var(--rc-green, #1e4433) !important;
     box-shadow: 0 0 0 1px var(--rc-green, #1e4433) !important;
     outline: none !important;
-  }
-
-  /* Sort select — tame the focus outline */
-  .facet-filters__field .select {
-    height: auto !important;
   }
   .facet-filters__field .select__select:focus,
   .facet-filters__field .select__select:focus-visible {
@@ -547,21 +533,10 @@
     outline-offset: 2px !important;
     box-shadow: none !important;
   }
-
-  /* "Det högsta priset är..." text */
-  .facets__price .facets__header,
-  .facets__header {
-    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 0.8125rem !important;
-    font-weight: 400 !important;
-    color: #666 !important;
-  }
-
-  /* General .caption-large override inside facets */
   .facets .caption-large,
   .facets-container .caption-large,
   .facet-filters .caption-large {
-    font-size: 0.875rem !important;
+    font-size: 14px !important;
     letter-spacing: 0 !important;
   }
 </style>
