@@ -593,6 +593,134 @@
     color: var(--rc-off-black, #1a1a1a) !important;
   }
 
+  /* ===== Search modal & predictive search ===== */
+  /* Search input */
+  .search__input {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+  .search__input::placeholder,
+  .field__label {
+    font-size: 14px !important;
+  }
+  /* Section headings (FÖRSLAG, PRODUKTER) */
+  .predictive-search__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: rgba(var(--color-foreground), 0.5) !important;
+    margin: 0 20px !important;
+    padding: 12px 0 8px !important;
+  }
+  /* Suggestion items (dobby, desert, etc.) */
+  .predictive-search__item--term {
+    padding: 8px 20px !important;
+  }
+  .predictive-search__item-heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+  }
+  .predictive-search__item-query-result *:not(mark) {
+    font-weight: 600 !important;
+  }
+  /* Arrow icon in suggestion rows */
+  .predictive-search__item--term .icon-arrow {
+    width: 14px !important;
+    height: 14px !important;
+    margin-left: 16px !important;
+  }
+  /* Product items */
+  .predictive-search__item--link-with-thumbnail {
+    grid-template-columns: 50px 1fr !important;
+    grid-column-gap: 16px !important;
+    padding: 8px 20px !important;
+  }
+  .predictive-search__item--link-with-thumbnail .predictive-search__item-heading {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+  }
+  .predictive-search__item .price {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 13px !important;
+    color: rgba(var(--color-foreground), 0.6) !important;
+  }
+  .predictive-search__item-vendor {
+    font-size: 12px !important;
+  }
+  /* "Sök efter" button at bottom */
+  .predictive-search__search-for-button {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 14px !important;
+    padding: 10px 20px !important;
+  }
+  .predictive-search__search-for-button .icon-arrow {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  /* Close button (X) in search */
+  .search-modal__close-button .icon {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  /* Search icon button */
+  .search-modal__content .icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  /* Clear (X circle) button */
+  .reset__button .icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
+  /* Results group spacing */
+  .predictive-search__results-groups-wrapper {
+    padding-bottom: 8px !important;
+  }
+  @media screen and (min-width: 750px) {
+    .predictive-search__result-group:first-child {
+      flex: 0 0 220px !important;
+    }
+  }
+
+  /* ===== Shopify cookie consent banner ===== */
+  #shopify-pc__banner {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+  }
+  #shopify-pc__banner .shopify-pc__banner__title {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 1.125rem !important;
+    font-weight: 600 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+  #shopify-pc__banner p,
+  #shopify-pc__banner .shopify-pc__banner__text {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.5 !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+  #shopify-pc__banner a {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
+  }
+  #shopify-pc__banner button,
+  #shopify-pc__banner .shopify-pc__banner__btn-manage,
+  #shopify-pc__banner .shopify-pc__banner__btn-accept,
+  #shopify-pc__banner .shopify-pc__banner__btn-decline {
+    font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    padding: 8px 20px !important;
+    min-height: auto !important;
+    min-width: auto !important;
+  }
+
   /* ===== Mobile facets drawer ===== */
   /* Trigger button ("Filtrera och sortera") + product count */
   .mobile-facets__open-label {

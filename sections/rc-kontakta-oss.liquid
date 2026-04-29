@@ -324,19 +324,36 @@
       gap: 3rem !important;
       padding: 0 1.25rem !important;
     }
+    /* Order: info (1), form (2), persons (3) */
+    .rc-contact-page__info { order: 1 !important; }
+    .rc-contact-form-wrap { order: 2 !important; }
+    .rc-contact-page__persons { order: 3 !important; }
     .rc-form-row { grid-template-columns: 1fr; }
     .rc-contact-persons { grid-template-columns: 1fr; gap: 2rem; }
+    /* Mobile text sizes */
+    .rc-contact-page__info-heading {
+      font-size: 36px !important;
+    }
+    .rc-contact-page__info-body {
+      font-size: 1rem !important;
+    }
+    .rc-contact-person__name {
+      font-size: 1.125rem !important;
+    }
   }
   @media (max-width: 600px) {
     .rc-contact-form-wrap { padding: 1.75rem 1.25rem; }
     .rc-radio-grid { grid-template-columns: 1fr; }
+    .rc-contact-page__info-heading {
+      font-size: 28px !important;
+    }
   }
 </style>
 
 <section class="rc-contact-page">
   <div class="rc-contact-page__inner">
-    <!-- Left: Info + contact persons -->
-    <div>
+    <!-- Info: heading, body, email, address -->
+    <div class="rc-contact-page__info">
       <h2 class="rc-contact-page__info-heading">{{ section.settings.heading }}</h2>
       {%- if section.settings.body != blank -%}
         <p class="rc-contact-page__info-body">{{ section.settings.body }}</p>
@@ -361,10 +378,12 @@
           </div>
         {%- endif -%}
       </div>
+    </div>
 
-      <!-- Contact persons -->
-      {%- assign person_blocks = section.blocks | where: "type", "contact_person" -%}
-      {%- if person_blocks.size > 0 -%}
+    <!-- Contact persons (separate element for mobile reordering) -->
+    {%- assign person_blocks = section.blocks | where: "type", "contact_person" -%}
+    {%- if person_blocks.size > 0 -%}
+      <div class="rc-contact-page__persons">
         <div class="rc-contact-persons">
           {%- for block in section.blocks -%}
             {%- if block.type == 'contact_person' -%}
@@ -386,8 +405,8 @@
             {%- endif -%}
           {%- endfor -%}
         </div>
-      {%- endif -%}
-    </div>
+      </div>
+    {%- endif -%}
 
     <!-- Right: Form -->
     <div class="rc-contact-form-wrap">
