@@ -97,6 +97,15 @@
     margin-top: 1.75rem;
   }
 
+  @media (max-width: 991px) {
+    .rc-stats__heading {
+      font-size: 2rem !important;
+    }
+    .rc-stat__number,
+    .rc-stat__unit {
+      font-size: 2.5rem !important;
+    }
+  }
   @media (max-width: 900px) {
     .rc-stats__inner {
       grid-template-columns: 1fr;
@@ -105,6 +114,19 @@
     }
     .rc-stats__row {
       gap: 1.5rem;
+    }
+  }
+  @media (max-width: 767px) {
+    .rc-stats__heading {
+      font-size: 28px !important;
+    }
+    .rc-stat__number,
+    .rc-stat__unit {
+      font-size: 36px !important;
+    }
+    .rc-stats__row {
+      flex-direction: column;
+      gap: 2rem;
     }
   }
 </style>
