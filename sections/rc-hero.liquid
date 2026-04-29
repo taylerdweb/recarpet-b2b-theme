@@ -12,8 +12,9 @@
     justify-content: center;
     overflow: hidden;
     background-color: var(--base-color-brand--rc-re-green);
-    margin-top: -4.5rem;
-    padding-top: 4.5rem;
+    /* margin-top set dynamically by JS to match header height */
+    margin-top: var(--rc-header-height, -4.5rem);
+    padding-top: 4.5rem; /* fallback; JS overrides with exact header height */
   }
   .rc-hero__bg {
     position: absolute;
@@ -103,6 +104,24 @@
     .rc-hero__subtext { font-size: 1.375rem; }
   }
 </style>
+
+<script>
+  /* Measure header height (navbar + optional guest banner) and pull
+     the hero up by exactly that amount so it sits flush behind it. */
+  (function() {
+    function setHeroOffset() {
+      var header = document.querySelector('.header-wrapper');
+      if (!header) return;
+      var h = header.offsetHeight;
+      document.documentElement.style.setProperty('--rc-header-height', '-' + h + 'px');
+      /* Match padding-top so content isn't hidden behind header */
+      var hero = document.querySelector('.rc-hero');
+      if (hero) hero.style.paddingTop = h + 'px';
+    }
+    document.addEventListener('DOMContentLoaded', setHeroOffset);
+    window.addEventListener('resize', setHeroOffset);
+  })();
+</script>
 
 <section class="rc-hero">
   <div class="rc-hero__bg">
