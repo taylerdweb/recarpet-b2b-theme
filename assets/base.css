@@ -2588,8 +2588,8 @@ input[type='checkbox'] {
 /* reCarpet: smaller hamburger/close on mobile */
 @media screen and (max-width: 989px) {
   .header__icon--menu .icon {
-    height: 14px;
-    width: 14px;
+    height: 18px;
+    width: 18px;
   }
 }
 

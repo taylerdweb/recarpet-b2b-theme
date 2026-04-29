@@ -194,15 +194,102 @@
                 -%}
               </a>
             {%- endif -%}
-            {%- comment -%} reCarpet: combined flag-based locale switcher (same as desktop) {%- endcomment -%}
-            {%- if localization.available_countries or localization.available_languages -%}
+            {%- comment -%} reCarpet: mobile flag-based locale switcher — inline flags, no dropdown {%- endcomment -%}
+            {%- if localization.available_countries and localization.available_countries.size > 1 -%}
               <div class="menu-drawer__localization header-localization" style="padding: 20px 30px;">
-                {%- comment -%} Hidden Shopify localization form for mobile {%- endcomment -%}
                 {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
                   <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
                   <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
                 {%- endform -%}
-                {%- render 'rc-locale-switcher', position: 'mobile' -%}
+
+                {%- capture flag_SE -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#006AA7"/><rect x="6" width="3" height="15" fill="#FECC02"/><rect y="6" width="20" height="3" fill="#FECC02"/></svg>{%- endcapture -%}
+                {%- capture flag_NO -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#EF2B2D"/><rect x="6" width="3" height="15" fill="#002868"/><rect y="6" width="20" height="3" fill="#002868"/><rect x="6.5" width="2" height="15" fill="#fff"/><rect y="6.5" width="20" height="2" fill="#fff"/></svg>{%- endcapture -%}
+                {%- capture flag_DK -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#C8102E"/><rect x="6" width="2.5" height="15" fill="#fff"/><rect y="6.25" width="20" height="2.5" fill="#fff"/></svg>{%- endcapture -%}
+                {%- capture flag_FI -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#fff"/><rect x="6" width="3" height="15" fill="#003580"/><rect y="6" width="20" height="3" fill="#003580"/></svg>{%- endcapture -%}
+                {%- capture flag_DE -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#FFCC00"/><rect width="20" height="5" rx="2" fill="#000"/><rect y="5" width="20" height="5" fill="#DD0000"/></svg>{%- endcapture -%}
+                {%- capture flag_NL -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#21468B"/><rect width="20" height="5" rx="2" fill="#AE1C28"/><rect y="5" width="20" height="5" fill="#fff"/></svg>{%- endcapture -%}
+                {%- capture flag_GB -%}<svg class="rc-flag" viewBox="0 0 20 15" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="15" rx="2" fill="#012169"/><path d="M0,0 L20,15 M20,0 L0,15" stroke="#fff" stroke-width="2.5"/><path d="M0,0 L20,15 M20,0 L0,15" stroke="#C8102E" stroke-width="1.5"/><rect x="8" width="4" height="15" fill="#fff"/><rect y="5.5" width="20" height="4" fill="#fff"/><rect x="8.75" width="2.5" height="15" fill="#C8102E"/><rect y="6" width="20" height="3" fill="#C8102E"/></svg>{%- endcapture -%}
+
+                <div class="rc-locale-mobile" data-rc-locale-mobile>
+                  <div class="rc-locale-mobile__flags">
+                    {%- for country in localization.available_countries -%}
+                      {%- case country.iso_code -%}
+                        {%- when 'SE' -%}{%- assign _mflag = flag_SE -%}{%- assign _mlabel = 'SE' -%}{%- assign _mlang = 'sv' -%}
+                        {%- when 'NO' -%}{%- assign _mflag = flag_NO -%}{%- assign _mlabel = 'NO' -%}{%- assign _mlang = 'sv' -%}
+                        {%- when 'DK' -%}{%- assign _mflag = flag_DK -%}{%- assign _mlabel = 'DK' -%}{%- assign _mlang = 'da' -%}
+                        {%- when 'FI' -%}{%- assign _mflag = flag_FI -%}{%- assign _mlabel = 'FI' -%}{%- assign _mlang = 'sv' -%}
+                        {%- when 'DE' -%}{%- assign _mflag = flag_DE -%}{%- assign _mlabel = 'DE' -%}{%- assign _mlang = 'de' -%}
+                        {%- when 'NL' -%}{%- assign _mflag = flag_NL -%}{%- assign _mlabel = 'NL' -%}{%- assign _mlang = 'nl' -%}
+                        {%- when 'GB' -%}{%- assign _mflag = flag_GB -%}{%- assign _mlabel = 'GB' -%}{%- assign _mlang = 'en' -%}
+                        {%- else -%}{%- assign _mflag = '' -%}{%- assign _mlabel = country.iso_code -%}{%- assign _mlang = 'sv' -%}
+                      {%- endcase -%}
+                      <button
+                        type="button"
+                        class="rc-locale-mobile__flag-btn{% if country.iso_code == localization.country.iso_code %} rc-locale-mobile__flag-btn--active{% endif %}"
+                        data-country-code="{{ country.iso_code }}"
+                        data-locale-code="{{ _mlang }}"
+                        aria-label="{{ _mlabel }}"
+                      >
+                        <span class="rc-locale-mobile__flag">{{ _mflag }}</span>
+                        <span class="rc-locale-mobile__label">{{ _mlabel }}</span>
+                      </button>
+                    {%- endfor -%}
+                  </div>
+                </div>
+
+                <style>
+                  .rc-locale-mobile__flags {
+                    display: flex;
+                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                  }
+                  .rc-locale-mobile__flag-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.35rem;
+                    padding: 0.5rem 0.75rem;
+                    background: transparent;
+                    border: 1px solid #ddd;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-family: var(--rc-font, 'DM Sans', sans-serif);
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                    color: var(--rc-off-black, #1a1a1a);
+                    transition: border-color 0.15s, background 0.15s;
+                  }
+                  .rc-locale-mobile__flag-btn:hover {
+                    border-color: #aaa;
+                  }
+                  .rc-locale-mobile__flag-btn--active {
+                    border-color: var(--rc-green, #1e4433);
+                    background: rgba(30, 68, 51, 0.06);
+                    font-weight: 600;
+                  }
+                  .rc-locale-mobile__flag .rc-flag {
+                    width: 20px;
+                    height: 15px;
+                    display: block;
+                  }
+                </style>
+
+                <script>
+                  (function() {
+                    document.querySelectorAll('[data-rc-locale-mobile]').forEach(function(root) {
+                      root.querySelectorAll('.rc-locale-mobile__flag-btn').forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                          var form = root.closest('.menu-drawer__localization').querySelector('form[action*="/localization"]');
+                          if (!form) return;
+                          var countryInput = form.querySelector('input[name="country_code"]');
+                          var langInput = form.querySelector('input[name="locale_code"]');
+                          if (countryInput) countryInput.value = btn.getAttribute('data-country-code');
+                          if (langInput) langInput.value = btn.getAttribute('data-locale-code');
+                          form.submit();
+                        });
+                      });
+                    });
+                  })();
+                </script>
               </div>
             {%- endif -%}
             <ul class="list list-social list-unstyled" role="list">
