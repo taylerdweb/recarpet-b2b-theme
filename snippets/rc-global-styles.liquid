@@ -377,18 +377,31 @@
     background: #F6F6F6 !important;
   }
   body.collection .content-for-layout,
-  body.collection .content-for-layout > *,
-  body.collection .content-for-layout .gradient,
-  body.collection .content-for-layout .color-scheme-1,
-  body.collection .content-for-layout .color-scheme-2,
+  body.collection .content-for-layout > * {
+    background: #F6F6F6 !important;
+  }
+  /* Override Dawn .gradient + color-scheme combo directly */
+  body.collection .content-for-layout .gradient {
+    background: #F6F6F6 !important;
+    background-attachment: initial !important;
+  }
+  body.collection .content-for-layout [class*="color-scheme"] {
+    --color-background: 246, 246, 246 !important;
+    --gradient-background: #F6F6F6 !important;
+    background: #F6F6F6 !important;
+  }
   body.collection .content-for-layout [class*="product-grid-padding"],
   body.collection .content-for-layout .product-grid-container,
   body.collection .content-for-layout .collection,
   body.collection .content-for-layout .loading-overlay {
     background: #F6F6F6 !important;
     background-color: #F6F6F6 !important;
-    --gradient-background: #F6F6F6 !important;
-    --color-background: 246, 246, 246 !important;
+  }
+  /* Nuclear option: override on any element inside collection content */
+  body.collection #MainContent .gradient[class*="color-"] {
+    background: #F6F6F6 !important;
+    background-image: none !important;
+    background-attachment: initial !important;
   }
 
   /* Hero banner — beige background, two-column layout */
