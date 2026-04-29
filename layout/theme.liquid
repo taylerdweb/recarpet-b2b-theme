@@ -994,23 +994,13 @@
           var RC_YELLOW = '#EDB81E';
           var RC_STEPPER_CSS = [
             '/* Override SparkLayer stepper pulse — blue → yellow */',
-            '/* Target all possible pulse/animate keyframe names */',
-            '@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(237,184,30,0.5); } 100% { box-shadow: 0 0 0 10px rgba(237,184,30,0); } }',
-            '@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(237,184,30,0.5); } 100% { box-shadow: 0 0 0 10px rgba(237,184,30,0); } }',
-            '@keyframes spark-pulse { 0% { box-shadow: 0 0 0 0 rgba(237,184,30,0.5); } 100% { box-shadow: 0 0 0 10px rgba(237,184,30,0); } }',
-            '/* Blanket override: any element with animate class that pulses */',
-            '[class*="animate-pulse"], [class*="animate-ping"] {',
-            '  animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite !important;',
+            '@keyframes rc-step-pulse {',
+            '  0% { box-shadow: 0 0 0 0 rgba(237,184,30,0.5); }',
+            '  70% { box-shadow: 0 0 0 8px rgba(237,184,30,0); }',
+            '  100% { box-shadow: 0 0 0 0 rgba(237,184,30,0); }',
             '}',
-            '/* Direct box-shadow override on step circles */',
             '.rounded-full.bg-link, .bg-link.rounded-full {',
-            '  box-shadow: 0 0 0 0 rgba(237,184,30,0.4) !important;',
-            '  animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite !important;',
-            '}',
-            '/* Also catch ::before / ::after pseudo pulse */',
-            '.rounded-full.bg-link::before, .rounded-full.bg-link::after {',
-            '  background-color: rgba(237,184,30,0.3) !important;',
-            '  border-color: rgba(237,184,30,0.3) !important;',
+            '  animation: rc-step-pulse 2s infinite !important;',
             '}'
           ].join('\n');
 
