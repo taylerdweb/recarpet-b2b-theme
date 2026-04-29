@@ -14,7 +14,8 @@
       "settings": {
         "title": "Våra produktserier",
         "sort": "alphabetical",
-        "image_ratio": "square"
+        "image_ratio": "square",
+        "columns_desktop": 4
       }
     }
   },
