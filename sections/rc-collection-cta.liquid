@@ -1,0 +1,128 @@
+{%- comment -%}
+  rc-collection-cta.liquid
+  Two-column CTA bar shown on collection pages between banner and product grid.
+  All text and links are editable via Shopify Customizer.
+{%- endcomment -%}
+
+<div class="rc-collection-cta">
+  <div class="rc-collection-cta__inner page-width">
+    <div class="rc-collection-cta__left">
+      <p class="rc-collection-cta__text">{{ section.settings.left_text }}</p>
+    </div>
+    <div class="rc-collection-cta__right">
+      {%- if section.settings.right_heading != blank -%}
+        <p class="rc-collection-cta__heading">{{ section.settings.right_heading }}</p>
+      {%- endif -%}
+      {%- if section.settings.right_body != blank -%}
+        <p class="rc-collection-cta__body">{{ section.settings.right_body }}</p>
+      {%- endif -%}
+      {%- if section.settings.right_link_label != blank -%}
+        <a href="{{ section.settings.right_link_url }}" class="rc-collection-cta__link">
+          {{ section.settings.right_link_label }}
+          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L6 6L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .rc-collection-cta {
+    background: var(--rc-cream, #f5f3ef);
+    padding: 3rem 0;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+  .rc-collection-cta__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  .rc-collection-cta__text {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--rc-off-black, #1a1a1a);
+    margin: 0;
+  }
+  .rc-collection-cta__heading {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--rc-off-black, #1a1a1a);
+    margin: 0 0 0.25rem;
+  }
+  .rc-collection-cta__body {
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--rc-off-black, #1a1a1a);
+    margin: 0 0 0.75rem;
+  }
+  .rc-collection-cta__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--rc-font, 'DM Sans', sans-serif);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--rc-green, #1e4433);
+    text-decoration: none;
+  }
+  .rc-collection-cta__link:hover {
+    text-decoration: underline;
+  }
+  .rc-collection-cta__link svg {
+    flex-shrink: 0;
+  }
+  @media screen and (max-width: 749px) {
+    .rc-collection-cta__inner {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection CTA",
+  "class": "section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "left_text",
+      "label": "Vänster text",
+      "default": "Vill du ha mer information om någon av våra produkter? Kontakta oss!"
+    },
+    {
+      "type": "text",
+      "id": "right_heading",
+      "label": "Höger rubrik",
+      "default": "Har du ett projekt som ligger längre fram i tiden?"
+    },
+    {
+      "type": "text",
+      "id": "right_body",
+      "label": "Höger brödtext",
+      "default": "Lugn, vi hjälper dig!"
+    },
+    {
+      "type": "text",
+      "id": "right_link_label",
+      "label": "Länktext",
+      "default": "Kontakta oss för att planera ditt projekt"
+    },
+    {
+      "type": "url",
+      "id": "right_link_url",
+      "label": "Länk URL",
+      "default": "/pages/kontakta-oss"
+    }
+  ]
+}
+{% endschema %}
