@@ -373,11 +373,16 @@
   /* ===== Collection page overrides ===== */
 
   /* Collection page — beige background on entire page */
+  body.collection,
   .collection .content-for-layout,
+  .collection .content-for-layout > *,
   .collection .content-for-layout .gradient,
+  .collection .content-for-layout .color-scheme-1,
   .collection .content-for-layout [class*="product-grid-padding"],
-  body.collection {
+  .collection .content-for-layout .rc-collection-cta {
     background: var(--base-color-brand--rc-beige, #e6e3de) !important;
+    --gradient-background: #e6e3de !important;
+    --color-background: 230, 227, 222 !important;
   }
 
   /* Hero banner — beige background, two-column layout */
