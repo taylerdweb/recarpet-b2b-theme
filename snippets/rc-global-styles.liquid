@@ -372,36 +372,14 @@
 
   /* ===== Collection page overrides ===== */
 
-  /* Collection page — #F6F6F6 background everywhere */
-  body.collection {
-    background: #F6F6F6 !important;
-  }
-  body.collection .content-for-layout,
-  body.collection .content-for-layout > * {
-    background: #F6F6F6 !important;
-  }
-  /* Override Dawn .gradient + color-scheme combo directly */
-  body.collection .content-for-layout .gradient {
-    background: #F6F6F6 !important;
-    background-attachment: initial !important;
-  }
-  body.collection .content-for-layout [class*="color-scheme"] {
-    --color-background: 246, 246, 246 !important;
-    --gradient-background: #F6F6F6 !important;
-    background: #F6F6F6 !important;
-  }
-  body.collection .content-for-layout [class*="product-grid-padding"],
-  body.collection .content-for-layout .product-grid-container,
-  body.collection .content-for-layout .collection,
-  body.collection .content-for-layout .loading-overlay {
-    background: #F6F6F6 !important;
-    background-color: #F6F6F6 !important;
-  }
-  /* Nuclear option: override on any element inside collection content */
-  body.collection #MainContent .gradient[class*="color-"] {
-    background: #F6F6F6 !important;
-    background-image: none !important;
-    background-attachment: initial !important;
+  /*
+   * Collection page #F6F6F6 background:
+   * The main product-grid .gradient override lives in main-collection-product-grid.liquid
+   * using Liquid's {{ section.id }} for a selector that always wins.
+   * Below we only handle the body/content-for-layout wrapper.
+   */
+  .content-for-layout {
+    background: transparent;
   }
 
   /* Hero banner — beige background, two-column layout */

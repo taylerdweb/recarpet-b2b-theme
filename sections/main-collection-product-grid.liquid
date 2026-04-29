@@ -102,6 +102,18 @@
   {%- assign _coll_is_services = true -%}
 {%- endif -%}
 
+{%- comment -%} Force #F6F6F6 on the product grid wrapper — beats Dawn .gradient + color-scheme {%- endcomment -%}
+<style>
+  .section-{{ section.id }}-padding.gradient {
+    background: #F6F6F6 !important;
+    background-image: none !important;
+    background-attachment: initial !important;
+  }
+  .section-{{ section.id }}-padding .loading-overlay.gradient {
+    background: #F6F6F6 !important;
+  }
+</style>
+
 {%- if _coll_is_services and rc_sees_services == false -%}
   <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
     <div class="page-width" style="text-align:center;padding:3rem 1rem;">
