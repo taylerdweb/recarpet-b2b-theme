@@ -912,6 +912,7 @@
               inp.placeholder = f.ph;
               inp.dataset.fk  = f.key;
               inp.className   = input.className;
+              inp.required    = true;
               inp.style.cssText = 'padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;width:100%;box-sizing:border-box;transition:border-color 0.2s;';
               if (f.type === 'email') {
                 inp.setAttribute('pattern', '[^@\\s]+@[^@\\s]+\\.[^@\\s]+');
@@ -952,7 +953,79 @@
             });
 
             input.parentNode.insertBefore(wrap, input);
-            console.log('[reCarpet] Fakturauppgifter: injected 3 fields, replaced', input.tagName, input.id || input.placeholder);
+
+            // ── Required validation: block "Fortsätt" if any faktura field is empty ──
+            var helperText = wrap.parentNode && wrap.parentNode.querySelector('[class*="helper"], [class*="hint"], small, p');
+            function validateFakturaFields(showErrors) {
+              var allValid = true;
+              FIELDS.forEach(function(f) {
+                var el = wrap.querySelector('[data-fk="' + f.key + '"]');
+                var err = wrap.querySelector('[data-fk-err="' + f.key + '"]');
+                if (!el) return;
+                var v = el.value.trim();
+                var empty = v.length === 0;
+                var formatOk = true;
+                var formatMsg = '';
+                if (!empty && f.type === 'email') {
+                  formatOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+                  formatMsg = 'Ange en giltig e-postadress';
+                }
+                if (!empty && f.key === 'orgnr') {
+                  formatOk = /^\d{6}-?\d{4}$/.test(v);
+                  formatMsg = 'Ange org.nr som 556123-4567';
+                }
+                if (empty || !formatOk) allValid = false;
+                if (showErrors && err) {
+                  if (empty) {
+                    err.textContent = f.label + ' är obligatoriskt';
+                    err.style.display = 'block';
+                    el.style.borderColor = '#d32f2f';
+                  } else if (!formatOk) {
+                    err.textContent = formatMsg;
+                    err.style.display = 'block';
+                    el.style.borderColor = '#d32f2f';
+                  } else {
+                    err.style.display = 'none';
+                    el.style.borderColor = '#4caf50';
+                  }
+                }
+              });
+              return allValid;
+            }
+
+            // Intercept submit/continue buttons inside the same checkout step
+            function interceptContinueBtn(searchRoot) {
+              if (!searchRoot) return;
+              var btns = searchRoot.querySelectorAll('button');
+              btns.forEach(function(btn) {
+                var txt = (btn.textContent || '').trim().toLowerCase();
+                if (txt === 'fortsätt' || txt === 'continue' || txt === 'next' || btn.type === 'submit') {
+                  if (btn.dataset.fakIntercepted) return;
+                  btn.dataset.fakIntercepted = '1';
+                  btn.addEventListener('click', function(e) {
+                    if (!validateFakturaFields(true)) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      e.stopImmediatePropagation();
+                      // Scroll first empty field into view
+                      var firstEmpty = wrap.querySelector('input:invalid, input[style*="d32f2f"]');
+                      if (firstEmpty) firstEmpty.focus();
+                      console.log('[reCarpet] Fakturauppgifter: blocked continue — required fields empty');
+                    }
+                  }, true); // capture phase to run before SparkLayer's handler
+                }
+              });
+            }
+
+            // Run interceptor on current root and re-run on mutations
+            interceptContinueBtn(root);
+            if (root.host) interceptContinueBtn(root); // shadow root
+            var _fakBtnObs = new MutationObserver(function() {
+              interceptContinueBtn(root);
+            });
+            _fakBtnObs.observe(root === document ? document.body : root, { childList: true, subtree: true });
+
+            console.log('[reCarpet] Fakturauppgifter: injected 3 required fields, replaced', input.tagName, input.id || input.placeholder);
           }
 
           // Recursively walk shadow roots (handles nested components)
