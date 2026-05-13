@@ -1,0 +1,27 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "93588b31cc895dc90f517ad41bdbbef2"
+name = "ReCarpet Leveransdatum"
+application_url = "https://example.com"
+embedded = true
+handle = "recarpet-delivery-dates"
+
+[webhooks]
+api_version = "2026-04"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_orders,write_orders,read_draft_orders,write_draft_orders"
+optional_scopes = [ ]
+use_legacy_install_flow = false
+
+[auth]
+redirect_urls = [ ]
+
+[app_proxy]
+url = "https://YOUR_APP_URL/api/proxy"
+subpath = "delivery-dates"
+prefix = "apps"
+
+[pos]
+embedded = false
