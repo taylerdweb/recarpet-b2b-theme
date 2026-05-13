@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "policy": {
+      "type": "rc-integritetspolicy",
+      "settings": {}
+    }
+  },
+  "order": [
+    "policy"
+  ]
+}
