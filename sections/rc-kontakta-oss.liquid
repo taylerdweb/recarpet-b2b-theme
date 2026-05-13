@@ -217,34 +217,31 @@
   .rc-radio-option {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
   }
   .rc-radio-option input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-    pointer-events: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    min-width: 1.25rem;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--rc-green, #1e4433);
+    flex-shrink: 0;
   }
   .rc-radio-option label {
     margin: 0 !important;
     cursor: pointer;
-    padding: 0.625rem 1rem !important;
-    border: 1px solid var(--rc-off-black, #1a1a1a) !important;
-    border-radius: 2px !important;
+    padding: 0 !important;
+    border: none !important;
     background: transparent !important;
-    transition: all 0.15s;
-    display: flex !important;
-    align-items: center !important;
-    flex: 1;
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
     font-size: 0.875rem !important;
     font-weight: 400 !important;
     color: var(--rc-off-black, #1a1a1a) !important;
+    display: inline !important;
   }
   .rc-radio-option input[type="radio"]:checked + label {
-    border-color: var(--rc-green, #1e4433) !important;
-    background: rgba(30, 68, 51, 0.05) !important;
-    color: var(--rc-green, #1e4433) !important;
+    color: var(--rc-off-black, #1a1a1a) !important;
     font-weight: 500 !important;
   }
 
@@ -324,10 +321,9 @@
       gap: 3rem !important;
       padding: 0 1.25rem !important;
     }
-    /* Order: info (1), form (2), persons (3) */
+    /* Order: info+persons (1), form (2) */
     .rc-contact-page__info { order: 1 !important; }
     .rc-contact-form-wrap { order: 2 !important; }
-    .rc-contact-page__persons { order: 3 !important; }
     .rc-form-row { grid-template-columns: 1fr; }
     .rc-contact-persons { grid-template-columns: 1fr; gap: 2rem; }
     /* Mobile text sizes */
@@ -378,12 +374,10 @@
           </div>
         {%- endif -%}
       </div>
-    </div>
 
-    <!-- Contact persons (separate element for mobile reordering) -->
-    {%- assign person_blocks = section.blocks | where: "type", "contact_person" -%}
-    {%- if person_blocks.size > 0 -%}
-      <div class="rc-contact-page__persons">
+      <!-- Contact persons — inside left column -->
+      {%- assign person_blocks = section.blocks | where: "type", "contact_person" -%}
+      {%- if person_blocks.size > 0 -%}
         <div class="rc-contact-persons">
           {%- for block in section.blocks -%}
             {%- if block.type == 'contact_person' -%}
@@ -405,8 +399,8 @@
             {%- endif -%}
           {%- endfor -%}
         </div>
-      </div>
-    {%- endif -%}
+      {%- endif -%}
+    </div>
 
     <!-- Right: Form -->
     <div class="rc-contact-form-wrap">

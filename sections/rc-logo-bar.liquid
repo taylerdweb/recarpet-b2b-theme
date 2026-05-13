@@ -5,7 +5,7 @@
 
 <style>
   .rc-logo-bar {
-    background: var(--base-color-neutral--white);
+    background: {{ section.settings.bg_color | default: 'var(--base-color-neutral--white)' }};
     padding: var(--rc-section-sm) 0;
     border: none;
   }
@@ -81,6 +81,12 @@
       "id": "heading",
       "label": "Rubrik",
       "default": "Några av våra nöjda kunder"
+    },
+    {
+      "type": "text",
+      "id": "bg_color",
+      "label": "Bakgrundsfärg (CSS)",
+      "default": "var(--base-color-neutral--white)"
     }
   ],
   "blocks": [

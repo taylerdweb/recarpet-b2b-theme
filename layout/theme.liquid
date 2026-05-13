@@ -874,7 +874,8 @@
             var FIELDS = [
               { key: 'orgnr',  label: 'Org.nr',          type: 'text',  ph: 'ex. 556123-4567' },
               { key: 'fepost', label: 'Faktura-e-post',  type: 'email', ph: 'ex. faktura@foretag.se' },
-              { key: 'ref',    label: 'Referensnummer',  type: 'text',  ph: 'ex. PO-2026-001' }
+              { key: 'ref',    label: 'Referensnummer',  type: 'text',  ph: 'ex. PO-2026-001' },
+              { key: 'mark',   label: 'Märkning',        type: 'text',  ph: 'ex. Projekt Vasagatan 12' }
             ];
 
             var wrap = document.createElement('div');
@@ -917,7 +918,7 @@
               inp.placeholder = f.ph;
               inp.dataset.fk  = f.key;
               inp.className   = input.className;
-              inp.required    = true;
+              /* required handled by custom validation, not native HTML */
               inp.style.cssText = 'padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;width:100%;box-sizing:border-box;transition:border-color 0.2s;';
               if (f.type === 'email') {
                 inp.setAttribute('pattern', '[^@\\s]+@[^@\\s]+\\.[^@\\s]+');
@@ -972,7 +973,7 @@
             var dateInp = document.createElement('input');
             dateInp.type = 'date';
             dateInp.dataset.fk = 'leveransdatum';
-            dateInp.required = true;
+            /* required handled by custom validation, not native HTML */
             dateInp.className = input.className;
             dateInp.style.cssText = 'padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;width:100%;box-sizing:border-box;transition:border-color 0.2s;font-family:inherit;';
             // Set minimum date to tomorrow
@@ -1064,7 +1065,7 @@
               var btns = searchRoot.querySelectorAll('button');
               btns.forEach(function(btn) {
                 var txt = (btn.textContent || '').trim().toLowerCase();
-                if (txt === 'fortsätt' || txt === 'continue' || txt === 'next' || btn.type === 'submit') {
+                if (txt === 'fortsätt' || txt === 'continue' || txt === 'next') {
                   if (btn.dataset.fakIntercepted) return;
                   btn.dataset.fakIntercepted = '1';
                   btn.addEventListener('click', function(e) {

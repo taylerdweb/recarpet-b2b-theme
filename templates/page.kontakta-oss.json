@@ -113,7 +113,8 @@
         "logo_VpkUkf"
       ],
       "settings": {
-        "heading": "Några av våra nöjda kunder"
+        "heading": "Några av våra nöjda kunder",
+        "bg_color": "var(--rc-cream, #f5f3ef)"
       }
     }
   },
