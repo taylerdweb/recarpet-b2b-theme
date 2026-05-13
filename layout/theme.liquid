@@ -985,6 +985,10 @@
             dateErr.style.cssText = 'font-size:11px;color:#d32f2f;display:none;margin-top:2px;';
             dateErr.dataset.fkErr = 'leveransdatum';
 
+            dateInp.addEventListener('click', function() {
+              if (dateInp.showPicker) { try { dateInp.showPicker(); } catch(e) {} }
+            });
+            dateInp.style.cursor = 'pointer';
             dateInp.addEventListener('input', sync);
             dateInp.addEventListener('input', function() {
               var v = dateInp.value;
