@@ -887,6 +887,11 @@
                 var el = wrap.querySelector('[data-fk="' + f.key + '"]');
                 return f.label + ': ' + (el ? el.value.trim() : '');
               });
+              // Include delivery date
+              var dateEl = wrap.querySelector('[data-fk="leveransdatum"]');
+              if (dateEl && dateEl.value) {
+                vals.push('Önskat leveransdatum: ' + dateEl.value);
+              }
               var combined = vals.join(' | ');
               // Handle both input and textarea
               var nativeSetter = Object.getOwnPropertyDescriptor(
@@ -952,10 +957,51 @@
               wrap.appendChild(row);
             });
 
+            // ── Önskat leveransdatum (date picker) ──
+            var dateSection = document.createElement('div');
+            dateSection.style.cssText = 'margin-top:16px;padding-top:16px;border-top:1px solid #e5e5e5;display:flex;flex-direction:column;gap:4px;';
+
+            var dateLbl = document.createElement('label');
+            dateLbl.textContent = 'Önskat leveransdatum';
+            dateLbl.style.cssText = 'font-size:13px;font-weight:600;color:inherit;display:block;margin-bottom:2px;';
+
+            var dateHelp = document.createElement('span');
+            dateHelp.textContent = 'Välj det datum ni önskar leverans. Vi bekräftar exakt datum.';
+            dateHelp.style.cssText = 'font-size:11px;color:#666;margin-bottom:4px;';
+
+            var dateInp = document.createElement('input');
+            dateInp.type = 'date';
+            dateInp.dataset.fk = 'leveransdatum';
+            dateInp.required = true;
+            dateInp.className = input.className;
+            dateInp.style.cssText = 'padding:8px 10px;border:1px solid #ccc;border-radius:6px;font-size:14px;width:100%;box-sizing:border-box;transition:border-color 0.2s;font-family:inherit;';
+            // Set minimum date to tomorrow
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            dateInp.min = tomorrow.toISOString().split('T')[0];
+
+            var dateErr = document.createElement('span');
+            dateErr.style.cssText = 'font-size:11px;color:#d32f2f;display:none;margin-top:2px;';
+            dateErr.dataset.fkErr = 'leveransdatum';
+
+            dateInp.addEventListener('input', sync);
+            dateInp.addEventListener('input', function() {
+              var v = dateInp.value;
+              if (v) {
+                dateInp.style.borderColor = '#4caf50';
+                dateErr.style.display = 'none';
+              }
+            });
+
+            dateSection.appendChild(dateLbl);
+            dateSection.appendChild(dateHelp);
+            dateSection.appendChild(dateInp);
+            dateSection.appendChild(dateErr);
+            wrap.appendChild(dateSection);
+
             input.parentNode.insertBefore(wrap, input);
 
-            // ── Required validation: block "Fortsätt" if any faktura field is empty ──
-            var helperText = wrap.parentNode && wrap.parentNode.querySelector('[class*="helper"], [class*="hint"], small, p');
+            // ── Required validation: block "Fortsätt" if any faktura field or delivery date is empty ──
             function validateFakturaFields(showErrors) {
               var allValid = true;
               FIELDS.forEach(function(f) {
@@ -990,6 +1036,25 @@
                   }
                 }
               });
+              // Validate delivery date
+              var dateEl = wrap.querySelector('[data-fk="leveransdatum"]');
+              var dateErrEl = wrap.querySelector('[data-fk-err="leveransdatum"]');
+              if (dateEl) {
+                var dv = dateEl.value;
+                if (!dv) {
+                  allValid = false;
+                  if (showErrors && dateErrEl) {
+                    dateErrEl.textContent = 'Önskat leveransdatum är obligatoriskt';
+                    dateErrEl.style.display = 'block';
+                    dateEl.style.borderColor = '#d32f2f';
+                  }
+                } else {
+                  if (showErrors && dateErrEl) {
+                    dateErrEl.style.display = 'none';
+                    dateEl.style.borderColor = '#4caf50';
+                  }
+                }
+              }
               return allValid;
             }
 
