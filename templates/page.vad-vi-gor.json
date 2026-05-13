@@ -64,7 +64,7 @@
             "body_after": "Med vår hjälp får era textilplattor ett nytt hem där de kan fortsätta göra nytta. Tillsammans minskar vi avfallet och skapar en mer cirkulär byggbransch.",
             "image": "shopify://shop_images/rc-tjanst-formedling.jpg",
             "btn_label": "Se vårt sortiment",
-            "btn_url": "/collections/all"
+            "btn_url": "shopify://collections"
           }
         },
         "s4": {
