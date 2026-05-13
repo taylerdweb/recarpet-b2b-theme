@@ -840,6 +840,51 @@
           // ── Fakturauppgifter: replace customer-reference / notes input with 3 labelled inputs ──
           // SparkLayer may render the field as <input> or <textarea>, with id "customer-reference"
           // or with our placeholder text, inside a shadow root OR in the regular DOM.
+          var _fakturaFieldsEverInjected = false;
+          var _fakturaFieldCache = {}; // Persists field values across SparkLayer re-renders
+
+          // Save current faktura field values to cache
+          function cacheFakturaValues() {
+            var wraps = document.querySelectorAll('[data-fak-wrap]');
+            // Also search shadow roots
+            if (wraps.length === 0) {
+              document.querySelectorAll('spark-drawer, spark-cart, spark-checkout').forEach(function(el) {
+                if (el.shadowRoot) {
+                  var sw = el.shadowRoot.querySelectorAll('[data-fak-wrap]');
+                  if (sw.length) wraps = sw;
+                  el.shadowRoot.querySelectorAll('*').forEach(function(c) {
+                    if (c.shadowRoot) {
+                      var cw = c.shadowRoot.querySelectorAll('[data-fak-wrap]');
+                      if (cw.length) wraps = cw;
+                    }
+                  });
+                }
+              });
+            }
+            wraps.forEach(function(wrap) {
+              wrap.querySelectorAll('[data-fk]').forEach(function(inp) {
+                if (inp.value.trim()) {
+                  _fakturaFieldCache[inp.dataset.fk] = inp.value;
+                }
+              });
+            });
+          }
+
+          // Restore cached values into freshly injected fields
+          function restoreFakturaValues(wrap) {
+            var keys = Object.keys(_fakturaFieldCache);
+            if (keys.length === 0) return;
+            keys.forEach(function(key) {
+              var inp = wrap.querySelector('[data-fk="' + key + '"]');
+              if (inp && !inp.value) {
+                inp.value = _fakturaFieldCache[key];
+                // Trigger border color update
+                inp.style.borderColor = '#4caf50';
+                inp.dispatchEvent(new Event('input', { bubbles: true }));
+              }
+            });
+            console.log('[reCarpet] Fakturauppgifter: restored cached values', keys.join(', '));
+          }
 
           function injectFakturaFields(root) {
             // Broad selector: input OR textarea, by id OR placeholder content
@@ -1069,11 +1114,16 @@
               var btns = searchRoot.querySelectorAll('button');
               btns.forEach(function(btn) {
                 var txt = (btn.textContent || '').trim().toLowerCase();
+                // Only match the exact checkout "Fortsätt" / "Continue" / "Next" button
+                // Exclude buttons with extra text like "Continue and use this address"
                 if (txt === 'fortsätt' || txt === 'continue' || txt === 'next') {
                   if (btn.dataset.fakIntercepted) return;
                   btn.dataset.fakIntercepted = '1';
                   btn.addEventListener('click', function(e) {
-                    if (!document.body.contains(wrap)) return; // checkout closed, skip validation
+                    // Only validate if our faktura wrap is currently visible in the DOM
+                    var wrapRoot = wrap.getRootNode ? wrap.getRootNode() : document;
+                    var wrapPresent = wrapRoot.contains ? wrapRoot.contains(wrap) : document.body.contains(wrap);
+                    if (!wrapPresent) return;
                     if (!validateFakturaFields(true)) {
                       e.preventDefault();
                       e.stopPropagation();
@@ -1095,6 +1145,9 @@
             });
             _fakBtnObs.observe(root === document ? document.body : root, { childList: true, subtree: true });
 
+            _fakturaFieldsEverInjected = true;
+            // Restore any previously entered values (survives SparkLayer re-renders)
+            restoreFakturaValues(wrap);
             console.log('[reCarpet] Fakturauppgifter: injected 3 required fields, replaced', input.tagName, input.id || input.placeholder);
           }
 
@@ -1175,25 +1228,182 @@
             });
           }
 
-          var fakPoll = setInterval(function() {
-            runFakturaInjection();
-            watchForCheckoutChanges();
-            injectStepperToSpark();
-          }, 500);
-          setTimeout(function() { clearInterval(fakPoll); }, 120000);
+          // Poll continuously while checkout is open (no hard timeout — stops when drawer closes)
+          var _fakPollActive = false;
+          var _fakPollInterval = null;
 
-          // ── Montering-tillval: auto-add vid köp ────────────────────────────────
-          var MONTERING_PRICE_PER_M2 = 45;
+          function startFakPoll() {
+            if (_fakPollActive) return;
+            _fakPollActive = true;
+            _fakPollInterval = setInterval(function() {
+              cacheFakturaValues(); // Save values before potential re-render destroys them
+              runFakturaInjection();
+              watchForCheckoutChanges();
+              injectStepperToSpark();
+            }, 200);
+            console.log('[reCarpet] Fakturauppgifter: poll started');
+          }
+
+          function stopFakPoll() {
+            if (!_fakPollActive) return;
+            clearInterval(_fakPollInterval);
+            _fakPollActive = false;
+            _fakturaFieldsEverInjected = false; // reset for next checkout session
+            _fakturaFieldCache = {}; // clear cached values for next session
+            console.log('[reCarpet] Fakturauppgifter: poll stopped (checkout closed)');
+          }
+
+          // Start immediately
+          startFakPoll();
+
+          // Watch for drawer open/close to manage poll lifecycle
+          setInterval(function() {
+            var open = isCheckoutOpen();
+            if (open && !_fakPollActive) startFakPoll();
+            if (!open && _fakPollActive) stopFakPoll();
+          }, 500);
+
+          // ── Failsafe: auto-close checkout if faktura fields fail to inject ──
+          // Watches for SparkLayer checkout step 2 (Leverans) appearing.
+          // If our faktura fields aren't present within 3 seconds, close the drawer
+          // and show a toast so the customer can try again.
+          (function() {
+            var _failsafeTimer = null;
+            var _failsafeChecked = false;
+
+            function findFakturaWrap() {
+              // Check regular DOM
+              if (document.querySelector('[data-fak-wrap]')) return true;
+              // Check shadow roots
+              var sparks = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
+              for (var i = 0; i < sparks.length; i++) {
+                var sr = sparks[i].shadowRoot;
+                if (sr) {
+                  if (sr.querySelector('[data-fak-wrap]')) return true;
+                  // Check nested shadow roots
+                  var nested = sr.querySelectorAll('*');
+                  for (var j = 0; j < nested.length; j++) {
+                    if (nested[j].shadowRoot && nested[j].shadowRoot.querySelector('[data-fak-wrap]')) return true;
+                  }
+                }
+              }
+              return false;
+            }
+
+            function isCheckoutOpen() {
+              // SparkLayer checkout is open when we can find a step indicator or form
+              var sparks = document.querySelectorAll('spark-drawer, spark-cart');
+              for (var i = 0; i < sparks.length; i++) {
+                var sr = sparks[i].shadowRoot;
+                if (!sr) continue;
+                // Look for the checkout stepper or the notes/reference field
+                var deep = sr.querySelector('[class*="step"], [class*="checkout"]');
+                if (deep) return true;
+                // Also check nested shadow roots
+                var all = sr.querySelectorAll('*');
+                for (var j = 0; j < all.length; j++) {
+                  if (all[j].shadowRoot) {
+                    var d2 = all[j].shadowRoot.querySelector('[class*="step"], [class*="checkout"], input#customer-reference, textarea#customer-reference');
+                    if (d2) return true;
+                  }
+                }
+              }
+              return false;
+            }
+
+            function closeDrawerAndNotify() {
+              console.warn('[reCarpet] Failsafe: faktura fields not found after timeout — closing checkout');
+              // Try SparkLayer API
+              if (window.spark && typeof window.spark.closeDrawer === 'function') {
+                window.spark.closeDrawer();
+              }
+              // Also try clicking any close/back button inside shadow roots
+              var sparks = document.querySelectorAll('spark-drawer, spark-cart');
+              sparks.forEach(function(el) {
+                var sr = el.shadowRoot;
+                if (!sr) return;
+                // Look for close buttons
+                sr.querySelectorAll('button').forEach(function(btn) {
+                  var t = (btn.textContent || '').trim().toLowerCase();
+                  if (t.indexOf('stäng') !== -1 || t.indexOf('close') !== -1 || btn.getAttribute('aria-label') === 'Close') {
+                    btn.click();
+                  }
+                });
+              });
+
+              // Show toast notification
+              var toast = document.createElement('div');
+              toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:999999;background:#1e4433;color:#fff;padding:14px 28px;border-radius:10px;font-family:DM Sans,sans-serif;font-size:15px;box-shadow:0 4px 20px rgba(0,0,0,0.25);opacity:0;transition:opacity 0.3s;';
+              toast.textContent = 'Kassan kunde inte laddas korrekt. Öppna varukorgen och försök igen.';
+              document.body.appendChild(toast);
+              requestAnimationFrame(function() { toast.style.opacity = '1'; });
+              setTimeout(function() {
+                toast.style.opacity = '0';
+                setTimeout(function() { toast.remove(); }, 400);
+              }, 5000);
+            }
+
+            // Watch for checkout opening — poll every 500ms
+            setInterval(function() {
+              var checkoutVisible = isCheckoutOpen();
+              if (checkoutVisible && !_failsafeChecked) {
+                _failsafeChecked = true;
+                // Checkout just opened — give 3 seconds for fields to inject
+                _failsafeTimer = setTimeout(function() {
+                  // Only close if fields were NEVER injected — if they were injected
+                  // but disappeared (e.g. "Lägg till ny adress" re-render), skip.
+                  if (!_fakturaFieldsEverInjected && !findFakturaWrap() && isCheckoutOpen()) {
+                    closeDrawerAndNotify();
+                  }
+                  _failsafeChecked = false;
+                }, 3000);
+              } else if (!checkoutVisible && _failsafeChecked) {
+                // Checkout closed — reset
+                clearTimeout(_failsafeTimer);
+                _failsafeChecked = false;
+              }
+            }, 500);
+          })();
+
+          // ── Montering-tillval v2: attribute-only (no product in cart) ──────────
+          // Montering tracked via customAttributes on cart items.
+          // No montering product is added to cart — instead we show badges in
+          // cart and a summary in checkout + inject into notes field.
+
+          var _monteringPricePerM2 = 45; // fallback, overwritten by API fetch
+          var _monteringPriceFetched = false;
+
+          // Fetch montering price from Shopify product
+          (function() {
+            fetch('/products/montering.js')
+              .then(function(r) { return r.json(); })
+              .then(function(prod) {
+                if (prod && prod.variants && prod.variants.length > 0) {
+                  // Shopify .js returns price as string e.g. "4500" (öre) or "45.00" (kronor)
+                  var rawPrice = parseFloat(prod.variants[0].price);
+                  var price = rawPrice > 1000 ? rawPrice / 100 : rawPrice; // auto-detect format
+                  if (price > 0) {
+                    _monteringPricePerM2 = price;
+                    _monteringPriceFetched = true;
+                    console.log('[reCarpet] Monteringspris hämtat: ' + price + ' kr/m²');
+                    // Update PDP checkbox text if present
+                    var priceSpan = document.querySelector('.montering-addon__price');
+                    if (priceSpan) priceSpan.textContent = '+' + price + ' kr/m²';
+                  }
+                }
+              }).catch(function(e) {
+                console.warn('[reCarpet] Kunde inte hämta monteringspris, använder fallback: ' + _monteringPricePerM2);
+              });
+          })();
 
           var addonEl = document.getElementById('montering-addon');
           var checkboxEl = document.getElementById('montering-checkbox');
           var subtotalEl = document.getElementById('montering-subtotal');
 
           if (addonEl && checkboxEl) {
-            // Visa checkbox (döljs i HTML tills JS laddats)
             addonEl.style.display = '';
 
-            // Hämta kvantitet från spark-pdp:s input (shadow DOM)
+            // Get quantity from spark-pdp input (shadow DOM)
             function getSparkQuantity() {
               var pdp = document.querySelector('spark-pdp');
               if (!pdp) return 1;
@@ -1208,358 +1418,274 @@
               return 1;
             }
 
-            // Uppdatera delsumma
             function updateMonteringSubtotal() {
               if (!checkboxEl.checked) { subtotalEl.style.display = 'none'; return; }
               var qty = getSparkQuantity();
               if (qty > 0) {
-                subtotalEl.textContent = 'Montering: ' + qty + ' m\u00B2 \u00D7 ' + MONTERING_PRICE_PER_M2 + ' kr = ' + (qty * MONTERING_PRICE_PER_M2) + ' kr';
+                subtotalEl.textContent = 'Montering: ' + qty + ' m² × ' + _monteringPricePerM2 + ' kr = ' + (qty * _monteringPricePerM2) + ' kr';
                 subtotalEl.style.display = '';
               }
             }
             checkboxEl.addEventListener('change', updateMonteringSubtotal);
             setInterval(updateMonteringSubtotal, 1000);
 
-            // ── Montering bundling via customAttributes ─────────────────────────
-            //
-            // When a customer adds a product WITH the montering checkbox checked,
-            // we pass customAttributes: [{ key: "montering", value: "true" }].
-            // SparkLayer creates a SEPARATE line item from the same SKU added
-            // without the attribute. This means the cart can show:
-            //   - Product A (6 m²)                    ← no montering
-            //   - Product A (4 m²) — Inkl. montering  ← with montering
-            //
-            // The montering service line item syncs to the total quantity of
-            // all cart items that have the montering customAttribute.
-            //
-            var MONTERING_SKU = 'RC-SERVICE-MONTERING';
-            var MONTERING_ATTR = { key: 'montering', value: 'true' };
+            // ── Wrap _updateCart: inject customAttributes when checkbox is checked ──
             var _origSparkUpdateCart = window.spark._updateCart.bind(window.spark);
-            var _monteringBusy = false;
-            var _monteringUserRemoved = false;
 
-            // ── Helper: check if a cart item has the montering attribute ──
-            function hasMonteringAttr(item) {
-              return item.customAttributes && item.customAttributes.some(function(a) {
-                return a.key === 'montering' && a.value === 'true';
-              });
-            }
-
-            // ── Silent cart update ──
-            function silentUpdateCart(payload) {
-              _monteringBusy = true;
-              return _origSparkUpdateCart(payload).then(function(r) {
-                _monteringBusy = false;
-                return r;
-              }).catch(function(err) {
-                _monteringBusy = false;
-              });
-            }
-
-            // ── Sync montering qty with items that have montering attribute ──
-            // Only counts quantities of cart items with customAttributes montering=true.
-            // Never creates montering — only PDP add with checkbox does that.
-            function syncMonteringWithCart() {
-              if (_monteringBusy || _monteringUserRemoved) return;
-
-              window.spark.getCart().then(function(cart) {
-                if (!cart || !cart.items) return;
-
-                var monteringQty = 0;
-                var attrQty = 0;
-
-                cart.items.forEach(function(item) {
-                  if (item.sku === MONTERING_SKU) {
-                    monteringQty = item.quantity;
-                  } else if (item.sku && item.sku.indexOf('RC-SERVICE') === -1 && hasMonteringAttr(item)) {
-                    attrQty += item.quantity;
-                  }
-                });
-
-                // If montering not in cart, do nothing
-                if (monteringQty === 0) return;
-
-                // If no attributed items left, remove montering
-                if (attrQty === 0) {
-                  console.log('[reCarpet] Inga monterings-produkter kvar — tar bort montering');
-                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: 0 }] });
-                  return;
-                }
-
-                // Sync montering to match attributed total
-                if (monteringQty !== attrQty) {
-                  console.log('[reCarpet] Synkar montering: ' + monteringQty + ' → ' + attrQty + ' m²');
-                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: attrQty }] });
-                }
-              }).catch(function() {});
-            }
-
-            // ── Wrap _updateCart to trigger sync after every cart change ──
-            // IMPORTANT: always return result unmodified so SparkLayer works normally.
             window.spark._updateCart = function(payload, t, n) {
               try {
-                // Detect manual montering removal first
-                if (payload && payload.products && !_monteringBusy) {
-                  var isMonteringRemoval = payload.products.some(function(p) {
-                    return p.sku === MONTERING_SKU && (p.quantity === 0 || (p.adjustQuantity && p.adjustQuantity < 0));
-                  });
-                  if (isMonteringRemoval) {
-                    _monteringUserRemoved = true;
-                    return _origSparkUpdateCart(payload, t, n);
-                  }
-                }
-
-                // Skip everything for our own silent calls
-                if (_monteringBusy) return _origSparkUpdateCart(payload, t, n);
-
-                // Ignore calls that only touch montering
-                var isOwnCall = payload && payload.products &&
-                  payload.products.length === 1 && payload.products[0].sku === MONTERING_SKU;
-                if (isOwnCall) return _origSparkUpdateCart(payload, t, n);
-
-                // Detect PDP add (adjustQuantity > 0 for non-service SKUs)
                 var isPDPAdd = payload && payload.products && payload.products.some(function(p) {
                   return p.adjustQuantity && p.adjustQuantity > 0 && p.sku && p.sku.indexOf('RC-SERVICE') === -1;
                 });
 
-                // If checkbox checked, inject customAttributes onto the carpet products
-                // This creates a SEPARATE line item from the same SKU added without attributes
-                var addedQty = 0;
                 if (isPDPAdd && checkboxEl && checkboxEl.checked) {
-                  payload = JSON.parse(JSON.stringify(payload)); // deep clone
+                  payload = JSON.parse(JSON.stringify(payload));
                   payload.products.forEach(function(p) {
                     if (p.adjustQuantity && p.adjustQuantity > 0 && p.sku && p.sku.indexOf('RC-SERVICE') === -1) {
-                      p.customAttributes = [MONTERING_ATTR];
-                      addedQty += p.adjustQuantity;
+                      p.customAttributes = [{ key: 'montering', value: 'true' }];
                     }
                   });
                 }
 
-                // Call original (with potentially modified payload)
-                var result = _origSparkUpdateCart(payload, t, n);
-
-                if (result && typeof result.then === 'function') {
-                  result.then(function() {
-                    // If PDP add with checkbox, also add montering service
-                    if (isPDPAdd && checkboxEl && checkboxEl.checked && addedQty > 0) {
-                      _monteringUserRemoved = false;
-                      silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] });
-                    } else {
-                      // For all other cart changes, sync montering after a short delay
-                      setTimeout(syncMonteringWithCart, 800);
-                    }
-                  });
-                }
-
-                return result;
+                return _origSparkUpdateCart(payload, t, n);
               } catch (e) {
                 console.warn('[reCarpet] updateCart wrapper error:', e);
                 return _origSparkUpdateCart(payload, t, n);
               }
             };
+          }
 
-            // ── Hide montering qty controls & delete button in cart ──
-            // Shadow roots are forced open via attachShadow override above.
+          // ── Helper: check if a cart item has montering attribute ──
+          function hasMonteringAttr(item) {
+            return item.customAttributes && item.customAttributes.some(function(a) {
+              return a.key === 'montering' && a.value === 'true';
+            });
+          }
 
-            // Cache which SKU+qty combos have montering attr (from cart API)
-            var _monteringItemKeys = {}; // { sku+qty: true } for items with montering attr
-
-            function refreshMonteringItemKeys(cb) {
-              window.spark.getCart().then(function(cart) {
-                if (!cart || !cart.items) return;
-                _monteringItemKeys = {};
-                cart.items.forEach(function(item) {
-                  if (item.sku && item.sku !== MONTERING_SKU && hasMonteringAttr(item)) {
-                    _monteringItemKeys[item.sku] = true;
-                  }
-                });
-                if (cb) cb();
-              }).catch(function() {});
-            }
-
-            function lockMonteringRows() {
-              // Process both drawer (slide-out) and cart (full page) shadow roots
+          // ── Cart badges: show "Inkl. montering" on attributed rows ──────────
+          (function() {
+            function decorateCartRows() {
               var targets = ['spark-drawer', 'spark-cart'];
               targets.forEach(function(tag) {
                 var el = document.querySelector(tag);
                 if (!el || !el.shadowRoot) return;
-                lockMonteringRowsIn(el.shadowRoot);
+                decorateRowsIn(el.shadowRoot);
               });
             }
 
-            var _lockRunning = false; // prevent re-entry from MutationObserver loop
+            function decorateRowsIn(sr) {
+              var rows = sr.querySelectorAll('.py-4, [class*="line-item"], [class*="cart-item"], li, article');
+              if (!rows.length) rows = sr.querySelectorAll('div, section');
 
-            function lockMonteringRowsIn(sr) {
-              if (_lockRunning) return;
-              _lockRunning = true;
-
-              try {
-                // Find all cart line-item rows — try multiple selectors for robustness
-                var rows = sr.querySelectorAll('.py-4, [class*="line-item"], [class*="cart-item"], li, article');
-                if (!rows.length) {
-                  // Fallback: walk all elements looking for ones containing SKU text
-                  rows = sr.querySelectorAll('div, section');
-                }
-
-                rows.forEach(function(row) {
-                  // Fix "montering: true" → "Montering"
-                  row.querySelectorAll('span').forEach(function(span) {
-                    if (span.textContent.trim() === 'montering: true') {
-                      span.textContent = 'Montering';
-                    }
-                  });
-
-                  // Find SKU in this row
-                  var skuText = '';
-                  row.querySelectorAll('p, span, small, div').forEach(function(el) {
-                    var t = el.textContent.trim();
-                    if (t.indexOf('RC-SERVICE-MONTERING') !== -1) skuText = 'RC-SERVICE-MONTERING';
-                    else if (t.indexOf('SKU:') !== -1 && !skuText) skuText = t.replace('SKU:', '').trim();
-                  });
-
-                  if (!skuText) return; // Not a product row
-
-                  // Check if THIS specific row has the "Montering" attribute rendered by SparkLayer
-                  var rowHasMonteringAttr = false;
-                  row.querySelectorAll('span').forEach(function(span) {
-                    var t = span.textContent.trim();
-                    if (t === 'Montering' || t === 'montering: true' || t === 'montering') {
-                      var parent = span.parentElement;
-                      if (parent && parent.querySelector('svg')) {
-                        rowHasMonteringAttr = true;
-                      }
-                    }
-                  });
-
-                  // ── Montering service row: lock controls ──
-                  if (skuText === 'RC-SERVICE-MONTERING') {
-                    // Find the narrowest container that holds this item
-                    // Walk up from the SKU text to find the row boundary
-                    var itemRow = row;
-                    if (row.querySelectorAll('input').length > 1) {
-                      // Too broad — find a tighter container
-                      var skuEl = null;
-                      row.querySelectorAll('p, span, small, div').forEach(function(el) {
-                        if (el.textContent.indexOf('RC-SERVICE-MONTERING') !== -1 && !skuEl) skuEl = el;
-                      });
-                      if (skuEl) {
-                        // Walk up to find item boundary (look for a meaningful container)
-                        var p = skuEl;
-                        while (p && p !== sr) {
-                          if (p.querySelector && p.querySelector('img') && p.querySelector('button')) {
-                            itemRow = p;
-                            break;
-                          }
-                          p = p.parentElement;
-                        }
-                      }
-                    }
-
-                    if (itemRow.dataset && itemRow.dataset.rcLocked) return;
-                    if (itemRow.dataset) itemRow.dataset.rcLocked = '1';
-
-                    // Hide ALL buttons in this item (qty +/-, delete)
-                    itemRow.querySelectorAll('button').forEach(function(btn) {
-                      btn.style.cssText = 'display:none !important;';
-                    });
-
-                    // Hide qty input and its wrapper
-                    itemRow.querySelectorAll('input[type="number"], input[inputmode="numeric"]').forEach(function(inp) {
-                      var wrapper = inp.closest('div');
-                      if (wrapper) wrapper.style.cssText = 'display:none !important;';
-                    });
-                    // Also try class-based wrappers
-                    var qtyWrapper = itemRow.querySelector('.mt-2, [class*="quantity"], [class*="qty"]');
-                    if (qtyWrapper) {
-                      qtyWrapper.style.cssText = 'display:none !important;';
-                    }
-
-                    // Show qty as static text (if not already added)
-                    if (!itemRow.querySelector('.rc-montering-qty')) {
-                      var inp = itemRow.querySelector('input');
-                      var qty = inp ? inp.value : '';
-                      if (qty) {
-                        var qtyText = document.createElement('div');
-                        qtyText.className = 'rc-montering-qty';
-                        qtyText.textContent = qty + ' m\u00B2';
-                        qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
-                        var header = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
-                        if (header && header.parentNode) {
-                          header.parentNode.insertBefore(qtyText, header.nextSibling);
-                        }
-                      }
-                    }
-
-                    if (!itemRow.querySelector('.rc-montering-note')) {
-                      var header2 = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
-                      if (header2) {
-                        var note = document.createElement('div');
-                        note.className = 'rc-montering-note';
-                        note.textContent = 'Synkas automatiskt med monterings-produkter';
-                        note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
-                        header2.parentNode.insertBefore(note, header2.nextSibling);
-                      }
-                    }
-                    return;
+              rows.forEach(function(row) {
+                // Fix "montering: true" → styled badge
+                row.querySelectorAll('span').forEach(function(span) {
+                  var t = span.textContent.trim();
+                  if (t === 'montering: true' || t === 'montering') {
+                    span.textContent = 'Inkl. montering';
+                    span.style.cssText = 'color:#28AB76;font-weight:600;font-size:12px;';
                   }
+                });
 
-                  // ── Carpet rows: show "Inkl. montering" only if THIS row has the attribute ──
-                  if (rowHasMonteringAttr) {
-                    if (!row.querySelector('.rc-montering-label')) {
-                      var header = row.querySelector('header') || row.querySelector('a') || row.querySelector('p');
-                      if (header) {
-                        var label = document.createElement('div');
-                        label.className = 'rc-montering-label';
-                        label.textContent = 'Inkl. montering +45 kr/m\u00B2';
-                        label.style.cssText = 'font-size:11px;color:#28AB76;font-weight:500;margin-top:2px;';
-                        header.parentNode.insertBefore(label, header.nextSibling);
-                      }
+                // Check if row has the montering attribute badge
+                var rowHasMontering = false;
+                row.querySelectorAll('span').forEach(function(span) {
+                  var t = span.textContent.trim();
+                  if (t === 'Inkl. montering' || t === 'Montering') {
+                    var parent = span.parentElement;
+                    if (parent && parent.querySelector('svg')) {
+                      rowHasMontering = true;
                     }
                   }
                 });
-              } finally {
-                _lockRunning = false;
+
+                if (rowHasMontering && !row.querySelector('.rc-montering-label')) {
+                  var header = row.querySelector('header') || row.querySelector('a') || row.querySelector('p');
+                  if (header) {
+                    var label = document.createElement('div');
+                    label.className = 'rc-montering-label';
+                    label.innerHTML = '<span style="margin-right:4px;">&#128295;</span> Montering tillagd (+' + _monteringPricePerM2 + ' kr/m²)';
+                    label.style.cssText = 'font-size:12px;color:#28AB76;font-weight:600;margin-top:4px;display:flex;align-items:center;';
+                    header.parentNode.insertBefore(label, header.nextSibling);
+                  }
+                }
+              });
+            }
+
+            var _cartObservers = {};
+            function watchCart(tag) {
+              var el = document.querySelector(tag);
+              if (!el || !el.shadowRoot || _cartObservers[tag]) return;
+              _cartObservers[tag] = true;
+              decorateCartRows();
+
+              var debounce = null;
+              new MutationObserver(function() {
+                clearTimeout(debounce);
+                debounce = setTimeout(decorateCartRows, 100);
+                decorateCartRows();
+              }).observe(el.shadowRoot, { childList: true, subtree: true });
+            }
+
+            new MutationObserver(function() {
+              watchCart('spark-drawer');
+              watchCart('spark-cart');
+            }).observe(document.body, { childList: true, subtree: true });
+
+            setInterval(function() {
+              watchCart('spark-drawer');
+              watchCart('spark-cart');
+            }, 1000);
+          })();
+
+          // ── Checkout: montering summary info-ruta + notes injection ──────────
+          (function() {
+            var _monteringSummaryInjected = false;
+
+            function getMonteringItems(cart) {
+              if (!cart || !cart.items) return [];
+              return cart.items.filter(function(item) {
+                return hasMonteringAttr(item) && item.sku && item.sku.indexOf('RC-SERVICE') === -1;
+              });
+            }
+
+            function buildMonteringSummary(items) {
+              var lines = [];
+              var totalQty = 0;
+              var totalKr = 0;
+              items.forEach(function(item) {
+                var name = item.title || item.sku || 'Produkt';
+                var qty = item.quantity || 0;
+                var cost = qty * _monteringPricePerM2;
+                totalQty += qty;
+                totalKr += cost;
+                lines.push(name + ': ' + qty + ' m² × ' + _monteringPricePerM2 + ' kr = ' + cost + ' kr');
+              });
+              return {
+                lines: lines,
+                totalQty: totalQty,
+                totalKr: totalKr,
+                noteText: 'MONTERING TILLAGD: ' + lines.join(' | ') + ' — Totalt: ' + totalQty + ' m², ' + totalKr + ' kr (tillkommer på faktura)'
+              };
+            }
+
+            function injectMonteringSummary(root, items) {
+              if (!root || items.length === 0) return;
+              if (root.querySelector && root.querySelector('[data-rc-montering-summary]')) return;
+
+              var summary = buildMonteringSummary(items);
+
+              var box = document.createElement('div');
+              box.setAttribute('data-rc-montering-summary', '1');
+              box.style.cssText = 'margin:16px 0;padding:16px;background:rgba(40,171,118,0.08);border:1px solid rgba(40,171,118,0.3);border-radius:10px;font-family:DM Sans,sans-serif;';
+
+              var heading = document.createElement('div');
+              heading.innerHTML = '<span style="margin-right:6px;">&#128295;</span> Montering tillagd';
+              heading.style.cssText = 'font-weight:700;font-size:14px;color:#1e4433;margin-bottom:8px;';
+              box.appendChild(heading);
+
+              summary.lines.forEach(function(line) {
+                var p = document.createElement('div');
+                p.textContent = line;
+                p.style.cssText = 'font-size:13px;color:#333;margin-bottom:4px;line-height:1.4;';
+                box.appendChild(p);
+              });
+
+              var totalDiv = document.createElement('div');
+              totalDiv.style.cssText = 'margin-top:8px;padding-top:8px;border-top:1px solid rgba(40,171,118,0.3);font-weight:700;font-size:14px;color:#1e4433;';
+              totalDiv.textContent = 'Totalt montering: ' + summary.totalQty + ' m² = ' + summary.totalKr + ' kr (tillkommer på faktura)';
+              box.appendChild(totalDiv);
+
+              // Insert before the faktura fields or continue button
+              var fakWrap = root.querySelector('[data-fak-wrap]');
+              if (fakWrap) {
+                fakWrap.parentNode.insertBefore(box, fakWrap);
+                return;
+              }
+              // Fallback: before the first big button
+              var btns = root.querySelectorAll('button');
+              for (var i = 0; i < btns.length; i++) {
+                var txt = (btns[i].textContent || '').trim().toLowerCase();
+                if (txt === 'fortsätt' || txt === 'continue' || txt === 'next') {
+                  var btnParent = btns[i].parentElement;
+                  btnParent.parentNode.insertBefore(box, btnParent);
+                  return;
+                }
+              }
+              root.appendChild(box);
+            }
+
+            function injectMonteringIntoNotes(items) {
+              if (items.length === 0) return;
+              var summary = buildMonteringSummary(items);
+
+              function findAndUpdate(searchRoot) {
+                if (!searchRoot) return false;
+                // Find the hidden customer-reference field
+                var inputs = searchRoot.querySelectorAll('input#customer-reference, textarea#customer-reference, input[data-fak-splitted], textarea[data-fak-splitted]');
+                for (var i = 0; i < inputs.length; i++) {
+                  var inp = inputs[i];
+                  var val = inp.value || '';
+                  if (val.indexOf('MONTERING TILLAGD') === -1) {
+                    inp.value = val + (val ? ' | ' : '') + summary.noteText;
+                    inp.dispatchEvent(new Event('input', { bubbles: true }));
+                    console.log('[reCarpet] Montering info injected into notes field');
+                  }
+                  return true;
+                }
+                return false;
+              }
+
+              if (findAndUpdate(document)) return;
+              var sparks = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
+              for (var i = 0; i < sparks.length; i++) {
+                var sr = sparks[i].shadowRoot;
+                if (sr) {
+                  if (findAndUpdate(sr)) return;
+                  var nested = sr.querySelectorAll('*');
+                  for (var j = 0; j < nested.length; j++) {
+                    if (nested[j].shadowRoot && findAndUpdate(nested[j].shadowRoot)) return;
+                  }
+                }
               }
             }
 
-            // Use MutationObserver for instant response (no flickering)
-            // Watches both spark-drawer (slide-out) and spark-cart (full page).
-            var _sparkObservers = {}; // keyed by tag name
-            function watchSparkCart(tag) {
-              var el = document.querySelector(tag);
-              if (!el || !el.shadowRoot) return;
-              if (_sparkObservers[tag]) return; // already watching
-
-              refreshMonteringItemKeys(); // fetch attr data from cart API
-              lockMonteringRows(); // initial run
-
-              var _mutDebounce = null;
-              _sparkObservers[tag] = new MutationObserver(function() {
-                clearTimeout(_mutDebounce);
-                _mutDebounce = setTimeout(function() {
-                  refreshMonteringItemKeys();
-                  setTimeout(lockMonteringRows, 200);
-                }, 150);
-                lockMonteringRows();
-              });
-              _sparkObservers[tag].observe(el.shadowRoot, {
-                childList: true, subtree: true
-              });
-            }
-
-            // Watch for spark-drawer and spark-cart appearing in the DOM
-            var _docObserver = new MutationObserver(function() {
-              watchSparkCart('spark-drawer');
-              watchSparkCart('spark-cart');
-            });
-            _docObserver.observe(document.body, { childList: true, subtree: true });
-
-            // Also poll as fallback
+            // Poll for checkout with montering items
             setInterval(function() {
-              watchSparkCart('spark-drawer');
-              watchSparkCart('spark-cart');
-            }, 1000);
-          }
+              if (!window.spark || typeof window.spark.getCart !== 'function') return;
+
+              window.spark.getCart().then(function(cart) {
+                var items = getMonteringItems(cart);
+                if (items.length === 0) {
+                  _monteringSummaryInjected = false;
+                  return;
+                }
+
+                // Inject summary into checkout shadow roots
+                var sparks = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
+                sparks.forEach(function(el) {
+                  if (!el.shadowRoot) return;
+                  var hasSteps = el.shadowRoot.querySelector('[class*="step"], [class*="checkout"]');
+                  if (!hasSteps) {
+                    el.shadowRoot.querySelectorAll('*').forEach(function(child) {
+                      if (child.shadowRoot) {
+                        var d = child.shadowRoot.querySelector('[class*="step"], [class*="checkout"]');
+                        if (d) injectMonteringSummary(child.shadowRoot, items);
+                      }
+                    });
+                  } else {
+                    injectMonteringSummary(el.shadowRoot, items);
+                  }
+                });
+
+                // Inject into notes (once per checkout session)
+                if (!_monteringSummaryInjected) {
+                  injectMonteringIntoNotes(items);
+                  _monteringSummaryInjected = true;
+                }
+              }).catch(function() {});
+            }, 1500);
+          })();
 
           // ── B2B Cart icon: count badge + animation ────────────────────────────
           (function() {
