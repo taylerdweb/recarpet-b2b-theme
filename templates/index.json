@@ -222,7 +222,7 @@
           "settings": {
             "eyebrow": "Förmedling",
             "title": "Förmedling",
-            "body": "Vi hjälper dina återbrukade textilplattor att få ett nytt liv med vår erfarenhet och breda nätverk.",
+            "body": "Vi hjälper dina återbrukade textilplattor att få ett nytt liv. Med vår erfarenhet och vårt breda nätverk ser vi till att varje platta får en ny chans att göra nytta – effektivt, hållbart och med omtanke för både miljö och människa.",
             "image": "shopify://shop_images/rc-tjanst-formedling.jpg",
             "link_url": "shopify://pages/vad-vi-gor"
           }
@@ -232,7 +232,7 @@
           "settings": {
             "eyebrow": "Montering",
             "title": "Montering",
-            "body": "Vi samarbetar med entreprenörer från syd till norr och hjälper dig med ditt projekt från start till mål.",
+            "body": "Vi har samarbeten med entreprenörer från syd till norr och hjälper dig med ditt projekt från start till mål.",
             "image": "shopify://shop_images/rc-service-montering.jpg",
             "link_url": "shopify://pages/vad-vi-gor"
           }
@@ -269,7 +269,7 @@
       "settings": {
         "eyebrow": "Tjänster",
         "heading": "Gör skillnad med hållbara golvlösningar!",
-        "intro": "Vi erbjuder en helhetslösning för att återbruka textilplattor i stor skala. Från noggrann inventering och säker demontering till att förmedla plattorna vidare för ett nytt liv.",
+        "intro": "Vi erbjuder en helhetslösning för att återbruka textilplattor i stor skala. Från noggrann inventering och säker demontering till att förmedla plattorna vidare för ett nytt liv. Välj våra tjänster och var med och skapa en mer hållbar byggbransch. För att nå en storskalig återbruksmarknad krävs det att experter tar tillvara på golven och gör dem valbara i nya projekt.",
         "btn_label": "Se tjänster",
         "btn_url": "/pages/vad-vi-gor"
       }
@@ -313,7 +313,7 @@
       "settings": {
         "eyebrow": "Sortiment",
         "heading": "Prisvärda mattor av hög kvalitet",
-        "body": "Vi erbjuder ett brett sortiment av både återbrukade och nya textilplattor till konkurrenskraftiga priser. Alla produkter är kvalitetssäkrade och redo att monteras.",
+        "body": "Vi kan tack vare vår teknik för återbruk av befintliga textilplattor erbjuda dessa till ett mycket förmånligt pris, utan att göra avkall på textilplattornas kvalitet. Upptäck vårt lager och beställ prover för att hitta rätt lösning för ditt projekt.",
         "image": "shopify://shop_images/rc-omoss-hallbarhet.jpg",
         "btn1_label": "Beställ prover",
         "btn1_url": "/pages/kontakta-oss"
