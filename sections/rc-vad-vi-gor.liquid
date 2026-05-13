@@ -7,11 +7,12 @@
   /* ===== Timeline navigation ===== */
   .rc-timeline-nav {
     background: var(--rc-cream, #f5f3ef);
-    padding: var(--rc-section-md) var(--rc-page-padding);
+    padding: var(--rc-section-md) 0;
   }
   .rc-timeline-nav__inner {
     max-width: var(--rc-max-width);
     margin: 0 auto;
+    padding: 0 var(--rc-page-padding);
   }
   .rc-timeline-nav__track {
     display: grid;
@@ -127,7 +128,7 @@
   }
   .rc-service-detail__body {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 1rem !important;
+    font-size: var(--rc-text-md) !important;
     font-weight: 400 !important;
     line-height: 1.6 !important;
     color: var(--rc-text-muted) !important;
@@ -163,7 +164,7 @@
   }
   .rc-service-detail__body-after {
     font-family: var(--rc-font, 'DM Sans', sans-serif) !important;
-    font-size: 1rem !important;
+    font-size: var(--rc-text-md) !important;
     font-weight: 400 !important;
     line-height: 1.6 !important;
     color: var(--rc-text-muted) !important;
@@ -175,7 +176,10 @@
   @media (max-width: 900px) {
     /* ===== Timeline mobile — vertical with dots & line ===== */
     .rc-timeline-nav {
-      padding: 2.5rem 1.25rem;
+      padding: 2.5rem 0;
+    }
+    .rc-timeline-nav__inner {
+      padding: 0 1.25rem;
     }
     .rc-timeline-nav__track {
       display: flex !important;

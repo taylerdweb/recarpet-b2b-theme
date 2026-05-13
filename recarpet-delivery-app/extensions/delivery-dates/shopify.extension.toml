@@ -1,0 +1,44 @@
+api_version = "2025-07"
+
+[[extensions]]
+name = "Leveransdatum"
+handle = "delivery-dates-block"
+uid = "a3f23ad5-4825-a111-aa4d-86c45d830d7ecdedcdee"
+type = "ui_extension"
+
+  [extensions.api_access]
+  direct_api_mode = "online"
+
+  [[extensions.targeting]]
+  module = "./src/BlockExtension.jsx"
+  target = "admin.draft-order-details.block.render"
+
+[[extensions]]
+name = "Leveransdatum (order)"
+handle = "delivery-dates-order-block"
+uid = "81d6fcb4-2d8e-cc08-b06a-cccbb2a9f2e2d72f033e"
+type = "ui_extension"
+
+  [extensions.api_access]
+  direct_api_mode = "online"
+
+  [[extensions.targeting]]
+  module = "./src/OrderBlockExtension.jsx"
+  target = "admin.order-details.block.render"
+
+[[extensions]]
+name = "Leveransdatum (kund)"
+handle = "delivery-dates-customer-block"
+uid = "08385f5a-b54f-ebc2-f1c1-250b1d805e8dd71040de"
+type = "ui_extension"
+
+  [extensions.capabilities]
+  api_access = true
+
+  [[extensions.metafields]]
+  namespace = "custom"
+  key = "confirmed_delivery_dates"
+
+  [[extensions.targeting]]
+  module = "./src/CustomerOrderBlock.jsx"
+  target = "customer-account.order-status.block.render"

@@ -255,7 +255,19 @@
             {%- endif -%}
 
             {%- if rc_is_member -%}
-              {%- if is_storbatch and rc_can_buy_batches == false -%}
+              {%- if featured_card -%}
+                {%- comment -%} Featured product card: show price + "Visa produkt" link, no spark buy UI {%- endcomment -%}
+                {% render 'price', product: card_product, price_class: 'price--listing' %}
+                {%- if card_product.available -%}
+                  <a href="{{ card_product.url }}" class="rc-featured-btn" style="display:block;text-align:center;font-family:var(--recarpet-dm-sans,sans-serif);font-size:1rem;font-weight:400;color:#fff;background:var(--rc-green,#1e4433);padding:0.75rem 1.5rem;border-radius:var(--rc-radius-btn,8px);text-decoration:none;margin-top:0.75rem;transition:opacity 0.2s;border:1px solid var(--rc-green,#1e4433);cursor:pointer;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+                    Visa produkt
+                  </a>
+                {%- else -%}
+                  <a href="{{ card_product.url }}" class="rc-featured-btn" style="display:block;text-align:center;font-family:var(--recarpet-dm-sans,sans-serif);font-size:1rem;font-weight:400;color:#888;background:#eee;padding:0.75rem 1.5rem;border-radius:var(--rc-radius-btn,8px);text-decoration:none;margin-top:0.75rem;border:1px solid #eee;">
+                    Slutsåld
+                  </a>
+                {%- endif -%}
+              {%- elsif is_storbatch and rc_can_buy_batches == false -%}
                 {%- comment -%} Member utan Plus/Premium + storbatch → låst, INGEN spark-product-card (döljer köpknapp) {%- endcomment -%}
                 {% render 'price', product: card_product, price_class: 'price--listing' %}
                 <p class="storbatch-lock-note">Endast för Plus-medlemmar</p>

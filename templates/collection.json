@@ -17,16 +17,6 @@
         "color_scheme": "scheme-1"
       }
     },
-    "collection-cta": {
-      "type": "rc-collection-cta",
-      "settings": {
-        "left_text": "Vill du ha mer inforamtion om någon av våra produkter? Kontakta oss!",
-        "right_heading": "Har du ett projekt som ligger längre fram i tiden?",
-        "right_body": "Lugn, vi hjälper dig!",
-        "right_link_label": "Kontakta oss för att planera ditt projekt",
-        "right_link_url": "/pages/kontakta-oss"
-      }
-    },
     "product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -46,7 +36,6 @@
   },
   "order": [
     "banner",
-    "collection-cta",
     "product-grid"
   ]
 }

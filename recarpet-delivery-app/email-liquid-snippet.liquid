@@ -1,0 +1,41 @@
+{% comment %}
+  Leveransdatum-snippet för orderbekräftelse-mail.
+  Lägg till i Settings → Notifications → Order confirmation
+  efter ordersammanfattningen (efter artikellistan).
+
+  Parsar "Bekräftade leveransdatum:" från order notes.
+{% endcomment %}
+
+{% assign note_text = note | default: order.note %}
+{% if note_text contains "Bekräftade leveransdatum:" %}
+  {% assign delivery_section = note_text | split: "Bekräftade leveransdatum:" | last %}
+  {% assign delivery_lines = delivery_section | strip | newline_to_br | split: "<br />" %}
+
+  <table class="row" style="width:100%; margin-top:20px; margin-bottom:20px;">
+    <tr>
+      <td style="padding:20px; background-color:#f7f7f7; border-radius:8px;">
+        <h3 style="margin:0 0 12px 0; font-size:16px; color:#333;">Bekräftade leveransdatum</h3>
+        <table style="width:100%; border-collapse:collapse;">
+          <tr style="border-bottom:1px solid #ddd;">
+            <th style="text-align:left; padding:8px 0; font-size:14px; color:#666; font-weight:600;">Artikel</th>
+            <th style="text-align:right; padding:8px 0; font-size:14px; color:#666; font-weight:600;">Leveransdatum</th>
+          </tr>
+          {% for line in delivery_lines %}
+            {% assign stripped_line = line | strip %}
+            {% if stripped_line != "" and stripped_line contains ": " %}
+              {% assign parts = stripped_line | split: ": " %}
+              {% assign item_name = parts | first %}
+              {% assign item_date = parts | last %}
+              {% if item_date != "" and item_name != "" %}
+                <tr>
+                  <td style="padding:8px 0; font-size:14px; color:#333; border-bottom:1px solid #eee;">{{ item_name }}</td>
+                  <td style="text-align:right; padding:8px 0; font-size:14px; color:#333; font-weight:600; border-bottom:1px solid #eee;">{{ item_date }}</td>
+                </tr>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </table>
+      </td>
+    </tr>
+  </table>
+{% endif %}
