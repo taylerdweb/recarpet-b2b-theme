@@ -219,7 +219,9 @@
     align-items: center;
     gap: 0.5rem;
   }
-  .rc-radio-option input[type="radio"] {
+  .rc-radio-option input[type="checkbox"] {
+    -webkit-appearance: auto !important;
+    appearance: auto !important;
     width: 1.25rem;
     height: 1.25rem;
     min-width: 1.25rem;
@@ -240,7 +242,7 @@
     color: var(--rc-off-black, #1a1a1a) !important;
     display: inline !important;
   }
-  .rc-radio-option input[type="radio"]:checked + label {
+  .rc-radio-option input[type="checkbox"]:checked + label {
     color: var(--rc-off-black, #1a1a1a) !important;
     font-weight: 500 !important;
   }
@@ -432,43 +434,43 @@
               <div class="rc-radio-group__label">Välj vad du vill ha hjälp med</div>
               <div class="rc-radio-grid">
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp01" name="contact[body_type]" value="Fråga pris">
+                  <input type="checkbox" id="ContactFormHelp01" name="contact[body_type]" value="Fråga pris">
                   <label for="ContactFormHelp01">Fråga pris</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp02" name="contact[body_type]" value="Beställa prov">
+                  <input type="checkbox" id="ContactFormHelp02" name="contact[body_type]" value="Beställa prov">
                   <label for="ContactFormHelp02">Beställa prov</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp03" name="contact[body_type]" value="Inventering">
+                  <input type="checkbox" id="ContactFormHelp03" name="contact[body_type]" value="Inventering">
                   <label for="ContactFormHelp03">Inventering</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp04" name="contact[body_type]" value="Föreskriftsfrågor">
+                  <input type="checkbox" id="ContactFormHelp04" name="contact[body_type]" value="Föreskriftsfrågor">
                   <label for="ContactFormHelp04">Föreskriftsfrågor</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp05" name="contact[body_type]" value="Demontering">
+                  <input type="checkbox" id="ContactFormHelp05" name="contact[body_type]" value="Demontering">
                   <label for="ContactFormHelp05">Demontering</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp06" name="contact[body_type]" value="Boka möte">
+                  <input type="checkbox" id="ContactFormHelp06" name="contact[body_type]" value="Boka möte">
                   <label for="ContactFormHelp06">Boka möte</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp07" name="contact[body_type]" value="Produktfråga">
+                  <input type="checkbox" id="ContactFormHelp07" name="contact[body_type]" value="Produktfråga">
                   <label for="ContactFormHelp07">Produktfråga</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp08" name="contact[body_type]" value="Service & Underhåll">
+                  <input type="checkbox" id="ContactFormHelp08" name="contact[body_type]" value="Service & Underhåll">
                   <label for="ContactFormHelp08">Service & Underhåll</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp09" name="contact[body_type]" value="Samarbeten">
+                  <input type="checkbox" id="ContactFormHelp09" name="contact[body_type]" value="Samarbeten">
                   <label for="ContactFormHelp09">Samarbeten</label>
                 </div>
                 <div class="rc-radio-option">
-                  <input type="radio" id="ContactFormHelp10" name="contact[body_type]" value="Annat">
+                  <input type="checkbox" id="ContactFormHelp10" name="contact[body_type]" value="Annat">
                   <label for="ContactFormHelp10">Annat</label>
                 </div>
               </div>
