@@ -1069,14 +1069,14 @@
               var btns = searchRoot.querySelectorAll('button');
               btns.forEach(function(btn) {
                 var txt = (btn.textContent || '').trim().toLowerCase();
-                if ((txt === 'fortsätt' || txt === 'continue' || txt === 'next' || btn.type === 'submit') && txt.indexOf('stäng') === -1 && txt.indexOf('redigera') === -1 && txt.indexOf('close') === -1) {
+                if (txt === 'fortsätt' || txt === 'continue' || txt === 'next') {
                   if (btn.dataset.fakIntercepted) return;
                   btn.dataset.fakIntercepted = '1';
                   btn.addEventListener('click', function(e) {
+                    if (!document.body.contains(wrap)) return; // checkout closed, skip validation
                     if (!validateFakturaFields(true)) {
                       e.preventDefault();
                       e.stopPropagation();
-                      e.stopImmediatePropagation();
                       // Scroll first empty field into view
                       var firstEmpty = wrap.querySelector('input:invalid, input[style*="d32f2f"]');
                       if (firstEmpty) firstEmpty.focus();
