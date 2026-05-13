@@ -1446,33 +1446,8 @@
             }
 
             // Sync montering product qty = sum of all items with montering attribute
-            // Detect if checkout is past step 1 (cart) — don't sync during checkout flow
-            function isInCheckoutFlow() {
-              var sparks = document.querySelectorAll('spark-drawer, spark-cart');
-              for (var i = 0; i < sparks.length; i++) {
-                var sr = sparks[i].shadowRoot;
-                if (!sr) continue;
-                // Look for step indicators — if step 2+ is active/completed, we're in checkout
-                var steps = sr.querySelectorAll('[class*="step"], [class*="checkout"]');
-                if (steps.length > 0) return true;
-                var all = sr.querySelectorAll('*');
-                for (var j = 0; j < all.length; j++) {
-                  if (all[j].shadowRoot) {
-                    var d = all[j].shadowRoot.querySelector('[class*="step"], [class*="checkout"]');
-                    if (d) return true;
-                  }
-                }
-              }
-              return false;
-            }
-
             function syncMonteringWithCart() {
               if (_monteringBusy || _monteringUserRemoved) return;
-              // Never sync during checkout — it interferes with SparkLayer's order flow
-              if (isInCheckoutFlow()) {
-                console.log('[reCarpet] Skipping montering sync — checkout flow active');
-                return;
-              }
               window.spark.getCart().then(function(cart) {
                 if (!cart || !cart.items) return;
                 var monteringQty = 0;
@@ -1536,8 +1511,7 @@
 
                 var result = _origSparkUpdateCart(payload, t, n);
 
-                // Only run post-update logic if NOT in checkout flow
-                if (result && typeof result.then === 'function' && !isInCheckoutFlow()) {
+                if (result && typeof result.then === 'function') {
                   result.then(function() {
                     if (isPDPAdd && checkboxEl && checkboxEl.checked && addedQty > 0) {
                       _monteringUserRemoved = false;
@@ -1612,13 +1586,14 @@
               if (!el || !el.shadowRoot) return;
               if (!_cartObservers[tag]) {
                 _cartObservers[tag] = true;
+                var debounce = null;
                 new MutationObserver(function() {
+                  clearTimeout(debounce);
+                  debounce = setTimeout(decorateCartRows, 150);
                   decorateCartRows();
-                  // Rapid burst to catch SparkLayer's multi-step rendering
-                  setTimeout(decorateCartRows, 50);
-                  setTimeout(decorateCartRows, 150);
                 }).observe(el.shadowRoot, { childList: true, subtree: true });
               }
+              // Always decorate (handles re-renders SparkLayer does silently)
               decorateCartRows();
             }
 
@@ -1627,7 +1602,7 @@
               watchCart('spark-cart');
             }).observe(document.body, { childList: true, subtree: true });
 
-            // Polling as fallback
+            // Active polling — catches cases where MutationObserver misses
             setInterval(function() {
               watchCart('spark-drawer');
               watchCart('spark-cart');
@@ -1737,10 +1712,11 @@
               if (!el || !el.shadowRoot) return;
               if (!_lockObservers[tag]) {
                 _lockObservers[tag] = true;
+                var debounce = null;
                 new MutationObserver(function() {
+                  clearTimeout(debounce);
+                  debounce = setTimeout(lockMonteringRows, 150);
                   lockMonteringRows();
-                  setTimeout(lockMonteringRows, 50);
-                  setTimeout(lockMonteringRows, 150);
                 }).observe(el.shadowRoot, { childList: true, subtree: true });
               }
               lockMonteringRows();
