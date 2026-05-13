@@ -89,11 +89,11 @@
             "eyebrow": "Service & underhåll",
             "nav_desc": "Vi hjälper dig att hålla golven fräscha och i toppskick.",
             "title": "Vi underhåller era befintliga golv",
-            "body": "Vill ni behålla golvet inom fastigheten? Vi hjälper er att återanvända befintliga textilplattor för nästa hyresgäst, vilket sparar både pengar och resurser. Vår metod säkerställer att golvet blir som nytt igen.",
-            "list": "Inspektion och rengöring av befintligt golv.\nSortering och eventuella reparationer av skadade plattor.\nKomplettering med nya eller återbrukade plattor vid behov.\nMontering och anpassning efter hyresgästens önskemål.",
+            "body": "Behåll era golv i toppskick med våra service- och underhållstjänster. Vi hjälper er att förlänga livslängden på era textilplattor genom regelbunden rengöring och reparation vid behov.",
+            "list": "Djupgående rengöring av golv för att ta bort svåra fläckar.\nReparation av skadade plattor eller byte vid behov.\nRådgivning om daglig skötsel för att maximera hållbarheten.\nÅtgärder för att motverka slitage i särskilt utsatta områden.",
             "body_after": "Vi ser till att era textilplattor håller sig fräscha och i gott skick, oavsett hur länge de har varit i bruk. Med rätt underhåll kan golven se ut som nya i många år framöver.",
             "image": "shopify://shop_images/rc-service-underhall.jpg",
-            "btn_label": "Kontakta oss",
+            "btn_label": "Beställ service & underhåll",
             "btn_url": "shopify://pages/kontakta-oss"
           }
         },
