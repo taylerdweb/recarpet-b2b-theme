@@ -1,0 +1,61 @@
+{% comment %}
+  reCarpet Full-width Image
+  Simple full-width image section with optional rounded corners, used as a visual break between content sections.
+{% endcomment %}
+
+<style>
+  .rc-full-image {
+    padding: 0 var(--rc-page-padding);
+    max-width: var(--rc-max-width);
+    margin: 0 auto;
+  }
+  .rc-full-image__img {
+    width: 100%;
+    border-radius: var(--rc-radius, 1rem);
+    overflow: hidden;
+  }
+  .rc-full-image__img img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+</style>
+
+<section class="rc-full-image">
+  {%- if section.settings.image != blank -%}
+    <div class="rc-full-image__img">
+      {{ section.settings.image | image_url: width: 2400 | image_tag:
+        alt: section.settings.alt,
+        loading: 'lazy',
+        widths: '600, 900, 1200, 1800, 2400',
+        sizes: '100vw'
+      }}
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Fullbreddsbild",
+  "tag": "div",
+  "class": "rc-full-image-wrapper",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Bild"
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Alt-text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fullbreddsbild"
+    }
+  ]
+}
+{% endschema %}

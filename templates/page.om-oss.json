@@ -128,6 +128,13 @@
         "sustainability_btn2_url": "/pages/kontakta-oss"
       }
     },
+    "full_image": {
+      "type": "rc-full-image",
+      "settings": {
+        "image": "shopify://shop_images/rc-omoss-lager.jpg",
+        "alt": "ReCarpet lager med textilplattor"
+      }
+    },
     "logo_bar": {
       "type": "rc-logo-bar",
       "blocks": {
@@ -203,6 +210,7 @@
   "order": [
     "page_hero",
     "om_oss",
+    "full_image",
     "logo_bar",
     "contact_cta"
   ]
