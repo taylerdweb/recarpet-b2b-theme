@@ -13,16 +13,6 @@
   "sections": {
     "rc_footer": {
       "type": "rc-footer",
-      "settings": {
-        "logo": "shopify://shop_images/rc-logo-light.png",
-        "phone": "0700733682",
-        "email": "jonas@recarpet.se",
-        "address": "",
-        "legal_1_label": "Integritetspolicy",
-        "legal_1_url": "/pages/integritetspolicy",
-        "legal_2_label": "Köpvillkor",
-        "legal_2_url": "/pages/kopvillkor"
-      },
       "blocks": {
         "col_kunder": {
           "type": "column",
@@ -126,7 +116,7 @@
           "type": "link",
           "settings": {
             "label": "Återbrukade textilplattor",
-            "url": "/collections/aterbrukade-textilplattor",
+            "url": "/collections/aterbrukade-mattor",
             "new_tab": false
           }
         },
@@ -134,15 +124,15 @@
           "type": "link",
           "settings": {
             "label": "Milliken textilplattor",
-            "url": "/collections/nya-textilplattor",
+            "url": "/collections/milliken",
             "new_tab": false
           }
         },
         "link_alla": {
           "type": "link",
           "settings": {
-            "label": "Alla produkter",
-            "url": "/collections/all",
+            "label": "Överproduktion",
+            "url": "/collections/overproduktion",
             "new_tab": false
           }
         },
@@ -198,7 +188,17 @@
         "link_kontakt",
         "link_om",
         "link_login"
-      ]
+      ],
+      "settings": {
+        "logo": "shopify://shop_images/rc-logo-light.png",
+        "phone": "0700733682",
+        "email": "jonas@recarpet.se",
+        "address": "",
+        "legal_1_label": "Integritetspolicy",
+        "legal_1_url": "/pages/integritetspolicy",
+        "legal_2_label": "Köpvillkor",
+        "legal_2_url": "/pages/kopvillkor"
+      }
     }
   },
   "order": [
