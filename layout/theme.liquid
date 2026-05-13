@@ -1429,25 +1429,126 @@
             checkboxEl.addEventListener('change', updateMonteringSubtotal);
             setInterval(updateMonteringSubtotal, 1000);
 
-            // ── Wrap _updateCart: inject customAttributes when checkbox is checked ──
+            // ── Wrap _updateCart: inject customAttributes + sync montering product ──
+            var MONTERING_SKU = 'RC-SERVICE-MONTERING';
             var _origSparkUpdateCart = window.spark._updateCart.bind(window.spark);
+            var _monteringBusy = false;
+            var _monteringUserRemoved = false;
+
+            function silentUpdateCart(payload) {
+              _monteringBusy = true;
+              return _origSparkUpdateCart(payload).then(function(r) {
+                _monteringBusy = false;
+                return r;
+              }).catch(function() {
+                _monteringBusy = false;
+              });
+            }
+
+            // Sync montering product qty = sum of all items with montering attribute
+            // Detect if checkout is past step 1 (cart) — don't sync during checkout flow
+            function isInCheckoutFlow() {
+              var sparks = document.querySelectorAll('spark-drawer, spark-cart');
+              for (var i = 0; i < sparks.length; i++) {
+                var sr = sparks[i].shadowRoot;
+                if (!sr) continue;
+                // Look for step indicators — if step 2+ is active/completed, we're in checkout
+                var steps = sr.querySelectorAll('[class*="step"], [class*="checkout"]');
+                if (steps.length > 0) return true;
+                var all = sr.querySelectorAll('*');
+                for (var j = 0; j < all.length; j++) {
+                  if (all[j].shadowRoot) {
+                    var d = all[j].shadowRoot.querySelector('[class*="step"], [class*="checkout"]');
+                    if (d) return true;
+                  }
+                }
+              }
+              return false;
+            }
+
+            function syncMonteringWithCart() {
+              if (_monteringBusy || _monteringUserRemoved) return;
+              // Never sync during checkout — it interferes with SparkLayer's order flow
+              if (isInCheckoutFlow()) {
+                console.log('[reCarpet] Skipping montering sync — checkout flow active');
+                return;
+              }
+              window.spark.getCart().then(function(cart) {
+                if (!cart || !cart.items) return;
+                var monteringQty = 0;
+                var attrQty = 0;
+                cart.items.forEach(function(item) {
+                  if (item.sku === MONTERING_SKU) {
+                    monteringQty = item.quantity;
+                  } else if (item.sku && item.sku.indexOf('RC-SERVICE') === -1 && hasMonteringAttr(item)) {
+                    attrQty += item.quantity;
+                  }
+                });
+                if (monteringQty === 0 && attrQty === 0) return;
+                if (attrQty === 0 && monteringQty > 0) {
+                  console.log('[reCarpet] Inga monteringsprodukter kvar — tar bort montering');
+                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: 0 }] });
+                  return;
+                }
+                if (monteringQty !== attrQty) {
+                  console.log('[reCarpet] Synkar montering: ' + monteringQty + ' → ' + attrQty + ' m²');
+                  silentUpdateCart({ products: [{ sku: MONTERING_SKU, quantity: attrQty }] });
+                }
+              }).catch(function() {});
+            }
 
             window.spark._updateCart = function(payload, t, n) {
               try {
+                // Detect manual montering removal
+                if (payload && payload.products && !_monteringBusy) {
+                  var isMonteringRemoval = payload.products.some(function(p) {
+                    return p.sku === MONTERING_SKU && (p.quantity === 0 || (p.adjustQuantity && p.adjustQuantity < 0));
+                  });
+                  if (isMonteringRemoval) {
+                    _monteringUserRemoved = true;
+                    return _origSparkUpdateCart(payload, t, n);
+                  }
+                }
+
+                if (_monteringBusy) return _origSparkUpdateCart(payload, t, n);
+
+                // Skip calls that only touch montering SKU
+                var isOwnCall = payload && payload.products &&
+                  payload.products.length === 1 && payload.products[0].sku === MONTERING_SKU;
+                if (isOwnCall) return _origSparkUpdateCart(payload, t, n);
+
+                // Detect PDP add
                 var isPDPAdd = payload && payload.products && payload.products.some(function(p) {
                   return p.adjustQuantity && p.adjustQuantity > 0 && p.sku && p.sku.indexOf('RC-SERVICE') === -1;
                 });
 
+                // Inject customAttributes if checkbox checked
+                var addedQty = 0;
                 if (isPDPAdd && checkboxEl && checkboxEl.checked) {
                   payload = JSON.parse(JSON.stringify(payload));
                   payload.products.forEach(function(p) {
                     if (p.adjustQuantity && p.adjustQuantity > 0 && p.sku && p.sku.indexOf('RC-SERVICE') === -1) {
                       p.customAttributes = [{ key: 'montering', value: 'true' }];
+                      addedQty += p.adjustQuantity;
                     }
                   });
                 }
 
-                return _origSparkUpdateCart(payload, t, n);
+                var result = _origSparkUpdateCart(payload, t, n);
+
+                // Only run post-update logic if NOT in checkout flow
+                if (result && typeof result.then === 'function' && !isInCheckoutFlow()) {
+                  result.then(function() {
+                    if (isPDPAdd && checkboxEl && checkboxEl.checked && addedQty > 0) {
+                      _monteringUserRemoved = false;
+                      silentUpdateCart({ products: [{ sku: MONTERING_SKU, adjustQuantity: addedQty }] });
+                    } else {
+                      setTimeout(syncMonteringWithCart, 800);
+                    }
+                  });
+                }
+
+                return result;
               } catch (e) {
                 console.warn('[reCarpet] updateCart wrapper error:', e);
                 return _origSparkUpdateCart(payload, t, n);
@@ -1478,23 +1579,16 @@
               if (!rows.length) rows = sr.querySelectorAll('div, section');
 
               rows.forEach(function(row) {
-                // Fix "montering: true" → styled badge
-                row.querySelectorAll('span').forEach(function(span) {
-                  var t = span.textContent.trim();
-                  if (t === 'montering: true' || t === 'montering') {
-                    span.textContent = 'Inkl. montering';
-                    span.style.cssText = 'color:#28AB76;font-weight:600;font-size:12px;';
-                  }
-                });
-
-                // Check if row has the montering attribute badge
+                // Hide SparkLayer's "montering: true" attribute text
                 var rowHasMontering = false;
                 row.querySelectorAll('span').forEach(function(span) {
                   var t = span.textContent.trim();
-                  if (t === 'Inkl. montering' || t === 'Montering') {
+                  if (t === 'montering: true' || t === 'montering' || t === 'Inkl. montering' || t === 'Montering') {
                     var parent = span.parentElement;
                     if (parent && parent.querySelector('svg')) {
                       rowHasMontering = true;
+                      // Hide the entire attribute row (icon + text)
+                      parent.style.cssText = 'display:none !important;';
                     }
                   }
                 });
@@ -1515,16 +1609,17 @@
             var _cartObservers = {};
             function watchCart(tag) {
               var el = document.querySelector(tag);
-              if (!el || !el.shadowRoot || _cartObservers[tag]) return;
-              _cartObservers[tag] = true;
+              if (!el || !el.shadowRoot) return;
+              if (!_cartObservers[tag]) {
+                _cartObservers[tag] = true;
+                new MutationObserver(function() {
+                  decorateCartRows();
+                  // Rapid burst to catch SparkLayer's multi-step rendering
+                  setTimeout(decorateCartRows, 50);
+                  setTimeout(decorateCartRows, 150);
+                }).observe(el.shadowRoot, { childList: true, subtree: true });
+              }
               decorateCartRows();
-
-              var debounce = null;
-              new MutationObserver(function() {
-                clearTimeout(debounce);
-                debounce = setTimeout(decorateCartRows, 100);
-                decorateCartRows();
-              }).observe(el.shadowRoot, { childList: true, subtree: true });
             }
 
             new MutationObserver(function() {
@@ -1532,160 +1627,137 @@
               watchCart('spark-cart');
             }).observe(document.body, { childList: true, subtree: true });
 
+            // Polling as fallback
             setInterval(function() {
               watchCart('spark-drawer');
               watchCart('spark-cart');
-            }, 1000);
+            }, 500);
           })();
 
-          // ── Checkout: montering summary info-ruta + notes injection ──────────
+          // ── Lock montering service row in cart (hide qty controls + delete) ──
           (function() {
-            var _monteringSummaryInjected = false;
+            var _lockRunning = false;
 
-            function getMonteringItems(cart) {
-              if (!cart || !cart.items) return [];
-              return cart.items.filter(function(item) {
-                return hasMonteringAttr(item) && item.sku && item.sku.indexOf('RC-SERVICE') === -1;
+            function lockMonteringRows() {
+              var targets = ['spark-drawer', 'spark-cart'];
+              targets.forEach(function(tag) {
+                var el = document.querySelector(tag);
+                if (!el || !el.shadowRoot) return;
+                lockRowsIn(el.shadowRoot);
               });
             }
 
-            function buildMonteringSummary(items) {
-              var lines = [];
-              var totalQty = 0;
-              var totalKr = 0;
-              items.forEach(function(item) {
-                var name = item.title || item.sku || 'Produkt';
-                var qty = item.quantity || 0;
-                var cost = qty * _monteringPricePerM2;
-                totalQty += qty;
-                totalKr += cost;
-                lines.push(name + ': ' + qty + ' m² × ' + _monteringPricePerM2 + ' kr = ' + cost + ' kr');
-              });
-              return {
-                lines: lines,
-                totalQty: totalQty,
-                totalKr: totalKr,
-                noteText: 'MONTERING TILLAGD: ' + lines.join(' | ') + ' — Totalt: ' + totalQty + ' m², ' + totalKr + ' kr (tillkommer på faktura)'
-              };
-            }
+            function lockRowsIn(sr) {
+              if (_lockRunning) return;
+              _lockRunning = true;
+              try {
+                var rows = sr.querySelectorAll('.py-4, [class*="line-item"], [class*="cart-item"], li, article');
+                if (!rows.length) rows = sr.querySelectorAll('div, section');
 
-            function injectMonteringSummary(root, items) {
-              if (!root || items.length === 0) return;
-              if (root.querySelector && root.querySelector('[data-rc-montering-summary]')) return;
+                rows.forEach(function(row) {
+                  // Find SKU in this row
+                  var skuText = '';
+                  row.querySelectorAll('p, span, small, div').forEach(function(el) {
+                    var t = el.textContent.trim();
+                    if (t.indexOf('RC-SERVICE-MONTERING') !== -1) skuText = 'RC-SERVICE-MONTERING';
+                  });
 
-              var summary = buildMonteringSummary(items);
+                  if (skuText !== 'RC-SERVICE-MONTERING') return;
 
-              var box = document.createElement('div');
-              box.setAttribute('data-rc-montering-summary', '1');
-              box.style.cssText = 'margin:16px 0;padding:16px;background:rgba(40,171,118,0.08);border:1px solid rgba(40,171,118,0.3);border-radius:10px;font-family:DM Sans,sans-serif;';
-
-              var heading = document.createElement('div');
-              heading.innerHTML = '<span style="margin-right:6px;">&#128295;</span> Montering tillagd';
-              heading.style.cssText = 'font-weight:700;font-size:14px;color:#1e4433;margin-bottom:8px;';
-              box.appendChild(heading);
-
-              summary.lines.forEach(function(line) {
-                var p = document.createElement('div');
-                p.textContent = line;
-                p.style.cssText = 'font-size:13px;color:#333;margin-bottom:4px;line-height:1.4;';
-                box.appendChild(p);
-              });
-
-              var totalDiv = document.createElement('div');
-              totalDiv.style.cssText = 'margin-top:8px;padding-top:8px;border-top:1px solid rgba(40,171,118,0.3);font-weight:700;font-size:14px;color:#1e4433;';
-              totalDiv.textContent = 'Totalt montering: ' + summary.totalQty + ' m² = ' + summary.totalKr + ' kr (tillkommer på faktura)';
-              box.appendChild(totalDiv);
-
-              // Insert before the faktura fields or continue button
-              var fakWrap = root.querySelector('[data-fak-wrap]');
-              if (fakWrap) {
-                fakWrap.parentNode.insertBefore(box, fakWrap);
-                return;
-              }
-              // Fallback: before the first big button
-              var btns = root.querySelectorAll('button');
-              for (var i = 0; i < btns.length; i++) {
-                var txt = (btns[i].textContent || '').trim().toLowerCase();
-                if (txt === 'fortsätt' || txt === 'continue' || txt === 'next') {
-                  var btnParent = btns[i].parentElement;
-                  btnParent.parentNode.insertBefore(box, btnParent);
-                  return;
-                }
-              }
-              root.appendChild(box);
-            }
-
-            function injectMonteringIntoNotes(items) {
-              if (items.length === 0) return;
-              var summary = buildMonteringSummary(items);
-
-              function findAndUpdate(searchRoot) {
-                if (!searchRoot) return false;
-                // Find the hidden customer-reference field
-                var inputs = searchRoot.querySelectorAll('input#customer-reference, textarea#customer-reference, input[data-fak-splitted], textarea[data-fak-splitted]');
-                for (var i = 0; i < inputs.length; i++) {
-                  var inp = inputs[i];
-                  var val = inp.value || '';
-                  if (val.indexOf('MONTERING TILLAGD') === -1) {
-                    inp.value = val + (val ? ' | ' : '') + summary.noteText;
-                    inp.dispatchEvent(new Event('input', { bubbles: true }));
-                    console.log('[reCarpet] Montering info injected into notes field');
-                  }
-                  return true;
-                }
-                return false;
-              }
-
-              if (findAndUpdate(document)) return;
-              var sparks = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
-              for (var i = 0; i < sparks.length; i++) {
-                var sr = sparks[i].shadowRoot;
-                if (sr) {
-                  if (findAndUpdate(sr)) return;
-                  var nested = sr.querySelectorAll('*');
-                  for (var j = 0; j < nested.length; j++) {
-                    if (nested[j].shadowRoot && findAndUpdate(nested[j].shadowRoot)) return;
-                  }
-                }
-              }
-            }
-
-            // Poll for checkout with montering items
-            setInterval(function() {
-              if (!window.spark || typeof window.spark.getCart !== 'function') return;
-
-              window.spark.getCart().then(function(cart) {
-                var items = getMonteringItems(cart);
-                if (items.length === 0) {
-                  _monteringSummaryInjected = false;
-                  return;
-                }
-
-                // Inject summary into checkout shadow roots
-                var sparks = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
-                sparks.forEach(function(el) {
-                  if (!el.shadowRoot) return;
-                  var hasSteps = el.shadowRoot.querySelector('[class*="step"], [class*="checkout"]');
-                  if (!hasSteps) {
-                    el.shadowRoot.querySelectorAll('*').forEach(function(child) {
-                      if (child.shadowRoot) {
-                        var d = child.shadowRoot.querySelector('[class*="step"], [class*="checkout"]');
-                        if (d) injectMonteringSummary(child.shadowRoot, items);
-                      }
+                  // Find the narrowest container for this item
+                  var itemRow = row;
+                  if (row.querySelectorAll('input').length > 1) {
+                    var skuEl = null;
+                    row.querySelectorAll('p, span, small, div').forEach(function(el) {
+                      if (el.textContent.indexOf('RC-SERVICE-MONTERING') !== -1 && !skuEl) skuEl = el;
                     });
-                  } else {
-                    injectMonteringSummary(el.shadowRoot, items);
+                    if (skuEl) {
+                      var p = skuEl;
+                      while (p && p !== sr) {
+                        if (p.querySelector && p.querySelector('img') && p.querySelector('button')) {
+                          itemRow = p;
+                          break;
+                        }
+                        p = p.parentElement;
+                      }
+                    }
+                  }
+
+                  if (itemRow.dataset && itemRow.dataset.rcLocked) return;
+                  if (itemRow.dataset) itemRow.dataset.rcLocked = '1';
+
+                  // Hide ALL buttons (qty +/-, delete)
+                  itemRow.querySelectorAll('button').forEach(function(btn) {
+                    btn.style.cssText = 'display:none !important;';
+                  });
+
+                  // Hide qty input and wrapper
+                  itemRow.querySelectorAll('input[type="number"], input[inputmode="numeric"]').forEach(function(inp) {
+                    var wrapper = inp.closest('div');
+                    if (wrapper) wrapper.style.cssText = 'display:none !important;';
+                  });
+                  var qtyWrapper = itemRow.querySelector('.mt-2, [class*="quantity"], [class*="qty"]');
+                  if (qtyWrapper) qtyWrapper.style.cssText = 'display:none !important;';
+
+                  // Show qty as static text
+                  if (!itemRow.querySelector('.rc-montering-qty')) {
+                    var inp = itemRow.querySelector('input');
+                    var qty = inp ? inp.value : '';
+                    if (qty) {
+                      var qtyText = document.createElement('div');
+                      qtyText.className = 'rc-montering-qty';
+                      qtyText.textContent = qty + ' m²';
+                      qtyText.style.cssText = 'font-size:13px;color:#666;margin-top:8px;';
+                      var header = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
+                      if (header && header.parentNode) header.parentNode.insertBefore(qtyText, header.nextSibling);
+                    }
+                  }
+
+                  // Show note
+                  if (!itemRow.querySelector('.rc-montering-note')) {
+                    var header2 = itemRow.querySelector('header') || itemRow.querySelector('a') || itemRow.querySelector('p');
+                    if (header2) {
+                      var note = document.createElement('div');
+                      note.className = 'rc-montering-note';
+                      note.textContent = 'Synkas automatiskt med monterings-produkter';
+                      note.style.cssText = 'font-size:11px;color:#999;font-style:italic;margin-top:4px;';
+                      header2.parentNode.insertBefore(note, header2.nextSibling);
+                    }
                   }
                 });
+              } finally {
+                _lockRunning = false;
+              }
+            }
 
-                // Inject into notes (once per checkout session)
-                if (!_monteringSummaryInjected) {
-                  injectMonteringIntoNotes(items);
-                  _monteringSummaryInjected = true;
-                }
-              }).catch(function() {});
-            }, 1500);
+            // Reuse the same observer/polling pattern
+            var _lockObservers = {};
+            function watchCartForLock(tag) {
+              var el = document.querySelector(tag);
+              if (!el || !el.shadowRoot) return;
+              if (!_lockObservers[tag]) {
+                _lockObservers[tag] = true;
+                new MutationObserver(function() {
+                  lockMonteringRows();
+                  setTimeout(lockMonteringRows, 50);
+                  setTimeout(lockMonteringRows, 150);
+                }).observe(el.shadowRoot, { childList: true, subtree: true });
+              }
+              lockMonteringRows();
+            }
+
+            new MutationObserver(function() {
+              watchCartForLock('spark-drawer');
+              watchCartForLock('spark-cart');
+            }).observe(document.body, { childList: true, subtree: true });
+
+            setInterval(function() {
+              watchCartForLock('spark-drawer');
+              watchCartForLock('spark-cart');
+            }, 500);
           })();
+
+          // (Checkout montering summary removed — montering product handles this)
 
           // ── B2B Cart icon: count badge + animation ────────────────────────────
           (function() {
