@@ -19,9 +19,9 @@
         "heading": "Professionell hantering av återbrukade och nya textilplattor",
         "subtext": "ReCarpet är specialister på demontering, kvalitetssäkring och leverans av textilplattor. För cirkulära lösningar i både ombyggnad och nyproduktion",
         "btn1_label": "Köp Milliken",
-        "btn1_url": "/collections/nya-textilplattor",
+        "btn1_url": "shopify://collections/milliken",
         "btn2_label": "Se våra produkter",
-        "btn2_url": "/collections/all"
+        "btn2_url": "shopify://collections"
       }
     },
     "rc_featured_products": {
@@ -141,7 +141,8 @@
         "logo6"
       ],
       "settings": {
-        "heading": "Några av våra nöjda kunder"
+        "heading": "Några av våra nöjda kunder",
+        "bg_color": "var(--base-color-neutral--white)"
       }
     },
     "rc_customer_cards": {
@@ -153,7 +154,7 @@
             "image": "shopify://shop_images/rc-card-fastighetsagare.jpg",
             "title": "Fastighetsägare",
             "text": "Vi demonterar, rengör, lagerhåller och förmedlar textilplattor.",
-            "url": "shopify://pages/fastighetsagare"
+            "url": "/pages/vara-kunder#fastighetsagare"
           }
         },
         "card2": {
@@ -162,7 +163,7 @@
             "image": "shopify://shop_images/rc-card-arkitekt.jpg",
             "title": "Arkitekt",
             "text": "Förskriv hållbara och återbrukade textilplattor för dina projekt. Enkelt och cirkulärt.",
-            "url": "shopify://pages/arkitekter"
+            "url": "/pages/vara-kunder#arkitekter"
           }
         },
         "card3": {
@@ -171,7 +172,7 @@
             "image": "shopify://shop_images/rc-card-hyresgast.jpg",
             "title": "Hyresgäst",
             "text": "Uppdatera ditt kontor med nya eller återbrukade textilplattor – enkelt och miljövänligt!",
-            "url": "shopify://pages/hyresgast"
+            "url": "/pages/vara-kunder#hyresgaster"
           }
         },
         "card4": {
@@ -180,7 +181,7 @@
             "image": "shopify://shop_images/rc-card-entreprenor.jpg",
             "title": "Entreprenör",
             "text": "Erbjud cirkulära golvlösningar och stärk din konkurrenskraft med vårt återbrukade sortiment.",
-            "url": "shopify://pages/entreprenor"
+            "url": "/pages/vara-kunder#entreprenorer"
           }
         }
       },
