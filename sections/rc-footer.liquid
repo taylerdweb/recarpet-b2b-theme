@@ -1,6 +1,6 @@
 {% comment %}
   reCarpet Custom Footer
-  Dark green, 4-column layout matching old site design
+  Dark green, dynamic columns via blocks (column + link)
 {% endcomment %}
 
 <style>
@@ -15,7 +15,7 @@
     margin: 0 auto;
     padding: 0 var(--rc-page-padding);
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1.5fr repeat(var(--rc-footer-cols, 4), 1fr);
     column-gap: 3rem;
     row-gap: 3rem;
   }
@@ -81,6 +81,7 @@
     text-decoration: none;
     line-height: 1.5;
   }
+  .rc-footer__nav a:hover { color: #fff; text-decoration: underline; }
 
   /* Bottom bar */
   .rc-footer__bottom {
@@ -137,7 +138,17 @@
   }
 </style>
 
-<footer class="rc-footer" role="contentinfo">
+{%- comment -%}
+  Count how many column blocks we have so we can set the grid columns
+{%- endcomment -%}
+{%- assign col_count = 0 -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'column' -%}
+    {%- assign col_count = col_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<footer class="rc-footer" role="contentinfo" style="--rc-footer-cols: {{ col_count | default: 4 }}">
   <div class="rc-footer__inner">
 
     <!-- Brand column -->
@@ -151,8 +162,6 @@
           </svg>
         {%- endif -%}
       </a>
-
-
 
       <h2 class="rc-footer__contact-label">Kontakt</h2>
       <div class="rc-footer__contact">
@@ -168,62 +177,47 @@
       </div>
     </div>
 
-    <!-- Våra kunder -->
-    <div class="rc-footer__col">
-      <h2 class="rc-footer__col-title">Våra kunder</h2>
-      <ul class="rc-footer__nav">
-        <li><a href="/pages/fastighetsagare">Fastighetsägare</a></li>
-        <li><a href="/pages/arkitekter">Arkitekt</a></li>
-        <li><a href="/pages/hyresgast">Hyresgäst</a></li>
-        <li><a href="/pages/entreprenor">Entreprenör</a></li>
-      </ul>
-    </div>
-
-    <!-- Vad vi gör -->
-    <div class="rc-footer__col">
-      <h2 class="rc-footer__col-title">Vad vi gör</h2>
-      <ul class="rc-footer__nav">
-        <li><a href="/pages/vad-vi-gor#inventering">Inventering</a></li>
-        <li><a href="/pages/vad-vi-gor#demontering">Demontering</a></li>
-        <li><a href="/pages/vad-vi-gor#formedling">Förmedling</a></li>
-        <li><a href="/pages/vad-vi-gor#montering">Montering</a></li>
-        <li><a href="/pages/vad-vi-gor#service">Service & underhåll</a></li>
-        <li><a href="/pages/vad-vi-gor#internt-aterbruk">Internt återbruk</a></li>
-      </ul>
-    </div>
-
-    <!-- Våra golv -->
-    <div class="rc-footer__col">
-      <h2 class="rc-footer__col-title">Våra golv</h2>
-      <ul class="rc-footer__nav">
-        <li><a href="/collections/aterbrukade-textilplattor">Återbrukade textilplattor</a></li>
-        <li><a href="/collections/nya-textilplattor">Milliken textilplattor</a></li>
-        <li><a href="/collections/all">Alla produkter</a></li>
-      </ul>
-    </div>
-
-    <!-- Kontakta ReCarpet -->
-    <div class="rc-footer__col">
-      <h2 class="rc-footer__col-title">Kontakta ReCarpet</h2>
-      <ul class="rc-footer__nav">
-        <li><a href="/pages/kontakta-oss">Kontakta oss</a></li>
-        <li><a href="/pages/om-oss">Om oss</a></li>
-        <li><a href="{{ routes.account_login_url }}">Logga in B2B</a></li>
-        {%- if section.settings.linkedin_url != blank -%}
-          <li><a href="{{ section.settings.linkedin_url }}" target="_blank" rel="noopener nofollow">LinkedIn ReCarpet</a></li>
+    {%- comment -%}
+      Render columns dynamically from blocks.
+      A "column" block starts a new <div>, and all following "link" blocks
+      become <li> items inside that column until the next "column" block.
+    {%- endcomment -%}
+    {%- assign col_open = false -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'column' -%}
+        {%- if col_open -%}
+              </ul>
+            </div>
         {%- endif -%}
-        {%- if section.settings.linkedin_jonas != blank -%}
-          <li><a href="{{ section.settings.linkedin_jonas }}" target="_blank" rel="noopener nofollow">LinkedIn Jonas</a></li>
+            <div class="rc-footer__col" {{ block.shopify_attributes }}>
+              <h2 class="rc-footer__col-title">{{ block.settings.title }}</h2>
+              <ul class="rc-footer__nav">
+        {%- assign col_open = true -%}
+      {%- elsif block.type == 'link' -%}
+        {%- if col_open -%}
+                <li {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.url }}"
+                    {%- if block.settings.new_tab %} target="_blank" rel="noopener nofollow"{% endif -%}
+                  >{{ block.settings.label }}</a>
+                </li>
         {%- endif -%}
-      </ul>
-    </div>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if col_open -%}
+          </ul>
+        </div>
+    {%- endif -%}
 
     <!-- Bottom bar -->
     <div class="rc-footer__bottom">
       <span class="rc-footer__copyright">&copy; {{ 'now' | date: '%Y' }} ReCarpet</span>
       <div class="rc-footer__legal">
-        <a href="/pages/integritetspolicy">Integritetspolicy</a>
-        <a href="/pages/kopvillkor">Köpvillkor</a>
+        {%- if section.settings.legal_1_label != blank -%}
+          <a href="{{ section.settings.legal_1_url }}">{{ section.settings.legal_1_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.legal_2_label != blank -%}
+          <a href="{{ section.settings.legal_2_url }}">{{ section.settings.legal_2_label }}</a>
+        {%- endif -%}
       </div>
     </div>
   </div>
@@ -258,19 +252,105 @@
       "label": "Adress"
     },
     {
-      "type": "url",
-      "id": "linkedin_url",
-      "label": "LinkedIn ReCarpet URL"
+      "type": "header",
+      "content": "Juridiska länkar (botten)"
     },
     {
-      "type": "url",
-      "id": "linkedin_jonas",
-      "label": "LinkedIn Jonas URL"
+      "type": "text",
+      "id": "legal_1_label",
+      "label": "Länk 1 text",
+      "default": "Integritetspolicy"
+    },
+    {
+      "type": "text",
+      "id": "legal_1_url",
+      "label": "Länk 1 URL",
+      "default": "/pages/integritetspolicy"
+    },
+    {
+      "type": "text",
+      "id": "legal_2_label",
+      "label": "Länk 2 text",
+      "default": "Köpvillkor"
+    },
+    {
+      "type": "text",
+      "id": "legal_2_url",
+      "label": "Länk 2 URL",
+      "default": "/pages/kopvillkor"
+    }
+  ],
+  "max_blocks": 30,
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Kolumn",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Kolumnrubrik",
+          "default": "Kolumn"
+        }
+      ]
+    },
+    {
+      "type": "link",
+      "name": "Länk",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Länktext",
+          "default": "Länk"
+        },
+        {
+          "type": "text",
+          "id": "url",
+          "label": "URL (t.ex. /pages/om-oss eller /pages/vara-kunder#fastighetsagare)"
+        },
+        {
+          "type": "checkbox",
+          "id": "new_tab",
+          "label": "Öppna i ny flik",
+          "default": false
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "reCarpet Footer"
+      "name": "reCarpet Footer",
+      "settings": {
+        "phone": "0700733682",
+        "email": "jonas@recarpet.se",
+        "legal_1_label": "Integritetspolicy",
+        "legal_1_url": "/pages/integritetspolicy",
+        "legal_2_label": "Köpvillkor",
+        "legal_2_url": "/pages/kopvillkor"
+      },
+      "blocks": [
+        { "type": "column", "settings": { "title": "Våra kunder" } },
+        { "type": "link", "settings": { "label": "Fastighetsägare", "url": "/pages/vara-kunder#fastighetsagare" } },
+        { "type": "link", "settings": { "label": "Arkitekt", "url": "/pages/vara-kunder#arkitekter" } },
+        { "type": "link", "settings": { "label": "Hyresgäst", "url": "/pages/vara-kunder#hyresgaster" } },
+        { "type": "link", "settings": { "label": "Entreprenör", "url": "/pages/vara-kunder#entreprenorer" } },
+        { "type": "column", "settings": { "title": "Vad vi gör" } },
+        { "type": "link", "settings": { "label": "Inventering", "url": "/pages/vad-vi-gor#inventering" } },
+        { "type": "link", "settings": { "label": "Demontering", "url": "/pages/vad-vi-gor#demontering" } },
+        { "type": "link", "settings": { "label": "Förmedling", "url": "/pages/vad-vi-gor#formedling" } },
+        { "type": "link", "settings": { "label": "Montering", "url": "/pages/vad-vi-gor#montering" } },
+        { "type": "link", "settings": { "label": "Service & underhåll", "url": "/pages/vad-vi-gor#service" } },
+        { "type": "link", "settings": { "label": "Internt återbruk", "url": "/pages/vad-vi-gor#internt-aterbruk" } },
+        { "type": "column", "settings": { "title": "Våra golv" } },
+        { "type": "link", "settings": { "label": "Återbrukade textilplattor", "url": "/collections/aterbrukade-textilplattor" } },
+        { "type": "link", "settings": { "label": "Milliken textilplattor", "url": "/collections/nya-textilplattor" } },
+        { "type": "link", "settings": { "label": "Alla produkter", "url": "/collections/all" } },
+        { "type": "column", "settings": { "title": "Kontakta ReCarpet" } },
+        { "type": "link", "settings": { "label": "Kontakta oss", "url": "/pages/kontakta-oss" } },
+        { "type": "link", "settings": { "label": "Om oss", "url": "/pages/om-oss" } },
+        { "type": "link", "settings": { "label": "Logga in B2B", "url": "/account/login" } }
+      ]
     }
   ]
 }

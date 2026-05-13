@@ -18,9 +18,187 @@
         "phone": "0700733682",
         "email": "jonas@recarpet.se",
         "address": "",
-        "linkedin_url": "",
-        "linkedin_jonas": ""
-      }
+        "legal_1_label": "Integritetspolicy",
+        "legal_1_url": "/pages/integritetspolicy",
+        "legal_2_label": "Köpvillkor",
+        "legal_2_url": "/pages/kopvillkor"
+      },
+      "blocks": {
+        "col_kunder": {
+          "type": "column",
+          "settings": {
+            "title": "Våra kunder"
+          }
+        },
+        "link_fastighetsagare": {
+          "type": "link",
+          "settings": {
+            "label": "Fastighetsägare",
+            "url": "/pages/vara-kunder#fastighetsagare",
+            "new_tab": false
+          }
+        },
+        "link_arkitekt": {
+          "type": "link",
+          "settings": {
+            "label": "Arkitekt",
+            "url": "/pages/vara-kunder#arkitekter",
+            "new_tab": false
+          }
+        },
+        "link_hyresgast": {
+          "type": "link",
+          "settings": {
+            "label": "Hyresgäst",
+            "url": "/pages/vara-kunder#hyresgaster",
+            "new_tab": false
+          }
+        },
+        "link_entreprenor": {
+          "type": "link",
+          "settings": {
+            "label": "Entreprenör",
+            "url": "/pages/vara-kunder#entreprenorer",
+            "new_tab": false
+          }
+        },
+        "col_vad_vi_gor": {
+          "type": "column",
+          "settings": {
+            "title": "Vad vi gör"
+          }
+        },
+        "link_inventering": {
+          "type": "link",
+          "settings": {
+            "label": "Inventering",
+            "url": "/pages/vad-vi-gor#inventering",
+            "new_tab": false
+          }
+        },
+        "link_demontering": {
+          "type": "link",
+          "settings": {
+            "label": "Demontering",
+            "url": "/pages/vad-vi-gor#demontering",
+            "new_tab": false
+          }
+        },
+        "link_formedling": {
+          "type": "link",
+          "settings": {
+            "label": "Förmedling",
+            "url": "/pages/vad-vi-gor#formedling",
+            "new_tab": false
+          }
+        },
+        "link_montering": {
+          "type": "link",
+          "settings": {
+            "label": "Montering",
+            "url": "/pages/vad-vi-gor#montering",
+            "new_tab": false
+          }
+        },
+        "link_service": {
+          "type": "link",
+          "settings": {
+            "label": "Service & underhåll",
+            "url": "/pages/vad-vi-gor#service",
+            "new_tab": false
+          }
+        },
+        "link_aterbruk": {
+          "type": "link",
+          "settings": {
+            "label": "Internt återbruk",
+            "url": "/pages/vad-vi-gor#internt-aterbruk",
+            "new_tab": false
+          }
+        },
+        "col_golv": {
+          "type": "column",
+          "settings": {
+            "title": "Våra golv"
+          }
+        },
+        "link_aterbrukade": {
+          "type": "link",
+          "settings": {
+            "label": "Återbrukade textilplattor",
+            "url": "/collections/aterbrukade-textilplattor",
+            "new_tab": false
+          }
+        },
+        "link_milliken": {
+          "type": "link",
+          "settings": {
+            "label": "Milliken textilplattor",
+            "url": "/collections/nya-textilplattor",
+            "new_tab": false
+          }
+        },
+        "link_alla": {
+          "type": "link",
+          "settings": {
+            "label": "Alla produkter",
+            "url": "/collections/all",
+            "new_tab": false
+          }
+        },
+        "col_kontakt": {
+          "type": "column",
+          "settings": {
+            "title": "Kontakta ReCarpet"
+          }
+        },
+        "link_kontakt": {
+          "type": "link",
+          "settings": {
+            "label": "Kontakta oss",
+            "url": "/pages/kontakta-oss",
+            "new_tab": false
+          }
+        },
+        "link_om": {
+          "type": "link",
+          "settings": {
+            "label": "Om oss",
+            "url": "/pages/om-oss",
+            "new_tab": false
+          }
+        },
+        "link_login": {
+          "type": "link",
+          "settings": {
+            "label": "Logga in B2B",
+            "url": "/account/login",
+            "new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "col_kunder",
+        "link_fastighetsagare",
+        "link_arkitekt",
+        "link_hyresgast",
+        "link_entreprenor",
+        "col_vad_vi_gor",
+        "link_inventering",
+        "link_demontering",
+        "link_formedling",
+        "link_montering",
+        "link_service",
+        "link_aterbruk",
+        "col_golv",
+        "link_aterbrukade",
+        "link_milliken",
+        "link_alla",
+        "col_kontakt",
+        "link_kontakt",
+        "link_om",
+        "link_login"
+      ]
     }
   },
   "order": [
