@@ -249,9 +249,14 @@
   assign rc_can_add_montering = rc_is_premium
 -%}
             {%- assign product_tags_lower = card_product.tags | join: ',' | downcase -%}
+            {%- assign _card_type = card_product.product_type | downcase -%}
             {%- assign is_storbatch = false -%}
             {%- if product_tags_lower contains 'storbatch' -%}
               {%- assign is_storbatch = true -%}
+            {%- endif -%}
+            {%- assign is_service = false -%}
+            {%- if _card_type contains 'tjänst' or _card_type contains 'service' or product_tags_lower contains 'service' -%}
+              {%- assign is_service = true -%}
             {%- endif -%}
 
             {%- if rc_is_member -%}
@@ -268,9 +273,13 @@
                   </a>
                 {%- endif -%}
               {%- elsif is_storbatch and rc_can_buy_batches == false -%}
-                {%- comment -%} Member utan Plus/Premium + storbatch → låst, INGEN spark-product-card (döljer köpknapp) {%- endcomment -%}
+                {%- comment -%} Member utan Plus/Premium + storbatch → låst {%- endcomment -%}
                 {% render 'price', product: card_product, price_class: 'price--listing' %}
                 <p class="storbatch-lock-note">Endast för Plus-medlemmar</p>
+              {%- elsif is_service and rc_sees_services == false -%}
+                {%- comment -%} Member/Plus utan Premium + tjänst → låst {%- endcomment -%}
+                {% render 'price', product: card_product, price_class: 'price--listing' %}
+                <p class="storbatch-lock-note">Endast för Premium-medlemmar</p>
               {%- else -%}
                 <spark-product-card parent-id="{{ card_product.id }}"></spark-product-card>
                 <div data-spark="b2c-only">
@@ -314,7 +323,7 @@
           </div>
         {%- endif -%}
         {% if quick_add == 'standard' %}
-          <div data-spark="b2c-only" class="quick-add no-js-hidden {% unless rc_is_member %}hidden{% endunless %}{% if is_storbatch and rc_can_buy_batches == false %} hidden{% endif %}">
+          <div data-spark="b2c-only" class="quick-add no-js-hidden {% unless rc_is_member %}hidden{% endunless %}{% if is_storbatch and rc_can_buy_batches == false %} hidden{% endif %}{% if is_service and rc_sees_services == false %} hidden{% endif %}">
             {%- liquid
               assign qty_rules = false
               if card_product.selected_or_first_available_variant.quantity_rule.min > 1 or card_product.selected_or_first_available_variant.quantity_rule.max != null or card_product.selected_or_first_available_variant.quantity_rule.increment > 1
