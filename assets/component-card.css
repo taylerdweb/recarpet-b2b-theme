@@ -621,6 +621,11 @@
   padding: 0.5rem 0;
 }
 
+/* Sold-out cards: align text to top when buy button is absent */
+.card__content:not(:has(.card__cta-logged-out)) {
+  align-content: start;
+}
+
 /* Consistent font sizes for product title & price on all cards */
 .card-wrapper .card__content .card__heading {
   font-size: 1.25rem;

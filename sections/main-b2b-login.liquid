@@ -200,6 +200,25 @@ This is the Shopify Liquid code that generates the page layout
                     {% endif %}
 
                     <div class="b2b-form-item">
+                      <input class="b2b-input" type="text"
+                        id="ContactForm-organisationsnummer"
+                        name="contact[organisationsnummer]"
+                        placeholder="Organisationsnummer"
+                        pattern="\d{6}-?\d{4}"
+                        title="Ange org.nr som 556123-4567">
+                    </div>
+
+                    {% if section.settings.form_email_field_vat != blank %}
+                    <div class="b2b-form-item">
+                      <input class="b2b-input" type="text"
+                        {% if section.settings.form_email_field_vat_required %} required {% endif %}
+                        id="ContactForm-{{ section.settings.form_email_field_vat | replace: ' ', '_' | downcase }}"
+                        name="contact[{{ section.settings.form_email_field_vat | replace: ' ', '_' | downcase }}]"
+                        placeholder="{{ section.settings.form_email_field_vat }}">
+                    </div>
+                    {% endif %}
+
+                    <div class="b2b-form-item">
                       <select class="b2b-input" name="contact[roll]" id="ContactForm-roll" required>
                         <option value="" disabled selected>Roll / Verksamhet</option>
                         <option value="Arkitekt">Arkitekt</option>

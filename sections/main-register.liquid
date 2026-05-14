@@ -120,6 +120,17 @@
       <label for="RegisterForm-company">Företagsnamn</label>
     </div>
     <div class="field">
+      <input
+        type="text"
+        id="RegisterForm-orgnr"
+        placeholder="Organisationsnummer (valfritt)"
+        autocomplete="off"
+        pattern="\d{6}-?\d{4}"
+        title="Ange org.nr som 556123-4567"
+      >
+      <label for="RegisterForm-orgnr">Organisationsnummer</label>
+    </div>
+    <div class="field">
       <select id="RegisterForm-role" aria-required="true">
         <option value="" disabled selected>Välj roll</option>
         <option value="Arkitekt">Arkitekt</option>
@@ -181,10 +192,12 @@
       $form.addEventListener('submit', function() {
         var company = document.getElementById('RegisterForm-company');
         var role    = document.getElementById('RegisterForm-role');
+        var orgnr   = document.getElementById('RegisterForm-orgnr');
         var note    = document.getElementById('RegisterForm-note');
 
         var parts = [];
         if (company && company.value.trim()) parts.push('Företag: ' + company.value.trim());
+        if (orgnr && orgnr.value.trim())     parts.push('Org.nr: ' + orgnr.value.trim());
         if (role && role.value)              parts.push('Roll: ' + role.value);
 
         if (note && parts.length) {

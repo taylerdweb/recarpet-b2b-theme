@@ -316,6 +316,17 @@
     </script>
 
     {%- if is_b2b_customer -%}
+      <!-- Expose customer data for faktura field pre-fill -->
+      <script>
+        window._rcCustomer = {
+          email: {{ customer.email | json }},
+          id: {{ customer.id | json }},
+          name: {{ customer.name | json }},
+          company: {{ customer.metafields.sparklayer.company_name | default: '' | json }},
+          orgnr: {{ customer.metafields.custom.org_nr | default: '' | json }}
+        };
+      </script>
+
       <!-- SparkLayer core script (single load) -->
       <script>
       window.sparkOptions = {
@@ -684,8 +695,51 @@
             p.appendChild(span);
           }
 
+          // ── SparkLayer UI text translations (EN → SV) ──
+          var _rcTranslations = {
+            'Continue and use this address': 'Fortsätt och använd denna adress',
+            'Save address to address book': 'Spara adress i adressboken',
+            'Cancel': 'Avbryt'
+          };
+          var _rcTranslationKeys = Object.keys(_rcTranslations);
+
+          function translateSparkText(root) {
+            root.querySelectorAll('button, a, label, span, p').forEach(function(el) {
+              if (el.dataset.rcTranslated) return;
+              if (el.children.length === 0) {
+                var t = el.textContent.trim();
+                if (_rcTranslations[t]) {
+                  el.textContent = _rcTranslations[t];
+                  el.dataset.rcTranslated = '1';
+                }
+              }
+            });
+          }
+
+          // ── Deep shadow DOM translation poller ──
+          function translateDeepShadow(root) {
+            translateSparkText(root);
+            root.querySelectorAll('*').forEach(function(el) {
+              if (el.shadowRoot) {
+                translateSparkText(el.shadowRoot);
+                el.shadowRoot.querySelectorAll('*').forEach(function(nested) {
+                  if (nested.shadowRoot) {
+                    translateSparkText(nested.shadowRoot);
+                  }
+                });
+              }
+            });
+          }
+          setInterval(function() {
+            ['spark-drawer', 'spark-cart', 'spark-checkout'].forEach(function(tag) {
+              var el = document.querySelector(tag);
+              if (el && el.shadowRoot) translateDeepShadow(el.shadowRoot);
+            });
+          }, 500);
+
           function patchRoot(root, insideSpark) {
             patchQtyHeaders(root);
+            translateSparkText(root);
             root.querySelectorAll('.price-summary p').forEach(appendM2);
             if (insideSpark) {
               root.querySelectorAll('p').forEach(function (p) {
@@ -884,6 +938,63 @@
               }
             });
             console.log('[reCarpet] Fakturauppgifter: restored cached values', keys.join(', '));
+          }
+
+          // ── Prefill + save faktura fields ──────────────────────────────
+          var _LS_KEY = 'rc_faktura_data'; // localStorage key
+
+          function getSavedFakturaData() {
+            try {
+              var saved = JSON.parse(localStorage.getItem(_LS_KEY) || '{}');
+              // Merge with Shopify customer data (Liquid-injected)
+              var cust = window._rcCustomer || {};
+              return {
+                orgnr: saved.orgnr || cust.orgnr || '',
+                fepost: saved.fepost || cust.email || '',
+                ref: saved.ref || '',
+                mark: saved.mark || ''
+              };
+            } catch (e) { return {}; }
+          }
+
+          function saveFakturaData(wrap) {
+            if (!wrap) return;
+            var data = {};
+            wrap.querySelectorAll('[data-fk]').forEach(function(inp) {
+              var key = inp.dataset.fk;
+              var val = inp.value.trim();
+              if (val && key !== 'leveransdatum') {
+                data[key] = val;
+              }
+            });
+            if (Object.keys(data).length === 0) return;
+            try {
+              localStorage.setItem(_LS_KEY, JSON.stringify(data));
+              console.log('[reCarpet] Fakturauppgifter sparade till localStorage');
+            } catch (e) {}
+          }
+
+          // NOTE: Writing to Shopify customer metafields requires Admin API (not available from frontend).
+          // Org.nr is read from metafield (if set in admin) and saved to localStorage for reuse.
+          // For persistent server-side storage, set up a Shopify app proxy in the future.
+
+          function prefillFakturaFields(wrap) {
+            var saved = getSavedFakturaData();
+            if (!saved || Object.keys(saved).length === 0) return;
+            var prefilled = [];
+            Object.keys(saved).forEach(function(key) {
+              if (!saved[key]) return;
+              var inp = wrap.querySelector('[data-fk="' + key + '"]');
+              if (inp && !inp.value) {
+                inp.value = saved[key];
+                inp.style.borderColor = '#4caf50';
+                inp.dispatchEvent(new Event('input', { bubbles: true }));
+                prefilled.push(key);
+              }
+            });
+            if (prefilled.length > 0) {
+              console.log('[reCarpet] Fakturauppgifter förifyllda: ' + prefilled.join(', '));
+            }
           }
 
           function injectFakturaFields(root) {
@@ -1120,17 +1231,47 @@
                   if (btn.dataset.fakIntercepted) return;
                   btn.dataset.fakIntercepted = '1';
                   btn.addEventListener('click', function(e) {
-                    // Only validate if our faktura wrap is currently visible in the DOM
-                    var wrapRoot = wrap.getRootNode ? wrap.getRootNode() : document;
-                    var wrapPresent = wrapRoot.contains ? wrapRoot.contains(wrap) : document.body.contains(wrap);
-                    if (!wrapPresent) return;
-                    if (!validateFakturaFields(true)) {
+                    // Dynamically find the CURRENT visible wrap (not stale closure reference)
+                    var currentWrap = null;
+                    var searchRoots = [document];
+                    document.querySelectorAll('spark-drawer, spark-cart, spark-checkout').forEach(function(el) {
+                      if (el.shadowRoot) {
+                        searchRoots.push(el.shadowRoot);
+                        el.shadowRoot.querySelectorAll('*').forEach(function(nested) {
+                          if (nested.shadowRoot) searchRoots.push(nested.shadowRoot);
+                        });
+                      }
+                    });
+                    for (var si = 0; si < searchRoots.length; si++) {
+                      var found = searchRoots[si].querySelector('[data-fak-wrap]');
+                      if (found) { currentWrap = found; break; }
+                    }
+
+                    if (!currentWrap) return; // no wrap in DOM, don't interfere
+
+                    // Validate using the CURRENT wrap
+                    var allValid = true;
+                    FIELDS.forEach(function(f) {
+                      var el = currentWrap.querySelector('[data-fk="' + f.key + '"]');
+                      if (!el) return;
+                      var v = el.value.trim();
+                      var empty = v.length === 0;
+                      var formatOk = true;
+                      if (!empty && f.type === 'email') formatOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+                      if (!empty && f.key === 'orgnr') formatOk = /^\d{6}-?\d{4}$/.test(v);
+                      if (empty || !formatOk) allValid = false;
+                    });
+                    var dateEl = currentWrap.querySelector('[data-fk="leveransdatum"]');
+                    if (dateEl && !dateEl.value) allValid = false;
+
+                    if (!allValid) {
                       e.preventDefault();
                       e.stopPropagation();
-                      // Scroll first empty field into view
-                      var firstEmpty = wrap.querySelector('input:invalid, input[style*="d32f2f"]');
-                      if (firstEmpty) firstEmpty.focus();
+                      // Show errors using original validation function with current wrap
+                      validateFakturaFields(true);
                       console.log('[reCarpet] Fakturauppgifter: blocked continue — required fields empty');
+                    } else {
+                      saveFakturaData(currentWrap);
                     }
                   }, true); // capture phase to run before SparkLayer's handler
                 }
@@ -1148,6 +1289,8 @@
             _fakturaFieldsEverInjected = true;
             // Restore any previously entered values (survives SparkLayer re-renders)
             restoreFakturaValues(wrap);
+            // Pre-fill from localStorage / Shopify customer data
+            prefillFakturaFields(wrap);
             console.log('[reCarpet] Fakturauppgifter: injected 3 required fields, replaced', input.tagName, input.id || input.placeholder);
           }
 
@@ -1263,53 +1406,45 @@
             if (!open && _fakPollActive) stopFakPoll();
           }, 500);
 
+          // ── Shared helpers (used by poll lifecycle + failsafe) ──
+          function isCheckoutOpen() {
+            var sparks = document.querySelectorAll('spark-drawer, spark-cart');
+            for (var i = 0; i < sparks.length; i++) {
+              var sr = sparks[i].shadowRoot;
+              if (!sr) continue;
+              var deep = sr.querySelector('[class*="step"], [class*="checkout"]');
+              if (deep) return true;
+              var all = sr.querySelectorAll('*');
+              for (var j = 0; j < all.length; j++) {
+                if (all[j].shadowRoot) {
+                  var d2 = all[j].shadowRoot.querySelector('[class*="step"], [class*="checkout"], input#customer-reference, textarea#customer-reference');
+                  if (d2) return true;
+                }
+              }
+            }
+            return false;
+          }
+
+          function findFakturaWrap() {
+            if (document.querySelector('[data-fak-wrap]')) return true;
+            var sparks = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
+            for (var i = 0; i < sparks.length; i++) {
+              var sr = sparks[i].shadowRoot;
+              if (sr) {
+                if (sr.querySelector('[data-fak-wrap]')) return true;
+                var nested = sr.querySelectorAll('*');
+                for (var j = 0; j < nested.length; j++) {
+                  if (nested[j].shadowRoot && nested[j].shadowRoot.querySelector('[data-fak-wrap]')) return true;
+                }
+              }
+            }
+            return false;
+          }
+
           // ── Failsafe: auto-close checkout if faktura fields fail to inject ──
-          // Watches for SparkLayer checkout step 2 (Leverans) appearing.
-          // If our faktura fields aren't present within 3 seconds, close the drawer
-          // and show a toast so the customer can try again.
           (function() {
             var _failsafeTimer = null;
             var _failsafeChecked = false;
-
-            function findFakturaWrap() {
-              // Check regular DOM
-              if (document.querySelector('[data-fak-wrap]')) return true;
-              // Check shadow roots
-              var sparks = document.querySelectorAll('spark-drawer, spark-cart, spark-checkout');
-              for (var i = 0; i < sparks.length; i++) {
-                var sr = sparks[i].shadowRoot;
-                if (sr) {
-                  if (sr.querySelector('[data-fak-wrap]')) return true;
-                  // Check nested shadow roots
-                  var nested = sr.querySelectorAll('*');
-                  for (var j = 0; j < nested.length; j++) {
-                    if (nested[j].shadowRoot && nested[j].shadowRoot.querySelector('[data-fak-wrap]')) return true;
-                  }
-                }
-              }
-              return false;
-            }
-
-            function isCheckoutOpen() {
-              // SparkLayer checkout is open when we can find a step indicator or form
-              var sparks = document.querySelectorAll('spark-drawer, spark-cart');
-              for (var i = 0; i < sparks.length; i++) {
-                var sr = sparks[i].shadowRoot;
-                if (!sr) continue;
-                // Look for the checkout stepper or the notes/reference field
-                var deep = sr.querySelector('[class*="step"], [class*="checkout"]');
-                if (deep) return true;
-                // Also check nested shadow roots
-                var all = sr.querySelectorAll('*');
-                for (var j = 0; j < all.length; j++) {
-                  if (all[j].shadowRoot) {
-                    var d2 = all[j].shadowRoot.querySelector('[class*="step"], [class*="checkout"], input#customer-reference, textarea#customer-reference');
-                    if (d2) return true;
-                  }
-                }
-              }
-              return false;
-            }
 
             function closeDrawerAndNotify() {
               console.warn('[reCarpet] Failsafe: faktura fields not found after timeout — closing checkout');

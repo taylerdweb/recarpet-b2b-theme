@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="sv" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orderbekräftelse — ReCarpet</title>
+  <!--[if mso]>
+  <style type="text/css">
+    table { border-collapse: collapse; }
+    td { font-family: Arial, sans-serif; }
+  </style>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f2;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+
+<!-- Wrapper -->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f2;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+
+      <!-- Email container -->
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+
+        <!-- Header -->
+        <tr>
+          <td style="background-color:#1e4433;padding:32px 40px;text-align:center;">
+            <!-- Replace with your logo URL from Klaviyo asset library -->
+            <img src="https://cdn.shopify.com/s/files/1/0915/4498/0281/files/recarpet-logo-white.png" alt="ReCarpet" width="160" style="display:inline-block;max-width:160px;height:auto;" />
+          </td>
+        </tr>
+
+        <!-- Hero section -->
+        <tr>
+          <td style="padding:40px 40px 24px;">
+            <h1 style="margin:0 0 8px;font-size:24px;font-weight:600;color:#1e4433;line-height:1.3;">
+              Tack för din beställning{{ first_name|default:"" }}!
+            </h1>
+            <p style="margin:0;font-size:16px;color:#444;line-height:1.6;">
+              Vi har mottagit din order och den bearbetas nu. Vi återkommer med en bekräftelse och leveransinformation så snart ordern är klar.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+          <td style="padding:0 40px;">
+            <hr style="border:none;border-top:1px solid #e8e8e6;margin:0;" />
+          </td>
+        </tr>
+
+        <!-- Order summary -->
+        <tr>
+          <td style="padding:24px 40px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="50%" style="padding-bottom:16px;vertical-align:top;">
+                  <p style="margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:#888;font-weight:600;">Ordernummer</p>
+                  <p style="margin:0;font-size:16px;color:#1e4433;font-weight:600;">{{ event.order_name }}</p>
+                </td>
+                <td width="50%" style="padding-bottom:16px;vertical-align:top;text-align:right;">
+                  <p style="margin:0 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;color:#888;font-weight:600;">Totalt belopp</p>
+                  <p style="margin:0;font-size:16px;color:#1e4433;font-weight:600;">{{ event.total_amount }} SEK <span style="font-weight:400;font-size:13px;color:#888;">(exkl. moms)</span></p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+          <td style="padding:0 40px;">
+            <hr style="border:none;border-top:1px solid #e8e8e6;margin:0;" />
+          </td>
+        </tr>
+
+        <!-- Fakturadetaljer -->
+        <tr>
+          <td style="padding:24px 40px;">
+            <h2 style="margin:0 0 16px;font-size:16px;font-weight:600;color:#1e4433;">Fakturauppgifter</h2>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f9f9f8;border-radius:8px;border:1px solid #e8e8e6;">
+              {% if event.extra.org_nummer %}
+              <tr>
+                <td style="padding:12px 16px 0;font-size:13px;color:#888;font-weight:600;width:140px;vertical-align:top;">Org.nr</td>
+                <td style="padding:12px 16px 0;font-size:14px;color:#333;">{{ event.extra.org_nummer }}</td>
+              </tr>
+              {% endif %}
+              {% if event.extra.faktura_epost %}
+              <tr>
+                <td style="padding:8px 16px 0;font-size:13px;color:#888;font-weight:600;width:140px;vertical-align:top;">Faktura-e-post</td>
+                <td style="padding:8px 16px 0;font-size:14px;color:#333;">{{ event.extra.faktura_epost }}</td>
+              </tr>
+              {% endif %}
+              {% if event.extra.ref_nummer %}
+              <tr>
+                <td style="padding:8px 16px 0;font-size:13px;color:#888;font-weight:600;width:140px;vertical-align:top;">Referensnummer</td>
+                <td style="padding:8px 16px 0;font-size:14px;color:#333;">{{ event.extra.ref_nummer }}</td>
+              </tr>
+              {% endif %}
+              {% if event.extra.markning %}
+              <tr>
+                <td style="padding:8px 16px 0;font-size:13px;color:#888;font-weight:600;width:140px;vertical-align:top;">Märkning</td>
+                <td style="padding:8px 16px 0;font-size:14px;color:#333;">{{ event.extra.markning }}</td>
+              </tr>
+              {% endif %}
+              {% if event.extra.leveransdatum %}
+              <tr>
+                <td style="padding:8px 16px 12px;font-size:13px;color:#888;font-weight:600;width:140px;vertical-align:top;">Önskat leveransdatum</td>
+                <td style="padding:8px 16px 12px;font-size:14px;color:#333;">{{ event.extra.leveransdatum }}</td>
+              </tr>
+              {% endif %}
+            </table>
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+          <td style="padding:0 40px;">
+            <hr style="border:none;border-top:1px solid #e8e8e6;margin:0;" />
+          </td>
+        </tr>
+
+        <!-- What happens next -->
+        <tr>
+          <td style="padding:24px 40px;">
+            <h2 style="margin:0 0 12px;font-size:16px;font-weight:600;color:#1e4433;">Vad händer nu?</h2>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td width="36" style="vertical-align:top;padding:0 12px 12px 0;">
+                  <div style="width:28px;height:28px;border-radius:50%;background-color:#ecf5f0;text-align:center;line-height:28px;font-size:14px;color:#1e4433;font-weight:600;">1</div>
+                </td>
+                <td style="vertical-align:top;padding-bottom:12px;">
+                  <p style="margin:0;font-size:14px;color:#333;line-height:1.5;"><strong style="color:#1e4433;">Vi granskar din order</strong><br>Vi kontrollerar lagerstatus och förbereder din leverans.</p>
+                </td>
+              </tr>
+              <tr>
+                <td width="36" style="vertical-align:top;padding:0 12px 12px 0;">
+                  <div style="width:28px;height:28px;border-radius:50%;background-color:#ecf5f0;text-align:center;line-height:28px;font-size:14px;color:#1e4433;font-weight:600;">2</div>
+                </td>
+                <td style="vertical-align:top;padding-bottom:12px;">
+                  <p style="margin:0;font-size:14px;color:#333;line-height:1.5;"><strong style="color:#1e4433;">Orderbekräftelse</strong><br>Du får en bekräftelse med leveransdatum och eventuella detaljer.</p>
+                </td>
+              </tr>
+              <tr>
+                <td width="36" style="vertical-align:top;padding:0 12px 0 0;">
+                  <div style="width:28px;height:28px;border-radius:50%;background-color:#ecf5f0;text-align:center;line-height:28px;font-size:14px;color:#1e4433;font-weight:600;">3</div>
+                </td>
+                <td style="vertical-align:top;">
+                  <p style="margin:0;font-size:14px;color:#333;line-height:1.5;"><strong style="color:#1e4433;">Leverans</strong><br>Vi meddelar dig när din order är på väg.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- CTA button -->
+        <tr>
+          <td style="padding:8px 40px 32px;text-align:center;">
+            <a href="https://recarpet-b2b.myshopify.com/account" style="display:inline-block;padding:14px 32px;background-color:#1e4433;color:#ffffff;text-decoration:none;font-size:15px;font-weight:500;border-radius:8px;letter-spacing:0.2px;">
+              Visa mitt konto
+            </a>
+          </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+          <td style="padding:0 40px;">
+            <hr style="border:none;border-top:1px solid #e8e8e6;margin:0;" />
+          </td>
+        </tr>
+
+        <!-- Contact / help -->
+        <tr>
+          <td style="padding:24px 40px;">
+            <p style="margin:0;font-size:14px;color:#666;line-height:1.6;text-align:center;">
+              Har du frågor om din order? Vi hjälper gärna till.<br>
+              <a href="mailto:info@recarpet.se" style="color:#1e4433;text-decoration:underline;">info@recarpet.se</a>
+              &nbsp;&middot;&nbsp;
+              <a href="tel:+46700733682" style="color:#1e4433;text-decoration:underline;">070-073 36 82</a>
+            </p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background-color:#f9f9f8;padding:24px 40px;border-top:1px solid #e8e8e6;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="text-align:center;">
+                  <p style="margin:0 0 8px;font-size:13px;color:#888;">
+                    ReCarpet AB &middot; Professionell hantering av begagnade och nya textilplattor
+                  </p>
+                  <p style="margin:0;font-size:12px;color:#aaa;">
+                    <a href="https://recarpet.se" style="color:#888;text-decoration:none;">recarpet.se</a>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+      <!-- /Email container -->
+
+    </td>
+  </tr>
+</table>
+<!-- /Wrapper -->
+
+</body>
+</html>
