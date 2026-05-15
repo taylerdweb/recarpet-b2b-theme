@@ -19,19 +19,11 @@
     }
   }
 
-  /* reCarpet: match product grid spacing */
-  .related-products .grid.product-grid {
-    column-gap: 2.5rem;
-    row-gap: 3rem;
-  }
-  .related-products .grid--4-col-desktop.product-grid .grid__item {
-    width: calc(25% - 2.5rem * 3 / 4);
-    max-width: calc(25% - 2.5rem * 3 / 4);
-  }
+  /* reCarpet: force 2-col on mobile for related products */
   @media screen and (max-width: 749px) {
-    .related-products .grid.product-grid {
-      column-gap: 1.25rem;
-      row-gap: 2rem;
+    .related-products .grid.product-grid .grid__item {
+      width: calc(50% - var(--grid-mobile-horizontal-spacing) / 2);
+      max-width: calc(50% - var(--grid-mobile-horizontal-spacing) / 2);
     }
   }
 {%- endstyle -%}

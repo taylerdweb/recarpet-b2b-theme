@@ -1,7 +1,10 @@
 {%- comment -%}
   reCarpet — Service Product Content
   Renders descriptive content for service products (RC-SERVICE-* SKUs).
-  Each service gets its own content block based on SKU.
+
+  Priority:
+    1. product.description (editable in Shopify admin)
+    2. Hardcoded fallback per SKU (legacy — remove once all descriptions are migrated)
 
   Usage: {% render 'recarpet-service-content', product: product %}
 {%- endcomment -%}
@@ -13,8 +16,14 @@
 
 <div class="recarpet-service">
 
-  {%- if _svc_sku contains 'RENGORING' -%}
-    {%- comment -%} ── Service & underhåll ─────────────────────────────── {%- endcomment -%}
+  {%- if product.description != blank -%}
+    {%- comment -%} Beskrivning finns i Shopify admin — visa den här (description-blocket saknas i template JSON). {%- endcomment -%}
+    <div class="recarpet-service__description">
+      {{ product.description }}
+    </div>
+
+  {%- elsif _svc_sku contains 'RENGORING' -%}
+    {%- comment -%} ── Fallback: Service & underhåll ── {%- endcomment -%}
     <div class="recarpet-service__intro">
       <h3 class="recarpet-service__heading">Vi underhåller era befintliga golv</h3>
       <p>Behåll era golv i toppskick med våra service- och underhållstjänster. Vi hjälper er att förlänga livslängden på era textilplattor genom regelbunden rengöring och reparation vid behov.</p>
@@ -42,7 +51,7 @@
     <p class="recarpet-service__outro">Med rätt underhåll kan golven se ut som nya i många år framöver.</p>
 
   {%- elsif _svc_sku contains 'MONTERING' -%}
-    {%- comment -%} ── Montering ──────────────────────────────────────── {%- endcomment -%}
+    {%- comment -%} ── Fallback: Montering ── {%- endcomment -%}
     <div class="recarpet-service__intro">
       <h3 class="recarpet-service__heading">Behöver du hjälp med montering?</h3>
       <p>Vi monterar både återbrukade och nya textilplattor med samma precision och noggrannhet. Våra samarbetspartners består av erfarna golventreprenörer som finns från norr till söder.</p>
@@ -70,7 +79,7 @@
     <p class="recarpet-service__outro">Vi ser till att ert nya golv är snyggt, hållbart och redo för många års användning. Våra samarbetspartners finns i hela landet.</p>
 
   {%- elsif _svc_sku contains 'DEMONTERING' -%}
-    {%- comment -%} ── Demontering ────────────────────────────────────── {%- endcomment -%}
+    {%- comment -%} ── Fallback: Demontering ── {%- endcomment -%}
     <div class="recarpet-service__intro">
       <h3 class="recarpet-service__heading">Demonterar och rengör era befintliga mattor</h3>
       <p>En effektiv och säker demontering är avgörande för att återbruket ska bli framgångsrikt. Vi demonterar med noggrannhet och tar hand om textilplattorna så att de kan få ett nytt liv.</p>
@@ -98,7 +107,7 @@
     <p class="recarpet-service__outro">Vi utför demonteringen snabbt och effektivt, alltid med fokus på att maximera återanvändningen och minimera avfall.</p>
 
   {%- elsif _svc_sku contains 'INTERNT' or _svc_sku contains 'ATERBRUK' -%}
-    {%- comment -%} ── Internt återbruk ───────────────────────────────── {%- endcomment -%}
+    {%- comment -%} ── Fallback: Internt återbruk ── {%- endcomment -%}
     <div class="recarpet-service__intro">
       <h3 class="recarpet-service__heading">Återbruk av ert befintliga golv</h3>
       <p>Vill ni behålla golvet inom fastigheten? Vi hjälper er att återanvända befintliga textilplattor för nästa hyresgäst, vilket sparar både pengar och resurser.</p>
@@ -126,16 +135,18 @@
     <p class="recarpet-service__outro">Internt återbruk är ett smart sätt att spara både pengar och miljö. Vi gör det enkelt att ge era golv ett nytt liv.</p>
 
   {%- else -%}
-    {%- comment -%} ── Generisk tjänst (fallback) ────────────────────── {%- endcomment -%}
+    {%- comment -%} ── Generisk tjänst (fallback) ── {%- endcomment -%}
     <div class="recarpet-service__intro">
       <p>Kontakta oss för mer information om denna tjänst.</p>
     </div>
 
   {%- endif -%}
 
-  <div class="recarpet-service__contact">
-    <p>Har du frågor? Kontakta oss på <a href="tel:+46700733682">0700-73 36 82</a> eller <a href="mailto:jonas@recarpet.se">jonas@recarpet.se</a></p>
-  </div>
+  {%- unless product.description != blank -%}
+    <div class="recarpet-service__contact">
+      <p>Har du frågor? Kontakta oss på <a href="tel:+46700733682">0700-73 36 82</a> eller <a href="mailto:jonas@recarpet.se">jonas@recarpet.se</a></p>
+    </div>
+  {%- endunless -%}
 
 </div>
 
@@ -143,6 +154,41 @@
   .recarpet-service {
     margin: 24px 0 0;
     font-family: inherit;
+  }
+
+  .recarpet-service__description {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .recarpet-service__description h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: var(--color-foreground, #1a1a1a);
+  }
+  .recarpet-service__description p {
+    margin: 0 0 12px;
+    color: #555;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .recarpet-service__description ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .recarpet-service__description ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #333;
   }
 
   .recarpet-service__intro {

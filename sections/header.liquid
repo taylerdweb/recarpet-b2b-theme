@@ -583,10 +583,10 @@
       </div>
       {% render 'header-search', input_id: 'Search-In-Modal' %}
 
-      {%- comment -%} reCarpet: Always show account/login icon (no dependency on customer_accounts_enabled) {%- endcomment -%}
+      {%- comment -%} reCarpet: Show account/login icon. On mobile: visible for guests (login shortcut), hidden for logged-in (cart icon suffices). {%- endcomment -%}
         <a
           href="{%- if customer -%}{{ routes.account_url }}{%- else -%}/pages/b2b-login{%- endif -%}"
-          class="header__icon header__icon--account link focus-inset"
+          class="header__icon header__icon--account link focus-inset{% if customer %} small-hide{% endif %}"
           rel="nofollow"
         >
           <span class="svg-wrapper">{{ 'icon-account.svg' | inline_asset_content }}</span>

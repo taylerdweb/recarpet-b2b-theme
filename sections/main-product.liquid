@@ -319,6 +319,12 @@
                   <div class="product__description rte quick-add-hidden" {{ block.shopify_attributes }}>
                     {{ product.description }}
                   </div>
+                  {%- assign _desc_sku = product.selected_or_first_available_variant.sku | default: '' -%}
+                  {%- if _desc_sku contains 'RC-SERVICE' or product.product_type contains 'Tjänst' -%}
+                    <div class="recarpet-service__contact" style="border-top:1px solid #e5e5e5;padding-top:16px;margin-top:8px;">
+                      <p style="margin:0;color:#555;font-size:0.8rem;">Har du frågor? Kontakta oss på <a href="tel:+46700733682" style="color:#1a6b2f;text-decoration:underline;">0700-73 36 82</a> eller <a href="mailto:jonas@recarpet.se" style="color:#1a6b2f;text-decoration:underline;">jonas@recarpet.se</a></p>
+                    </div>
+                  {%- endif -%}
                 {%- endif -%}
               {%- when 'sku' -%}
                 <p
